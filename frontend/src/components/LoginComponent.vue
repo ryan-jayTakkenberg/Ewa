@@ -1,5 +1,5 @@
 <template>
-  <div class="center">inlog</div>
+  <h1 class="text-center">inlog</h1>
 </template>
 
 <script>
@@ -10,7 +10,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.center {
-  text-align: center;
-}
+
 </style>

@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.css';
 import { createApp } from 'vue';
 import AppComponent from './AppComponent.vue';
 import LoginComponent from '@/components/LoginComponent.vue';
