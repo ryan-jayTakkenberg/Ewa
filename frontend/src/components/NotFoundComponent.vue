@@ -1,7 +1,9 @@
 <template>
-  <div class="center">
-    <h1>404 Not Found</h1>
-    <router-link to="/" class="button">Login Page</router-link>
+  <div class="text-center">
+    <h1 class="m-3 fw-semibold">Oops! We couldn't find that in our warehouse...</h1>
+    <router-link to="/" class="btn btn-secondary p-3">Click to return to the Login Page</router-link>
+    <br />
+    <img src="../../static/images/lost_warehouse.png" class="img-fluid mt-5" />
   </div>
 </template>
 
@@ -12,18 +14,5 @@ export default {
 </script>
 
 <style scoped>
-.center {
-  margin: 1em 1em;
-  text-align: center;
-}
 
-.button {
-  background-color: gray;
-  color: white;
-  padding: 1em 1em;
-  text-align: center;
-  display: inline-block;
-  font-size: 1em;
-  border-radius: 1em;
-}
 </style>
