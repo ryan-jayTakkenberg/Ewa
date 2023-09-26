@@ -1,43 +1,43 @@
 <template>
   <nav class="navbar navbar-light bg-light">
     <div class="empty"></div>
-    <div class="container rounded">
+    <div class="container rounded-3">
       <div class="logoContainer">
         <span class="material-symbols-outlined">inventory_2</span>
       </div>
-      <div class="textContainer rounded-bottom" style="background-color:aqua;">
+      <div class="textContainer rounded-bottom-3" style="background-color:aqua;">
         <span class="fw-semibold">Product</span>
       </div>
     </div>
-    <div class="container rounded">
+    <div class="container rounded-3">
       <div class="logoContainer">
         <span class="material-symbols-outlined">warehouse</span>
       </div>
-      <div class="textContainer rounded-bottom" style="background-color:yellow;">
-        <span class="fw-semibold">Projects</span>
+      <div class="textContainer rounded-bottom-3" style="background-color:yellow;">
+        <span class="fw-semibold">Warehouses</span>
       </div>
     </div>
-    <div class="container rounded">
+    <div class="container rounded-3">
       <div class="logoContainer">
         <span class="material-symbols-outlined">tactic</span>
       </div>
-      <div class="textContainer rounded-bottom" style="background-color:orangered;">
+      <div class="textContainer rounded-bottom-3" style="background-color:orangered;">
         <span class="fw-semibold">Projects</span>
       </div>
     </div>
-    <div class="container rounded">
+    <div class="container rounded-3">
       <div class="logoContainer">
         <span class="material-symbols-outlined">folder_shared</span>
       </div>
-      <div class="textContainer rounded-bottom" style="background-color:limegreen;">
+      <div class="textContainer rounded-bottom-3" style="background-color:limegreen;">
         <span class="fw-semibold">Teams</span>
       </div>
     </div>
-    <div class="container rounded">
+    <div class="container rounded-3">
       <div class="logoContainer">
         <span class="material-symbols-outlined">person</span>
       </div>
-      <div class="textContainer rounded-bottom" style="background-color:orange;">
+      <div class="textContainer rounded-bottom-3" style="background-color:orange;">
         <span class="fw-semibold">Accounts</span>
       </div>
     </div>
@@ -82,5 +82,14 @@ export default {
   height: 30%;
   width: 100%;
   border-top: 2px solid black;
+}
+
+.material-symbols-outlined {
+  font-size: 2em;
+  font-variation-settings:
+      'FILL' 0,
+      'wght' 300,
+      'GRAD' 0,
+      'opsz' 24
 }
 </style>
