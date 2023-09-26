@@ -1,5 +1,8 @@
 <template>
   <h1 class="text-center">inlog</h1>
+
+
+
 </template>
 
 <script>
