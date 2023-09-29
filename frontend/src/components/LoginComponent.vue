@@ -41,14 +41,12 @@
     </div>
   </div>
 
-
-
 </template>
 
 <script>
+
 export default {
   name: 'LoginComponent',
-
 
   data() {
     return {
@@ -99,7 +97,7 @@ export default {
 
       } else {
         this.$el.querySelector('.errorMessageWrapper').style.display = 'none';
-        alert('Successful Login')
+        this.$router.push('/overview');
       }
     },
   },
