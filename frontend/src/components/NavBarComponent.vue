@@ -7,28 +7,17 @@
       <div class="loggedInAs">
         <h1 class="textLoggedIn">You are logged in as:<strong> {{ loggedIn }}</strong></h1>
         <button @click="loggedInUpdate">change</button>
-
       </div>
-      <a href="#" class="closebtn" @click="closeNav">&times;</a>
-
       <div class="navbarComponents">
-        <a href="#" class="closebtn" @click="closeNav">&times;</a>
-        <a href="#"><span class="material-symbols-outlined">
-overview
-</span>Overview</a>
+        <a class="closebtn" @click="closeNav">&times;</a>
+        <router-link to="/overview"><span class="material-symbols-outlined">overview</span>Overview</router-link>
         <router-link to="/manage"><span class="material-symbols-outlined">settings</span>Manage</router-link>
-        <a href="#"><span class="material-symbols-outlined">
-warehouse
-</span>Warehouse</a>
-        <a href="#"><span class="material-symbols-outlined">
-tactic
-</span>Project</a>
-        <a href="#"><span class="material-symbols-outlined">
-groups
-</span>Teams</a>
+        <a><span class="material-symbols-outlined">warehouse</span>Warehouse</a>
+        <a><span class="material-symbols-outlined">tactic</span>Project</a>
+        <a><span class="material-symbols-outlined">groups</span>Teams</a>
       </div>
       <div class="notification">
-        <a href="#">Notification</a>
+        <a>Notification</a>
         <i class="material-symbols-outlined">notifications</i>
         <span class="count">{{ listArray.length }}</span>
       </div>
