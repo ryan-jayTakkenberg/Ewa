@@ -162,9 +162,7 @@ export default {
 }
 
 .content-box:hover{
-  width: 210px;
-  height: 160px;
-  margin: 10px;
+  border: 3px solid black;
   cursor: pointer;
 }
 
