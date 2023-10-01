@@ -16,9 +16,7 @@
         <a href="#"><span class="material-symbols-outlined">
 overview
 </span>Overview</a>
-        <a href="#"><span class="material-symbols-outlined">
-settings
-</span>Manage</a>
+        <router-link to="/manage"><span class="material-symbols-outlined">settings</span>Manage</router-link>
         <a href="#"><span class="material-symbols-outlined">
 warehouse
 </span>Warehouse</a>
