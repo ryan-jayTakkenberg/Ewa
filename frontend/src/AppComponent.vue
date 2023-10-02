@@ -16,7 +16,7 @@ export default {
   padding: 0;
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
-  //outline: 1px solid red;
+  /*outline: 1px solid red;*/
 }
 
 </style>
