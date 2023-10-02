@@ -342,6 +342,14 @@ label {
     width: 30%;
   }
 
+  .welcomeContainer {
+    margin-top: 3rem;
+  }
+
+  .loginContainer form {
+    margin-top: 0;
+  }
+
   button {
     font-size: 0.8em;
   }
@@ -355,6 +363,14 @@ label {
   .container {
     padding: 0.8rem;
     width: 35%;
+  }
+
+  .welcomeContainer {
+    margin-top: 2rem;
+  }
+
+  .loginContainer form {
+    margin-top: 0;
   }
 
   button {
