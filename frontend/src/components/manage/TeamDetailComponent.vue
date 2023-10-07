@@ -83,84 +83,12 @@ export default {
 </script>
 
 <style scoped>
-.red {
-  color: red;
-}
-
-.box{
-  display: flex;
-  justify-content: center;
-  align-content: center;
-}
-
 .line {
   background-color: lightgray;
   height: 0.5vh;
   width: 100%;
   margin: 0;
   padding: 0;
-}
-
-.content{
-  text-align: center;
-  height: fit-content;
-  width: 60%;
-  border-radius: 20px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  margin: 15px 0 30px 0;
-}
-
-.content-header{
-  height: 175px;
-  background: url("../../../static/images/manageDetailHeader.jpg") center no-repeat;
-  background-size: cover;
-  border-radius: 20px 20px 0 0 ;
-}
-
-.content-box{
-  margin: 30px 0 30px 0;
-}
-.content-box-text{
-  margin: 0 15% 0 15%;
-  text-align: left;
-}
-
-label{
-  width: 100%;
-  margin: 10px 0 5px 0;
-}
-
-input{
-  padding: 5px;
-  border-radius: 10px;
-  border: 1px solid gray;
-  width: 100%;
-}
-
-.number-input::-webkit-inner-spin-button,
-.number-input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-textarea{
-  width: 100%;
-  height: 125px;
-  overflow: hidden;
-  resize: none;
-  padding: 5px;
-  border-radius: 10px;
-}
-
-select{
-  padding: 5px;
-  border-radius: 10px;
-  border: 1px solid gray;
-  width: 100%;
-}
-
-.h3-middle{
-  margin-top: 25px;
 }
 
 button{
@@ -170,11 +98,5 @@ button{
   border-radius: 10px;
   background: #c7d02c;
   color: #fff;
-}
-
-@media (max-width: 500px) {
-  .content{
-    width: 70%;
-  }
 }
 </style>
