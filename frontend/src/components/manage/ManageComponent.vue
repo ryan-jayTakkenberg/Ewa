@@ -1,10 +1,14 @@
 <template>
   <NavBarComponent></NavBarComponent>
   <div>
+    <div class="title">
+      <h3 class="fw-bold">Manage</h3>
+      <p>Add, remove or edit a specific category:</p>
+    </div>
     <div class="nav-box">
       <div @click="goToPage('product')" class="content-box">
         <div class="content-box-top"><span class="material-symbols-outlined">inventory_2</span></div>
-        <div class="content-box-bottom product"><h3 class="subtitle">Product</h3></div>
+        <div class="content-box-bottom product"><h3 class="subtitle">Team</h3></div>
       </div>
       <div @click="goToPage('warehouse')" class="content-box">
         <div class="content-box-top"><span class="material-symbols-outlined">warehouse</span></div>
@@ -24,8 +28,8 @@
       </div>
     </div>
     <div class="line rounded mt-3 mb-3"></div>
-    <div>
-      <router-view id="scrollTo" />
+    <div ref="RouterView">
+      <router-view />
     </div>
   </div>
 </template>
@@ -47,13 +51,15 @@ export default {
       }
 
       this.$router.push(path);
-      setTimeout(() => {
-        let y = document.getElementById("scrollTo")?.offsetTop;
-        if (y > window.screen.height / 2) {
-          window.scrollTo({top: y, behavior: "smooth"});
-        }
-      }, 1);
-    }
+      setTimeout(this.scrollToRouterView, 1);
+    },
+    scrollToRouterView() {
+      let y = this.$refs.RouterView?.offsetTop;
+      console.log(y);
+      if (y > 0) {
+        window.scrollTo({top: y, behavior: "smooth"});
+      }
+    },
   }
 
 }
@@ -61,6 +67,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.title {
+  width: 82.5%;
+  margin: auto;
+}
+
 .subtitle {
   text-align: center;
   font-size: max(1.5vw, 15px);

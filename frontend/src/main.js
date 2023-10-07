@@ -3,12 +3,13 @@ import { createApp } from 'vue';
 import AppComponent from './AppComponent.vue';
 import LoginComponent from "@/components/LoginComponent.vue";
 import OverviewComponent from "@/components/OverviewComponent.vue";
-import ManageComponent from '@/components/ManageComponent.vue';
+import ManageComponent from '@/components/manage/ManageComponent.vue';
 import NotFoundComponent from '@/components/NotFoundComponent.vue'
 import { createRouter, createWebHashHistory } from "vue-router";
-import ProductDetailComponent from "@/components/ProductDetailComponent";
-import ProjectDetailComponent from "@/components/ProjectDetailComponent";
-import WarehouseDetailComponent from "@/components/WarehouseDetailComponent";
+import ProductDetailComponent from "@/components/manage/ProductDetailComponent";
+import ProjectDetailComponent from "@/components/manage/ProjectDetailComponent";
+import WarehouseDetailComponent from "@/components/manage/WarehouseDetailComponent";
+import TeamDetailComponent from "@/components/manage/TeamDetailComponent";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -36,6 +37,10 @@ const router = createRouter({
                 {
                     path: "warehouse",
                     component: WarehouseDetailComponent
+                },
+                {
+                    path: "team",
+                    component: TeamDetailComponent
                 }
             ]
         },
