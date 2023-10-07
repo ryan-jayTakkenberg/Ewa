@@ -7,34 +7,34 @@
         <div class="content-box-text">
           <form>
             <h3>Project information</h3>
-            <label>Name*</label>
+            <label class="fw-semibold">Name<span class="red fw-normal">*</span></label>
             <input type="text" placeholder=". . .">
-            <label>Install team*</label>
+            <label class="fw-semibold">Install team<span class="red fw-normal">*</span></label>
             <select >
               <option selected disabled>Select a team</option>
               <option>Team Solar Sedum</option>
               <option>Team 1</option>
             </select>
-            <label>Warehouse used for storage*</label>
-            <select >
+            <label class="fw-semibold">Warehouse used for storage<span class="red fw-normal">*</span></label>
+            <select>
               <option selected disabled>Select a warehouse</option>
               <option>Solar Sedum warehouse</option>
               <option>Team 1 warehouse</option>
             </select>
-            <label>Note</label>
+            <label class="fw-semibold">Note</label>
             <textarea placeholder="Notes . . ."></textarea>
             <h3 class="h3-middle">Client information</h3>
-            <label>Name*</label>
+            <label class="fw-semibold">Name<span class="red fw-normal">*</span></label>
             <input type="text" placeholder="Solar Sedum">
-            <label>Email*</label>
+            <label class="fw-semibold">Email<span class="red fw-normal">*</span></label>
             <input type="email" placeholder="info@solarsedum.nl">
-            <label>Phone number*</label>
+            <label class="fw-semibold">Phone number<span class="red fw-normal">*</span></label>
             <input type="number" placeholder="020 30 80 622" class="number-input">
-            <label>Adres*</label>
+            <label class="fw-semibold">Address<span class="red fw-normal">*</span></label>
             <input type="text" placeholder="H.J.E. Wenckebachweg 47d-4">
-            <label>Postal code*</label>
+            <label class="fw-semibold">Postal code<span class="red fw-normal">*</span></label>
             <input type="text" placeholder="1096 AK">
-            <label>City*</label>
+            <label class="fw-semibold">City<span class="red fw-normal">*</span></label>
             <input type="text" placeholder="Amsterdam">
           </form>
           <button>Create new project</button>
@@ -51,6 +51,10 @@ export default {
 </script>
 
 <style scoped>
+.red {
+  color: red;
+}
+
 .box{
   display: flex;
   justify-content: center;
@@ -68,7 +72,7 @@ export default {
 
 .content-header{
   height: 175px;
-  background: url("../../static/images/manageDetailHeader.jpg") center no-repeat;
+  background: url("../../../static/images/manageDetailHeader.jpg") center no-repeat;
   background-size: cover;
   border-radius: 20px 20px 0 0 ;
 }
@@ -84,7 +88,6 @@ export default {
 label{
   width: 100%;
   margin: 10px 0 5px 0;
-  font-weight: bold;
 }
 
 input{

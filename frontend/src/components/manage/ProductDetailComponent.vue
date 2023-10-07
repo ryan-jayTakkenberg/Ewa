@@ -6,14 +6,14 @@
       <div class="content-box">
         <div class="content-box-text">
           <form>
-            <h3>Product information</h3>
-            <label>Product ID*</label>
+            <h3>Team information</h3>
+            <label class="fw-semibold">Team ID<span class="red fw-normal">*</span></label>
             <input type="text" placeholder="A12345">
-            <label>Name*</label>
+            <label class="fw-semibold">Name<span class="red fw-normal">*</span></label>
             <input type="text" placeholder="Solar panel">
-            <label>Weight in kg*</label>
+            <label class="fw-semibold">Weight in kg</label>
             <input type="text" placeholder="1,525">
-            <label>Description</label>
+            <label class="fw-semibold">Description</label>
             <textarea placeholder="Description . . ."></textarea>
           </form>
           <button>Add new product</button>
@@ -30,6 +30,10 @@ export default {
 </script>
 
 <style scoped>
+.red {
+  color: red;
+}
+
 .box{
   margin-top: 10px;
   display: flex;
@@ -48,7 +52,7 @@ export default {
 
 .content-header{
   height: 175px;
-  background: url("../../static/images/manageDetailHeader2.jpg") center no-repeat;
+  background: url("../../../static/images/manageDetailHeader2.jpg") center no-repeat;
   background-size: cover;
   border-radius: 20px 20px 0 0 ;
 }
@@ -64,7 +68,6 @@ export default {
 label{
   width: 100%;
   margin: 10px 0 5px 0;
-  font-weight: bold;
 }
 
 input{

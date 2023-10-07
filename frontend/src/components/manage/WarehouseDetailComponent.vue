@@ -6,13 +6,13 @@
         <div class="content-box-text">
           <form>
             <h3>Warehouses information</h3>
-            <label>Name*</label>
+            <label class="fw-semibold">Name<span class="red fw-normal">*</span></label>
             <input type="text" placeholder="Solar Sedum">
-            <label>Adres*</label>
+            <label class="fw-semibold">Adres<span class="red fw-normal">*</span></label>
             <input type="text" placeholder="H.J.E. Wenckebachweg 47d-4">
-            <label>Postal code*</label>
+            <label class="fw-semibold">Postal code<span class="red fw-normal">*</span></label>
             <input type="text" placeholder="1096 AK">
-            <label>City</label>
+            <label class="fw-semibold">City<span class="red fw-normal">*</span></label>
             <input type="text" placeholder="Amsterdam">
           </form>
           <button>Add warehouse</button>
@@ -29,6 +29,10 @@ export default {
 </script>
 
 <style scoped>
+.red {
+  color: red;
+}
+
 .box{
   display: flex;
   justify-content: center;
@@ -46,7 +50,7 @@ export default {
 
 .content-header{
   height: 175px;
-  background: url("../../static/images/manageDetailHeader3.jpg") center no-repeat;
+  background: url("../../../static/images/manageDetailHeader3.jpg") center no-repeat;
   background-size: cover;
   border-radius: 20px 20px 0 0 ;
 }
