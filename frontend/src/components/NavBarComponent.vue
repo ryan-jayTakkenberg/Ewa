@@ -64,7 +64,7 @@ export default {
       this.showNotifications = !this.showNotifications;
     },
   },created() {
-    // Haal de rolwaarde op uit de lokale opslag en wijs deze toe aan userRole
+
     this.userRole = localStorage.getItem('userRole');
   },
 };
@@ -105,6 +105,7 @@ li{
   display: flex;
   align-items: center;
   margin-top: 10px;
+  margin-left: 33%;
 }
 
 .notification-bell i {
