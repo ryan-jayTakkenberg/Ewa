@@ -1,37 +1,48 @@
 <template>
-  <NavBarComponent></NavBarComponent>
-  <div>
-    <div class="title">
-      <h3 class="fw-bold">Manage</h3>
-      <p>Add, remove or edit a specific category:</p>
+
+  <div class="main">
+
+    <NavBarComponent></NavBarComponent>
+
+    <div class="manageContainer">
+
+      <div>
+        <div class="title">
+          <h3 class="fw-bold">Manage</h3>
+          <p>Add, remove or edit a specific category:</p>
+        </div>
+        <div class="nav-box">
+          <div @click="goToPage('product')" class="content-box">
+            <div class="content-box-top"><span class="material-symbols-outlined">inventory_2</span></div>
+            <div class="content-box-bottom product"><h3 class="subtitle">Product</h3></div>
+          </div>
+          <div @click="goToPage('warehouse')" class="content-box">
+            <div class="content-box-top"><span class="material-symbols-outlined">warehouse</span></div>
+            <div class="content-box-bottom warehouse"><h3 class="subtitle">Warehouse</h3></div>
+          </div>
+          <div @click="goToPage('project')" class="content-box">
+            <div class="content-box-top"><span class="material-symbols-outlined">tactic</span></div>
+            <div class="content-box-bottom project"><h3 class="subtitle">Project</h3></div>
+          </div>
+          <div @click="goToPage('team')" class="content-box">
+            <div class="content-box-top"><span class="material-symbols-outlined">folder_shared</span></div>
+            <div class="content-box-bottom team"><h3 class="subtitle">Team</h3></div>
+          </div>
+          <div @click="goToPage('user')" class="content-box">
+            <div class="content-box-top"><span class="material-symbols-outlined">person</span></div>
+            <div class="content-box-bottom user"><h3 class="subtitle">User</h3></div>
+          </div>
+        </div>
+        <div class="line rounded mt-3 mb-3"></div>
+        <div ref="RouterView">
+          <router-view />
+        </div>
+      </div>
+
     </div>
-    <div class="nav-box">
-      <div @click="goToPage('product')" class="content-box">
-        <div class="content-box-top"><span class="material-symbols-outlined">inventory_2</span></div>
-        <div class="content-box-bottom product"><h3 class="subtitle">Product</h3></div>
-      </div>
-      <div @click="goToPage('warehouse')" class="content-box">
-        <div class="content-box-top"><span class="material-symbols-outlined">warehouse</span></div>
-        <div class="content-box-bottom warehouse"><h3 class="subtitle">Warehouse</h3></div>
-      </div>
-      <div @click="goToPage('project')" class="content-box">
-        <div class="content-box-top"><span class="material-symbols-outlined">tactic</span></div>
-        <div class="content-box-bottom project"><h3 class="subtitle">Project</h3></div>
-      </div>
-      <div @click="goToPage('team')" class="content-box">
-        <div class="content-box-top"><span class="material-symbols-outlined">folder_shared</span></div>
-        <div class="content-box-bottom team"><h3 class="subtitle">Team</h3></div>
-      </div>
-      <div @click="goToPage('user')" class="content-box">
-        <div class="content-box-top"><span class="material-symbols-outlined">person</span></div>
-        <div class="content-box-bottom user"><h3 class="subtitle">User</h3></div>
-      </div>
-    </div>
-    <div class="line rounded mt-3 mb-3"></div>
-    <div ref="RouterView">
-      <router-view />
-    </div>
+
   </div>
+
 </template>
 
 <script>
@@ -66,9 +77,27 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+/* whole page, inc. side-bar */
+.main {
+  display: flex;
+  height: auto;
+  max-width: 100svw;
+}
+
+/* manage */
+.manageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-height: 100svh;
+  width: 100%;
+  padding: 2rem;
+}
+
 .title {
-  width: 82.5%;
-  margin: auto;
+  //width: 82.5%;
+  //margin: auto;
 }
 
 .subtitle {
@@ -86,11 +115,9 @@ export default {
 
 .nav-box{
   display: flex;
+  gap: 2rem;
   flex-wrap: wrap;
   width: 100%;
-  height: fit-content;
-  justify-content: center;
-  align-content: center;
 }
 
 .content-box {
@@ -98,7 +125,6 @@ export default {
   width: max(15vw, 150px);
   border: 3px solid lightgray;
   border-radius: 10px;
-  margin: 1vw;
   flex-shrink: 0;
 }
 
