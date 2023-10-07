@@ -4,7 +4,7 @@
     <span @click="openNav" class="material-symbols-outlined">menu</span>
     <div id="mySidenav" :style="{ width: sidebarWidth }" class="sidenav">
       <div class="loggedInAs">
-        <h1 class="textLoggedIn">You are logged in as:<strong> Admin </strong></h1>
+        <h1 class="textLoggedIn">You are logged in as:<strong> {{ userRole }} </strong></h1>
 
       </div>
       <div class="navbarComponents">
@@ -41,6 +41,8 @@ export default {
   data() {
     return {
       showNotifications: false,
+        userRole: '', // Initialiseer userRole als lege string
+        // Andere data en methoden hier
       sidebarWidth: "250px",
       loggedIn:"admin",
       listArray: ["Zonnepanelen zijn bijna op",
@@ -61,6 +63,9 @@ export default {
     }, toggleNotifications() {
       this.showNotifications = !this.showNotifications;
     },
+  },created() {
+    // Haal de rolwaarde op uit de lokale opslag en wijs deze toe aan userRole
+    this.userRole = localStorage.getItem('userRole');
   },
 };
 </script>

@@ -69,7 +69,6 @@ export default {
       this.$el.querySelector('.buttonContainer').style.display = 'none';
       this.$el.querySelector('.welcomeContainer').style.display = 'none';
     },
-
     hideLogin() {
 
       this.errorMessage = '';
@@ -97,6 +96,7 @@ export default {
 
       } else {
         this.$el.querySelector('.errorMessageWrapper').style.display = 'none';
+        localStorage.setItem('userRole', this.typeOfUser);
         this.$router.push('/overview');
       }
     },
