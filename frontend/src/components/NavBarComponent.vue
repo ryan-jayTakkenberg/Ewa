@@ -2,8 +2,8 @@
   <div>
 
 
-    <span @click="openNav" class="material-symbols-outlined">menu</span>
     <div id="mySidenav" :style="{ width: sidebarWidth }" class="sidenav">
+      <span @click="openNav" class="material-symbols-outlined">menu</span>
       <div class="loggedInAs">
         <h1 class="textLoggedIn">You are logged in as:<strong> {{ loggedIn }}</strong></h1>
         <button @click="loggedInUpdate">change</button>
@@ -38,7 +38,7 @@ export default {
   name: "NavBarComponent",
   data() {
     return {
-      sidebarWidth: "0px",
+      sidebarWidth: "250px",
       notificationCount: 5,
       loggedIn:"admin",
       listArray: ["Zonnepanelen zijn bijna op",
@@ -53,7 +53,7 @@ export default {
       this.sidebarWidth = "250px";
     },
     closeNav() {
-      this.sidebarWidth = "0px";
+      this.sidebarWidth = "50px";
     }, logOut() {
       alert("je bent uitgelogd")
     },
@@ -109,11 +109,7 @@ li{
 .sidenav {
   height: 100%; /* 100% Full-height */
   width: 0; /* 0 width - change this with JavaScript */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Stay on top */
-  top: 0; /* Stay at the top */
-  left: 0;
-  background-color: #E5E5E5; /* Black*/
+  background-color: #f5f5f5; /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 60px; /* Place content 60px from the top */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
@@ -144,7 +140,6 @@ li{
 
 /* Position and style the close button (top right corner) */
 .sidenav .closebtn {
-  position: absolute;
   top: 0;
   right: 25px;
   font-size: 36px;
