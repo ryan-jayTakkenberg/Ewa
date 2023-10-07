@@ -6,7 +6,7 @@
       <div class="content-box">
         <div class="content-box-text">
           <form>
-            <h3>Team information</h3>
+            <h3>Product information</h3>
             <label class="fw-semibold">Team ID<span class="red fw-normal">*</span></label>
             <input type="text" placeholder="A12345">
             <label class="fw-semibold">Name<span class="red fw-normal">*</span></label>
