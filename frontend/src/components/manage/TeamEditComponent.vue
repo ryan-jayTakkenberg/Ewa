@@ -10,9 +10,10 @@
             <label class="fw-semibold">Team Name<span class="red fw-normal">*</span></label>
             <input type="text" placeholder="Enter the team name" v-model="editTeam.name" ref="name">
             <label class="fw-semibold">Users</label>
-            <select v-model="userSelector">
+            <select v-model="userSelector" @change="e => addUserToTeam(e.target.value)">
               <option value="defaultOption" selected disabled>Click to add an user to the team</option>
-              <option v-for="user of this.otherUsers" :key="user" @click="addUserToTeam(user)">{{ user.name }}</option>
+<!--              Not all browsers support click events on Option Elements-->
+              <option v-for="user of this.otherUsers" :key="user">{{ user.name }}</option>
             </select>
             <TableArrayComponent :items="userList" :attributes="{user: u => u.name}" :sortable="true" :clickable-rows="false" :removable="true" @row-remove="handleRowRemoveEvent" class="mt-3" />
           </form>
@@ -81,7 +82,8 @@ export default {
       }
       this.$emit("team-cancel");
     },
-    addUserToTeam(user) {
+    addUserToTeam(username) {
+      let user = this.otherUsers.find(u => u.name === username);
       this.editTeam.users.push(user);
       this.updateUsers();
     },
