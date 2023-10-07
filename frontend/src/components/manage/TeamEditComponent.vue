@@ -88,6 +88,10 @@ export default {
       this.updateUsers();
     },
     updateUsers() {
+      if (User.fetching) {
+        setTimeout(this.updateUsers, 100);
+        return;
+      }
       this.userSelector = "defaultOption";
       this.userList = [];
       for (let u of this.editTeam.users) {

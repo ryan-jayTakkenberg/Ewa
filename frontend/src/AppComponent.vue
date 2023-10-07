@@ -3,6 +3,15 @@
 </template>
 
 <script>
+import Team from "@/models/team";
+import User from "@/models/user";
+
+// This only fetches the data accessible to the logged in user
+// TODO should be placed at the login page if no session is present
+(async () => {
+  Team.teams = await Team.getDatabase();
+  User.users = await User.getDatabase();
+})();
 
 export default {
   name: 'AppComponent',

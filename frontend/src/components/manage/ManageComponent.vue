@@ -55,8 +55,7 @@ export default {
     },
     scrollToRouterView() {
       let y = this.$refs.RouterView?.offsetTop;
-      console.log(y);
-      if (y > 0) {
+      if (y > window.screen.height / 2) {
         window.scrollTo({top: y, behavior: "smooth"});
       }
     },

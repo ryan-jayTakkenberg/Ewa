@@ -8,7 +8,7 @@
   <TeamEditComponent :team="selectedTeam" @team-cancel="handleTeamCancelEvent" @team-save="handleTeamSaveEvent" v-if="selectedTeam" ref="TeamEditComponent" />
 </template>
 
-<script>
+<script>// TODO popups
 import Team from "@/models/team";
 import TableArrayComponent from "@/components/helpers/TableObjectComponent";
 import TeamEditComponent from "@/components/manage/TeamEditComponent";
@@ -29,6 +29,16 @@ export default {
       }
     };
   },
+  created() {
+    if (!this.teams?.length) {
+      const teamFetchingInterval = setInterval(() => {
+        if (!Team.fetching) {
+          this.teams = Team.teams;
+          clearInterval(teamFetchingInterval);
+        }
+      }, 100);
+    }
+  },
   methods: {
     handleRowClickEvent(team) {
       if (!Object.is(team, this.selectedTeam)) {
@@ -38,27 +48,40 @@ export default {
         this.closeTeamEditPage();
       }
     },
-    handleRowRemoveEvent(team) {
+    async handleRowRemoveEvent(team) {
       if (this.selectedTeam === team) {
         window.alert("You cannot remove the team you are currently editing");
         return;
       }
 
       if (window.confirm(`Are you sure you want to remove this team ("${team.name}")?`)) {
-        this.teams = this.teams.filter(t => t !== team);
+        // show load popup
+        if (!await team.delDatabase()) {
+          // hide load popup
+          // show popup with error message
+          return;
+        }
+        // hide load popup
         this.syncTeams();
       }
     },
     handleTeamCancelEvent() {
       this.closeTeamEditPage();
     },
-    handleTeamSaveEvent(team) {
+    async handleTeamSaveEvent(team) {
       let index = this.teams.indexOf(this.selectedTeam);
       if (index < 0) {
         this.teams.push(team);
       } else {
         this.teams[index] = team;
       }
+      // show load popup
+      if (!await team.putDatabase()) {
+        // hide load popup
+        // show popup with error message
+        return;
+      }
+      // hide load popup
       this.syncTeams();
       this.closeTeamEditPage();
     },
@@ -76,8 +99,8 @@ export default {
       this.selectedTeam = null;
     },
     syncTeams() {
-      Team.teams = this.teams;
-    }
+      this.teams = Team.teams;
+    },
   }
 };
 </script>
