@@ -8,7 +8,7 @@
     <div class="nav-box">
       <div @click="goToPage('product')" class="content-box">
         <div class="content-box-top"><span class="material-symbols-outlined">inventory_2</span></div>
-        <div class="content-box-bottom product"><h3 class="subtitle">Team</h3></div>
+        <div class="content-box-bottom product"><h3 class="subtitle">Product</h3></div>
       </div>
       <div @click="goToPage('warehouse')" class="content-box">
         <div class="content-box-top"><span class="material-symbols-outlined">warehouse</span></div>
