@@ -12,6 +12,7 @@ export default {
       this.activePage = page
     },
     logOut() {
+      this.$router.push('/login');
     },
     isPageActive(page) {
       return this.activePage === page
