@@ -42,7 +42,7 @@ export default {
                    @click="handleNavClick('overview')">
         <span class="material-symbols-outlined nav-icon">overview_key</span>
         <p class="nav-text">Overview</p>
-        <span class="notification-indicator">3</span>
+        <span class="notification-indicator bg-danger-subtle text-danger">3</span>
       </router-link>
 
       <router-link v-if="(userRole === 'viewer')" to="/test" class="nav-button"
@@ -101,7 +101,7 @@ export default {
                    @click="handleNavClick('reports')">
         <span class="material-symbols-outlined nav-icon">report</span>
         <p class="nav-text">Reports</p>
-        <span class="notification-indicator">3</span>
+        <span class="notification-indicator bg-danger-subtle text-danger">3</span>
       </router-link>
 
       <div class="log-out-button" @click="logOut()">
@@ -124,8 +124,8 @@ export default {
   padding: 0.75rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: rgb(30 64 175 / 100%);
-  background-color: rgb(219 234 254 / 100%);
+  color: darkred;
+  background-color: palevioletred;
   border-radius: 9999px;
 }
 
@@ -218,7 +218,7 @@ export default {
 }
 
 .nav-button.active .nav-text {
-  color: #c7d02c;
+  color: #5B2E18;
 }
 
 .navbar.expanded {
@@ -241,8 +241,8 @@ export default {
 
 .menu-toggle-wrap{
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1rem;
+  justify-content: center;
+  padding: 1rem;
 }
 
 
