@@ -210,9 +210,6 @@ select {
 }
 
 @media (max-width: 768px) {
-  .overviewContainer {
-    width: calc(100% - 70px);
-  }
 }
 
 </style>

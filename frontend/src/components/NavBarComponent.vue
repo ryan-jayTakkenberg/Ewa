@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <span @click="openNav" class="material-symbols-outlined">menu</span>
     <div id="mySidenav" :style="{ width: sidebarWidth }" class="sidenav">
       <div class="loggedInAs">
