@@ -1,13 +1,8 @@
 <template>
-
   <div class="main">
-
     <NavBarComponent></NavBarComponent>
-
     <div class="manageContainer">
-
-      <div>
-        <div class="title">
+        <div>
           <h3 class="fw-bold">Manage</h3>
           <p>Add, remove or edit a specific category:</p>
         </div>
@@ -37,12 +32,8 @@
         <div ref="RouterView">
           <router-view />
         </div>
-      </div>
-
     </div>
-
   </div>
-
 </template>
 
 <script>
@@ -93,11 +84,7 @@ export default {
   min-height: 100svh;
   width: 100%;
   padding: 2rem;
-}
-
-.title {
-  //width: 82.5%;
-  //margin: auto;
+  margin: auto;
 }
 
 .subtitle {
@@ -115,6 +102,7 @@ export default {
 
 .nav-box{
   display: flex;
+  justify-content: center;
   gap: 2rem;
   flex-wrap: wrap;
   width: 100%;

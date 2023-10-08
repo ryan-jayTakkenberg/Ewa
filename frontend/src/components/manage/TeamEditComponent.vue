@@ -13,7 +13,7 @@
             <select v-model="userSelector" @change="e => addUserToTeam(e.target.value)">
               <option value="defaultOption" selected disabled>Click to add an user to the team</option>
 <!--              Not all browsers support click events on Option Elements-->
-              <option v-for="user of this.otherUsers" :key="user">{{ user.name }}</option>
+              <option v-for="user of this.otherUsers" :key="user.id">{{ user.name }}</option>
             </select>
             <TableArrayComponent :items="userList" :attributes="{user: u => u.name}" :sortable="true" :clickable-rows="false" :removable="true" @row-remove="handleRowRemoveEvent" class="mt-3" />
           </form>
@@ -53,7 +53,6 @@ export default {
     handleRowRemoveEvent(item) {
       if (window.confirm(`Are you sure you want to remove this user from the team ("${item.user.name}")?`)) {
         this.editTeam.users = this.editTeam.users.filter(u => u !== item.user);
-        console.log(this.editTeam.users);
         this.updateUsers();
       }
     },
