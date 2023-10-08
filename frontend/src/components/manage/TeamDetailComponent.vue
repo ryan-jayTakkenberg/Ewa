@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       selectedTeam: null,
-      teams: Team.teams,
+      teams: [...Team.teams],
       teamObject: {
         name: s => s,
         users: a => a?.length,
@@ -33,7 +33,7 @@ export default {
     if (!this.teams?.length) {
       const teamFetchingInterval = setInterval(() => {
         if (!Team.fetching) {
-          this.teams = Team.teams;
+          this.teams = [...Team.teams];
           clearInterval(teamFetchingInterval);
         }
       }, 100);
@@ -62,7 +62,7 @@ export default {
           return;
         }
         // hide load popup
-        this.syncTeams();
+        this.teams = this.teams.filter(t => t !== team);
       }
     },
     handleTeamCancelEvent() {
@@ -82,7 +82,6 @@ export default {
         return;
       }
       // hide load popup
-      this.syncTeams();
       this.closeTeamEditPage();
     },
     addTeam() {
@@ -97,9 +96,6 @@ export default {
     },
     closeTeamEditPage() {
       this.selectedTeam = null;
-    },
-    syncTeams() {
-      this.teams = Team.teams;
     },
   }
 };

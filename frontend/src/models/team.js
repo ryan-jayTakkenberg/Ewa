@@ -6,16 +6,19 @@ export default class Team {
     }
 
     equals(other) {
-        return other && this.name === other.name && this.users.toString() === other.users.toString();
+        if (!other) {
+            return false;
+        }
+        for (let attr of Object.keys(this)) {
+            if (typeof this[attr] !== typeof other[attr] || `${this[attr]}` !== `${other[attr]}`) {
+                return false;
+            }
+        }
+        return true;
     }
 
     clone() {
-        return new Team(-1, this.name, [...this.users]);
-    }
-
-    static createNewTeam(name) {
-        // The team id will be set once saved in the database
-        return new Team(-1, name);
+        return new Team(this.id, this.name, [...this.users]);
     }
 
     /**
@@ -27,7 +30,7 @@ export default class Team {
             // TODO make a post request to the backend
             //  if the current team id is -1, receive the new team id
             if (isNewTeam) {
-                this.id = 0;// receive the new team id
+                this.id = Team.teams.length;// receive the new team id
                 Team.teams.push(this);
             } else {
                 Team.teams[Team.teams.findIndex(t => t.id === this.id)] = this;
@@ -66,7 +69,7 @@ export default class Team {
             await new Promise((resolve) => {
                 setTimeout(resolve, 1000); // Sleep for 1 second (1000 milliseconds)
             });
-            return [Team.createNewTeam('team1'), Team.createNewTeam('team2'), Team.createNewTeam('team3')];
+            return [new Team(0, 'team1'), new Team(1, 'team2'), new Team(2, 'team3')];
         } catch (e) {
             return [];
         } finally {
