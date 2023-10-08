@@ -1,10 +1,12 @@
 <template>
-  <router-view></router-view>
+  <NavBar v-if="isLoggedIn === false"></NavBar>
+  <router-view ></router-view>
 </template>
 
 <script>
 import Team from "@/models/team";
 import User from "@/models/user";
+import NavBar from "@/components/navigation/NavBar.vue";
 
 // This only fetches the data accessible to the logged in user
 // TODO should be placed at the login page if no session is present
@@ -15,6 +17,12 @@ import User from "@/models/user";
 
 export default {
   name: 'AppComponent',
+  components: {NavBar},
+  data(){
+    return {
+      isLoggedIn: false,
+    }
+  }
 }
 </script>
 
@@ -29,3 +37,4 @@ export default {
 }
 
 </style>
+
