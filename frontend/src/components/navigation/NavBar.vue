@@ -32,7 +32,7 @@ export default {
         <img class="nav-header-logo" src="../../../static/images/solar_sedum_logo_small.svg" alt="logo"/>
         <div class="menu-toggle-wrap">
           <button class="menu-toggle" @click="toggleMenu">
-            <span class="material-symbols-outlined">keyboard_double_arrow_left</span>
+            <span class="material-symbols-outlined"> {{ isExpanded ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</span>
           </button>
         </div>
       </div>
@@ -137,7 +137,7 @@ export default {
   height: 100vh;
   background-color: #fff;
   border-right: 1px solid #e5e5e5;
-  padding-bottom: 0;
+  padding: 0;
 }
 
 .navbar-container {
@@ -152,13 +152,12 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 6rem;
   margin-bottom: 1rem;
+  flex-direction: column;
 }
 
 .nav-header-logo {
-  width: 100%;
-  height: 100%;
+  padding: 1rem;
 }
 
 .nav-button,
@@ -241,24 +240,11 @@ export default {
   top: -22px;
 }
 
-
-@media (max-width: 768px) {
-  .navbar {
-    width: 70px;
-  }
-
-  .nav-button {
-    padding-left: 1.5rem;
-  }
-
-  .nav-text {
-    display: none;
-  }
-
-  .notification-indicator {
-    position: relative;
-    left: -20px;
-    top: -22px;
-  }
+.menu-toggle-wrap{
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
 }
+
+
 </style>
