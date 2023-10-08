@@ -30,10 +30,8 @@ export default {
     <div class="navbar-container">
       <div class="nav-header">
         <img class="nav-header-logo" src="../../../static/images/solar_sedum_logo_small.svg" alt="logo"/>
-        <div class="menu-toggle-wrap">
-          <button class="menu-toggle" @click="toggleMenu">
+        <div class="menu-toggle btn" @click="toggleMenu" >
             <span class="material-symbols-outlined"> {{ isExpanded ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</span>
-          </button>
         </div>
       </div>
 
@@ -239,11 +237,15 @@ export default {
   top: -22px;
 }
 
-.menu-toggle-wrap{
+.menu-toggle{
   display: flex;
   justify-content: center;
   padding: 1rem;
 }
 
+.menu-toggle:hover{
+  color: #c7d02c;
+  transform: translateX(0.5rem);
+}
 
 </style>
