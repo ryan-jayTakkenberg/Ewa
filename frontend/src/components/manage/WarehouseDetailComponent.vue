@@ -4,35 +4,103 @@
       <div class="content-header"></div>
       <div class="content-box">
         <div class="content-box-text">
-          <form>
-            <h3>Warehouses information</h3>
-            <label class="fw-semibold">Name<span class="red fw-normal">*</span></label>
-            <input type="text" placeholder="Solar Sedum">
-            <label class="fw-semibold">Adres<span class="red fw-normal">*</span></label>
-            <input type="text" placeholder="H.J.E. Wenckebachweg 47d-4">
-            <label class="fw-semibold">Postal code<span class="red fw-normal">*</span></label>
-            <input type="text" placeholder="1096 AK">
-            <label class="fw-semibold">City<span class="red fw-normal">*</span></label>
-            <input type="text" placeholder="Amsterdam">
-          </form>
-          <button>Add warehouse</button>
+          <table>
+            <thead>
+            <tr><th>List of all the warehouses</th></tr>
+            </thead>
+            <tbody>
+            <tr v-for="warehouse in warehouseList" :key="warehouse.name" @click="selectWarehouse(warehouse)" :class="{ 'selected': selectedWarehouse === warehouse }">
+              {{"Name: " + warehouse.name + ", Address: " + warehouse.address + ", " + warehouse.postalCode + ", " + warehouse.city}}
+            </tr>
+            </tbody>
+          </table>
+          <button @click="showEditComponent = !showEditComponent" v-if="!selectedWarehouse">Create a new Warehouse</button>
+          <button @click="removeWarehouse()" v-if="selectedWarehouse">Remove selected Warehoue</button>
         </div>
       </div>
     </div>
   </div>
+  <WarehouseEditComponent
+      v-if="showEditComponent"
+      @cancel="handleCancel"
+      :name="selectedWarehouse ? selectedWarehouse.name : ''"
+      :address="selectedWarehouse ? selectedWarehouse.address : ''"
+      :postalCode="selectedWarehouse ? selectedWarehouse.postalCode : ''"
+      :city="selectedWarehouse ? selectedWarehouse.city : ''"
+      @add-warehouse="addWarehouse"
+      @save-warehouse="saveWarehouse"
+  />
 </template>
 
 <script>
+import {Warehouse} from "@/models/warehouse";
+import WarehouseEditComponent from "@/components/manage/WarehouseEditComponent";
+
 export default {
-  name: "WarehouseManageComponent"
+  name: 'WarehouseDetailComponent',
+  components: {
+    WarehouseEditComponent,
+  },
+  data(){
+    return{
+      warehouseList: [],
+      warehouseNumber: 0,
+      selectedWarehouse: null,
+      showEditComponent: false,
+    };
+  },
+  created() {
+    let amountOfWarhouses = 4
+
+    for (let i = 0; i < amountOfWarhouses; i++){
+      const newWarehouse = Warehouse.createSampleWarehouse(this.warehouseNumber);
+      this.warehouseList.push(newWarehouse);
+      this.warehouseNumber += 1;
+    }
+  },
+  methods: {
+    handleCancel(){
+      this.showEditComponent = false;
+      this.selectedWarehouse = null;
+    },
+    selectWarehouse(warehouse){
+      if (this.selectedWarehouse === warehouse){
+        this.handleCancel()
+      } else {
+        this.selectedWarehouse = warehouse;
+        this.showEditComponent = true;
+      }
+    },
+    removeWarehouse(){
+      const index = this.warehouseList.indexOf(this.selectedWarehouse);
+      if (index !== -1) {
+        this.warehouseList.splice(index, 1);
+        this.handleCancel()
+      }
+    },
+    addWarehouse(newWarehouseData) {
+      const name = newWarehouseData.name;
+      const address = newWarehouseData.address;
+      const postalCode =newWarehouseData.postalCode;
+      const city = newWarehouseData.city;
+      const newWarehouse = new Warehouse(name, address, postalCode,city);
+      this.warehouseList.push(newWarehouse);
+      this.handleCancel();
+    },
+    saveWarehouse(updatedWarehouseData) {
+      if (this.selectedWarehouse) {
+        this.selectedWarehouse.name = updatedWarehouseData.name;
+        this.selectedWarehouse.address = updatedWarehouseData.address;
+        this.selectedWarehouse.postalCode = updatedWarehouseData.postalCode;
+        this.selectedWarehouse.city = updatedWarehouseData.city;
+
+      }
+    }
+  },
 }
 </script>
 
 <style scoped>
-.red {
-  color: red;
-}
-
 .box{
   display: flex;
   justify-content: center;
@@ -63,29 +131,6 @@ export default {
   text-align: left;
 }
 
-label{
-  width: 100%;
-  margin: 10px 0 5px 0;
-  font-weight: bold;
-}
-
-input{
-  padding: 5px;
-  border-radius: 10px;
-  border: 1px solid gray;
-  width: 100%;
-  appearance: none;
-}
-
-textarea{
-  width: 100%;
-  height: 125px;
-  overflow: hidden;
-  resize: none;
-  padding: 5px;
-  border-radius: 10px;
-}
-
 button{
   margin: 35px 20px 20px 0;
   padding: 10px;
@@ -95,9 +140,22 @@ button{
   color: #fff;
 }
 
-@media (max-width: 500px) {
-  .content{
-    width: 70%;
-  }
+table{
+  border-collapse: collapse;
+  width: 100%;
+}
+
+tr{
+  border: 1px solid black;
+  padding: 10px;
+}
+
+tr:hover{
+  color: #818181;
+  cursor: pointer;
+}
+
+.selected{
+  background: #c7d02c;
 }
 </style>
