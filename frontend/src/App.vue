@@ -16,7 +16,7 @@ import NavBar from "@/components/navigation/NavBar.vue";
 })();
 
 export default {
-  name: 'AppComponent',
+  name: 'App',
   components: {NavBar},
   data(){
     return {

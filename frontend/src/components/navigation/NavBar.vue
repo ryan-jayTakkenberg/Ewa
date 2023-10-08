@@ -5,7 +5,7 @@ export default {
     return {
       activePage: 'overview', //Default overview
       userRole: 'admin', // viewer or Admin
-      isExpanded: false,
+      sidebarIsExpanded: false,
     }
   },
   methods: {
@@ -18,20 +18,20 @@ export default {
     isPageActive(page) {
       return this.activePage === page
     },
-    toggleMenu(){
-      this.isExpanded = !this.isExpanded;
-
+    toggleSidebar(){
+      this.sidebarIsExpanded = !this.sidebarIsExpanded;
+      this.$emit('sidebar-expanded', this.sidebarIsExpanded); // Use for adjusting sizing of page when sidebar is collapsed
     }
   },
 }
 </script>
 <template>
-  <div :class="{'navbar': true, 'expanded': isExpanded}">
+  <div :class="{'navbar': true, 'expanded': sidebarIsExpanded}">
     <div class="navbar-container">
       <div class="nav-header">
         <img class="nav-header-logo" src="../../../static/images/solar_sedum_logo_small.svg" alt="logo"/>
-        <div class="menu-toggle btn" @click="toggleMenu" >
-            <span class="material-symbols-outlined"> {{ isExpanded ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</span>
+        <div class="menu-toggle btn" @click="toggleSidebar" >
+            <span class="material-symbols-outlined"> {{ sidebarIsExpanded ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</span>
         </div>
       </div>
 
@@ -216,7 +216,7 @@ export default {
 }
 
 .nav-button.active .nav-text {
-  color: #5B2E18;
+  color: #c7d02c;
 }
 
 .navbar.expanded {
