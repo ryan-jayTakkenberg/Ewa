@@ -163,7 +163,7 @@ export default {
   flex-direction: row;
   align-items: center;
   transition: background-color 0.3s;
-  justify-content: start;
+  justify-content: flex-start;
   padding: 1.0rem 1.5rem;
 }
 
