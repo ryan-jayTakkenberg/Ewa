@@ -5,6 +5,7 @@ export default {
     return {
       activePage: 'overview', //Default overview
       userRole: 'admin', // viewer or Admin
+      isExpanded: false,
     }
   },
   methods: {
@@ -17,14 +18,23 @@ export default {
     isPageActive(page) {
       return this.activePage === page
     },
+    toggleMenu(){
+      this.isExpanded = !this.isExpanded;
+
+    }
   },
 }
 </script>
 <template>
-  <div class="navbar">
+  <div :class="{'navbar': true, 'expanded': isExpanded}">
     <div class="navbar-container">
       <div class="nav-header">
         <img class="nav-header-logo" src="../../../static/images/solar_sedum_logo_small.svg" alt="logo"/>
+        <div class="menu-toggle-wrap">
+          <button class="menu-toggle" @click="toggleMenu">
+            <span class="material-symbols-outlined">keyboard_double_arrow_left</span>
+          </button>
+        </div>
       </div>
 
       <router-link to="/overview" class="nav-button relative"
@@ -212,6 +222,25 @@ export default {
 .nav-button.active .nav-text {
   color: #c7d02c;
 }
+
+.navbar.expanded {
+  width: 70px;
+}
+
+.navbar.expanded .nav-button {
+  padding-left: 1.5rem;
+}
+
+.navbar.expanded .nav-text {
+  display: none;
+}
+
+.navbar.expanded .notification-indicator {
+  position: relative;
+  left: -20px;
+  top: -22px;
+}
+
 
 @media (max-width: 768px) {
   .navbar {
