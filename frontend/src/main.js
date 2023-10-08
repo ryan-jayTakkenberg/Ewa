@@ -6,8 +6,8 @@ import OverviewComponent from "@/components/OverviewComponent.vue";
 import ManageComponent from '@/components/manage/ManageComponent.vue';
 import NotFoundComponent from '@/components/NotFoundComponent.vue'
 import { createRouter, createWebHashHistory } from "vue-router";
-import ProductDetailComponent from "@/components/manage/ProductDetailComponent";
-import ProjectDetailComponent from "@/components/manage/ProjectDetailComponent";
+import ProductEditComponent from "@/components/manage/ProductEditComponent";
+import ProjectEditComponent from "@/components/manage/ProjectEditComponent";
 import WarehouseDetailComponent from "@/components/manage/WarehouseDetailComponent";
 import TeamDetailComponent from "@/components/manage/TeamDetailComponent";
 
@@ -28,11 +28,11 @@ const router = createRouter({
             children: [
                 {
                     path: "product",
-                    component: ProductDetailComponent
+                    component: ProductEditComponent
                 },
                 {
                     path: "project",
-                    component: ProjectDetailComponent
+                    component: ProjectEditComponent
                 },
                 {
                     path: "warehouse",

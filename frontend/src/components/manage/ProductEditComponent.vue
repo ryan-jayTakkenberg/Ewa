@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  name: "ProductManageComponent"
+  name: "ProductEditComponent"
 }
 </script>
 
