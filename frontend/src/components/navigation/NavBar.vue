@@ -57,35 +57,35 @@ export default {
         <p class="nav-text">Warehouses</p>
       </router-link>
 
-      <router-link v-if="(userRole === 'admin')" to="overview" class="nav-button"
+      <router-link v-if="(userRole === 'admin')" to="/projects" class="nav-button"
                    :class="{ active: isPageActive('projects') }"
                    @click="handleNavClick('projects')">
         <span class="material-symbols-outlined nav-icon">assignment</span>
         <p class="nav-text">Projects</p>
       </router-link>
 
-      <router-link v-if="(userRole === 'admin')" to="/test" class="nav-button"
+      <router-link v-if="(userRole === 'admin')" to="/teams" class="nav-button"
                    :class="{ active: isPageActive('teams') }"
                    @click="handleNavClick('teams')">
         <span class="material-symbols-outlined nav-icon">groups</span>
         <p class="nav-text">Teams</p>
       </router-link>
 
-      <router-link v-if="(userRole === 'admin')" to="/test" class="nav-button"
+      <router-link v-if="(userRole === 'admin')" to="/products" class="nav-button"
                    :class="{ active: isPageActive('products') }"
                    @click="handleNavClick('products')">
         <span class="material-symbols-outlined nav-icon">inventory_2</span>
         <p class="nav-text">Products</p>
       </router-link>
 
-      <router-link v-if="(userRole === 'admin')" to="/test" class="nav-button"
+      <router-link v-if="(userRole === 'admin')" to="/users" class="nav-button"
                    :class="{ active: isPageActive('users') }"
                    @click="handleNavClick('users')">
         <span class="material-symbols-outlined nav-icon">person</span>
         <p class="nav-text">Users</p>
       </router-link>
 
-      <router-link v-if="(userRole === 'admin')" to="/test" class="nav-button"
+      <router-link v-if="(userRole === 'admin')" to="/reports" class="nav-button"
                    :class="{ active: isPageActive('reports') }"
                    @click="handleNavClick('reports')">
         <span class="material-symbols-outlined nav-icon">report</span>

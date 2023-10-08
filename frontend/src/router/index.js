@@ -16,6 +16,8 @@ const routes = [
     {path: '/projects', component: ProjectEditComponent},
     {path: '/teams', component: TeamDetailComponent},
     {path: '/products', component: ProductEditComponent},
+    {path: '/users', component: ProductEditComponent},
+    {path: '/reports', component: ProductEditComponent},
     {path: '/:pathMatch(.*)*', component: NotFoundComponent}
 ];
 export const router = createRouter({
