@@ -7,7 +7,7 @@ import TeamDetailComponent from "@/components/manage/TeamDetailComponent.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";
 import ProductDetailComponent from "@/components/manage/ProductDetailComponent";
 import ProjectDetailComponent from "@/components/manage/ProjectDetailComponent";
-import UsersComponent from "@/components/UsersComponent.vue";
+import UsersComponent from "@/components/UsersViewComponent.vue";
 
 const routes = [
     {path: '/', redirect: '/login'},

@@ -16,8 +16,9 @@ export default {
 
 <style scoped>
 .page-title{
+  display: flex;
   font-weight: 700;
   font-size: 2rem;
-  padding: 2rem 1rem;
+  margin-right: auto;
 }
 </style>
