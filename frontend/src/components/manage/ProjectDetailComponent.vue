@@ -26,6 +26,12 @@
   @cancel="handleCancel"
   @add-project="addProject"
   @save-project="saveProject"
+  :projectName="selectedProject ? selectedProject.projectName : ''"
+  :clientName="selectedProject ? selectedProject.clientName : ''"
+  :installDate="selectedProject ? selectedProject.installDate : ''"
+  :installTeam="selectedProject ? selectedProject.installTeam : ''"
+  :usedWarehouse="selectedProject ? selectedProject.usedWarehouse : ''"
+  :notes="selectedProject ? selectedProject.notes : ''"
 />
 </template>
 
@@ -85,7 +91,7 @@ export default {
     },
     saveProject(updateProjectData) {
       if (this.selectedProject) {
-        this.selectedProject.projectName = updateProjectData.projectNamel
+        this.selectedProject.projectName = updateProjectData.projectName;
         this.selectedProject.clientName = updateProjectData.clientName;
         this.selectedProject.installDate = updateProjectData.installDate;
         this.selectedProject.installTeam = updateProjectData.installTeam;
