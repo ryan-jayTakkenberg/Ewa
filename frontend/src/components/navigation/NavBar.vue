@@ -42,6 +42,9 @@ export default {
             alt=" logo"
             :src="sidebarIsExpanded ? logoCollapsed  : logoExpanded"
         />
+        <h1 class="textLoggedIn">You are logged in as: <strong> {{ userRole }} </strong></h1>
+
+
 
         <div class="menu-toggle btn" @click="toggleSidebar">
           <span class="material-symbols-outlined">
@@ -286,6 +289,13 @@ export default {
 .menu-toggle:hover {
   color: #c7d02c;
   transform: translateX(0.5rem);
+}
+.textLoggedIn{
+  padding: 3px 6px 6px 10px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #818181;
+  display: block;
 }
 
 </style>
