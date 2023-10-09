@@ -1,14 +1,16 @@
 <template>
   <div class="box">
     <div class="content">
-      <div class="content-header">
-      </div>
       <div class="content-box">
         <div class="content-box-text">
           <form>
             <h3>Project information</h3>
-            <label class="fw-semibold">Name<span class="red fw-normal">*</span></label>
+            <label class="fw-semibold">Name Project<span class="red fw-normal">*</span></label>
             <input type="text" placeholder=". . .">
+            <label class="fw-semibold">Name Client<span class="red fw-normal">*</span></label>
+            <input type="text" placeholder=". . .">
+            <label class="fw-semibold">Time of installation<span class="red fw-normal">*</span></label>
+            <input type="date">
             <label class="fw-semibold">Install team<span class="red fw-normal">*</span></label>
             <select >
               <option selected disabled>Select a team</option>
@@ -23,19 +25,6 @@
             </select>
             <label class="fw-semibold">Note</label>
             <textarea placeholder="Notes . . ."></textarea>
-            <h3 class="h3-middle">Client information</h3>
-            <label class="fw-semibold">Name<span class="red fw-normal">*</span></label>
-            <input type="text" placeholder="Solar Sedum">
-            <label class="fw-semibold">Email<span class="red fw-normal">*</span></label>
-            <input type="email" placeholder="info@solarsedum.nl">
-            <label class="fw-semibold">Phone number<span class="red fw-normal">*</span></label>
-            <input type="number" placeholder="020 30 80 622" class="number-input">
-            <label class="fw-semibold">Address<span class="red fw-normal">*</span></label>
-            <input type="text" placeholder="H.J.E. Wenckebachweg 47d-4">
-            <label class="fw-semibold">Postal code<span class="red fw-normal">*</span></label>
-            <input type="text" placeholder="1096 AK">
-            <label class="fw-semibold">City<span class="red fw-normal">*</span></label>
-            <input type="text" placeholder="Amsterdam">
           </form>
           <button>Create new project</button>
         </div>
@@ -68,13 +57,6 @@ export default {
   border-radius: 20px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   margin: 15px 0 30px 0;
-}
-
-.content-header{
-  height: 175px;
-  background: url("../../../static/images/manageDetailHeader.jpg") center no-repeat;
-  background-size: cover;
-  border-radius: 20px 20px 0 0 ;
 }
 
 .content-box{
@@ -110,6 +92,7 @@ textarea{
   resize: none;
   padding: 5px;
   border-radius: 10px;
+  border: 1px solid grey;
 }
 
 select{

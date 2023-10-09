@@ -117,7 +117,7 @@ export default {
 
 .content-header{
   height: 175px;
-  background: url("../../../static/images/manageDetailHeader3.jpg") center no-repeat;
+  background: url("../../../static/images/manageDetailHeader2.jpg") center no-repeat;
   background-size: cover;
   border-radius: 20px 20px 0 0 ;
 }
