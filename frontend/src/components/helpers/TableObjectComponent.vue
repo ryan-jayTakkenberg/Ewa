@@ -3,7 +3,7 @@
     <thead>
     <tr>
       <th v-for="attr of Object.keys(attributes)" :key="attr" @click="sort(attr)" :class="{'clickable': sortable}">
-        <div class="d-inline-flex">
+        <div class="title">
           {{ capitalizeText(attr) }}
           <span class="material-symbols-outlined" v-if="sortKey.name===attr && sortAsc">arrow_drop_up</span>
           <span class="material-symbols-outlined" v-else-if="sortKey.name===attr">arrow_drop_down</span>
@@ -15,7 +15,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="item of sortedItems" :key="item.id">
+    <tr v-for="item of sortedItems" :key="item.id" :class="{'activeTableRow': current === item, 'hoverTableRow': clickableRows}">
       <td v-for="attr of attributes" :key="attr" :class="{'clickable': clickableRows}" @click="emitRowClickEvent(item)">
         {{ displayAttributeForItem(item, attr) }}
       </td>
@@ -28,12 +28,14 @@
 </template>
 
 <script>
+// @author leon
 export default {
   name: "TableArrayComponent",
   data() {
     return {
       sortKey: null,
       sortAsc: true,
+      current: null,
     };
   },
   props: {
@@ -83,6 +85,7 @@ export default {
     },
     emitRowClickEvent(item) {
       if (this.clickableRows && item) {
+        this.current = this.current !== item ? item : null;
         this.$emit('row-click', item);
       }
     },
@@ -128,5 +131,10 @@ thead {
 
 tr:nth-child(even) {
   background-color: #eee;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
 }
 </style>
