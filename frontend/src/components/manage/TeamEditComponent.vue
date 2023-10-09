@@ -46,10 +46,13 @@ export default {
     };
   },
   created() {
-    this.editTeam = this.team.clone();
-    this.updateUsers();
+    this.install();
   },
   methods: {
+    install() {
+      this.editTeam = this.team.clone();
+      this.updateUsers();
+    },
     handleRowRemoveEvent(item) {
       if (window.confirm(`Are you sure you want to remove this user from the team ("${item.user.name}")?`)) {
         this.editTeam.users = this.editTeam.users.filter(u => u !== item.user);
@@ -112,6 +115,11 @@ export default {
       setTimeout(() => element.classList.remove("shakeAnimation"), 1000);
     },
   },
+  watch: {
+    team() {
+      this.install();
+    }
+  }
 };
 </script>
 

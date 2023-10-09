@@ -15,7 +15,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="item of sortedItems" :key="item.id">
+    <tr v-for="item of sortedItems" :key="item.id" :class="{'activeTableRow': current === item}">
       <td v-for="attr of attributes" :key="attr" :class="{'clickable': clickableRows}" @click="emitRowClickEvent(item)">
         {{ displayAttributeForItem(item, attr) }}
       </td>
@@ -28,12 +28,14 @@
 </template>
 
 <script>
+// @author leon
 export default {
   name: "TableArrayComponent",
   data() {
     return {
       sortKey: null,
       sortAsc: true,
+      current: null,
     };
   },
   props: {
@@ -82,6 +84,7 @@ export default {
       return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
     },
     emitRowClickEvent(item) {
+      this.current = this.current !== item ? item : null;
       if (this.clickableRows && item) {
         this.$emit('row-click', item);
       }

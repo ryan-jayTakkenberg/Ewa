@@ -1,10 +1,16 @@
 <template>
-  <div class="text-center">
-    <p>Edit a team by clicking on a row:</p>
-    <TableArrayComponent :items="teams" :attributes="teamObject" :sortable="true" :removable="true" :clickable-rows="!selectedTeam" @row-click="handleRowClickEvent" @row-remove="handleRowRemoveEvent" />
-    <button @click="addTeam" :disabled="selectedTeam">Create a new team</button>
+  <div class="box">
+    <div class="content">
+      <div class="content-header">
+        <!-- text in background -->
+      </div>
+      <div class="content-box text-center">
+        <p>Edit a team by clicking on a row:</p>
+        <TableArrayComponent ref="tableRef" :items="teams" :attributes="teamObject" :sortable="true" :removable="true" :clickable-rows="true" @row-click="handleRowClickEvent" @row-remove="handleRowRemoveEvent" />
+        <button @click="addTeam">Create a new team</button>
+      </div>
+    </div>
   </div>
-  <div class="line rounded mt-3 mb-3"></div>
   <TeamEditComponent :team="selectedTeam" @team-cancel="handleTeamCancelEvent" @team-save="handleTeamSaveEvent" v-if="selectedTeam" ref="TeamEditComponent" />
 </template>
 
@@ -26,7 +32,7 @@ export default {
       teamObject: {
         name: s => s,
         users: a => a?.length,
-      }
+      },
     };
   },
   created() {
@@ -43,7 +49,7 @@ export default {
     handleRowClickEvent(team) {
       if (!Object.is(team, this.selectedTeam)) {
         this.selectedTeam = team;
-        setTimeout(this.scrollToTeam, 1);
+        setTimeout(this.scrollToTeam, 2);
       } else {
         this.closeTeamEditPage();
       }
@@ -86,6 +92,7 @@ export default {
     },
     addTeam() {
       this.selectedTeam = Team.template;
+      this.$refs.tableRef.current = null;
       setTimeout(this.scrollToTeam, 1);
     },
     scrollToTeam() {
@@ -95,6 +102,7 @@ export default {
       }
     },
     closeTeamEditPage() {
+      this.$refs.tableRef.current = null;
       this.selectedTeam = null;
     },
   }
@@ -102,20 +110,45 @@ export default {
 </script>
 
 <style scoped>
-.line {
-  background-color: lightgray;
-  height: 0.5vh;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
 
-button{
+button {
   margin: 35px 20px 20px 0;
   padding: 10px;
   border: none;
   border-radius: 10px;
   background: #c7d02c;
   color: #fff;
+}
+
+.box {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.content {
+  text-align: center;
+  height: fit-content;
+  width: 60%;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin: 15px 0 30px 0;
+}
+
+.content-header {
+  height: 175px;
+  background: url("../../../static/images/manageDetailHeader3.jpg") center no-repeat;
+  background-size: cover;
+  border-radius: 20px 20px 0 0;
+}
+
+.content-box {
+  margin: 30px 0 30px 0;
+}
+</style>
+
+<style>
+tr.activeTableRow {
+  background: #c7d02c !important;
 }
 </style>
