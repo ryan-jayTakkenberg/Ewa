@@ -1,4 +1,6 @@
 <script>
+/* TODO EMIT FOR sidebarIsExpanded FOR INTERACTION RESPONSIVENESS OTHER COMPONENTS*/
+/* (NOT ON MOBILE, SO MENU OVERFLOWS)*/
 
 import logoExpanded from '/static/images/solar_sedum_logo.svg'
 import logoCollapsed from '/static/images/solar_sedum_logo_small.svg'
