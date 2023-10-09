@@ -6,11 +6,11 @@
           <form>
             <h3>Project information</h3>
             <label class="fw-semibold">Name Project<span class="red fw-normal">*</span></label>
-            <input type="text" placeholder=". . .">
+            <input type="text" placeholder=". . ." v-model="selectedProjectName">
             <label class="fw-semibold">Name Client<span class="red fw-normal">*</span></label>
-            <input type="text" placeholder=". . .">
+            <input type="text" placeholder=". . ." v-model="selectedClientName">
             <label class="fw-semibold">Time of installation<span class="red fw-normal">*</span></label>
-            <input type="date">
+            <input type="date" v-model="selectedInstallDate">
             <label class="fw-semibold">Install team<span class="red fw-normal">*</span></label>
             <select >
               <option selected disabled>Select a team</option>
@@ -24,9 +24,10 @@
               <option>Team 1 warehouse</option>
             </select>
             <label class="fw-semibold">Note</label>
-            <textarea placeholder="Notes . . ."></textarea>
+            <textarea placeholder="Notes . . ." v-model="selectedNotes"></textarea>
           </form>
-          <button>Create new project</button>
+          <button @click="handleSave()">{{isNewProject ? 'Add project' : 'Save'}}</button>
+          <button @click="cancel()">Cancel</button>
         </div>
       </div>
     </div>
@@ -35,7 +36,72 @@
 
 <script>
 export default {
-  name: "ProjectEditComponent"
+  name: "ProjectEditComponent",
+  props: {
+    projectName: String,
+    clientName: String,
+    installDate: String,
+    installTeam: String,
+    usedWarehouse: String,
+    notes: String,
+  },
+  data() {
+    return{
+      selectedProjectName: this.projectName,
+      selectedClientName: this.clientName,
+      selectedInstallDate: this.installDate,
+      selectedInstallTeam: this.installTeam,
+      selectedUsedWarehouse: this.usedWarehouse,
+      selectedNotes: this.notes,
+      isNewProject: !this.projectName
+    }
+  },
+  methods: {
+    cancel() {
+      this.$emit('cancel')
+    },
+    handleSave() {
+      if (this.isNewProject) {
+        this.$emit('add-project', {
+          projectName: this.selectedProjectName,
+          clientName: this.selectedClientName,
+          installDate: this.selectedInstallDate,
+          installTeam: this.selectedInstallTeam,
+          usedWarehouse: this.selectedUsedWarehouse,
+          notes: this.selectedNotes,
+        });
+      } else {
+        this.$emit('save-project', {
+          projectName: this.selectedProjectName,
+          clientName: this.selectedClientName,
+          installDate: this.selectedInstallDate,
+          installTeam: this.selectedInstallTeam,
+          usedWarehouse: this.selectedUsedWarehouse,
+          notes: this.selectedNotes,
+        });
+      }
+    }
+  },
+  watch: {
+    projectName(newProjectName) {
+      this.selectedProjectName = newProjectName;
+    },
+    clientName(newClientName) {
+      this.selectedClientName = newClientName;
+    },
+    installDate(newInstallDate) {
+      this.selectedInstallDate = newInstallDate;
+    },
+    installTeam(newInstallTeam) {
+      this.selectedInstallTeam = newInstallTeam;
+    },
+    usedWarehouse(newUsedWarehouse) {
+      this.selectedUsedWarehouse = newUsedWarehouse;
+    },
+    notes(newNotes) {
+      this.selectedNotes = newNotes;
+    }
+  }
 }
 </script>
 
