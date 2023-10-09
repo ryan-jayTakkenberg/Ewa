@@ -11,7 +11,7 @@ export default {
     return {
       activePage: 'overview', //Default overview
       userRole: 'admin', // viewer or Admin
-      sidebarIsExpanded: false,
+      sidebarIsExpanded: true,
       logoExpanded: logoExpanded,
       logoCollapsed: logoCollapsed
     }
@@ -34,7 +34,7 @@ export default {
 }
 </script>
 <template>
-  <div :class="{'navbar': true, 'expanded': sidebarIsExpanded}">
+  <div :class="{'navbar': true, 'collapsed': sidebarIsExpanded}">
     <div class="navbar-container">
       <div class="nav-header">
         <img
@@ -259,19 +259,19 @@ export default {
   color: #c7d02c;
 }
 
-.navbar.expanded {
+.navbar.collapsed {
   width: 70px;
 }
 
-.navbar.expanded .nav-button {
+.navbar.collapsed .nav-button {
   padding-left: 1.5rem;
 }
 
-.navbar.expanded .nav-text {
+.navbar.collapsed .nav-text {
   display: none;
 }
 
-.navbar.expanded .notification-indicator {
+.navbar.collapsed .notification-indicator {
   position: relative;
   left: -20px;
   top: -22px;

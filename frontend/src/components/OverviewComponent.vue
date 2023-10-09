@@ -1,61 +1,63 @@
 <template>
-    <div class="overviewContainer">
-      <div class="statsOverview">
-        <div class="sectionTitle">Total Stock:</div>
-        <div class="sectionDescription">View stock of all warehouses. Lorum ipsum text information lorum ipsum.</div>
-        <div class="statsContainer">
-          <div class="child">
-            <div class="statTitle">Total</div>
-            <div class="statValue">150</div>
-          </div>
-          <div class="child">
-            <div class="statTitle">Solar Panels</div>
-            <div class="statValue">48</div>
-          </div>
-          <div class="child">
-            <div class="statTitle">Switches</div>
-            <div class="statValue">35</div>
-          </div>
-          <div class="child">
-            <div class="statTitle">Other</div>
-            <div class="statValue">...</div>
-          </div>
+  <div class="overviewContainer">
+    <div class="statsOverview">
+      <div class="sectionTitle">Total Stock:</div>
+      <div class="sectionDescription">View stock of all warehouses. Lorum ipsum text information lorum ipsum.</div>
+      <div class="statsContainer">
+        <div class="child">
+          <div class="statTitle">Total</div>
+          <div class="statValue">150</div>
+        </div>
+        <div class="child">
+          <div class="statTitle">Solar Panels</div>
+          <div class="statValue">48</div>
+        </div>
+        <div class="child">
+          <div class="statTitle">Switches</div>
+          <div class="statValue">35</div>
+        </div>
+        <div class="child">
+          <div class="statTitle">Other</div>
+          <div class="statValue">...</div>
         </div>
       </div>
-      <div class="warehouseOverview">
-        <div class="sectionTitle">View stock per warehouse:</div>
-        <div class="sectionDescription">Select a warehouse to view:</div>
-        <div class="warehouseContainer">
-          <div class="warehouseHeader">
-            <select name="warehouses" v-model="selectedWarehouse">
-              <option value="warehouse1">Warehouse 1</option>
-              <option value="warehouse2">Warehouse 2</option>
-              <option value="warehouse3">Warehouse 3</option>
-              <option value="warehouse4">Warehouse 4</option>
-            </select>
-            <div class="closeBtn" @click="closeWarehouse" v-if="selectedWarehouse !== ''">
-              <span class="material-symbols-outlined">close</span>
+    </div>
+    <div class="warehouseOverview">
+      <div class="sectionTitle">View stock per warehouse:</div>
+      <div class="sectionDescription">Select a warehouse to view:</div>
+      <div class="warehouseContainer">
+        <div class="warehouseHeader">
+          <select name="warehouses" v-model="selectedWarehouse">
+            <option value="warehouse1">Warehouse 1</option>
+            <option value="warehouse2">Warehouse 2</option>
+            <option value="warehouse3">Warehouse 3</option>
+            <option value="warehouse4">Warehouse 4</option>
+          </select>
+          <div class="closeBtn" @click="closeWarehouse" v-if="selectedWarehouse !== ''">
+            <span class="material-symbols-outlined">close</span>
+          </div>
+        </div>
+        <div class="warehouseContent" v-if="selectedWarehouse !== ''">
+          <div class="infoContainer">
+            <div class="stockInfo">
+              <h3 class="infoHeader">Stock Information</h3>
+              <div class="infoContent">
+                <ul>
+                  <li v-for="(value, key) in stockInfo[selectedWarehouse]" :key="key">
+                    {{ key }}: <span class="stockValue">{{ value }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="forecastInfo">
+              <h3 class="infoHeader">Stock Forecast</h3>
+              <div class="infoContent">
+                <p>Expected to Deplete Before Restock: <span class="forecastValue">{{
+                    forecastInfo[selectedWarehouse]
+                  }}</span></p>
+              </div>
             </div>
           </div>
-          <div class="warehouseContent" v-if="selectedWarehouse !== ''">
-            <div class="infoContainer">
-              <div class="stockInfo">
-                <h3 class="infoHeader">Stock Information</h3>
-                <div class="infoContent">
-                  <ul>
-                    <li v-for="(value, key) in stockInfo[selectedWarehouse]" :key="key">
-                      {{ key }}: <span class="stockValue">{{ value }}</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div class="forecastInfo">
-                <h3 class="infoHeader">Stock Forecast</h3>
-                <div class="infoContent">
-                  <p>Expected to Deplete Before Restock: <span class="forecastValue">{{ forecastInfo[selectedWarehouse] }}</span></p>
-                </div>
-              </div>
-            </div>
         </div>
       </div>
     </div>
@@ -72,8 +74,8 @@ export default {
       selectedWarehouse: "",
       activeTab: "stock",
       stockInfo: {
-        warehouse1: { Total: 150, SolarPanels: 48, Switches: 35 },
-        warehouse2: { Total: 100, SolarPanels: 20, Switches: 30 },
+        warehouse1: {Total: 150, SolarPanels: 48, Switches: 35},
+        warehouse2: {Total: 100, SolarPanels: 20, Switches: 30},
         // ... other warehouses
       },
       forecastInfo: {
@@ -99,10 +101,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  min-height: 100svh;
-  width: calc(100% - 180px);
   padding: 2rem;
-  float: right;
 }
 
 .statsOverview,
