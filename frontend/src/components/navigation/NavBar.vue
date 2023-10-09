@@ -161,7 +161,7 @@ export default {
   padding: 0.75rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: darkred;
+  color: white;
   background-color: palevioletred;
   border-radius: 9999px;
 }
