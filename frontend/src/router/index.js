@@ -6,7 +6,7 @@ import WarehouseDetailComponent from "@/components/manage/WarehouseDetailCompone
 import TeamDetailComponent from "@/components/manage/TeamDetailComponent.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";
 import ProjectEditComponent from "@/components/manage/ProjectEditComponent.vue";
-import ProductEditComponent from "@/components/manage/ProductEditComponent.vue";
+import ProductDetailComponent from "@/components/manage/ProductDetailComponent";
 
 const routes = [
     {path: '/', redirect: '/login'},
@@ -15,9 +15,9 @@ const routes = [
     {path: '/warehouses', component: WarehouseDetailComponent},
     {path: '/projects', component: ProjectEditComponent},
     {path: '/teams', component: TeamDetailComponent},
-    {path: '/products', component: ProductEditComponent},
-    {path: '/users', component: ProductEditComponent},
-    {path: '/reports', component: ProductEditComponent},
+    {path: '/products', component: ProductDetailComponent},
+    {path: '/users', component: ProductDetailComponent},
+    {path: '/reports', component: ProductDetailComponent},
     {path: '/:pathMatch(.*)*', component: NotFoundComponent}
 ];
 export const router = createRouter({
