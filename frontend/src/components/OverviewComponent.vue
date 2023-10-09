@@ -1,52 +1,32 @@
 <template>
-
   <div class="main">
-
-
     <div class="overviewContainer">
-
-      <!---------------------------------------------------------------------------------------->
-
       <div class="statsOverview">
-
         <div class="sectionTitle">Total Stock:</div>
         <div class="sectionDescription">View stock of all warehouses. Lorum ipsum text information lorum ipsum.</div>
-
         <div class="statsContainer">
-
           <div class="child">
             <div class="statTitle">Total</div>
             <div class="statValue">150</div>
           </div>
-
           <div class="child">
             <div class="statTitle">Solar Panels</div>
             <div class="statValue">48</div>
           </div>
-
           <div class="child">
             <div class="statTitle">Switches</div>
             <div class="statValue">35</div>
           </div>
-
           <div class="child">
             <div class="statTitle">Other</div>
             <div class="statValue">...</div>
           </div>
-
         </div>
-
       </div>
-
-      <!---------------------------------------------------------------------------------------->
-
       <div class="warehouseOverview">
-
         <div class="sectionTitle">View stock per warehouse:</div>
         <div class="sectionDescription">Select a warehouse to view:</div>
-
         <div class="warehouseContainer">
-
           <div class="warehouseHeader">
             <select name="warehouses" v-model="selectedWarehouse">
               <option value="warehouse1">Warehouse 1</option>
@@ -58,29 +38,52 @@
               <span class="material-symbols-outlined">close</span>
             </div>
           </div>
-
-          <div class="warehouseContent" v-if="selectedWarehouse !== ''">CONTENT</div>
+          <div class="warehouseContent" v-if="selectedWarehouse !== ''">
+            <div class="infoContainer">
+              <div class="stockInfo">
+                <h3 class="infoHeader">Stock Information</h3>
+                <div class="infoContent">
+                  <ul>
+                    <li v-for="(value, key) in stockInfo[selectedWarehouse]" :key="key">
+                      {{ key }}: <span class="stockValue">{{ value }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="forecastInfo">
+                <h3 class="infoHeader">Stock Forecast</h3>
+                <div class="infoContent">
+                  <p>Expected to Deplete Before Restock: <span class="forecastValue">{{ forecastInfo[selectedWarehouse] }}</span></p>
+                </div>
+              </div>
+            </div>
         </div>
-
       </div>
-
-      <!---------------------------------------------------------------------------------------->
-
     </div>
-
   </div>
-
+</div>
 </template>
 
-<script>
 
+<script>
 export default {
   name: "OverviewComponent",
 
   data() {
     return {
       selectedWarehouse: "",
-    }
+      activeTab: "stock",
+      stockInfo: {
+        warehouse1: { Total: 150, SolarPanels: 48, Switches: 35 },
+        warehouse2: { Total: 100, SolarPanels: 20, Switches: 30 },
+        // ... other warehouses
+      },
+      forecastInfo: {
+        warehouse1: "No",
+        warehouse2: "Yes",
+        // ... other warehouses
+      },
+    };
   },
 
   methods: {
@@ -88,9 +91,9 @@ export default {
       this.selectedWarehouse = "";
     },
   },
-
 };
 </script>
+
 
 
 <style scoped>
@@ -212,4 +215,37 @@ select {
 @media (max-width: 768px) {
 }
 
-</style>
+.infoContainer {
+  display: flex;
+  justify-content: space-between;
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+.stockInfo,
+.forecastInfo {
+  flex: 1;
+  padding: 1rem;
+  box-sizing: border-box;
+  width: 50%;
+}
+
+.infoHeader {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #007bff;
+}
+
+.infoContent {
+  font-size: 1.2em;
+}
+
+.stockValue,
+.forecastValue {
+  font-weight: normal;
+  color: #007bff;
+}</style>
