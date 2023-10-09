@@ -15,7 +15,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="item of sortedItems" :key="item.id" :class="{'activeTableRow': current === item}">
+    <tr v-for="item of sortedItems" :key="item.id" :class="{'activeTableRow': current === item, 'hoverTableRow': clickableRows}">
       <td v-for="attr of attributes" :key="attr" :class="{'clickable': clickableRows}" @click="emitRowClickEvent(item)">
         {{ displayAttributeForItem(item, attr) }}
       </td>
@@ -84,8 +84,8 @@ export default {
       return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
     },
     emitRowClickEvent(item) {
-      this.current = this.current !== item ? item : null;
       if (this.clickableRows && item) {
+        this.current = this.current !== item ? item : null;
         this.$emit('row-click', item);
       }
     },

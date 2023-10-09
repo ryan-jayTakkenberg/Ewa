@@ -151,4 +151,8 @@ button {
 tr.activeTableRow {
   background: #c7d02c !important;
 }
+
+tr.hoverTableRow:hover {
+  color: #818181;
+}
 </style>
