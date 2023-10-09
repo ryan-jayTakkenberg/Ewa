@@ -1,4 +1,8 @@
 <script>
+
+import logoExpanded from '/static/images/solar_sedum_logo.svg'
+import logoCollapsed from '/static/images/solar_sedum_logo_small.svg'
+
 export default {
   name: 'NavBar',
   data() {
@@ -6,6 +10,8 @@ export default {
       activePage: 'overview', //Default overview
       userRole: 'admin', // viewer or Admin
       sidebarIsExpanded: false,
+      logoExpanded: logoExpanded,
+      logoCollapsed: logoCollapsed
     }
   },
   methods: {
@@ -18,7 +24,7 @@ export default {
     isPageActive(page) {
       return this.activePage === page
     },
-    toggleSidebar(){
+    toggleSidebar() {
       this.sidebarIsExpanded = !this.sidebarIsExpanded;
       this.$emit('sidebar-expanded', this.sidebarIsExpanded); // Use for adjusting sizing of page when sidebar is collapsed
     }
@@ -29,74 +35,106 @@ export default {
   <div :class="{'navbar': true, 'expanded': sidebarIsExpanded}">
     <div class="navbar-container">
       <div class="nav-header">
-        <img class="nav-header-logo" src="../../../static/images/solar_sedum_logo_small.svg" alt="logo"/>
-        <div class="menu-toggle btn" @click="toggleSidebar" >
-            <span class="material-symbols-outlined"> {{ sidebarIsExpanded ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</span>
+        <img
+            class="nav-header-logo"
+            alt=" logo"
+            :src="sidebarIsExpanded ? logoCollapsed  : logoExpanded"
+        />
+
+        <div class="menu-toggle btn" @click="toggleSidebar">
+          <span class="material-symbols-outlined">
+            {{ sidebarIsExpanded ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</span>
         </div>
+
       </div>
 
-      <router-link to="/overview" class="nav-button relative"
-                   :class="{ active: isPageActive('overview') }"
-                   @click="handleNavClick('overview')">
+      <router-link
+          to="/overview"
+          class="nav-button relative"
+          :class="{ active: isPageActive('overview') }"
+          @click="handleNavClick('overview')"
+      >
         <span class="material-symbols-outlined nav-icon">overview_key</span>
         <p class="nav-text">Overview</p>
         <span class="notification-indicator bg-danger-subtle text-danger">3</span>
       </router-link>
 
-      <router-link v-if="(userRole === 'viewer')" to="/test" class="nav-button"
-                   :class="{ active: isPageActive('teams') }"
-                   @click="handleNavClick('teams')">
+      <router-link
+          v-if="(userRole === 'viewer')"
+          to="/test"
+          class="nav-button"
+          :class="{ active: isPageActive('teams') }"
+          @click="handleNavClick('teams')"
+      >
         <span class="material-symbols-outlined nav-icon">groups</span>
         <p class="nav-text">My Teams</p>
       </router-link>
 
-      <router-link v-if="(userRole === 'viewer')" to="/test" class="nav-button"
-                   :class="{ active: isPageActive('reports') }"
-                   @click="handleNavClick('reports')">
+      <router-link
+          v-if="(userRole === 'viewer')"
+          to="/test"
+          class="nav-button"
+          :class="{ active: isPageActive('reports') }"
+          @click="handleNavClick('reports')"
+      >
         <span class="material-symbols-outlined nav-icon">report</span>
         <p class="nav-text">My Reports</p>
         <span class="notification-indicator">3</span>
       </router-link>
 
 
-      <router-link v-if="(userRole === 'admin')" to="/warehouses" class="nav-button"
-                   :class="{ active: isPageActive('warehouses') }"
-                   @click="handleNavClick('warehouses')">
+      <router-link
+          v-if="(userRole === 'admin')" to="/warehouses" class="nav-button"
+          :class="{ active: isPageActive('warehouses') }"
+          @click="handleNavClick('warehouses')"
+      >
         <span class="material-symbols-outlined nav-icon">warehouse</span>
         <p class="nav-text">Warehouses</p>
       </router-link>
 
-      <router-link v-if="(userRole === 'admin')" to="/projects" class="nav-button"
-                   :class="{ active: isPageActive('projects') }"
-                   @click="handleNavClick('projects')">
+      <router-link
+          v-if="(userRole === 'admin')" to="/projects" class="nav-button"
+          :class="{ active: isPageActive('projects') }"
+          @click="handleNavClick('projects')"
+      >
         <span class="material-symbols-outlined nav-icon">assignment</span>
         <p class="nav-text">Projects</p>
       </router-link>
 
-      <router-link v-if="(userRole === 'admin')" to="/teams" class="nav-button"
-                   :class="{ active: isPageActive('teams') }"
-                   @click="handleNavClick('teams')">
+      <router-link
+          v-if="(userRole === 'admin')" to="/teams" class="nav-button"
+          :class="{ active: isPageActive('teams') }"
+          @click="handleNavClick('teams')"
+      >
         <span class="material-symbols-outlined nav-icon">groups</span>
         <p class="nav-text">Teams</p>
       </router-link>
 
-      <router-link v-if="(userRole === 'admin')" to="/products" class="nav-button"
-                   :class="{ active: isPageActive('products') }"
-                   @click="handleNavClick('products')">
+      <router-link
+          v-if="(userRole === 'admin')" to="/products" class="nav-button"
+          :class="{ active: isPageActive('products') }"
+          @click="handleNavClick('products')"
+      >
         <span class="material-symbols-outlined nav-icon">inventory_2</span>
         <p class="nav-text">Products</p>
       </router-link>
 
-      <router-link v-if="(userRole === 'admin')" to="/users" class="nav-button"
-                   :class="{ active: isPageActive('users') }"
-                   @click="handleNavClick('users')">
+      <router-link
+          v-if="(userRole === 'admin')" to="/users" class="nav-button"
+          :class="{ active: isPageActive('users') }"
+          @click="handleNavClick('users')"
+      >
         <span class="material-symbols-outlined nav-icon">person</span>
         <p class="nav-text">Users</p>
       </router-link>
 
-      <router-link v-if="(userRole === 'admin')" to="/reports" class="nav-button"
-                   :class="{ active: isPageActive('reports') }"
-                   @click="handleNavClick('reports')">
+      <router-link
+          v-if="(userRole === 'admin')"
+          to="/reports"
+          class="nav-button"
+          :class="{ active: isPageActive('reports') }"
+          @click="handleNavClick('reports')"
+      >
         <span class="material-symbols-outlined nav-icon">report</span>
         <p class="nav-text">Reports</p>
         <span class="notification-indicator bg-danger-subtle text-danger">3</span>
@@ -237,13 +275,13 @@ export default {
   top: -22px;
 }
 
-.menu-toggle{
+.menu-toggle {
   display: flex;
   justify-content: center;
   padding: 1rem;
 }
 
-.menu-toggle:hover{
+.menu-toggle:hover {
   color: #c7d02c;
   transform: translateX(0.5rem);
 }
