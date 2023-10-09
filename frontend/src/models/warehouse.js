@@ -37,6 +37,4 @@ export class Warehouse{
 
         return new Warehouse(name, address, postalCode, city);
     }
-
-    static warehouses = [];
 }

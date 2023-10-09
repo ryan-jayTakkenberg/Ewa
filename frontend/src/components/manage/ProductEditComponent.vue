@@ -1,22 +1,21 @@
 <template>
   <div class="box">
     <div class="content">
-      <div class="content-header">
-      </div>
       <div class="content-box">
         <div class="content-box-text">
           <form>
             <h3>Product information</h3>
-            <label class="fw-semibold">Team ID<span class="red fw-normal">*</span></label>
-            <input type="text" placeholder="A12345">
+            <label class="fw-semibold">Product ID<span class="red fw-normal">*</span></label>
+            <input type="text" placeholder="A12345" v-model="selectedProductId">
             <label class="fw-semibold">Name<span class="red fw-normal">*</span></label>
-            <input type="text" placeholder="Solar panel">
+            <input type="text" placeholder="Solar panel" v-model="selectedName">
             <label class="fw-semibold">Weight in kg</label>
-            <input type="text" placeholder="1,525">
+            <input type="text" placeholder="1,525" v-model="selectedWeight">
             <label class="fw-semibold">Description</label>
-            <textarea placeholder="Description . . ."></textarea>
+            <textarea placeholder="Description . . ." v-model="selectedDescription"></textarea>
           </form>
-          <button>Add new product</button>
+          <button @click="handleSave()">{{isNewProduct ? 'Add product' : 'Save'}}</button>
+          <button @click="cancel()">Cancel</button>
         </div>
       </div>
     </div>
@@ -25,7 +24,58 @@
 
 <script>
 export default {
-  name: "ProductEditComponent"
+  name: "ProductEditComponent",
+  props: {
+    productId: String,
+    name: String,
+    weight: String,
+    description: String,
+  },
+  data(){
+    return{
+      selectedProductId: this.productId,
+      selectedName: this.name,
+      selectedWeight: this.weight,
+      selectedDescription: this.description,
+      isNewProduct: !this.name,
+    }
+  },
+  methods: {
+    cancel(){
+      this.$emit('cancel');
+    },
+    handleSave() {
+      if (this.isNewProduct) {
+        this.$emit('add-product', {
+          productId: this.selectedProductId,
+          name: this.selectedName,
+          weight: this.selectedWeight,
+          description: this.selectedDescription
+        });
+      } else {
+        this.$emit('save-product', {
+          productId: this.selectedProductId,
+          name: this.selectedName,
+          weight: this.selectedWeight,
+          description: this.selectedDescription
+        });
+      }
+    }
+  },
+  watch: {
+    productId(newProductId) {
+      this.selectedProductId = newProductId;
+    },
+    name(newName) {
+      this.selectedName = newName;
+    },
+    weight(newWeight) {
+      this.selectedWeight = newWeight;
+    },
+    description(newDescription) {
+      this.selectedDescription = newDescription
+    }
+  }
 }
 </script>
 
@@ -48,13 +98,6 @@ export default {
   border-radius: 20px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   margin: 15px 0 30px 0;
-}
-
-.content-header{
-  height: 175px;
-  background: url("../../../static/images/manageDetailHeader2.jpg") center no-repeat;
-  background-size: cover;
-  border-radius: 20px 20px 0 0 ;
 }
 
 .content-box{
