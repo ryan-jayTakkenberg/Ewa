@@ -7,6 +7,7 @@ import TeamDetailComponent from "@/components/manage/TeamDetailComponent.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";
 import ProductDetailComponent from "@/components/manage/ProductDetailComponent";
 import ProjectDetailComponent from "@/components/manage/ProjectDetailComponent";
+import UsersComponent from "@/components/UsersComponent.vue";
 
 const routes = [
     {path: '/', redirect: '/login'},
@@ -16,7 +17,7 @@ const routes = [
     {path: '/projects', component: ProjectDetailComponent},
     {path: '/teams', component: TeamDetailComponent},
     {path: '/products', component: ProductDetailComponent},
-    {path: '/users', component: ProductDetailComponent},
+    {path: '/users', component: UsersComponent},
     {path: '/reports', component: ProductDetailComponent},
     {path: '/:pathMatch(.*)*', component: NotFoundComponent}
 ];
