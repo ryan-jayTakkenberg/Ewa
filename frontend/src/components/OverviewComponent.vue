@@ -52,9 +52,19 @@
             <div class="forecastInfo">
               <h3 class="infoHeader">Stock Forecast</h3>
               <div class="infoContent">
-                <p>Expected to Deplete Before Restock: <span class="forecastValue">{{
-                    forecastInfo[selectedWarehouse]
-                  }}</span></p>
+                <p v-if="forecastInfo[selectedWarehouse] === 'Yes'">
+                  Expected to Deplete Before Restock:
+                  <span class="forecastValue">
+                    {{ forecastInfo[selectedWarehouse] }}
+                    (Estimated Time: {{ estimatedTime[selectedWarehouse] }})
+                  </span>
+                </p>
+                <p v-else>
+                  Expected to Deplete Before Restock:
+                  <span class="forecastValue">
+                    {{ forecastInfo[selectedWarehouse] }}
+                  </span>
+                </p>
               </div>
             </div>
           </div>
@@ -64,11 +74,9 @@
   </div>
 </template>
 
-
 <script>
 export default {
   name: "OverviewComponent",
-
   data() {
     return {
       selectedWarehouse: "",
@@ -76,16 +84,17 @@ export default {
       stockInfo: {
         warehouse1: {Total: 150, SolarPanels: 48, Switches: 35},
         warehouse2: {Total: 100, SolarPanels: 20, Switches: 30},
-        // ... other warehouses
       },
       forecastInfo: {
         warehouse1: "No",
         warehouse2: "Yes",
-        // ... other warehouses
+      },
+      estimatedTime: {
+        warehouse1: "N/A",
+        warehouse2: "2 Weeks",
       },
     };
   },
-
   methods: {
     closeWarehouse() {
       this.selectedWarehouse = "";
