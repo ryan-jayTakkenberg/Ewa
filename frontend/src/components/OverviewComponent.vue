@@ -2,7 +2,6 @@
 
   <div class="main">
 
-    <NavBarComponent></NavBarComponent>
 
     <div class="overviewContainer">
 
@@ -75,13 +74,8 @@
 
 <script>
 
-import NavBarComponent from "@/components/NavBarComponent.vue";
-
 export default {
   name: "OverviewComponent",
-  components: {
-    NavBarComponent,
-  },
 
   data() {
     return {
@@ -101,21 +95,14 @@ export default {
 
 <style scoped>
 
-/* whole page, inc. side-bar */
-.main {
-  display: flex;
-  height: auto;
-  max-width: 100svw;
-}
-
 /* overview */
 .overviewContainer {
-  display: flex;
   flex-direction: column;
   gap: 2rem;
   min-height: 100svh;
-  width: 100%;
+  width: calc(100% - 180px);
   padding: 2rem;
+  float: right;
 }
 
 .statsOverview,
@@ -125,7 +112,7 @@ export default {
 }
 
 .sectionTitle {
-  font-size:  1em;
+  font-size: 1em;
   font-weight: 600;
   color: #222;
 }
@@ -220,6 +207,9 @@ select {
   height: 500px;
   width: 100%;
   background: #c7d02c;
+}
+
+@media (max-width: 768px) {
 }
 
 </style>
