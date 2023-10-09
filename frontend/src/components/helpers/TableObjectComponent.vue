@@ -3,7 +3,7 @@
     <thead>
     <tr>
       <th v-for="attr of Object.keys(attributes)" :key="attr" @click="sort(attr)" :class="{'clickable': sortable}">
-        <div class="d-inline-flex">
+        <div class="title">
           {{ capitalizeText(attr) }}
           <span class="material-symbols-outlined" v-if="sortKey.name===attr && sortAsc">arrow_drop_up</span>
           <span class="material-symbols-outlined" v-else-if="sortKey.name===attr">arrow_drop_down</span>
@@ -131,5 +131,10 @@ thead {
 
 tr:nth-child(even) {
   background-color: #eee;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
 }
 </style>
