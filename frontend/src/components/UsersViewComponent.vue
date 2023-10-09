@@ -61,7 +61,7 @@
         <tr>
           <th scope="col" class="px-6 py-3"></th>
           <th scope="col" class="px-6 py-3">Name</th>
-          <th scope="col" class="px-6 py-3">User Role</th>
+          <th scope="col" class="px-6 py-3">Function</th>
           <th scope="col" class="px-6 py-3">Status</th>
           <th scope="col" class="px-6 py-3">Action</th>
         </tr>

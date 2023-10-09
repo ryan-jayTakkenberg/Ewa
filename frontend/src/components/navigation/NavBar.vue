@@ -44,8 +44,6 @@ export default {
         />
         <h1 class="textLoggedIn">You are logged in as: <strong> {{ userRole }} </strong></h1>
 
-
-
         <div class="menu-toggle btn" @click="toggleSidebar">
           <span class="material-symbols-outlined">
             {{ sidebarIsExpanded ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</span>
