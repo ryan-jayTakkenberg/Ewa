@@ -49,7 +49,6 @@ export default {
         </div>
 
       </div>
-
       <router-link
           to="/overview"
           class="nav-button relative"
@@ -168,6 +167,7 @@ export default {
 }
 
 .navbar {
+  display: flex;
   position: fixed;
   left: 0;
   z-index: 50;

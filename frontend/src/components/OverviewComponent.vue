@@ -1,5 +1,4 @@
 <template>
-  <div class="main">
     <div class="overviewContainer">
       <div class="statsOverview">
         <div class="sectionTitle">Total Stock:</div>
@@ -61,7 +60,6 @@
       </div>
     </div>
   </div>
-</div>
 </template>
 
 
@@ -100,6 +98,7 @@ export default {
 
 /* overview */
 .overviewContainer {
+  display: flex;
   flex-direction: column;
   gap: 2rem;
   min-height: 100svh;
