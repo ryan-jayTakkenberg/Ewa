@@ -5,15 +5,15 @@ import OverviewComponent from "@/components/OverviewComponent.vue";
 import WarehouseDetailComponent from "@/components/manage/WarehouseDetailComponent.vue";
 import TeamDetailComponent from "@/components/manage/TeamDetailComponent.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";
-import ProjectEditComponent from "@/components/manage/ProjectEditComponent.vue";
 import ProductDetailComponent from "@/components/manage/ProductDetailComponent";
+import ProjectDetailComponent from "@/components/manage/ProjectDetailComponent";
 
 const routes = [
     {path: '/', redirect: '/login'},
     {path: '/login', component: LoginComponent},
     {path: '/overview', component: OverviewComponent},
     {path: '/warehouses', component: WarehouseDetailComponent},
-    {path: '/projects', component: ProjectEditComponent},
+    {path: '/projects', component: ProjectDetailComponent},
     {path: '/teams', component: TeamDetailComponent},
     {path: '/products', component: ProductDetailComponent},
     {path: '/users', component: ProductDetailComponent},
