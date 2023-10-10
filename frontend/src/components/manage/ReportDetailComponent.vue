@@ -6,7 +6,8 @@
           <div>
             <h1> React </h1>
             <ul>
-              <li v-for="(item, index) in items" :key="index">{{ item.item }}</li>
+              <li v-for="(item, index) in items" :key="index">{{ item.item }} <input></li>
+
             </ul>
             <button id="readButton" @click="readNotification">Click if readed</button>
           </div>
