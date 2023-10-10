@@ -42,7 +42,7 @@ export default {
             alt=" logo"
             :src="sidebarIsExpanded ? logoCollapsed  : logoExpanded"
         />
-        <h1 class="textLoggedIn">You are logged in as: <strong> {{ userRole }} </strong></h1>
+<!--        <h1 class="textLoggedIn">You are logged in as: <strong> {{ userRole }} </strong></h1>-->
 
         <div class="menu-toggle btn" @click="toggleSidebar">
           <span class="material-symbols-outlined">
@@ -172,7 +172,7 @@ export default {
   position: fixed;
   left: 0;
   z-index: 50;
-  width: 180px;
+  width: 200px;
   height: 100vh;
   background-color: #fff;
   border-right: 1px solid #e5e5e5;
@@ -288,7 +288,8 @@ export default {
   color: #c7d02c;
   transform: translateX(0.5rem);
 }
-.textLoggedIn{
+
+.textLoggedIn {
   padding: 3px 6px 6px 10px;
   text-decoration: none;
   font-size: 15px;

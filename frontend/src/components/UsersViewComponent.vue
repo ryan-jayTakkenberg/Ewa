@@ -82,7 +82,7 @@
             </div>
           </th>
           <td class="px-6 py-4">
-            Viewer Warehouse 69
+            Employee Warehouse 69
           </td>
           <td class="px-6 py-4">
             <div class="flex items-center">
@@ -144,7 +144,7 @@
             </div>
           </th>
           <td class="px-6 py-4">
-            Viewer Warehouse 43
+            Employee Warehouse 43
           </td>
           <td class="px-6 py-4">
             <div class="flex items-center">

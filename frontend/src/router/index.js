@@ -11,7 +11,7 @@ import UsersComponent from "@/components/UsersViewComponent.vue";
 import ReportComponent from "@/components/manage/ReportComponent.vue";
 
 const routes = [
-    {path: '/', redirect: '/login'},
+    {path: '/', redirect: '/overview'},
     {path: '/login', component: LoginComponent},
     {path: '/overview', component: OverviewComponent},
     {path: '/warehouses', component: WarehouseDetailComponent},
