@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       isLoggedIn: true,
-      isSideBarExpanded: true,
+      isSideBarExpanded: false,
     }
   },
   methods: {

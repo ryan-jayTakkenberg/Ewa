@@ -1,61 +1,58 @@
+<script>
+import TitleComponent from "@/components/general/SolarTitle.vue";
+import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
+import DropdownMenuButtonComponent from "@/components/general/SolarDropdownMenuButton.vue";
+import ButtonComponent from "@/components/general/SolarButton.vue";
+import DropdownMenuItemComponent from "@/components/general/SolarDropdownMenuItem.vue";
+import EditUserModal from "@/components/modals/EditUserModal.vue";
+
+export default {
+  name: "UsersComponent",
+  components: {
+    DropdownMenuItemComponent,
+    TitleComponent,
+    DropdownMenuButtonComponent,
+    SearchBarComponent,
+    ButtonComponent,
+    EditUserModal,
+  },
+  data() {
+    return {
+      isEditUserModalOpen: false,  // Added data property to control modal visibility
+    };
+  },
+  methods: {
+    openEditUserModal() {
+      this.isEditUserModalOpen = true;
+    },
+    closeEditUserModal() {
+      this.isEditUserModalOpen = false;
+    },
+  }
+}
+</script>
+
 <template>
   <div class="header">
     <TitleComponent page-title="Users"></TitleComponent>
   </div>
 
-  <div class="user-container">
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div class="flex items-center justify-between py-4 bg-white ">
-        <div>
-          <button id="dropdownActionButton" data-dropdown-toggle="dropdownAction"
-                  class=" ml-4 inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5"
-                  type="button">
-            <span class="sr-only">Action button</span>
-            Action
-            <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                 viewBox="0 0 10 6">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m1 1 4 4 4-4"/>
-            </svg>
-          </button>
-          <!-- Dropdown menu -->
-          <div id="dropdownAction"
-               class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ">
-            <ul class="py-1 text-sm text-gray-700 " aria-labelledby="dropdownActionButton">
-              <li>
-                <a href="#"
-                   class="block px-4 py-2 hover:bg-gray-100 ">Reward</a>
-              </li>
-              <li>
-                <a href="#"
-                   class="block px-4 py-2 hover:bg-gray-100 ">Promote</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 ">Activate
-                  account</a>
-              </li>
-            </ul>
-            <div class="py-1">
-              <a href="#"
-                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Delete
-                User</a>
-            </div>
-          </div>
-        </div>
-        <label for="table-search" class="sr-only">Search</label>
-        <div class="relative mr-4">
-          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                 fill="none" viewBox="0 0 20 20">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-            </svg>
-          </div>
-          <input type="text" id="table-search-users"
-                 class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                 placeholder="Search for users">
-        </div>
+  <div class="body">
+    <div class="body-container">
+      <EditUserModal v-if="isEditUserModalOpen" :on-close="closeEditUserModal"></EditUserModal>
+      <div class="table-header">
+        <!-- Action Dropdown Button -->
+        <DropdownMenuButtonComponent button-text="Action">
+          <DropdownMenuItemComponent text-menu-item="Edit Users"></DropdownMenuItemComponent>
+          <DropdownMenuItemComponent text-menu-item="Delete Users"></DropdownMenuItemComponent>
+        </DropdownMenuButtonComponent>
+
+        <!-- Searchbar -->
+        <SearchBarComponent place-holder="Search For Users" class="ml-auto"></SearchBarComponent>
+        <ButtonComponent button-text="Add User" on-click="OpenCreateUserModal"></ButtonComponent>
+
       </div>
+
       <table class="w-full text-sm text-left text-gray-500">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 ">
         <tr>
@@ -92,8 +89,8 @@
           </td>
           <td class="px-6 py-4">
             <!-- Modal toggle -->
-            <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal"
-               class="font-medium text-blue-600  hover:underline">Edit user</a>
+            <div @click="openEditUserModal" type="button" class="font-medium text-blue-600 hover:underline">Edit user
+            </div>
           </td>
         </tr>
         <tr class="bg-white border-b hover:bg-gray-50">
@@ -122,8 +119,8 @@
           </td>
           <td class="px-6 py-4">
             <!-- Modal toggle -->
-            <a href="#" type="button" data-modal-show="editUserModal"
-               class="font-medium text-blue-600  hover:underline">Edit user</a>
+            <div @click="openEditUserModal" type="button" class="font-medium text-blue-600 hover:underline">Edit user
+            </div>
           </td>
         </tr>
 
@@ -154,14 +151,15 @@
           </td>
           <td class="px-6 py-4">
             <!-- Modal toggle -->
-            <a href="#" type="button" data-modal-show="editUserModal"
-               class="font-medium text-blue-600 hover:underline">Edit user</a>
+            <div @click="openEditUserModal" type="button" class="font-medium text-blue-600 hover:underline">Edit user
+            </div>
           </td>
         </tr>
 
 
         </tbody>
       </table>
+
       <!-- Edit user modal -->
       <div id="editUserModal" tabindex="-1" aria-hidden="true"
            class="fixed top-0 left-0 right-0 z-50 items-center justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -256,23 +254,29 @@
       </div>
     </div>
   </div>
-
 </template>
 
-<script>
-
-
-import TitleComponent from "@/components/general/TitleComponent.vue";
-
-export default {
-  name: "UsersComponent",
-  components: {
-    TitleComponent,
-  },
-}
-</script>
 
 <style scoped>
+
+.table-header {
+  display: flex;
+  margin-bottom: 1rem /* 16px */;
+}
+
+.body {
+  position: relative;
+  overflow-x: auto;
+}
+
+.body-container {
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem /* 16px */;
+  background-color: white;
+}
+
 .header {
   flex-direction: row;
   display: flex;

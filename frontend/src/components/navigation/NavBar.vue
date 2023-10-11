@@ -11,7 +11,7 @@ export default {
     return {
       activePage: 'overview', //Default overview
       userRole: 'admin', // viewer or Admin
-      sidebarIsExpanded: true,
+      sidebarIsExpanded: false,
       logoExpanded: logoExpanded,
       logoCollapsed: logoCollapsed
     }
@@ -42,8 +42,6 @@ export default {
             alt=" logo"
             :src="sidebarIsExpanded ? logoCollapsed  : logoExpanded"
         />
-<!--        <h1 class="textLoggedIn">You are logged in as: <strong> {{ userRole }} </strong></h1>-->
-
         <div class="menu-toggle btn" @click="toggleSidebar">
           <span class="material-symbols-outlined">
             {{ sidebarIsExpanded ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</span>
@@ -288,13 +286,4 @@ export default {
   color: #c7d02c;
   transform: translateX(0.5rem);
 }
-
-.textLoggedIn {
-  padding: 3px 6px 6px 10px;
-  text-decoration: none;
-  font-size: 15px;
-  color: #818181;
-  display: block;
-}
-
 </style>

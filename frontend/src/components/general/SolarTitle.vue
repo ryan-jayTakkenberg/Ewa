@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "TitleComponent",
+  name: "SolarTitle",
   props: {
     pageTitle: {
       type: String,
