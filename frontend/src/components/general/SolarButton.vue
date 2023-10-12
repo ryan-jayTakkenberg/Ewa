@@ -23,12 +23,15 @@ export default {
   color: white;
   background-color: grey;
   font-weight: 500;
-  border-radius: 0.5rem /* 8px */;
-  font-size: 0.875rem /* 14px */;
-  line-height: 1.25rem /* 20px */;
-  padding: 0.625rem 1.25rem;;
-  margin-right: 0.5rem;
-  margin-left: 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding: 0.5rem 1.0rem;;
+  margin: 0 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  width: 105px;
+  justify-content: center;
 }
 
 .solar-button:hover {

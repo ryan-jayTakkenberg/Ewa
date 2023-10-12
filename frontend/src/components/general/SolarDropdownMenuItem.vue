@@ -5,13 +5,17 @@ export default {
     textMenuItem: {
       type: String,
       required: true,
+    },
+    onClick: {
+      type: Function,
+      required: true,
     }
   }
 }
 </script>
 
 <template>
-  <li class="list">
+  <li @click="onClick">
     <p class="menuItem">{{ textMenuItem }}</p>
   </li>
 </template>
@@ -27,7 +31,7 @@ li {
   padding: 0.5rem 1rem;
 }
 
-.menuItem:hover{
+.menuItem:hover {
   color: white;
 }
 </style>

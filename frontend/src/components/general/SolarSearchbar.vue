@@ -6,28 +6,64 @@ export default {
       type: String,
       required: true,
     },
+  },
+  methods: {
+    onInput(event) {
+      const inputValue = event.target.value;
+      this.$emit('input', inputValue);  // Emit the input value
+    }
   }
+
 }
 </script>
 
 <template>
   <div>
-    <div class="relative mr-4 mt-0.5">
-      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-        <svg class="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-             fill="none" viewBox="0 0 20 20">
+    <div class="searchbar">
+      <div class="searchbar-container">
+        <svg class="search-icon" fill="none" viewBox="0 0 20 20">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
         </svg>
       </div>
-      <input type="text" id="table-search-users"
-             class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50
-           focus:ring-blue-500 focus:border-blue-500" :placeholder="placeHolder">
+      <input type="text" class="search-input" :placeholder="placeHolder" @input="onInput">
     </div>
   </div>
 
 </template>
 
 <style scoped>
+.searchbar {
+  position: relative;
+  margin: 0.25rem;
+}
 
+.searchbar-container {
+  position: absolute;
+  display: flex;
+  top: 0;
+  bottom: 0;
+  align-items: center;
+  padding-left: 0.75rem;
+  pointer-events: none;
+}
+
+.search-icon {
+  width: 1rem;
+  height: 1rem;
+  color: rgb(107 114 128);
+}
+
+.search-input {
+  display: block;
+  padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+  color: rgb(17 24 39);
+  font-size: 0.875rem /* 14px */;
+  line-height: 1.25rem /* 20px */;
+  border-width: 1px;
+  border-color: rgb(209 213 219);
+  border-radius: 0.5rem /* 8px */;
+  width: 20rem;
+  background-color: rgb(249 250 251);
+}
 </style>

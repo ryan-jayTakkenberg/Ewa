@@ -3,7 +3,7 @@
     <!-- Dropdown button -->
     <button
         @click="toggleDropdown"
-        :class="{ 'dropdown-btn-open': isDropdownOpen, 'dropdown-btn': !isDropdownOpen }">{{ buttonText }}
+        :class="{ 'dropdown-btn-open': isDropdownOpen, 'dropdown-btn': !isDropdownOpen }">{{ textButton }}
       <svg class="w-2.5 h-2.5 ml-2.5" fill="none" viewBox="0 0 10 6">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
       </svg>
@@ -22,7 +22,7 @@
 export default {
   name: "SolarDropdownMenuButton",
   props: {
-    buttonText: {
+    textButton: {
       type: String,
       required: true,
     }
