@@ -28,6 +28,7 @@ export default {
   },
   methods: {
     handleInputValueChange(value) {
+      console.log(value);
       this.inputValue = value;
       // Use this.inputValue to search in the table
     },
@@ -73,7 +74,6 @@ export default {
             @input="handleInputValueChange"
         ></SearchBarComponent>
 
-        <p>Input value in parent: {{ inputValue }}</p>
         <ButtonComponent button-text="Add User" :on-click="openEditUserModal"></ButtonComponent>
       </div>
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">

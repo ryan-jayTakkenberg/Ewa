@@ -4,6 +4,8 @@ export default class User {
    constructor(id, name) {
        this.id = id;
        this.name = name;
+       // this.userRole= userRole;
+       // this.lastLoggedIn = lastLoggedIn;
    }
 
    getTeams() {
@@ -15,7 +17,7 @@ export default class User {
    }
 
     static createNewUser(name) {
-        return new User(-1, name);
+        return new User(-1, name, userRole, );
     }
 
     /**
@@ -66,7 +68,7 @@ export default class User {
             await new Promise((resolve) => {
                 setTimeout(resolve, 1000); // Sleep for 1 second (1000 milliseconds)
             });
-            return [User.createNewUser('user1'), User.createNewUser('user2'), User.createNewUser('user3')];
+            return [User.createNewUser('user1', 'admin'), User.createNewUser('user2'), User.createNewUser('user3', 'admin')];
         } catch (e) {
             return [];
         } finally {
