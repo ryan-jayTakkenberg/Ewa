@@ -56,7 +56,7 @@ export default {
 
     <td class="px-6 py-4">
       <!-- Modal toggle -->
-      <div @click="onClickEditUser" type="button" class="font-medium text-blue-600 hover:underline">Edit user
+      <div @click="onClickEditUser" type="button" class="edit-user-btn">Edit user
       </div>
     </td>
 
@@ -64,6 +64,15 @@ export default {
 </template>
 
 <style scoped>
+.edit-user-btn{
+  font-weight: 500;
+  color: rgb(37 99 235);
+  cursor: pointer;
+}
+.edit-user-btn:hover{
+  text-decoration-line: underline;
+}
+
 .table-row {
   background-color: white;
   border-bottom-width: 1px;
