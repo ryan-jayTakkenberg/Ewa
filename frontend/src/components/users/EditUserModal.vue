@@ -1,11 +1,9 @@
 <script>
 
 import User from "@/models/user";
-import SolarButton from "@/components/general/SolarButton.vue";
 
 export default {
   name: "EditUserModal",
-  components: {SolarButton},
   data() {
     return {
       UserRoleOptions: User.UserRole,
