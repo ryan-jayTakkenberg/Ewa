@@ -37,10 +37,11 @@ export default {
   },
   created() {
     if (!this.teams?.length) {
-      const teamFetchingInterval = setInterval(() => {
+      // Keep updating the list if the database has not returned all the data yet
+      const fetchingInterval = setInterval(() => {
         if (!Team.fetching) {
           this.teams = [...Team.teams];
-          clearInterval(teamFetchingInterval);
+          clearInterval(fetchingInterval);
         }
       }, 100);
     }
@@ -91,7 +92,7 @@ export default {
       this.closeTeamEditPage();
     },
     addTeam() {
-      this.selectedTeam = Team.template;
+      this.selectedTeam = Team.createNewTeam();
       this.$refs.tableRef.current = null;
       setTimeout(this.scrollToTeam, 1);
     },

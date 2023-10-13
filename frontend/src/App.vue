@@ -17,6 +17,9 @@
 
 import Team from "@/models/team";
 import User from "@/models/user";
+import Product from "@/models/product";
+import Project from "@/models/project";
+import Warehouse from "@/models/warehouse";
 import NavBar from "@/components/navigation/NavBar.vue";
 
 // This only fetches the data accessible to the logged in user
@@ -24,6 +27,9 @@ import NavBar from "@/components/navigation/NavBar.vue";
 (async () => {
   Team.teams = await Team.getDatabase();
   User.users = await User.getDatabase();
+  Product.products = await Product.getDatabase();
+  Project.projects = await Project.getDatabase();
+  Warehouse.warehouses = await Warehouse.getDatabase();
 })();
 
 export default {

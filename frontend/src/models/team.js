@@ -5,6 +5,10 @@ export default class Team {
         this.users = users;
     }
 
+    clone() {
+        return new Team(this.id, this.name, [...this.users]);
+    }
+
     equals(other) {
         if (!other) {
             return false;
@@ -17,12 +21,10 @@ export default class Team {
         return true;
     }
 
-    clone() {
-        return new Team(this.id, this.name, [...this.users]);
-    }
-
     /**
      * put this team into the database
+     * will add a new team to the database if no team exists
+     * will override the existing team with the new team if the team already exists
      */
     async putDatabase() {
         try {
@@ -33,7 +35,7 @@ export default class Team {
                 this.id = Team.teams.length;// receive the new team id
                 Team.teams.push(this);
             } else {
-                Team.teams[Team.teams.findIndex(t => t.id === this.id)] = this;
+                Team.teams[Team.teams.findIndex(o => o.id === this.id)] = this;
             }
             return true;
         } catch (e) {
@@ -51,7 +53,7 @@ export default class Team {
                 return false;
             }
             // TODO make a delete request to the backend
-            Team.teams = Team.teams.filter(t => t.id !== this.id);
+            Team.teams = Team.teams.filter(o => o.id !== this.id);
             return true;
         } catch (e) {
             return false;
@@ -66,9 +68,6 @@ export default class Team {
             this.fetching = true;
             // TODO make a get request to the backend
             //  update "teams" with the response
-            await new Promise((resolve) => {
-                setTimeout(resolve, 1000); // Sleep for 1 second (1000 milliseconds)
-            });
             return [new Team(0, 'team1'), new Team(1, 'team2'), new Team(2, 'team3')];
         } catch (e) {
             return [];
@@ -77,7 +76,10 @@ export default class Team {
         }
     }
 
-    static fetching = false;
+    static fetching = true;
     static teams = [];
-    static template = new Team(-1, null);
+
+    static createNewTeam(name, users) {
+        return new Team(-1, name, users);
+    }
 }

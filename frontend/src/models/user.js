@@ -1,35 +1,43 @@
 import Team from "@/models/team";
 
 export default class User {
-   constructor(id, email, name, userRole, dateLastLoggedIn, password) {
-       this.id = id;
-       this.email = email;
-       this.name = name;
-       this.userRole = userRole;
-       this.lastLoggedIn = dateLastLoggedIn;
-       this.password = password;
-   }
-
-    static copyConstructor(user) {
-        if (user === null || user === undefined) return null;
-        return Object.assign(new User(user.id, user.email, user.name, user.userRole, user.lastLoggedIn), user);
+    constructor(id, email, name, userRole, dateLastLoggedIn, password) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.userRole = userRole;
+        this.lastLoggedIn = dateLastLoggedIn;
+        this.password = password;
     }
 
+    clone() {
+        return new User(this.id, this.email, this.name, this.userRole, this.lastLoggedIn);
+    }
 
-   getTeams() {
-       return Team.teams.filter(team => team.users.includes(this));
-   }
+    equals(other) {
+        if (!other) {
+            return false;
+        }
+        for (let attr of Object.keys(this)) {
+            if (typeof this[attr] !== typeof other[attr] || `${this[attr]}` !== `${other[attr]}`) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-   equals(other) {
-       return other && this.name === other.name;
-   }
+    getTeams() {
+        return Team.teams.filter(team => team.users.includes(this));
+    }
 
-    static createNewUser(name) {
-        return new User(-1, name, );
+    static createNewUser(email, name, userRole, dateLastLoggedIn, password) {
+        return new User(-1, email, name, userRole, dateLastLoggedIn, password);
     }
 
     /**
      * put this user into the database
+     * will add a new user to the database if no user exists
+     * will override the existing user with the new user if the user already exists
      */
     async putDatabase() {
         try {
@@ -40,7 +48,7 @@ export default class User {
                 this.id = 0;// receive the new user id
                 User.users.push(this);
             } else {
-                User.users[User.users.findIndex(u => u.id === this.id)] = this;
+                User.users[User.users.findIndex(o => o.id === this.id)] = this;
             }
             return true;
         } catch (e) {
@@ -49,7 +57,7 @@ export default class User {
     }
 
     /**
-     * delete this user from the database
+     * delete this user from the databasenew User(4, "example4@company.com", "Full Name 4", "Viewer", "4 February 2023")
      */
     async delDatabase() {
         try {
@@ -58,7 +66,7 @@ export default class User {
                 return false;
             }
             // TODO make a delete request to the backend
-            User.users = User.users.filter(u => u.id !== this.id);
+            User.users = User.users.filter(o => o.id !== this.id);
             return true;
         } catch (e) {
             return false;
@@ -73,10 +81,7 @@ export default class User {
             this.fetching = true;
             // TODO make a get request to the backend
             //  update "users" with the response
-            await new Promise((resolve) => {
-                setTimeout(resolve, 1000); // Sleep for 1 second (1000 milliseconds)
-            });
-            return [User.createNewUser('user1', 'admin'), User.createNewUser('user2'), User.createNewUser('user3', 'admin')];
+            return [new User(1, "example1@company.com", "Full Name 1", "Admin", "1 February 2023"), new User(2, "example2@company.com", "Full Name 2", "Viewer", "2 February 2023"), new User(3, "example3@company.com", "Full Name 3", "Admin", "3 February 2023"), new User(4, "example4@company.com", "Full Name 4", "Viewer", "4 February 2023") ];
         } catch (e) {
             return [];
         } finally {
@@ -84,7 +89,6 @@ export default class User {
         }
     }
 
-    static fetching = false;
+    static fetching = true;
     static users = [];
-    static template = new User(-1, null);
 }

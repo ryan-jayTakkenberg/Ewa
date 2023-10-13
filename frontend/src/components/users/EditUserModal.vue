@@ -23,7 +23,7 @@ export default {
     },
   },
   props: {
-    selectedUser: {
+    user: {
       type: User,
       required: true,
     },
@@ -46,9 +46,8 @@ export default {
     },
   },
   created() {
-    // Create a copy of selectedUser
-    this.clonedUser = {...this.selectedUser};
-    console.log(this.clonedUser);
+    this.editedUser = this.user.clone();
+    console.log(this.editedUser);
   },
 }
 </script>
@@ -241,6 +240,7 @@ export default {
   overflow-y: auto;
   height: calc(100% - 1rem);
   max-height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .edit-user-modal-header {
