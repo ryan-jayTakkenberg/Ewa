@@ -14,13 +14,18 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      checked: this.isChecked,// for two way binding
+    }
+  },
   methods: {
     editUser() {
       this.$emit('click-edit-user', this.user);  // Emit the userModel directly
     },
     toggleCheckbox() {
-      // Emit an event to toggle the isChecked value
-      this.$emit('toggle-checkbox', !this.isChecked);
+      // Emit an event to toggle the checked value
+      this.$emit('toggle-checkbox', this.checked);
     },
   }
 }
@@ -33,7 +38,7 @@ export default {
       <div class="flex items-center">
         <input
             type="checkbox"
-            :checked="isChecked" @change="toggleCheckbox"
+            :checked="checked" v-model="checked" @change="toggleCheckbox"
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
         >
       </div>
