@@ -81,6 +81,7 @@ export default {
             @click-edit-user="openEditUserModal(user)"
         ></UsersRowComponent>
       </SolarTable>
+
     </div>
   </div>
   <EditUserModal v-if="isEditUserModalOpen" :on-close="closeEditUserModal" :user="selectedUser"></EditUserModal>
