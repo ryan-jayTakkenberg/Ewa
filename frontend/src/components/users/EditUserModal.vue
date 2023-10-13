@@ -1,7 +1,6 @@
 <script>
 
 import User from "@/models/user";
-import user from "@/models/user";
 
 export default {
   name: "EditUserModal",
@@ -29,7 +28,7 @@ export default {
     }
   },
   created() {
-    this.editedUser = user.copyConstructor(this.user)
+    this.editedUser = User.copyConstructor(this.user)
     console.log(this.editedUser);
   },
 }
@@ -182,6 +181,7 @@ export default {
   overflow-y: auto;
   height: calc(100% - 1rem);
   max-height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .edit-user-modal-header {
