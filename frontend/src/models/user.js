@@ -30,8 +30,8 @@ export default class User {
         return Team.teams.filter(team => team.users.includes(this));
     }
 
-    static createNewUser(name) {
-        return new User(-1, name);
+    static createNewUser(email, name, userRole, dateLastLoggedIn, password) {
+        return new User(-1, email, name, userRole, dateLastLoggedIn, password);
     }
 
     /**
@@ -48,7 +48,7 @@ export default class User {
                 this.id = 0;// receive the new user id
                 User.users.push(this);
             } else {
-                User.users[User.users.findIndex(u => u.id === this.id)] = this;
+                User.users[User.users.findIndex(o => o.id === this.id)] = this;
             }
             return true;
         } catch (e) {
@@ -57,7 +57,7 @@ export default class User {
     }
 
     /**
-     * delete this user from the database
+     * delete this user from the databasenew User(4, "example4@company.com", "Full Name 4", "Viewer", "4 February 2023")
      */
     async delDatabase() {
         try {
@@ -66,7 +66,7 @@ export default class User {
                 return false;
             }
             // TODO make a delete request to the backend
-            User.users = User.users.filter(u => u.id !== this.id);
+            User.users = User.users.filter(o => o.id !== this.id);
             return true;
         } catch (e) {
             return false;
@@ -81,10 +81,7 @@ export default class User {
             this.fetching = true;
             // TODO make a get request to the backend
             //  update "users" with the response
-            await new Promise((resolve) => {
-                setTimeout(resolve, 1000); // Sleep for 1 second (1000 milliseconds)
-            });
-            return [User.createNewUser('user1', 'admin'), User.createNewUser('user2'), User.createNewUser('user3', 'admin')];
+            return [new User(1, "example1@company.com", "Full Name 1", "Admin", "1 February 2023"), new User(2, "example2@company.com", "Full Name 2", "Viewer", "2 February 2023"), new User(3, "example3@company.com", "Full Name 3", "Admin", "3 February 2023"), new User(4, "example4@company.com", "Full Name 4", "Viewer", "4 February 2023") ];
         } catch (e) {
             return [];
         } finally {
@@ -92,6 +89,6 @@ export default class User {
         }
     }
 
-    static fetching = false;
+    static fetching = true;
     static users = [];
 }
