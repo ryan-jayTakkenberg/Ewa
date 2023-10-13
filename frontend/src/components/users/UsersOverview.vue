@@ -28,6 +28,7 @@ export default {
       users: [...User.users],
       selectedUser: null,  // Track the selected user for editing
       isEditUserModalOpen: false,
+      checkedUsers: [], // A list of the selected users ID's
     };
   },
   created() {
@@ -41,6 +42,18 @@ export default {
       }, 100);
     }
   },
+  // TODO Temporary explanation:
+  /**
+   * "user" in openEditUserModal() is NOT a User object when clicking the EDIT or DELETE options in the dropdown,
+   * instead "user" is a click event object !! this will throw an error later on !
+   *
+   * A list of all checked users ID's has been added to data() to keep track of the checked users
+   * A new function called getSelectedUsers() has been added to get the user objects from the ID's
+   * This getSelectedUsers() is called, and only the first (for now) object is parsed to the openEditUserModal(). See line 99 !
+   * This fixes the above mentioned problem (for now)
+   *
+   * TODO implement a way to display more than one edit popup (and support an array of users to edit)
+   */
   methods: {
     handleInputValueChange(value) {
       console.log(value);
@@ -48,6 +61,10 @@ export default {
       // Use this.inputValue to search in the table
     },
     openEditUserModal(user) {
+      if (!user) {
+        // No user selected
+        return;
+      }
       this.selectedUser = user;  // Set the selected user
       this.isEditUserModalOpen = true;  // Open the modal
     },
@@ -55,9 +72,16 @@ export default {
       this.isEditUserModalOpen = false;
     },
     toggleCheckbox(user, isChecked) {
-      user.isChecked = isChecked;  // Update the user's isChecked state
-      console.log(user.isChecked, user.id); // Log the updated isChecked state
+      if (isChecked) {
+        this.checkedUsers.push(user.id);
+      } else {
+        this.checkedUsers = this.checkedUsers.filter(id => id !== user.id);
+      }
+      console.log(this.checkedUsers);
     },
+    getSelectedUsers() {
+      return this.users.filter(user => this.checkedUsers.includes(user.id));
+    }
   },
 }
 </script>
@@ -72,8 +96,8 @@ export default {
       <div class="users-action-row">
         <!-- Action Dropdown Button -->
         <SolarDropdownMenuButton text-button="Action">
-          <SolarDropdownMenuItem text-menu-item="Edit Users" :on-click="openEditUserModal"></SolarDropdownMenuItem>
-          <SolarDropdownMenuItem text-menu-item="Delete Users" :on-click="openDeleteUserModal"></SolarDropdownMenuItem>
+          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="openEditUserModal(getSelectedUsers()[0])"></SolarDropdownMenuItem>
+          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteUserModal"></SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
 
         <!-- Searchbar -->
