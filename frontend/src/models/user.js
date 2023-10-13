@@ -1,12 +1,13 @@
 import Team from "@/models/team";
 
 export default class User {
-   constructor(id, email, name, userRole, dateLastLoggedIn ) {
+   constructor(id, email, name, userRole, dateLastLoggedIn, password) {
        this.id = id;
        this.email = email;
        this.name = name;
        this.userRole = userRole;
        this.lastLoggedIn = dateLastLoggedIn;
+       this.password = password;
    }
 
     static copyConstructor(user) {

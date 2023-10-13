@@ -23,16 +23,21 @@ export default {
   },
   data() {
     return {
-      isEditUserModalOpen: false,
-      inputValue: '', // Store the input value
+      inputValue: '', // Store the input value for searching users
       users: [
-        new User(1, "example1@company.com", "Full Name 1", "Admin", "3 February 2023"),
-        new User(2, "example2@company.com", "Full Name 2", "Viewer", "3 February 2023"),
-        new User(3, "example1@company.com", "Full Name 1", "Admin", "3 February 2023"),
-        new User(4, "example2@company.com", "Full Name 2", "Viewer", "3 February 2023")
+        new User(1, "example1@company.com", "Full Name 1", "Admin", "1 February 2023"),
+        new User(2, "example2@company.com", "Full Name 2", "Viewer", "2 February 2023"),
+        new User(3, "example3@company.com", "Full Name 3", "Admin", "3 February 2023"),
+        new User(4, "example4@company.com", "Full Name 4", "Viewer", "4 February 2023")
       ],
       selectedUser: null,  // Track the selected user for editing
+      isEditUserModalOpen: false,
     };
+  },
+  computed: {
+    User() {
+      return User;
+    },
   },
   methods: {
     handleInputValueChange(value) {
@@ -46,6 +51,10 @@ export default {
     },
     closeEditUserModal() {
       this.isEditUserModalOpen = false;
+    },
+    toggleCheckbox(user, isChecked) {
+      user.isChecked = isChecked;  // Update the user's isChecked state
+      console.log(user.isChecked, user.id); // Log the updated isChecked state
     },
   },
 }
@@ -64,23 +73,24 @@ export default {
           <SolarDropdownMenuItem text-menu-item="Edit Users" :on-click="openEditUserModal"></SolarDropdownMenuItem>
           <SolarDropdownMenuItem text-menu-item="Delete Users" :on-click="openDeleteUserModal"></SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
+
         <!-- Searchbar -->
         <SearchBarComponent place-holder="Search For Users" class="ml-auto" @input="handleInputValueChange"
         ></SearchBarComponent>
-        <ButtonComponent button-text="Add User" on-click="openEditUserModal"></ButtonComponent>
+        <ButtonComponent button-text="Add User" :on-click="openEditUserModal"></ButtonComponent>
       </div>
 
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
         <UsersRowComponent
             v-for="(user, index) in users"
             :key="index"
-            :user-email="user.email"
-            :user-name="user.name"
-            :user-role="user.userRole"
-            :user-last-logged-in="user.lastLoggedIn"
-            @click-edit-user="openEditUserModal(user)"
-        ></UsersRowComponent>
+            :user="user"
+            :isChecked="user.isChecked"
+            @click-edit-user="openEditUserModal"
+            @toggle-checkbox="toggleCheckbox(user, $event)"><!-- Pass user and checkbox state -->
+        </UsersRowComponent>
       </SolarTable>
+
 
     </div>
   </div>

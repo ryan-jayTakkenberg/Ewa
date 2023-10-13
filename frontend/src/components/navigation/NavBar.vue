@@ -128,18 +128,6 @@ export default {
         <p class="nav-text">Users</p>
       </router-link>
 
-      <router-link
-          v-if="(userRole === 'admin')"
-          to="/reports"
-          class="nav-button"
-          :class="{ active: isPageActive('reports') }"
-          @click="handleNavClick('reports')"
-      >
-        <span class="material-symbols-outlined nav-icon">report</span>
-        <p class="nav-text">Reports</p>
-        <span class="notification-indicator bg-danger-subtle text-danger">3</span>
-      </router-link>
-
       <div class="log-out-button" @click="logOut()">
         <span class="material-symbols-outlined nav-icon">logout</span>
         <p class="nav-text">Log out</p>

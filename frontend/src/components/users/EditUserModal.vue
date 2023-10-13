@@ -1,6 +1,7 @@
 <script>
 
 import User from "@/models/user";
+import user from "@/models/user";
 
 export default {
   name: "EditUserModal",
@@ -21,7 +22,6 @@ export default {
   },
   methods: {
     saveUser() {
-
       // Save the edited user and close the modal
       // Implement the logic to save the edited user details
       console.log("Saving user:", this.editedUser);
@@ -29,7 +29,7 @@ export default {
     }
   },
   created() {
-    this.editedUser = User.copyConstructor(this.user)
+    this.editedUser = user.copyConstructor(this.user)
     console.log(this.editedUser);
   },
 }
