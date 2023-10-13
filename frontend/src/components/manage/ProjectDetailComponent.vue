@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import {Project} from "@/models/Project";
+import {Project} from "@/models/project";
 import ProjectEditComponent from "@/components/manage/ProjectEditComponent";
 export default {
   name: "ProjectDetailComponent",

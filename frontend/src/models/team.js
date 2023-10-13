@@ -5,6 +5,10 @@ export default class Team {
         this.users = users;
     }
 
+    clone() {
+        return new Team(this.id, this.name, [...this.users]);
+    }
+
     equals(other) {
         if (!other) {
             return false;
@@ -17,12 +21,10 @@ export default class Team {
         return true;
     }
 
-    clone() {
-        return new Team(this.id, this.name, [...this.users]);
-    }
-
     /**
      * put this team into the database
+     * will add a new team to the database if no team exists
+     * will override the existing team with the new team if the team already exists
      */
     async putDatabase() {
         try {
@@ -79,5 +81,8 @@ export default class Team {
 
     static fetching = false;
     static teams = [];
-    static template = new Team(-1, null);
+
+    static createNewTeam() {
+        return new Team(-1, null);
+    }
 }

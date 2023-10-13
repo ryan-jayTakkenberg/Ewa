@@ -91,7 +91,7 @@ export default {
       this.closeTeamEditPage();
     },
     addTeam() {
-      this.selectedTeam = Team.template;
+      this.selectedTeam = Team.createNewTeam();
       this.$refs.tableRef.current = null;
       setTimeout(this.scrollToTeam, 1);
     },

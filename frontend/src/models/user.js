@@ -1,35 +1,43 @@
 import Team from "@/models/team";
 
 export default class User {
-   constructor(id, email, name, userRole, dateLastLoggedIn, password) {
-       this.id = id;
-       this.email = email;
-       this.name = name;
-       this.userRole = userRole;
-       this.lastLoggedIn = dateLastLoggedIn;
-       this.password = password;
-   }
-
-    static copyConstructor(user) {
-        if (user === null || user === undefined) return null;
-        return Object.assign(new User(user.id, user.email, user.name, user.userRole, user.lastLoggedIn), user);
+    constructor(id, email, name, userRole, dateLastLoggedIn, password) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.userRole = userRole;
+        this.lastLoggedIn = dateLastLoggedIn;
+        this.password = password;
     }
 
+    clone() {
+        return new User(this.id, this.email, this.name, this.userRole, this.lastLoggedIn);
+    }
 
-   getTeams() {
-       return Team.teams.filter(team => team.users.includes(this));
-   }
+    equals(other) {
+        if (!other) {
+            return false;
+        }
+        for (let attr of Object.keys(this)) {
+            if (typeof this[attr] !== typeof other[attr] || `${this[attr]}` !== `${other[attr]}`) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-   equals(other) {
-       return other && this.name === other.name;
-   }
+    getTeams() {
+        return Team.teams.filter(team => team.users.includes(this));
+    }
 
     static createNewUser(name) {
-        return new User(-1, name, );
+        return new User(-1, name);
     }
 
     /**
      * put this user into the database
+     * will add a new user to the database if no user exists
+     * will override the existing user with the new user if the user already exists
      */
     async putDatabase() {
         try {
@@ -86,5 +94,4 @@ export default class User {
 
     static fetching = false;
     static users = [];
-    static template = new User(-1, null);
 }

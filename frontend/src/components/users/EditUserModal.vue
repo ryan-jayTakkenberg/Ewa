@@ -28,7 +28,7 @@ export default {
     }
   },
   created() {
-    this.editedUser = User.copyConstructor(this.user)
+    this.editedUser = this.user.clone();
     console.log(this.editedUser);
   },
 }
