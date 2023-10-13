@@ -1,14 +1,20 @@
 import Team from "@/models/team";
 
 export default class User {
-    constructor(id, email, name, userRole, dateLastLoggedIn, password) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-        this.userRole = userRole;
-        this.lastLoggedIn = dateLastLoggedIn;
-        this.password = password;
+
+    static UserRole = {
+        VIEWER: "Viewer",
+        ADMIN: "Admin",
     }
+
+   constructor(id, email, name, userRole, dateLastLoggedIn, password) {
+       this.id = id;
+       this.email = email;
+       this.name = name;
+       this.userRole = userRole;
+       this.lastLoggedIn = dateLastLoggedIn;
+       this.password = password;
+   }
 
     clone() {
         return new User(this.id, this.email, this.name, this.userRole, this.lastLoggedIn);

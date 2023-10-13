@@ -58,6 +58,10 @@ export default {
   /*outline: 1px solid red;*/
 }
 
+body{
+  overflow: hidden;
+}
+
 .app-container {
   display: flex;
   flex-direction: row;
