@@ -1,4 +1,6 @@
 <script>
+import User from "@/models/user";
+
 import TitleComponent from "@/components/general/SolarTitle.vue";
 import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
 import ButtonComponent from "@/components/general/SolarButton.vue";
@@ -6,7 +8,6 @@ import SolarTable from "@/components/general/SolarTable.vue";
 import UsersRowComponent from "@/components/users/UsersRowComponent.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
-import User from "@/models/user";
 import EditUserModal from "@/components/users/EditUserModal.vue";
 
 export default {
@@ -25,19 +26,14 @@ export default {
     return {
       inputValue: '', // Store the input value for searching users
       users: [
-        new User(1, "example1@company.com", "Full Name 1", "Admin", "1 February 2023"),
-        new User(2, "example2@company.com", "Full Name 2", "Viewer", "2 February 2023"),
-        new User(3, "example3@company.com", "Full Name 3", "Admin", "3 February 2023"),
-        new User(4, "example4@company.com", "Full Name 4", "Viewer", "4 February 2023")
+        new User(1, "example1@company.com", "Full Name 1", "Admin", "1 February 2023", "1234",),
+        new User(2, "example2@company.com", "Full Name 2", "Viewer", "2 February 2023", "1234",),
+        new User(3, "example3@company.com", "Full Name 3", "Admin", "3 February 2023", "1234",),
+        new User(4, "example4@company.com", "Full Name 4", "Viewer", " February 2023", "1234",)
       ],
       selectedUser: null,  // Track the selected user for editing
       isEditUserModalOpen: false,
     };
-  },
-  computed: {
-    User() {
-      return User;
-    },
   },
   methods: {
     handleInputValueChange(value) {
@@ -94,7 +90,7 @@ export default {
 
     </div>
   </div>
-  <EditUserModal v-if="isEditUserModalOpen" :on-close="closeEditUserModal" :user="selectedUser"></EditUserModal>
+  <EditUserModal v-if="isEditUserModalOpen" :on-close="closeEditUserModal" :selected-user="selectedUser"></EditUserModal>
 
 </template>
 

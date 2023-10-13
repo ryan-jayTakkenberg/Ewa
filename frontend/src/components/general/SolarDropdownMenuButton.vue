@@ -43,7 +43,7 @@ export default {
 <style scoped>
 .dropdown-btn {
   color: white;
-  background-color: grey;
+  background-color: #c7d02c;
   font-weight: 500;
   border-radius: 0.5rem /* 8px */;
   padding: 0.5rem 1.0rem;;
@@ -54,7 +54,7 @@ export default {
 
 .dropdown-btn-open {
   color: white;
-  background-color: #c7d02c; /* Change to your desired open color */
+  background-color: #a3b825; /* Change to your desired open color */
   font-weight: 500;
   border-radius: 0.5rem;
   padding: 0.5rem 1.0rem;
@@ -64,7 +64,7 @@ export default {
 }
 
 .dropdown-btn:hover {
-  background-color: #c7d02c;
+  background-color: #a3b825;
 }
 
 </style>

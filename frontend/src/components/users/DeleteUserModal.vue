@@ -4,23 +4,12 @@ import User from "@/models/user";
 import SolarButton from "@/components/general/SolarButton.vue";
 
 export default {
-  name: "EditUserModal",
+  name: "DeleteUserModal",
   components: {SolarButton},
   data() {
     return {
-      UserRoleOptions: User.UserRole,
       clonedUser: null,
-      currentPasswordVisible: false,
-      newPasswordVisible: false,
     }
-  },
-  computed: {
-    currentPasswordFieldType() {
-      return this.currentPasswordVisible ? 'text' : 'password';
-    },
-    newPasswordFieldType() {
-      return this.newPasswordVisible ? 'text' : 'password';
-    },
   },
   props: {
     selectedUser: {

@@ -19,9 +19,10 @@ export default {
 </template>
 
 <style scoped>
+
 .solar-button {
   color: white;
-  background-color: grey;
+  background-color: #c7d02c;
   font-weight: 500;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -35,11 +36,11 @@ export default {
 }
 
 .solar-button:hover {
-  background-color: #c7d02c;
+  background-color: #a3b825;
 }
 
 .solar-button:focus {
-  background-color: #c7d02c;
+  background-color: #a3b825;
 }
 
 </style>
