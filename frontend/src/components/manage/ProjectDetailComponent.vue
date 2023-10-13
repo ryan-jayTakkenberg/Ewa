@@ -36,8 +36,9 @@
 </template>
 
 <script>
-import {Project} from "@/models/project";
 import ProjectEditComponent from "@/components/manage/ProjectEditComponent";
+import Project from "@/models/project";
+
 export default {
   name: "ProjectDetailComponent",
   components: {
@@ -45,17 +46,20 @@ export default {
   },
   data(){
     return{
-      projectList: [],
+      projectList: [...Project.projects],
       selectedProject: null,
       showEditComponent: false,
     }
   },
   created() {
-    let amountOfProjects = 3;
-
-    for (let i = 0; i < amountOfProjects; i++){
-      const newProject = Project.createSampleProject()
-      this.projectList.push(newProject);
+    if (!this.projectList?.length) {
+      // Keep updating the list if the database has not returned all the data yet
+      const fetchingInterval = setInterval(() => {
+        if (!Project.fetching) {
+          this.projectList = [...Project.projects];
+          clearInterval(fetchingInterval);
+        }
+      }, 100);
     }
   },
   methods: {

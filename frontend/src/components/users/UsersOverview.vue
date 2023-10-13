@@ -24,20 +24,21 @@ export default {
   data() {
     return {
       inputValue: '', // Store the input value for searching users
-      users: [
-        new User(1, "example1@company.com", "Full Name 1", "Admin", "1 February 2023"),
-        new User(2, "example2@company.com", "Full Name 2", "Viewer", "2 February 2023"),
-        new User(3, "example3@company.com", "Full Name 3", "Admin", "3 February 2023"),
-        new User(4, "example4@company.com", "Full Name 4", "Viewer", "4 February 2023")
-      ],
+      users: [...User.users],
       selectedUser: null,  // Track the selected user for editing
       isEditUserModalOpen: false,
     };
   },
-  computed: {
-    User() {
-      return User;
-    },
+  created() {
+    if (!this.users?.length) {
+      // Keep updating the list if the database has not returned all the data yet
+      const fetchingInterval = setInterval(() => {
+        if (!User.fetching) {
+          this.users = [...User.users];
+          clearInterval(fetchingInterval);
+        }
+      }, 100);
+    }
   },
   methods: {
     handleInputValueChange(value) {

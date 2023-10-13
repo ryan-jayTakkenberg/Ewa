@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {Warehouse} from "@/models/warehouse";
+import Warehouse from "@/models/warehouse";
 import WarehouseEditComponent from "@/components/manage/WarehouseEditComponent";
 
 export default {
@@ -43,19 +43,21 @@ export default {
   },
   data(){
     return{
-      warehouseList: [],
+      warehouseList: [...Warehouse.warehouses],
       warehouseNumber: 0,
       selectedWarehouse: null,
       showEditComponent: false,
     };
   },
   created() {
-    let amountOfWarhouses = 4
-
-    for (let i = 0; i < amountOfWarhouses; i++){
-      const newWarehouse = Warehouse.createSampleWarehouse(this.warehouseNumber);
-      this.warehouseList.push(newWarehouse);
-      this.warehouseNumber += 1;
+    if (!this.warehouseList?.length) {
+      // Keep updating the list if the database has not returned all the data yet
+      const fetchingInterval = setInterval(() => {
+        if (!Warehouse.fetching) {
+          this.warehouseList = [...Warehouse.warehouses];
+          clearInterval(fetchingInterval);
+        }
+      }, 100);
     }
   },
   methods: {

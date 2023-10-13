@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import {Product} from "@/models/product";
+import Product from "@/models/product";
 import ProductEditComponent from "@/components/manage/ProductEditComponent";
 
 export default {
@@ -45,17 +45,20 @@ export default {
   },
   data(){
     return{
-      productList: [],
+      productList: [...Product.products],
       selectedProduct: null,
       showEditComponent: false,
     }
   },
   created() {
-    let amountOfProducts = 5
-
-    for (let i = 0; i < amountOfProducts; i ++){
-      const newProduct = Product.createSampleProduct();
-      this.productList.push(newProduct);
+    if (!this.productList?.length) {
+      // Keep updating the list if the database has not returned all the data yet
+      const fetchingInterval = setInterval(() => {
+        if (!Product.fetching) {
+          this.productList = [...Product.products];
+          clearInterval(fetchingInterval);
+        }
+      }, 100);
     }
   },
   methods: {
