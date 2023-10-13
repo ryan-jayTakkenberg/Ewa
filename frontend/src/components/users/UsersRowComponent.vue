@@ -2,15 +2,15 @@
 export default {
   name: "UsersRowComponent",
   props: {
-    userName:{
+    userName: {
       type: String,
       required: true,
     },
-    userEmail:{
+    userEmail: {
       type: String,
       required: true,
     },
-    userFunction:{
+    userRole: {
       type: String,
       required: true,
     },
@@ -18,11 +18,16 @@ export default {
       type: String,
       required: true,
     },
-    onClickEditUser: {
-      type: Function,
-      required: true,
+  },
+  methods: {
+    editUser() {
+      this.$emit('click-edit-user', {
+        email: this.userEmail,
+        name: this.userName,
+        userRole: this.userRole,
+        lastLoggedIn: this.userLastLoggedIn,
+      });
     },
-
   }
 }
 </script>
@@ -43,33 +48,26 @@ export default {
         <div class="font-normal text-gray-500">{{ userEmail }}</div>
       </div>
     </th>
-
+    <td class="px-6 py-4">{{ userRole }}</td>
     <td class="px-6 py-4">
-      {{ userFunction }}
+      <div class="flex items-center">{{ userLastLoggedIn }}</div>
     </td>
 
     <td class="px-6 py-4">
-      <div class="flex items-center">
-        {{userLastLoggedIn }}
-      </div>
-    </td>
-
-    <td class="px-6 py-4">
-      <!-- Modal toggle -->
-      <div @click="onClickEditUser" type="button" class="edit-user-btn">Edit user
-      </div>
+      <div @click="editUser" class="edit-user-btn">Edit user</div>
     </td>
 
   </tr>
 </template>
 
 <style scoped>
-.edit-user-btn{
+.edit-user-btn {
   font-weight: 500;
   color: rgb(37 99 235);
   cursor: pointer;
 }
-.edit-user-btn:hover{
+
+.edit-user-btn:hover {
   text-decoration-line: underline;
 }
 
@@ -78,7 +76,7 @@ export default {
   border-bottom-width: 1px;
 }
 
-.table-row:hover{
+.table-row:hover {
   background-color: rgb(249 250 251);
 }
 </style>

@@ -1,12 +1,19 @@
 import Team from "@/models/team";
 
 export default class User {
-   constructor(id, name) {
+   constructor(id, email, name, userRole, dateLastLoggedIn ) {
        this.id = id;
+       this.email = email;
        this.name = name;
-       // this.userRole= userRole;
-       // this.lastLoggedIn = lastLoggedIn;
+       this.userRole = userRole;
+       this.lastLoggedIn = dateLastLoggedIn;
    }
+
+    static copyConstructor(user) {
+        if (user === null || user === undefined) return null;
+        return Object.assign(new User(user.id, user.email, user.name, user.userRole, user.lastLoggedIn), user);
+    }
+
 
    getTeams() {
        return Team.teams.filter(team => team.users.includes(this));
@@ -17,7 +24,7 @@ export default class User {
    }
 
     static createNewUser(name) {
-        return new User(-1, name, userRole, );
+        return new User(-1, name, );
     }
 
     /**
