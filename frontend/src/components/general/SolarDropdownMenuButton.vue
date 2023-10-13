@@ -2,7 +2,8 @@
   <div class="relative ml-2 mr-2">
     <!-- Dropdown button -->
     <button
-        @click="toggleDropdown"
+        @focus="showDropdown"
+        @blur="hideDropdown"
         :class="{ 'dropdown-btn-open': isDropdownOpen, 'dropdown-btn': !isDropdownOpen }">{{ textButton }}
       <svg class="w-2.5 h-2.5 ml-2.5" fill="none" viewBox="0 0 10 6">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
@@ -33,9 +34,12 @@ export default {
     };
   },
   methods: {
-    toggleDropdown() {
-      this.isDropdownOpen = !this.isDropdownOpen;
-    }
+    showDropdown() {
+      this.isDropdownOpen = true;
+    },
+    hideDropdown() {
+      setTimeout(() => this.isDropdownOpen = false, 100);
+    },
   }
 };
 </script>
