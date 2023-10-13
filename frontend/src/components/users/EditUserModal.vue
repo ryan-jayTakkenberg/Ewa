@@ -44,8 +44,8 @@ export default {
     },
   },
   created() {
-    this.editedUser = this.user.clone();
-    console.log(this.editedUser);
+    this.clonedUser = this.user.clone();
+    console.log(this.clonedUser);
   },
 }
 </script>

@@ -96,7 +96,7 @@ export default {
 
     </div>
   </div>
-  <EditUserModal v-if="isEditUserModalOpen" :on-close="closeEditUserModal" :selected-user="selectedUser"></EditUserModal>
+  <EditUserModal v-if="isEditUserModalOpen" :on-close="closeEditUserModal" :user="selectedUser"></EditUserModal>
 
 </template>
 
