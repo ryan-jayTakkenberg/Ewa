@@ -6,7 +6,7 @@ import WarehouseDetailComponent from "@/components/manage/WarehouseDetailCompone
 import TeamDetailComponent from "@/components/manage/TeamDetailComponent.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";
 import ProductDetailComponent from "@/components/manage/ProductDetailComponent";
-import ProjectDetailComponent from "@/components/manage/ProjectDetailComponent";
+import ProjectDetailComponent from "@/components/projects/ProjectDetailComponent.vue";
 import ReportComponent from "@/components/manage/ReportComponent.vue";
 import UsersOverview from "@/components/users/UsersOverview.vue";
 
