@@ -17,7 +17,7 @@ export default class User {
    }
 
     clone() {
-        return new User(this.id, this.email, this.name, this.userRole, this.lastLoggedIn);
+        return new User(this.id, this.email, this.name, this.userRole, this.lastLoggedIn, this.password);
     }
 
     equals(other) {
@@ -87,7 +87,7 @@ export default class User {
             this.fetching = true;
             // TODO make a get request to the backend
             //  update "users" with the response
-            return [new User(1, "example1@company.com", "Full Name 1", "Admin", "1 February 2023"), new User(2, "example2@company.com", "Full Name 2", "Viewer", "2 February 2023"), new User(3, "example3@company.com", "Full Name 3", "Admin", "3 February 2023"), new User(4, "example4@company.com", "Full Name 4", "Viewer", "4 February 2023") ];
+            return [new User(1, "example1@company.com", "Full Name 1", "Admin", "1 February 2023", "1234"), new User(2, "example2@company.com", "Full Name 2", "Viewer", "2 February 2023", "1234"), new User(3, "example3@company.com", "Full Name 3", "Admin", "3 February 2023", "1234"), new User(4, "example4@company.com", "Full Name 4", "Viewer", "4 February 2023", "1234") ];
         } catch (e) {
             return [];
         } finally {

@@ -6,10 +6,6 @@ export default {
       type: String,
       required: true,
     },
-    onClick: {
-      type: Function,
-      required: true,
-    }
   }
 }
 </script>

@@ -78,7 +78,7 @@ export default {
                   type="text"
                   v-model="this.clonedUser.name"
                   class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
-                  :placeholder="this.clonedUser.name"
+                  placeholder="Name"
                   required>
             </div>
 
@@ -94,20 +94,21 @@ export default {
             <div class="col-span-6 sm:col-span-3">
               <label for="user-role" class="modal-label">Function</label>
 
-              <select v-model="this.clonedUser.userRole"
-                      class="role-select">
-                <option v-for="userRole in UserRoleOptions" :key="userRole" :value="userRole"> {{ userRole }}</option>
+              <select v-model="this.clonedUser.userRole" class="role-select">
+                <option v-for="userRole in UserRoleOptions"
+                        :key="userRole"
+                        :value="userRole">{{ userRole }}
+                </option>
               </select>
             </div>
 
             <div class="col-span-6 sm:col-span-3">
               <label for="current-password" class="modal-label ">Current Password</label>
               <input
-                  v-model="clonedUser.password"
+                  v-model="this.clonedUser.password"
                   :type="currentPasswordFieldType" placeholder="••••••••"
                   class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
                   required>
-
               <button @click="toggleCurrentPasswordVisibility" type="button" class="toggle-password-button">
                 {{ currentPasswordFieldType === 'password' ? 'Show' : 'Hide' }}
               </button>

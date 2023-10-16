@@ -6,16 +6,12 @@ export default {
       type: String,
       required: true,
     },
-    onClick: {
-      type: Function,
-      required: true,
-    }
   }
 }
 </script>
 
 <template>
-  <li @click="onClick">
+  <li>
     <p class="menuItem">{{ textMenuItem }}</p>
   </li>
 </template>

@@ -16,7 +16,7 @@ export default {
   },
   data() {
     return {
-      checked: this.isChecked,// for two way binding
+      checked: this.isChecked, // for two-way binding
     }
   },
   methods: {

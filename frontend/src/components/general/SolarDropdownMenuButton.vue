@@ -2,7 +2,7 @@
   <div class="relative ml-2 mr-2">
     <!-- Dropdown button -->
     <button
-        @focus="showDropdown"
+        @click="toggleDropdown"
         @blur="hideDropdown"
         :class="{ 'dropdown-btn-open': isDropdownOpen, 'dropdown-btn': !isDropdownOpen }">{{ textButton }}
       <svg class="w-2.5 h-2.5 ml-2.5" fill="none" viewBox="0 0 10 6">
@@ -11,7 +11,7 @@
     </button>
 
     <!-- Dropdown menu -->
-    <div v-if="isDropdownOpen" class=" absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+    <div v-if="isDropdownOpen" class="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
       <ul class="py-2 text-sm text-gray-700">
         <slot></slot>
       </ul>
@@ -34,8 +34,8 @@ export default {
     };
   },
   methods: {
-    showDropdown() {
-      this.isDropdownOpen = true;
+    toggleDropdown() {
+      this.isDropdownOpen = !this.isDropdownOpen;
     },
     hideDropdown() {
       setTimeout(() => this.isDropdownOpen = false, 100);

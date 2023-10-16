@@ -9,10 +9,14 @@ import UsersRowComponent from "@/components/users/UsersRowComponent.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
 import EditUserModal from "@/components/users/EditUserModal.vue";
+import DeleteUserModal from "@/components/users/DeleteUserModal.vue";
+import CreateUserModal from "@/components/users/CreateUserModal.vue";
 
 export default {
   name: "UsersOverview",
   components: {
+    CreateUserModal,
+    DeleteUserModal,
     SolarDropdownMenuItem,
     SolarDropdownMenuButton,
     UsersRowComponent,
@@ -27,7 +31,9 @@ export default {
       inputValue: '', // Store the input value for searching users
       users: [...User.users],
       selectedUser: null,  // Track the selected user for editing
+      isCreateUserModalOpen: false,
       isEditUserModalOpen: false,
+      isDeleteUserModalOpen: false,
       checkedUsers: [], // A list of the selected users ID's
     };
   },
@@ -55,10 +61,23 @@ export default {
    * TODO implement a way to display more than one edit popup (and support an array of users to edit)
    */
   methods: {
+    addUser(newUser) {
+      // Add the new user to the users array
+      this.users.push(newUser);
+    },
+
     handleInputValueChange(value) {
       console.log(value);
       this.inputValue = value;
       // Use this.inputValue to search in the table
+    },
+    openDeleteUserModal(user) {
+      if (!user) {
+        // No user selected
+        return;
+      }
+      this.selectedUser = user;  // Set the selected user
+      this.isDeleteUserModalOpen = true;  // Open the modal
     },
     openEditUserModal(user) {
       if (!user) {
@@ -68,8 +87,18 @@ export default {
       this.selectedUser = user;  // Set the selected user
       this.isEditUserModalOpen = true;  // Open the modal
     },
+    openCreateUserModal() {
+      this.isCreateUserModalOpen = true;  // Open the modal
+    },
+
     closeEditUserModal() {
       this.isEditUserModalOpen = false;
+    },
+    closeDeleteUserModal() {
+      this.isDeleteUserModalOpen = false;
+    },
+    closeCreateUserModal() {
+      this.isCreateUserModalOpen = false;
     },
     toggleCheckbox(user, isChecked) {
       if (isChecked) {
@@ -94,18 +123,19 @@ export default {
   <div class="users-body">
     <div class="users-container">
       <div class="users-action-row">
-        <!-- Action Dropdown Button -->
         <SolarDropdownMenuButton text-button="Action">
-          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="openEditUserModal(getSelectedUsers()[0])"></SolarDropdownMenuItem>
-          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteUserModal"></SolarDropdownMenuItem>
+          <SolarDropdownMenuItem
+              text-menu-item="Edit Users" @click="openEditUserModal(getSelectedUsers()[0])"></SolarDropdownMenuItem>
+          <SolarDropdownMenuItem
+              text-menu-item="Delete Users" @click="openDeleteUserModal"></SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
 
-        <!-- Searchbar -->
-        <SearchBarComponent place-holder="Search For Users" class="ml-auto" @input="handleInputValueChange"
-        ></SearchBarComponent>
-        <ButtonComponent button-text="Add User" :on-click="openEditUserModal"></ButtonComponent>
-      </div>
+        <SearchBarComponent
+            class="ml-auto" place-holder="Search For Users"
+            @input="handleInputValueChange"></SearchBarComponent>
 
+        <ButtonComponent button-text="Add User" @click="openCreateUserModal"></ButtonComponent>
+      </div>
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
         <UsersRowComponent
             v-for="(user, index) in users"
@@ -113,15 +143,17 @@ export default {
             :user="user"
             :isChecked="user.isChecked"
             @click-edit-user="openEditUserModal"
-            @toggle-checkbox="toggleCheckbox(user, $event)"><!-- Pass user and checkbox state -->
+            @toggle-checkbox="toggleCheckbox(user, $event)"> <!-- Pass user and checkbox state -->
         </UsersRowComponent>
       </SolarTable>
-
-
     </div>
   </div>
-  <EditUserModal v-if="isEditUserModalOpen" :on-close="closeEditUserModal" :user="selectedUser"></EditUserModal>
 
+  <CreateUserModal v-if="isCreateUserModalOpen" :on-close="closeCreateUserModal" @addUser="addUser"></CreateUserModal>
+  <EditUserModal v-if="isEditUserModalOpen" :user="selectedUser" :on-close="closeEditUserModal"></EditUserModal>
+
+  <DeleteUserModal v-if="isDeleteUserModalOpen" :user="selectedUser" on-delete="" :on-close="closeDeleteUserModal">
+  </DeleteUserModal>
 </template>
 
 <style scoped>
