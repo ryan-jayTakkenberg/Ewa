@@ -18,11 +18,11 @@
         </div>
 
         <div class="modal-body">
-          <p>Are you sure you want to delete the user: <strong>{{user.name }}</strong>?</p>
+          <p>Are you sure you want to delete the user: <strong>{{ user.name }}</strong>?</p>
         </div>
 
         <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
-          <button @click="onDelete" class="delete-button">Delete</button>
+          <button @click="deleteUser" class="delete-button">Delete</button>
           <button @click="onClose" class="cancel-button">Cancel</button>
         </div>
       </div>
@@ -44,11 +44,12 @@ export default {
       type: Function,
       required: true,
     },
-    onDelete: {
-      type: Function,
-      required: true,
-    },
   },
+  methods: {
+    deleteUser() {
+      this.$emit('delete-user', this.user.id); // Emit an event to toggle the checked value
+    },
+  }
 };
 </script>
 
@@ -116,5 +117,13 @@ export default {
 
 .cancel-button:hover {
   background-color: rgb(206 212 218);
+}
+
+@media (min-width: 768px) {
+  .delete-user-modal-container {
+    width: 50%;
+    padding: 4rem;
+    margin-left: 0;
+  }
 }
 </style>

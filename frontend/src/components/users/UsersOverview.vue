@@ -62,35 +62,33 @@ export default {
    */
   methods: {
     addUser(newUser) {
-      // Add the new user to the users array
       this.users.push(newUser);
     },
-
+    deleteUser(userID) {
+      this.users = this.users.filter(user => user.id !== userID)
+      this.isDeleteUserModalOpen = false;  // Open the modal
+    },
     handleInputValueChange(value) {
       console.log(value);
-      this.inputValue = value;
-      // Use this.inputValue to search in the table
+      this.inputValue = value;  // Use this.inputValue to search in the table
     },
     openDeleteUserModal(user) {
       if (!user) {
-        // No user selected
         return;
       }
       this.selectedUser = user;  // Set the selected user
       this.isDeleteUserModalOpen = true;  // Open the modal
     },
-    openEditUserModal(user) {
-      if (!user) {
-        // No user selected
+    openEditUserModal(event) {
+      if (!event) {
         return;
       }
-      this.selectedUser = user;  // Set the selected user
+      this.selectedUser = event;  // Set the selected user
       this.isEditUserModalOpen = true;  // Open the modal
     },
     openCreateUserModal() {
       this.isCreateUserModalOpen = true;  // Open the modal
     },
-
     closeEditUserModal() {
       this.isEditUserModalOpen = false;
     },
@@ -124,15 +122,16 @@ export default {
     <div class="users-container">
       <div class="users-action-row">
         <SolarDropdownMenuButton text-button="Action">
-          <SolarDropdownMenuItem
-              text-menu-item="Edit Users" @click="openEditUserModal(getSelectedUsers()[0])"></SolarDropdownMenuItem>
-          <SolarDropdownMenuItem
-              text-menu-item="Delete Users" @click="openDeleteUserModal"></SolarDropdownMenuItem>
+          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="openEditUserModal(getSelectedUsers()[0])">
+          </SolarDropdownMenuItem>
+          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteUserModal">
+          </SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
 
         <SearchBarComponent
             class="ml-auto" place-holder="Search For Users"
-            @input="handleInputValueChange"></SearchBarComponent>
+            @input="handleInputValueChange">
+        </SearchBarComponent>
 
         <ButtonComponent button-text="Add User" @click="openCreateUserModal"></ButtonComponent>
       </div>
@@ -142,18 +141,32 @@ export default {
             :key="index"
             :user="user"
             :isChecked="user.isChecked"
-            @click-edit-user="openEditUserModal"
+            @on-click-edit-user="openEditUserModal"
+            @on-click-delete-user="openDeleteUserModal"
             @toggle-checkbox="toggleCheckbox(user, $event)"> <!-- Pass user and checkbox state -->
         </UsersRowComponent>
       </SolarTable>
     </div>
   </div>
 
-  <CreateUserModal v-if="isCreateUserModalOpen" :on-close="closeCreateUserModal" @addUser="addUser"></CreateUserModal>
-  <EditUserModal v-if="isEditUserModalOpen" :user="selectedUser" :on-close="closeEditUserModal"></EditUserModal>
+  <CreateUserModal
+      v-if="isCreateUserModalOpen"
+      :on-close="closeCreateUserModal">
+  </CreateUserModal>
 
-  <DeleteUserModal v-if="isDeleteUserModalOpen" :user="selectedUser" on-delete="" :on-close="closeDeleteUserModal">
+  <EditUserModal
+      v-if="isEditUserModalOpen"
+      :user="selectedUser"
+      :on-close="closeEditUserModal">
+  </EditUserModal>
+
+  <DeleteUserModal
+      v-if="isDeleteUserModalOpen"
+      :user="selectedUser"
+      @delete-user="deleteUser"
+      :on-close="closeDeleteUserModal">
   </DeleteUserModal>
+
 </template>
 
 <style scoped>

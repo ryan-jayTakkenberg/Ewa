@@ -3,6 +3,7 @@ import User from "@/models/user";
 
 export default {
   name: "UsersRowComponent",
+  emits: ["on-click-edit-user", "on-click-delete-user", "toggle-checkbox"],
   props: {
     user: {
       type: User,  // Use the UserModel as the prop type
@@ -20,12 +21,14 @@ export default {
     }
   },
   methods: {
-    editUser() {
-      this.$emit('click-edit-user', this.user);  // Emit the userModel directly
+    onClickEditUser() {
+      this.$emit('on-click-edit-user', this.user); // Emit the userModel directly
+    },
+    onClickDeleteUser() {
+      this.$emit('on-click-delete-user', this.user); // Emit the userModel directly
     },
     toggleCheckbox() {
-      // Emit an event to toggle the checked value
-      this.$emit('toggle-checkbox', this.checked);
+      this.$emit('toggle-checkbox', this.checked); // Emit an event to toggle the checked value
     },
   }
 }
@@ -39,8 +42,7 @@ export default {
         <input
             type="checkbox"
             :checked="checked" v-model="checked" @change="toggleCheckbox"
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-        >
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
       </div>
     </td>
 
@@ -57,8 +59,9 @@ export default {
     </td>
 
     <!-- Edit User -->
-    <td class="px-6 py-4">
-      <div @click="editUser" class="edit-user-btn">Edit user</div>
+    <td class="px-6 py-4 row">
+      <div @click="onClickEditUser" class="edit-user-btn">Edit user</div>
+      <div @click="onClickDeleteUser" class="delete-user-btn">Delete user</div>
     </td>
 
   </tr>
@@ -69,6 +72,16 @@ export default {
   font-weight: 500;
   color: rgb(37 99 235);
   cursor: pointer;
+}
+
+.delete-user-btn {
+  font-weight: 500;
+  color: red;
+  cursor: pointer;
+}
+
+.delete-user-btn:hover {
+  text-decoration-line: underline;
 }
 
 .edit-user-btn:hover {

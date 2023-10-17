@@ -141,12 +141,12 @@ export default {
   display: block;
   width: 100%;
   padding: 0.75rem 1rem;;
-  font-size: 1rem /* 16px */;
-  line-height: 1.5rem /* 24px */;
+  font-size: 1rem;
+  line-height: 1.5rem;
   color: rgb(17 24 39);
   border-width: 1px;
   border-color: rgb(209 213 219);
-  border-radius: 0.5rem /* 8px */;
+  border-radius: 0.5rem;
   background-color: rgb(249 250 251);
   height: 42px;
   cursor: pointer;
@@ -167,32 +167,31 @@ export default {
   background-color: rgb(30 64 175);
 }
 
-
 .modal-input {
   background-color: rgb(249 250 251);
   border-width: 1px;
   border-color: rgb(209 213 219);
   color: rgb(17 24 39);
-  font-size: 0.875rem /* 14px */;
-  line-height: 1.25rem /* 20px */;
-  border-radius: 0.5rem /* 8px */;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border-radius: 0.5rem;
   display: block;
   width: 100%;
-  padding: 0.625rem /* 10px */;
+  padding: 0.625rem;
 }
 
 .modal-label {
   display: block;
-  margin-bottom: 0.5rem /* 8px */;
-  font-size: 0.875rem /* 14px */;
-  line-height: 1.25rem /* 20px */;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   font-weight: 500;
   color: rgb(17 24 39);
 }
 
 
 .modal-body {
-  padding: 1.5rem /* 24px */;
+  padding: 1.5rem;
   --tw-space-y-reverse: 0;
   margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
@@ -201,17 +200,17 @@ export default {
 .modal-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 1.5rem /* 24px */;
+  gap: 1.5rem;
 }
 
 .close-modal-btn {
   color: rgb(156 163 175);
   background-color: transparent;
-  border-radius: 0.5rem /* 8px */;
-  font-size: 0.875rem /* 14px */;
-  line-height: 1.25rem /* 20px */;
-  width: 2rem /* 32px */;
-  height: 2rem /* 32px */;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  width: 2rem;
+  height: 2rem;
   margin-left: auto;
   display: inline-flex;
   justify-content: center;
@@ -246,10 +245,10 @@ export default {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 1rem /* 16px */;
+  padding: 1rem;
   border-bottom-width: 1px;
-  border-top-left-radius: 0.25rem /* 4px */;
-  border-top-right-radius: 0.25rem /* 4px */;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
 }
 
 .edit-user-modal-container {
