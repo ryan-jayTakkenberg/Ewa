@@ -6,7 +6,7 @@
         @sidebar-expanded="updateSidebarState"
     ></NavBar>
 
-    <div :class="{ 'router-view-expanded': isSideBarExpanded, 'router-view-collapsed': !isSideBarExpanded }">
+    <div class="router-view">
       <router-view></router-view>
     </div>
 
@@ -50,6 +50,7 @@ export default {
 </script>
 
 <style>
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -58,25 +59,15 @@ export default {
   /*outline: 1px solid red;*/
 }
 
-body{
-  overflow: hidden;
-}
-
 .app-container {
   display: flex;
   flex-direction: row;
+  height: 100svh;
+  width: 100svw;
 }
 
-/* Adjust the width when sidebar is collapsed */
-.router-view-expanded {
-  width: calc(100% - 70px);
-  margin-left: auto;
-  height: 100%;
-}
-
-.router-view-collapsed {
-  width: calc(100% - 70px);
-  margin-left: auto;
+.router-view {
+  width: 100%;
   height: 100%;
 }
 

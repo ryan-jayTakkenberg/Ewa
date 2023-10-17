@@ -1,6 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router';
 
-import LoginComponent from "@/components/LoginComponent.vue";
+import LoginComponent from "@/login/LoginComponent.vue";
 import OverviewComponent from "@/components/OverviewComponent.vue";
 import WarehouseDetailComponent from "@/components/manage/WarehouseDetailComponent.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";

@@ -10,7 +10,7 @@ export default {
   data() {
     return {
       activePage: 'overview', //Default overview
-      userRole: 'admin', // viewer or Admin
+      userRole: 'viewer', // viewer or Admin
       sidebarIsExpanded: false,
       logoExpanded: logoExpanded,
       logoCollapsed: logoCollapsed
@@ -34,110 +34,121 @@ export default {
 }
 </script>
 <template>
+
   <div :class="{'navbar': true, 'collapsed': sidebarIsExpanded}">
-    <div class="navbar-container">
       <div class="nav-header">
+
         <img
             class="nav-header-logo"
             alt=" logo"
             :src="sidebarIsExpanded ? logoCollapsed  : logoExpanded"
         />
-        <div class="menu-toggle btn" @click="toggleSidebar">
-          <span class="material-symbols-outlined">
-            {{ sidebarIsExpanded ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</span>
+
+        <div class="sideBarToggleContainer" @click="toggleSidebar">
+          <span :class="{'material-symbols-outlined logoExpanded': sidebarIsExpanded, 'material-symbols-outlined logoCollapsed': !sidebarIsExpanded}">start</span>
         </div>
 
       </div>
-      <router-link
-          to="/overview"
-          class="nav-button relative"
-          :class="{ active: isPageActive('overview') }"
-          @click="handleNavClick('overview')"
-      >
-        <span class="material-symbols-outlined nav-icon">overview_key</span>
-        <p class="nav-text">Overview</p>
-        <span class="notification-indicator bg-danger-subtle text-danger">3</span>
-      </router-link>
 
-      <router-link
-          v-if="(userRole === 'viewer')"
-          to="/test"
-          class="nav-button"
-          :class="{ active: isPageActive('teams') }"
-          @click="handleNavClick('teams')"
-      >
-        <span class="material-symbols-outlined nav-icon">groups</span>
-        <p class="nav-text">My Teams</p>
-      </router-link>
+      <div class="navigation">
 
-      <router-link
-          v-if="(userRole === 'viewer')"
-          to="/test"
-          class="nav-button"
-          :class="{ active: isPageActive('reports') }"
-          @click="handleNavClick('reports')"
-      >
-        <span class="material-symbols-outlined nav-icon">report</span>
-        <p class="nav-text">My Reports</p>
-        <span class="notification-indicator">3</span>
-      </router-link>
+        <div class="categories">
+
+          <router-link
+              to="/overview"
+              class="nav-button relative"
+              :class="{ active: isPageActive('overview') }"
+              @click="handleNavClick('overview')"
+          >
+            <span class="material-symbols-outlined nav-icon">overview_key</span>
+            <p class="nav-text">Overview</p>
+            <!--        <span class="notification-indicator bg-danger-subtle text-danger">3</span>-->
+          </router-link>
+
+          <router-link
+              v-if="(userRole === 'viewer')"
+              to="/test"
+              class="nav-button"
+              :class="{ active: isPageActive('teams') }"
+              @click="handleNavClick('teams')"
+          >
+            <span class="material-symbols-outlined nav-icon">warehouse</span>
+            <p class="nav-text">Warehouse</p>
+          </router-link>
+
+<!--          <router-link-->
+<!--              v-if="(userRole === 'viewer')"-->
+<!--              to="/test"-->
+<!--              class="nav-button"-->
+<!--              :class="{ active: isPageActive('reports') }"-->
+<!--              @click="handleNavClick('reports')"-->
+<!--          >-->
+<!--            <span class="material-symbols-outlined nav-icon">report</span>-->
+<!--            <p class="nav-text">My Reports</p>-->
+<!--            &lt;!&ndash;        <span class="notification-indicator">3</span>&ndash;&gt;-->
+<!--          </router-link>-->
 
 
-      <router-link
-          v-if="(userRole === 'admin')" to="/warehouses" class="nav-button"
-          :class="{ active: isPageActive('warehouses') }"
-          @click="handleNavClick('warehouses')"
-      >
-        <span class="material-symbols-outlined nav-icon">warehouse</span>
-        <p class="nav-text">Warehouses</p>
-      </router-link>
+          <router-link
+              v-if="(userRole === 'admin')" to="/warehouses" class="nav-button"
+              :class="{ active: isPageActive('warehouses') }"
+              @click="handleNavClick('warehouses')"
+          >
+            <span class="material-symbols-outlined nav-icon">warehouse</span>
+            <p class="nav-text">Warehouses</p>
+          </router-link>
 
-      <router-link
-          v-if="(userRole === 'admin')" to="/projects" class="nav-button"
-          :class="{ active: isPageActive('projects') }"
-          @click="handleNavClick('projects')"
-      >
-        <span class="material-symbols-outlined nav-icon">assignment</span>
-        <p class="nav-text">Projects</p>
-      </router-link>
+          <router-link
+              v-if="(userRole === 'admin')" to="/projects" class="nav-button"
+              :class="{ active: isPageActive('projects') }"
+              @click="handleNavClick('projects')"
+          >
+            <span class="material-symbols-outlined nav-icon">assignment</span>
+            <p class="nav-text">Projects</p>
+          </router-link>
 
-      <router-link
-          v-if="(userRole === 'admin')" to="/teams" class="nav-button"
-          :class="{ active: isPageActive('teams') }"
-          @click="handleNavClick('teams')"
-      >
-        <span class="material-symbols-outlined nav-icon">groups</span>
-        <p class="nav-text">Teams</p>
-      </router-link>
+          <router-link
+              v-if="(userRole === 'admin')" to="/teams" class="nav-button"
+              :class="{ active: isPageActive('teams') }"
+              @click="handleNavClick('teams')"
+          >
+            <span class="material-symbols-outlined nav-icon">groups</span>
+            <p class="nav-text">Teams</p>
+          </router-link>
 
-      <router-link
-          v-if="(userRole === 'admin')" to="/products" class="nav-button"
-          :class="{ active: isPageActive('products') }"
-          @click="handleNavClick('products')"
-      >
-        <span class="material-symbols-outlined nav-icon">inventory_2</span>
-        <p class="nav-text">Products</p>
-      </router-link>
+          <router-link
+              v-if="(userRole === 'admin')" to="/products" class="nav-button"
+              :class="{ active: isPageActive('products') }"
+              @click="handleNavClick('products')"
+          >
+            <span class="material-symbols-outlined nav-icon">inventory_2</span>
+            <p class="nav-text">Products</p>
+          </router-link>
 
-      <router-link
-          v-if="(userRole === 'admin')" to="/users" class="nav-button"
-          :class="{ active: isPageActive('users') }"
-          @click="handleNavClick('users')"
-      >
-        <span class="material-symbols-outlined nav-icon">person</span>
-        <p class="nav-text">Users</p>
-      </router-link>
+          <router-link
+              v-if="(userRole === 'admin')" to="/users" class="nav-button"
+              :class="{ active: isPageActive('users') }"
+              @click="handleNavClick('users')"
+          >
+            <span class="material-symbols-outlined nav-icon">person</span>
+            <p class="nav-text">Users</p>
+          </router-link>
 
-      <div class="log-out-button" @click="logOut()">
-        <span class="material-symbols-outlined nav-icon">logout</span>
-        <p class="nav-text">Log out</p>
+        </div>
+
+          <div class="log-out-button" @click="logOut()">
+            <span class="material-symbols-outlined nav-icon">logout</span>
+            <p class="nav-text">Log out</p>
+          </div>
+
       </div>
 
-    </div>
   </div>
+
 </template>
 
 <style scoped>
+
 .notification-indicator {
   display: inline-flex;
   align-items: center;
@@ -155,47 +166,66 @@ export default {
 
 .navbar {
   display: flex;
-  position: fixed;
-  left: 0;
-  z-index: 50;
-  width: 200px;
-  height: 100vh;
+  flex-direction: column;
+  z-index: 1;
+  width: 15svw;
+  height: 100svh;
   background-color: #fff;
   border-right: 1px solid #e5e5e5;
-  padding: 0;
-}
-
-.navbar-container {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  overflow: hidden;
-  height: 100%;
+  transition: 0.3s ease-in-out;
 }
 
 .nav-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
 }
 
 .nav-header-logo {
-  padding: 1rem;
+  height: 10svh;
+  width: 125px;
+}
+
+.sideBarToggleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logoExpanded {
+  transition: 0.2s ease-in-out;
+}
+
+.logoCollapsed {
+  transform: rotate(180deg);
+  transition: 0.2s ease-in-out;
+}
+
+.sideBarToggleContainer:hover {
+  background: #f5f5f5;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .nav-button,
 .log-out-button {
-  display: inline-flex;
+  display: flex;
   flex-direction: row;
   align-items: center;
   transition: background-color 0.3s;
-  justify-content: flex-start;
   padding: 1.0rem 1.5rem;
-}
-
-.log-out-button {
-  margin-top: auto;
+  width: 100%;
   cursor: pointer;
 }
 
@@ -229,13 +259,16 @@ export default {
 .nav-icon {
   width: 1.5rem;
   height: 1.5rem;
-  color: #5B2E18;
+  color: #222;
+  margin-right: 1rem;
 }
 
 .nav-text {
   font-size: 0.875rem;
-  color: #5B2E18;
-  padding-left: 1rem;
+  font-weight: 500;
+  color: #222;
+  width: 100%;
+  max-height: 20px;
 }
 
 .nav-button:hover .nav-text {
@@ -264,14 +297,4 @@ export default {
   top: -22px;
 }
 
-.menu-toggle {
-  display: flex;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.menu-toggle:hover {
-  color: #c7d02c;
-  transform: translateX(0.5rem);
-}
 </style>
