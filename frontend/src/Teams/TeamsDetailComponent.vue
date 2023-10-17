@@ -47,6 +47,11 @@ export default {
         }
       }, 100);
     }
+  },computed: {
+    filteredTeams() {
+      // Filter teams based on inputValue (you may need to adjust the property you're filtering by)
+      return this.teams.filter(team => team.name.includes(this.inputValue));
+    },
   },
   methods: {
     handleInputValueChange(value) {
@@ -85,7 +90,7 @@ export default {
       console.log(this.checkedTeams);
     }, getSelectedteams() {
       return this.projects.filter(team => this.checkedTeams.includes(team.id));
-    }
+    },
   },
 }
 </script>
@@ -112,7 +117,7 @@ export default {
 
       <SolarTable :columns="['Team', 'warehouse', 'project', 'Action']">
         <TeamsRowComponent
-            v-for="(team, index) in teams"
+            v-for="(team, index) in filteredTeams"
             :key="index"
             :teams="team"
             :isChecked="team.isChecked"

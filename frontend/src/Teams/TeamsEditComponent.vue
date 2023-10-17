@@ -31,6 +31,9 @@ export default {
   created() {
     this.editedTeam = this.team.clone();
     console.log(this.editedTeam);
+      // Wijs de waarde van de 'team' prop toe aan de 'editedTeam' lokale variabele
+      this.editedTeam = { ...this.team }; // Hier maak je een kopie om onbedoelde mutatie te voorkomen
+
   },
 
 }
@@ -59,7 +62,7 @@ export default {
             <div class="col-span-6 sm:col-span-3">
               <label for="name" class="modal-label ">Team name</label>
               <input type="text"
-                     v-model="this.team.name"
+                     v-model="this.editedTeam.name"
                      class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
                      :placeholder="team.name" required>
             </div>
@@ -67,7 +70,7 @@ export default {
               <label for="email" class="modal-label">warehouse</label>
               <input
                   type="text"
-                  v-model="this.team.warehouse"
+                  v-model="this.editedTeam.warehouse"
                   class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
                   required>
             </div>
@@ -75,7 +78,7 @@ export default {
               <label for="dateOfInstallation" class="modal-label">project</label>
               <input
                   type="text"
-                  v-model="this.team.project"
+                  v-model="this.editedTeam.project"
                   class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
                   required
               >

@@ -70,7 +70,7 @@ export default class Team {
             this.fetching = true;
             // TODO make a get request to the backend
             //  update "teams" with the response
-            return [new Team(232, 'team1','Amsterdam West ','Hva '), new Team(235, 'team2','Amsterdam West ','Hva '), new Team(237, 'team3','Amsterdam West ','Hva ')];
+            return [new Team(232, 'TeamWest','Amsterdam West ','Hva '), new Team(235, 'SolarPaneel','Amsterdam West ','Hva '), new Team(237, 'Solar2','Amsterdam West ','Hva ')];
         } catch (e) {
             return [];
         } finally {
@@ -81,7 +81,7 @@ export default class Team {
     static fetching = true;
     static teams = [];
 
-    static createNewTeam(name, users) {
-        return new Team(-1, name, users);
+    static createNewTeam(name, users,warehouse,project) {
+        return new Team(-1, name, users, warehouse,project);
     }
 }
