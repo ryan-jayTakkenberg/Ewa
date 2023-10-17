@@ -71,18 +71,5 @@ export default {
   height: 100%;
 }
 
-@media screen and (min-width: 769px) {
-  /* Adjust the width when sidebar is expanded */
-  .router-view-collapsed {
-    width: calc(100% - 200px);
-    margin-left: auto;
-  }
-
-  .app-container {
-    display: flex;
-    flex-direction: row;
-  }
-
-}
 </style>
 

@@ -55,7 +55,7 @@ export default {
         <div class="categories">
 
           <router-link
-              to="/overview"
+              to="/userOverview"
               class="nav-button relative"
               :class="{ active: isPageActive('overview') }"
               @click="handleNavClick('overview')"
@@ -185,7 +185,7 @@ export default {
 
 .nav-header-logo {
   height: 10svh;
-  width: 125px;
+  width: 50%;
 }
 
 .sideBarToggleContainer {
@@ -295,6 +295,22 @@ export default {
   position: relative;
   left: -20px;
   top: -22px;
+}
+
+@media only screen and (max-width: 1350px) {
+
+  .navbar {
+    width: 20svw;
+  }
+
+}
+
+@media only screen and (max-width: 950px) {
+
+  .navbar {
+    width: 25svw;
+  }
+
 }
 
 </style>
