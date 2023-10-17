@@ -1,12 +1,14 @@
 export default class Team {
-    constructor(id, name, users = []) {
+    constructor(id, name,warehouse,project, users = []) {
         this.id = id;
         this.name = name;
         this.users = users;
+        this.warehouse = warehouse
+        this.project = project;
     }
 
     clone() {
-        return new Team(this.id, this.name, [...this.users]);
+        return new Team(this.id, this.name,this.warehouse,this.project,[...this.users]);
     }
 
     equals(other) {
@@ -68,7 +70,7 @@ export default class Team {
             this.fetching = true;
             // TODO make a get request to the backend
             //  update "teams" with the response
-            return [new Team(0, 'team1'), new Team(1, 'team2'), new Team(2, 'team3')];
+            return [new Team(232, 'team1','Amsterdam West ','Hva '), new Team(235, 'team2','Amsterdam West ','Hva '), new Team(237, 'team3','Amsterdam West ','Hva ')];
         } catch (e) {
             return [];
         } finally {
