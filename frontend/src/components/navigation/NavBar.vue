@@ -8,7 +8,7 @@ export default {
   data() {
     return {
       activePage: 'overview', // Default overview page
-      userRole: 'admin', // Viewer or Admin role
+      userRole: 'viewer', // Viewer or Admin role
       sidebarIsExpanded: false,
       logoExpanded: logoExpanded,
       logoCollapsed: logoCollapsed
@@ -274,6 +274,30 @@ export default {
   position: relative;
   left: -20px;
   top: -22px;
+}
+
+@media only screen and (max-width: 1500px) {
+
+  .navbar {
+    width: 20svw;
+  }
+
+}
+
+@media only screen and (max-width: 1250px) {
+
+  .navbar {
+    width: 25svw;
+  }
+
+}
+
+@media only screen and (max-width: 900px) {
+
+  .navbar {
+    width: 30svw;
+  }
+
 }
 
 </style>
