@@ -48,19 +48,18 @@ export default {
       }, 100);
     }
   },
-  // TODO Temporary explanation:
-  /**
-   * "user" in openEditUserModal() is NOT a User object when clicking the EDIT or DELETE options in the dropdown,
-   * instead "user" is a click event object !! this will throw an error later on !
-   *
-   * A list of all checked users ID's has been added to data() to keep track of the checked users
-   * A new function called getSelectedUsers() has been added to get the user objects from the ID's
-   * This getSelectedUsers() is called, and only the first (for now) object is parsed to the openEditUserModal(). See line 99 !
-   * This fixes the above mentioned problem (for now)
-   *
-   * TODO implement a way to display more than one edit popup (and support an array of users to edit)
-   */
+
   methods: {
+    closeModal() {
+      this.$router.push(this.$route.matched[0].path);
+    },
+    findSelectedRouteFromParam(route) {
+      if (route && route.params.id) {
+        const userId = parseInt(route.params.id);
+        return this.users.find(user => user.id === userId);
+      }
+      return null;
+    },
     addUser(newUser) {
       this.users.push(newUser);
     },
@@ -73,30 +72,18 @@ export default {
       this.inputValue = value;  // Use this.inputValue to search in the table
     },
     openDeleteUserModal(user) {
-      if (!user) {
-        return;
-      }
+      this.$router.push(this.$route.matched[0].path + "/delete/" + user.id);
       this.selectedUser = user;  // Set the selected user
-      this.isDeleteUserModalOpen = true;  // Open the modal
+      // Open the modal
     },
-    openEditUserModal(event) {
-      if (!event) {
-        return;
-      }
-      this.selectedUser = event;  // Set the selected user
+    openEditUserModal(user) {
+      this.$router.push(this.$route.matched[0].path + "/edit/" + user.id);
+      this.selectedUser = user;  // Set the selected user
       this.isEditUserModalOpen = true;  // Open the modal
     },
-    openCreateUserModal() {
+    openCreateUserModal(user) {
+      this.$router.push(this.$route.matched[0].path + "/create/" + user.id);
       this.isCreateUserModalOpen = true;  // Open the modal
-    },
-    closeEditUserModal() {
-      this.isEditUserModalOpen = false;
-    },
-    closeDeleteUserModal() {
-      this.isDeleteUserModalOpen = false;
-    },
-    closeCreateUserModal() {
-      this.isCreateUserModalOpen = false;
     },
     toggleCheckbox(user, isChecked) {
       if (isChecked) {
@@ -110,6 +97,24 @@ export default {
       return this.users.filter(user => this.checkedUsers.includes(user.id));
     }
   },
+  watch: {
+    '$route'(to) {
+      this.selectedUser = this.findSelectedRouteFromParam(this.$route);
+      const modalType = to.path.includes('edit') ? 'isEditUserModalOpen' : to.path.includes('delete') ? 'isDeleteUserModalOpen' : null;
+
+      // Close any open modals
+      this.isCreateUserModalOpen = false;
+      this.isEditUserModalOpen = false;
+      this.isDeleteUserModalOpen = false;
+
+      // Open the appropriate modal based on the route type
+      if (modalType === 'isEditUserModalOpen') {
+        this.isEditUserModalOpen = true;
+      } else if (modalType === 'isDeleteUserModalOpen') {
+        this.isDeleteUserModalOpen = true;
+      }
+    },
+  }
 }
 </script>
 
@@ -151,20 +156,20 @@ export default {
 
   <CreateUserModal
       v-if="isCreateUserModalOpen"
-      :on-close="closeCreateUserModal">
+      :on-close="closeModal">
   </CreateUserModal>
 
   <EditUserModal
       v-if="isEditUserModalOpen"
       :user="selectedUser"
-      :on-close="closeEditUserModal">
+      :on-close="closeModal">
   </EditUserModal>
 
   <DeleteUserModal
       v-if="isDeleteUserModalOpen"
       :user="selectedUser"
       @delete-user="deleteUser"
-      :on-close="closeDeleteUserModal">
+      :on-close="closeModal">
   </DeleteUserModal>
 
 </template>
