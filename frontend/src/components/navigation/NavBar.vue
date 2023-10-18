@@ -292,10 +292,35 @@ export default {
 
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 1100px) {
 
   .navbar {
     width: 30svw;
+  }
+
+}
+
+@media only screen and (max-width: 1050px) {
+
+  .navbar {
+    width: 35svw;
+  }
+
+}
+
+@media only screen and (max-width: 850px) {
+
+  .navbar {
+    width: 40svw;
+  }
+
+}
+
+@media only screen and (max-width: 750px) {
+
+  .navbar {
+    position: absolute;;
+    width: 100svw;
   }
 
 }
