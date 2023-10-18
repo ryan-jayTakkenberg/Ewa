@@ -48,7 +48,6 @@ export default {
       }, 100);
     }
   },
-
   methods: {
     closeModal() {
       this.$router.push(this.$route.matched[0].path);
@@ -81,8 +80,8 @@ export default {
       this.selectedUser = user;  // Set the selected user
       this.isEditUserModalOpen = true;  // Open the modal
     },
-    openCreateUserModal(user) {
-      this.$router.push(this.$route.matched[0].path + "/create/" + user.id);
+    openCreateUserModal() {
+      this.$router.push(this.$route.matched[0].path + "/create");
       this.isCreateUserModalOpen = true;  // Open the modal
     },
     toggleCheckbox(user, isChecked) {
@@ -112,6 +111,8 @@ export default {
         this.isEditUserModalOpen = true;
       } else if (modalType === 'isDeleteUserModalOpen') {
         this.isDeleteUserModalOpen = true;
+      } else if (modalType === 'isCreateUserModalOpen') {
+        this.isCreateUserModalOpen = true;
       }
     },
   }

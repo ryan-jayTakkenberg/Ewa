@@ -25,20 +25,12 @@ const routes = [
     {
         path: '/users',
         component: UsersOverview,
-        children: [
-            {
-                path: 'edit/:id',
-                component: EditUserModal
-            },
-            {
-                path: 'delete/:id',
-                component: DeleteUserModal
-            },
-            {
-                path: 'create',
-                component: CreateUserModal
-            }
-        ]
+        children:
+            [
+                {path: 'create', component: CreateUserModal},
+                {path: 'edit/:id', component: EditUserModal},
+                {path: 'delete/:id', component: DeleteUserModal},
+            ]
     },
     {path: '/reports', component: ReportComponent},
     {path: '/:pathMatch(.*)*', component: NotFoundComponent}
