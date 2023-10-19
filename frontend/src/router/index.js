@@ -12,6 +12,7 @@ import TeamsDetailComponent from "@/Teams/TeamsDetailComponent.vue";
 import EditUserModal from "@/components/users/EditUserModal.vue";
 import DeleteUserModal from "@/components/users/DeleteUserModal.vue";
 import CreateUserModal from "@/components/users/CreateUserModal.vue";
+import warehouseOverviewComponent from "@/components/warehouseView/warehouseOverviewComponent.vue";
 
 
 const routes = [
@@ -33,6 +34,7 @@ const routes = [
             ]
     },
     {path: '/reports', component: ReportComponent},
+    {path: '/warehouseViewer', component: warehouseOverviewComponent},
     {path: '/:pathMatch(.*)*', component: NotFoundComponent}
 ];
 export const router = createRouter({

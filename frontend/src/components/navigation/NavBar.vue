@@ -57,7 +57,7 @@ export default {
 
         <router-link
             v-if="(userRole === 'viewer')"
-            to="/test"
+            to="/warehouseViewer"
             class="nav-button"
             :class="{ active: isPageActive('teams') }"
             @click="handleNavClick('teams')">
