@@ -71,5 +71,13 @@ export default {
   height: 100%;
 }
 
+@media only screen and (max-width: 750px) {
+
+  .router-view {
+    width: 100svw;
+  }
+
+}
+
 </style>
 

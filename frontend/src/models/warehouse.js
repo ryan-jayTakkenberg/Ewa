@@ -5,19 +5,19 @@ export default class Warehouse {
     postalCode;
     city;
 
-    static City = {
-        AMSTERDAM: "Amsterdam",
-        HAARLEM: "Haarlem",
-        ZAANDAM: "Zaandam",
-        DENHELDER: "Den Helder"
-    }
+    static City = [
+        "Amsterdam",
+        "Haarlem",
+        "Zaandam",
+        "Den Helder"
+    ];
 
-    static PostalCode = {
-        POSTAL1: "1234 AB",
-        POSTAL2: "5678 CD",
-        POSTAL3: "3456 JF",
-        POSTAL4: "1284 AJ"
-    }
+    static PostalCode = [
+        "1234 AB",
+        "5678 CD",
+        "3456 JF",
+        "1284 AJ"
+    ];
 
     constructor(id, name, address, postalCode, city) {
         this.id = id;
@@ -90,7 +90,9 @@ export default class Warehouse {
             this.fetching = true;
             // TODO make a get request to the backend
             //  update "Warehouses" with the response
-            return [new Warehouse(0, "Warehouse 0", "Address 10", Warehouse.PostalCode[Math.floor(Math.random() * Warehouse.PostalCode.length)], Warehouse.City[Math.floor(Math.random() * Warehouse.City.length)])];
+            return [new Warehouse(0, "Warehouse 0", "Address 10", Warehouse.PostalCode[Math.floor(Math.random() * Warehouse.PostalCode.length)], Warehouse.City[Math.floor(Math.random() * Warehouse.City.length)]),
+                new Warehouse(1, "Warehouse 1", "Address 124", Warehouse.PostalCode[Math.floor(Math.random() * Warehouse.PostalCode.length)], Warehouse.City[Math.floor(Math.random() * Warehouse.City.length)]),
+                new Warehouse(2, "Warehouse 2", "Address 23", Warehouse.PostalCode[Math.floor(Math.random() * Warehouse.PostalCode.length)], Warehouse.City[Math.floor(Math.random() * Warehouse.City.length)])];
         } catch (e) {
             return [];
         } finally {
