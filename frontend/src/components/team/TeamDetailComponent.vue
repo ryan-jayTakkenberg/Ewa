@@ -17,7 +17,7 @@
 <script>// TODO popups
 import Team from "@/models/team";
 import TableArrayComponent from "@/components/helpers/TableObjectComponent";
-import TeamEditComponent from "@/components/manage/TeamEditComponent";
+import TeamEditComponent from "@/components/team/TeamEditComponent";
 
 export default {
   name: 'TeamDetailComponent',

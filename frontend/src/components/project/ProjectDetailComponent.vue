@@ -6,8 +6,8 @@ import SolarTable from "@/components/general/SolarTable.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
 import Project from "@/models/project";
-import ProjectRowComponent from "@/components/projects/ProjectRowComponent.vue";
-import ProjectEditComponent from "@/components/projects/ProjectEditComponent.vue";
+import ProjectRowComponent from "@/components/project/ProjectRowComponent.vue";
+import ProjectEditComponent from "@/components/project/ProjectEditComponent.vue";
 
 export default {
   name: "UsersOverview",

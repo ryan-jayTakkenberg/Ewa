@@ -5,12 +5,12 @@ import TitleComponent from "@/components/general/SolarTitle.vue";
 import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
 import ButtonComponent from "@/components/general/SolarButton.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
-import UsersRowComponent from "@/components/users/UsersRowComponent.vue";
+import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
-import EditUserModal from "@/components/users/EditUserModal.vue";
-import DeleteUserModal from "@/components/users/DeleteUserModal.vue";
-import CreateUserModal from "@/components/users/CreateUserModal.vue";
+import EditUserModal from "@/components/user/EditUserModal.vue";
+import DeleteUserModal from "@/components/user/DeleteUserModal.vue";
+import CreateUserModal from "@/components/user/CreateUserModal.vue";
 
 export default {
   name: "UsersOverview",

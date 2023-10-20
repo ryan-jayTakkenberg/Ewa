@@ -36,7 +36,7 @@
 
 <script>
 import Product from "@/models/product";
-import ProductEditComponent from "@/components/manage/ProductEditComponent";
+import ProductEditComponent from "@/components/product/ProductEditComponent";
 
 export default {
   name: "ProductDetailComponent",
