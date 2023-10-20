@@ -1,18 +1,29 @@
 export default class Product {
-    productId;
+    id;
     name;
-    weight;
+    price;
     description;
 
-    constructor(productId, name, weight, description) {
-        this.productId = productId;
+    constructor(id, name, price, description) {
+        this.id = id;
         this.name = name;
-        this.weight = weight;
+        this.price = price;
         this.description = description;
     }
 
     clone() {
-        return new Product(this.id, this.name, this.weight, this.description);
+        return new Product(this.id, this.name, this.price, this.description);
+    }
+
+    injectAttributes(from) {
+        if (!(from instanceof Object)) {
+            return false;
+        }
+        for (let attr of Object.keys(this)) {
+            if (from[attr]) {
+                this[attr] = from[attr];
+            }
+        }
     }
 
     equals(other) {
@@ -27,8 +38,8 @@ export default class Product {
         return true;
     }
 
-    static createNewProduct(name, weight, description) {
-        return new Product(-1, name, weight, description);
+    static createNewProduct(name, price, description) {
+        return new Product(-1, name, price, description);
     }
 
     /**
@@ -47,9 +58,9 @@ export default class Product {
             } else {
                 Product.products[Product.products.findIndex(o => o.id === this.id)] = this;
             }
-            return true;
+            return this;
         } catch (e) {
-            return false;
+            return null;
         }
     }
 
@@ -78,7 +89,7 @@ export default class Product {
             this.fetching = true;
             // TODO make a get request to the backend
             //  update "products" with the response
-            return [Product.createNewProduct('Solar Panel', '5,125', 'A solar panel to generate energy'), Product.createNewProduct('Solar Panel', '4,125', 'A solar panel to generate energy'), Product.createNewProduct('Solar Panel', '51,125', 'A solar panel to generate a lot of energy')];
+            return [new Product(1, "Solar panel", 412, "De beste Zonnepanelen"), new Product(2, "Rail voor zonnepanelen", 17.95, "Deze rail kunt u gebruiken voor het monteren van uw zonnepanelen op uw dak. De rail is 120 centimeter lang en kan daardoor gebruikt worden voor de montage van meerdere zonnepanelen tegelijk. Verder is de rail gemaakt van aluminium, wat een lange levensduur en bestendigheid tegen slecht weer en vocht garandeert. De rail werkt perfect samen met het andere aansluitmateriaal dat we aanbieden, zoals eindklemmen, aardingsklemmen en midden klemmen dankzij de uitsparingen in de rail. Deze is 25mm breed aan beide kanten. ")];
         } catch (e) {
             return [];
         } finally {

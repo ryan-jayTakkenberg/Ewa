@@ -46,7 +46,7 @@ export default {
     handleInputValueChange(value) {
       console.log(value);
       this.inputValue = value;
-      // Use this.inputValue to search in the table
+      // Use this.filterValue to search in the table
     },
     openEditUserModal(project) {
       if (!project) {

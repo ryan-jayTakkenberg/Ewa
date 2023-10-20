@@ -68,7 +68,7 @@ export default {
     },
     handleInputValueChange(value) {
       console.log(value);
-      this.inputValue = value;  // Use this.inputValue to search in the table
+      this.inputValue = value;  // Use this.filterValue to search in the table
     },
     openDeleteUserModal(user) {
       this.$router.push(this.$route.matched[0].path + "/delete/" + user.id);

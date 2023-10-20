@@ -9,8 +9,7 @@ export default {
   },
   methods: {
     onInput(event) {
-      const inputValue = event.target.value;
-      this.$emit('input', inputValue);  // Emit the input value
+      this.$emit('search', event.target.value);  // Emit the input value
     }
   }
 
