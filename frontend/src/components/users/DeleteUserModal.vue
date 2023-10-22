@@ -17,7 +17,7 @@
           </button>
         </div>
 
-        <div class="modal-body">
+        <div class="modal-body p-4">
           <p>Are you sure you want to delete the user: <strong>{{ user.name }}</strong>?</p>
         </div>
 

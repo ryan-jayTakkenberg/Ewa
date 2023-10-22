@@ -29,60 +29,61 @@ export default {
   data() {
     return {
       inputValue: '', // Store the input value for searching users
-      users: [...User.users],
-      selectedUser: null,  // Track the selected user for editing
-      isCreateUserModalOpen: false,
-      isEditUserModalOpen: false,
-      isDeleteUserModalOpen: false,
+      users: [],
+      selectedUser: null,  // Track the selected user for editing / deleting
       checkedUsers: [], // A list of the selected users ID's
     };
   },
-  created() {
-    if (!this.users?.length) {
-      // Keep updating the list if the database has not returned all the data yet
-      const fetchingInterval = setInterval(() => {
-        if (!User.fetching) {
-          this.users = [...User.users];
-          clearInterval(fetchingInterval);
-        }
-      }, 100);
+  computed: {
+    filterUsers() {
+      // Create a regular expression with the inputValue and the 'i' flag for case-insensitivity
+      const regex = new RegExp(this.inputValue, 'i');
+
+      // Filter users based on the regular expression
+      return this.users.filter(user => {
+        return regex.test(user.name);
+      });
     }
   },
+  created() {
+    this.fetchUsers();
+  },
   methods: {
-    closeModal() {
-      this.$router.push(this.$route.matched[0].path);
-    },
-    findSelectedRouteFromParam(route) {
-      if (route && route.params.id) {
-        const userId = parseInt(route.params.id);
-        return this.users.find(user => user.id === userId);
+    fetchUsers() {
+      if (!this.users?.length) {
+        // Keep updating the list if the database has not returned all the data yet
+        const fetchingInterval = setInterval(() => {
+          if (!User.fetching) {
+            this.users = [...User.users];
+            clearInterval(fetchingInterval);
+          }
+        }, 100);
       }
-      return null;
     },
     addUser(newUser) {
       this.users.push(newUser);
+      this.closeModal();
     },
     deleteUser(userID) {
       this.users = this.users.filter(user => user.id !== userID)
-      this.isDeleteUserModalOpen = false;  // Open the modal
+      this.closeModal();
     },
     handleInputValueChange(value) {
       console.log(value);
       this.inputValue = value;  // Use this.inputValue to search in the table
     },
-    openDeleteUserModal(user) {
-      this.$router.push(this.$route.matched[0].path + "/delete/" + user.id);
-      this.selectedUser = user;  // Set the selected user
-      // Open the modal
+    openEditModal(user) {
+      this.$router.push(`${this.$route.matched[0].path}/edit/${user.id}`);
+      this.selectedUser = user;
     },
-    openEditUserModal(user) {
-      this.$router.push(this.$route.matched[0].path + "/edit/" + user.id);
-      this.selectedUser = user;  // Set the selected user
-      this.isEditUserModalOpen = true;  // Open the modal
+    openCreateModal() {
+      this.$router.push(`${this.$route.matched[0].path}/create`);
     },
-    openCreateUserModal() {
-      this.$router.push(this.$route.matched[0].path + "/create");
-      this.isCreateUserModalOpen = true;  // Open the modal
+    openDeleteModal(user) {
+      this.$router.push(`${this.$route.matched[0].path}/delete/${user.id}`);
+    },
+    closeModal() {
+      this.$router.push(this.$route.matched[0].path);
     },
     toggleCheckbox(user, isChecked) {
       if (isChecked) {
@@ -94,27 +95,19 @@ export default {
     },
     getSelectedUsers() {
       return this.users.filter(user => this.checkedUsers.includes(user.id));
-    }
+    },
+    findSelectedRouteFromParam(route) {
+      if (route && route.params.id) {
+        const userId = parseInt(route.params.id);
+        return this.users.find(user => user.id === userId);
+      }
+      return null;
+    },
   },
   watch: {
     '$route'(to) {
-      this.selectedUser = this.findSelectedRouteFromParam(this.$route);
-      const modalType = to.path.includes('edit') ? 'isEditUserModalOpen' : to.path.includes('delete') ? 'isDeleteUserModalOpen' : null;
-
-      // Close any open modals
-      this.isCreateUserModalOpen = false;
-      this.isEditUserModalOpen = false;
-      this.isDeleteUserModalOpen = false;
-
-      // Open the appropriate modal based on the route type
-      if (modalType === 'isEditUserModalOpen') {
-        this.isEditUserModalOpen = true;
-      } else if (modalType === 'isDeleteUserModalOpen') {
-        this.isDeleteUserModalOpen = true;
-      } else if (modalType === 'isCreateUserModalOpen') {
-        this.isCreateUserModalOpen = true;
-      }
-    },
+      this.selectedUser = this.findSelectedRouteFromParam(to);
+    }
   }
 }
 </script>
@@ -128,9 +121,9 @@ export default {
     <div class="users-container">
       <div class="users-action-row">
         <SolarDropdownMenuButton text-button="Action">
-          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="openEditUserModal(getSelectedUsers()[0])">
+          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="openEditModal(getSelectedUsers()[0], 'edit')">
           </SolarDropdownMenuItem>
-          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteUserModal">
+          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteModal(getSelectedUsers()[0], 'delete')">
           </SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
 
@@ -139,40 +132,40 @@ export default {
             @input="handleInputValueChange">
         </SearchBarComponent>
 
-        <ButtonComponent button-text="Add User" @click="openCreateUserModal"></ButtonComponent>
+        <ButtonComponent button-text="Add User" @click="openCreateModal"></ButtonComponent>
       </div>
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
         <UsersRowComponent
-            v-for="(user, index) in users"
+            v-for="(user, index) in filterUsers"
             :key="index"
             :user="user"
             :isChecked="user.isChecked"
-            @on-click-edit-user="openEditUserModal"
-            @on-click-delete-user="openDeleteUserModal"
+            @on-click-edit-user="openEditModal"
+            @on-click-delete-user="openDeleteModal"
             @toggle-checkbox="toggleCheckbox(user, $event)"> <!-- Pass user and checkbox state -->
         </UsersRowComponent>
       </SolarTable>
     </div>
   </div>
 
+  <!-- Conditionally render modals based on route -->
   <CreateUserModal
-      v-if="isCreateUserModalOpen"
-      :on-close="closeModal">
-  </CreateUserModal>
-
+      v-if="$route.path.includes('create')"
+      :on-close="closeModal"
+      :add-user="addUser"
+  />
   <EditUserModal
-      v-if="isEditUserModalOpen"
+      v-if="$route.path.includes('edit')"
       :user="selectedUser"
-      :on-close="closeModal">
-  </EditUserModal>
+      :on-close="closeModal"
 
+  />
   <DeleteUserModal
-      v-if="isDeleteUserModalOpen"
+      v-if="$route.path.includes('delete')"
       :user="selectedUser"
       @delete-user="deleteUser"
-      :on-close="closeModal">
-  </DeleteUserModal>
-
+      :on-close="closeModal"
+  />
 </template>
 
 <style scoped>

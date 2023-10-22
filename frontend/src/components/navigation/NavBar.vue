@@ -112,7 +112,7 @@ export default {
             v-if="(userRole === 'admin')" to="/users" class="nav-button"
             :class="{ active: isPageActive('users') }"
             @click="handleNavClick('users')">
-          <span class="material-symbols-outlined nav-icon">person</span>
+          <span class="material-symbols-outlined nav-icon">manage_accounts</span>
           <p class="nav-text">Users</p>
         </router-link>
       </div>
