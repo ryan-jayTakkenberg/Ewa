@@ -64,6 +64,7 @@ export default {
   overflow-y: auto;
   height: calc(100% - 1rem);
   max-height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .delete-user-modal-container {

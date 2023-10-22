@@ -152,13 +152,12 @@ export default {
   <CreateUserModal
       v-if="$route.path.includes('create')"
       :on-close="closeModal"
-      :add-user="addUser"
+      @create-user="addUser"
   />
   <EditUserModal
       v-if="$route.path.includes('edit')"
       :user="selectedUser"
       :on-close="closeModal"
-
   />
   <DeleteUserModal
       v-if="$route.path.includes('delete')"

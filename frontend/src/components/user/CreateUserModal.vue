@@ -3,7 +3,7 @@
   <div class="create-user-modal" tabindex="0">
     <div class="create-user-modal-container">
       <!-- Modal content -->
-      <form @submit.prevent="saveUser" class="create-user-form shadow ">
+      <form @submit.prevent="createUser" class="create-user-form shadow ">
 
         <!-- Modal header -->
         <div class="create-user-modal-header">
@@ -62,7 +62,8 @@
 
         <!-- Modal footer -->
         <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
-          <button type="submit" @click="saveUser" class="submit-button">Create User</button>
+          <button type="submit" class="submit-button">Create User</button>
+          <button @click="onClose" class="cancel-button">Cancel</button>
         </div>
       </form>
     </div>
@@ -74,14 +75,17 @@ import User from "@/models/user";
 
 export default {
   name: "CreateUserModal",
+  idAutoIncrement: 12,
+
   data() {
     return {
       UserRoleOptions: User.UserRole,
       user: {
+        id: '',
         name: '',
         email: '',
         userRole: '',
-        password: ''
+        password: '',
       }
     }
   },
@@ -90,16 +94,12 @@ export default {
       type: Function,
       required: true,
     },
-    addUser: {
-      type: Function,
-      required: true,
-    },
   },
   methods: {
     createUser() {
       //  TODO Fix hardcoded user iD
       const newUser = {
-        id: 12,
+        id: this.idAutoIncrement++,
         name: this.user.name,
         email: this.user.email,
         userRole: this.user.userRole,
@@ -237,9 +237,25 @@ export default {
   border-radius: 0.5rem;
 }
 
+.cancel-button {
+  color: rgb(17 24 39);
+  background-color: rgb(229 231 235);
+  font-weight: 500;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding: 0.625rem 1.25rem;
+  text-align: center;
+}
+
+.cancel-button:hover {
+  background-color: rgb(206 212 218);
+}
+
+
 @media (min-width: 768px) {
   .create-user-modal-container {
-    width: 50%;
+    width: 60%;
     padding: 4rem;
     margin-left: 0;
   }

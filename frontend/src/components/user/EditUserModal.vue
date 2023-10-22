@@ -129,6 +129,7 @@ export default {
         <!-- Modal footer -->
         <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
           <button type="submit" class="submit-button">Save Changes</button>
+          <button @click="onClose" class="cancel-button">Cancel</button>
         </div>
       </form>
     </div>
@@ -256,6 +257,21 @@ export default {
   margin-left: auto;
   width: calc(100% - 70px);
   max-height: 100%;
+}
+
+.cancel-button {
+  color: rgb(17 24 39);
+  background-color: rgb(229 231 235);
+  font-weight: 500;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding: 0.625rem 1.25rem;
+  text-align: center;
+}
+
+.cancel-button:hover {
+  background-color: rgb(206 212 218);
 }
 
 @media (min-width: 768px) {
