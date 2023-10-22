@@ -75,13 +75,11 @@ import User from "@/models/user";
 
 export default {
   name: "CreateUserModal",
-  idAutoIncrement: 12,
-
   data() {
     return {
       UserRoleOptions: User.UserRole,
       user: {
-        id: '',
+        id: 12,
         name: '',
         email: '',
         userRole: '',
@@ -97,15 +95,14 @@ export default {
   },
   methods: {
     createUser() {
-      //  TODO Fix hardcoded user iD
-      const newUser = {
-        id: this.idAutoIncrement++,
-        name: this.user.name,
-        email: this.user.email,
-        userRole: this.user.userRole,
-        password: this.user.password,
-        lastLoggedIn: "Not Logged in yet",
-      };
+      const newUser = new User(
+          this.user.id,
+          this.user.email,
+          this.user.name,
+          this.user.userRole,
+          "Not Logged in yet",
+          this.user.password,
+      );
 
       // Emit an event to the parent component to handle user creation
       this.$emit("create-user", newUser);

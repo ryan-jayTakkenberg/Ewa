@@ -2,7 +2,6 @@
 import User from "@/models/user";
 
 import TitleComponent from "@/components/general/SolarTitle.vue";
-import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
 import ButtonComponent from "@/components/general/SolarButton.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
@@ -11,10 +10,12 @@ import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vu
 import EditUserModal from "@/components/user/EditUserModal.vue";
 import DeleteUserModal from "@/components/user/DeleteUserModal.vue";
 import CreateUserModal from "@/components/user/CreateUserModal.vue";
+import SolarSearchbar from "@/components/general/SolarSearchbar.vue";
 
 export default {
   name: "UsersOverview",
   components: {
+    SolarSearchbar,
     CreateUserModal,
     DeleteUserModal,
     SolarDropdownMenuItem,
@@ -22,7 +23,6 @@ export default {
     UsersRowComponent,
     SolarTable,
     TitleComponent,
-    SearchBarComponent,
     ButtonComponent,
     EditUserModal,
   },
@@ -30,8 +30,8 @@ export default {
     return {
       inputValue: '', // Store the input value for searching users
       users: [],
-      selectedUser: null,  // Track the selected user for editing / deleting
-      checkedUsers: [], // A list of the selected users ID's
+      selectedUser: null,  // The selected user for editing / deleting
+      checkedUsers: [], // A list of the selected users ID's for editing / deleting multiple users at once
     };
   },
   computed: {
@@ -39,9 +39,9 @@ export default {
       // Create a regular expression with the inputValue and the 'i' flag for case-insensitivity
       const regex = new RegExp(this.inputValue, 'i');
 
-      // Filter users based on the regular expression
+      // Filter users based on the regular expression matching either name or email
       return this.users.filter(user => {
-        return regex.test(user.name);
+        return regex.test(user.name) || regex.test(user.email);
       });
     }
   },
@@ -60,8 +60,9 @@ export default {
         }, 100);
       }
     },
-    addUser(newUser) {
+    createUser(newUser) {
       this.users.push(newUser);
+      console.log(newUser);
       this.closeModal();
     },
     deleteUser(userID) {
@@ -72,15 +73,16 @@ export default {
       console.log(value);
       this.inputValue = value;  // Use this.filterValue to search in the table
     },
+    openCreateModal() {
+      this.$router.push(`${this.$route.matched[0].path}/create`);
+    },
     openEditModal(user) {
       this.$router.push(`${this.$route.matched[0].path}/edit/${user.id}`);
       this.selectedUser = user;
     },
-    openCreateModal() {
-      this.$router.push(`${this.$route.matched[0].path}/create`);
-    },
     openDeleteModal(user) {
       this.$router.push(`${this.$route.matched[0].path}/delete/${user.id}`);
+      this.selectedUser = user;
     },
     closeModal() {
       this.$router.push(this.$route.matched[0].path);
@@ -95,6 +97,20 @@ export default {
     },
     getSelectedUsers() {
       return this.users.filter(user => this.checkedUsers.includes(user.id));
+    },
+    deleteSelectedUsers() {
+      // Remove the selected users from the users array
+      this.checkedUsers.forEach(userId => {
+        const index = this.users.findIndex(user => user.id === userId);
+        if (index !== -1) {
+          this.users.splice(index, 1);
+        }
+      })
+      // Clear the checkedUsers array
+      this.checkedUsers = [];
+    },
+    editSelectedUsers(){
+
     },
     findSelectedRouteFromParam(route) {
       if (route && route.params.id) {
@@ -119,30 +135,33 @@ export default {
 
   <div class="users-body">
     <div class="users-container">
+
       <div class="users-action-row">
         <SolarDropdownMenuButton text-button="Action">
-          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="openEditModal(getSelectedUsers()[0], 'edit')">
-          </SolarDropdownMenuItem>
-          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteModal(getSelectedUsers()[0], 'delete')">
-          </SolarDropdownMenuItem>
+          <!-- Edit multiple Users -->
+          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="editSelectedUsers"></SolarDropdownMenuItem>
+          <!-- Delete multiple Users -->
+          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="deleteSelectedUsers"></SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
 
-        <SearchBarComponent
-            class="ml-auto" place-holder="Search For Users"
+        <SolarSearchbar
+            class="ml-auto"
+            place-holder="Search For Users"
             @input="handleInputValueChange">
-        </SearchBarComponent>
+        </SolarSearchbar>
 
         <ButtonComponent button-text="Add User" @click="openCreateModal"></ButtonComponent>
       </div>
+
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
         <UsersRowComponent
             v-for="(user, index) in filterUsers"
             :key="index"
             :user="user"
-            :isChecked="user.isChecked"
             @on-click-edit-user="openEditModal"
             @on-click-delete-user="openDeleteModal"
-            @toggle-checkbox="toggleCheckbox(user, $event)"> <!-- Pass user and checkbox state -->
+            @toggle-checkbox="toggleCheckbox(user, $event)"
+            :is-checked="checkedUsers.includes(user.id)"> <!-- Pass user and checkbox state -->
         </UsersRowComponent>
       </SolarTable>
     </div>
@@ -152,7 +171,7 @@ export default {
   <CreateUserModal
       v-if="$route.path.includes('create')"
       :on-close="closeModal"
-      @create-user="addUser"
+      @create-user="createUser"
   />
   <EditUserModal
       v-if="$route.path.includes('edit')"
