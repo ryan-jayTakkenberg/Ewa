@@ -29,7 +29,7 @@ export default {
   },
   computed: {
     filteredWarehouses() {
-      // Filter teams based on inputValue (you may need to adjust the property you're filtering by)
+      // Filter teams based on filterValue (you may need to adjust the property you're filtering by)
       return this.warehouses.filter(warehouse => {
         return warehouse.name.includes(this.inputValue);
       });
@@ -40,7 +40,7 @@ export default {
     handleInputValueChange(value) {
       console.log(value);
       this.inputValue = value;
-      // Use this.inputValue to search in the table
+      // Use this.filterValue to search in the table
     },
   },
 }

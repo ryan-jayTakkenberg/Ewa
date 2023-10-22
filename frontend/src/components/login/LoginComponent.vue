@@ -116,7 +116,7 @@ export default {
 .backgroundImgContainer {
   height: 100svh;
   width: 75%;
-  background: url("../../static/images/loginBackground.jpg") center no-repeat;
+  background: url("../../../static/images/loginBackground.jpg") center no-repeat;
   background-size: cover;
 }
 
@@ -134,7 +134,7 @@ export default {
 .logoContainer {
   height: 125px;
   width: 200px;
-  background: url("../../static/images/solar_sedum_logo.svg") center no-repeat;
+  background: url("../../../static/images/solar_sedum_logo.svg") center no-repeat;
   background-size: contain;
 }
 

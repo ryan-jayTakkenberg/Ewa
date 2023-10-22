@@ -34,7 +34,7 @@
 
 <script>
 import Warehouse from "@/models/warehouse";
-import WarehouseEditComponent from "@/components/manage/WarehouseEditComponent";
+import WarehouseEditComponent from "@/components/warehouse/WarehouseEditComponent";
 
 export default {
   name: 'WarehouseDetailComponent',

@@ -4,7 +4,9 @@
     <button
         @click="toggleDropdown"
         @blur="hideDropdown"
-        :class="{ 'dropdown-btn-open': isDropdownOpen, 'dropdown-btn': !isDropdownOpen }">{{ textButton }}
+        :class="{ 'dropdown-btn-open': isDropdownOpen, 'dropdown-btn': !isDropdownOpen }"
+        :disabled="disabled">
+      {{ textButton }}
       <svg class="w-2.5 h-2.5 ml-2.5" fill="none" viewBox="0 0 10 6">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
       </svg>
@@ -26,7 +28,12 @@ export default {
     textButton: {
       type: String,
       required: true,
-    }
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
   },
   data() {
     return {
@@ -69,6 +76,14 @@ export default {
 
 .dropdown-btn:hover {
   background-color: #a3b825;
+}
+
+.dropdown-btn:disabled {
+  opacity: 0.75;
+}
+
+.dropdown-btn:disabled:hover {
+  background-color: #c7d02c;
 }
 
 </style>

@@ -6,12 +6,17 @@ export default {
       type: String,
       required: true,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
   }
 }
 </script>
 
 <template>
-  <button type="button" class="solar-button">{{ buttonText }}</button>
+  <button type="button" class="solar-button" :disabled="disabled">{{ buttonText }}</button>
 </template>
 
 <style scoped>
@@ -27,7 +32,6 @@ export default {
   margin: 0 0.5rem;
   display: inline-flex;
   align-items: center;
-  width: 105px;
   justify-content: center;
 }
 
@@ -37,6 +41,14 @@ export default {
 
 .solar-button:focus {
   background-color: #a3b825;
+}
+
+.solar-button:disabled {
+  opacity: 0.75;
+}
+
+.solar-button:disabled:hover {
+  background-color: #c7d02c;
 }
 
 </style>

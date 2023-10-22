@@ -4,6 +4,11 @@ module.exports = {
     theme: {
         extend: {},
     },
+    // safelist: [
+    //     {
+    //         pattern: /./, // makes sure we have all the tailwind classes available (for development purposes)
+    //     },
+    // ],
     plugins: [],
 }
 
