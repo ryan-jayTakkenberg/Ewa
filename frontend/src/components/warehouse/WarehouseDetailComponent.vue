@@ -1,163 +1,137 @@
-<template>
-  <div class="box">
-    <div class="content">
-      <div class="content-header"></div>
-      <div class="content-box">
-        <div class="content-box-text">
-          <table>
-            <thead>
-            <tr><th>List of all the warehouses</th></tr>
-            </thead>
-            <tbody>
-            <tr v-for="warehouse in warehouseList" :key="warehouse.name" @click="selectWarehouse(warehouse)" :class="{ 'selected': selectedWarehouse === warehouse }">
-              {{"Name: " + warehouse.name + ", Address: " + warehouse.address + ", " + warehouse.postalCode + ", " + warehouse.city}}
-            </tr>
-            </tbody>
-          </table>
-          <button @click="showEditComponent = !showEditComponent" v-if="!selectedWarehouse">Create a new Warehouse</button>
-          <button @click="removeWarehouse()" v-if="selectedWarehouse">Remove selected Warehoue</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <WarehouseEditComponent
-      v-if="showEditComponent"
-      @cancel="handleCancel"
-      :name="selectedWarehouse ? selectedWarehouse.name : ''"
-      :address="selectedWarehouse ? selectedWarehouse.address : ''"
-      :postalCode="selectedWarehouse ? selectedWarehouse.postalCode : ''"
-      :city="selectedWarehouse ? selectedWarehouse.city : ''"
-      @add-warehouse="addWarehouse"
-      @save-warehouse="saveWarehouse"
-  />
-</template>
-
 <script>
+import TitleComponent from "@/components/general/SolarTitle.vue";
+import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
+import ButtonComponent from "@/components/general/SolarButton.vue";
+import SolarTable from "@/components/general/SolarTable.vue";
+import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
+import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
 import Warehouse from "@/models/warehouse";
-import WarehouseEditComponent from "@/components/warehouse/WarehouseEditComponent";
+import WarehouseRowComponent from "@/components/warehouseView/WarehouseRowComponent";
+
 
 export default {
-  name: 'WarehouseDetailComponent',
+  name: "WarehouseOverview",
   components: {
-    WarehouseEditComponent,
+    SolarDropdownMenuItem,
+    SolarDropdownMenuButton,
+    SolarTable,
+    TitleComponent,
+    SearchBarComponent,
+    ButtonComponent,
+    WarehouseRowComponent,
   },
-  data(){
-    return{
-      warehouseList: [...Warehouse.warehouses],
-      warehouseNumber: 0,
-      selectedWarehouse: null,
-      showEditComponent: false,
+  data() {
+    return {
+      inputValue: '', // Store the input value for searching warehouses
+      warehouses: [...Warehouse.warehouses],
+      selectedWarehouse: null,  // Track the selected warehouse for editing
+      isEditUserModalOpen: false,
+      checkedWarehouses: [],
     };
   },
   created() {
-    if (!this.warehouseList?.length) {
+    if (!this.warehouses?.length) {
       // Keep updating the list if the database has not returned all the data yet
       const fetchingInterval = setInterval(() => {
         if (!Warehouse.fetching) {
-          this.warehouseList = [...Warehouse.warehouses];
+          this.projects = [...Warehouse.projects];
           clearInterval(fetchingInterval);
         }
       }, 100);
     }
   },
   methods: {
-    handleCancel(){
-      this.showEditComponent = false;
-      this.selectedWarehouse = null;
+    handleInputValueChange(value) {
+      console.log(value);
+      this.inputValue = value;
+      // Use this.filterValue to search in the table
     },
-    selectWarehouse(warehouse){
-      if (this.selectedWarehouse === warehouse){
-        this.handleCancel()
+    openEditUserModal(warehouse) {
+      if (!warehouse) {
+        // No user selected
+        return;
+      }
+      this.selectedWarehouse = warehouse;  // Set the selected user
+      this.isEditUserModalOpen = true;  // Open the modal
+    },
+    closeEditUserModal() {
+      this.isEditUserModalOpen = false;
+    },
+    toggleCheckbox(warehouse, isChecked) {
+      if (isChecked) {
+        this.checkedWarehouses.push(warehouse.id);
       } else {
-        this.selectedWarehouse = warehouse;
-        this.showEditComponent = true;
+        this.checkedWarehouses = this.checkedWarehouses.filter(id => id !== warehouse.id);
       }
-    },
-    removeWarehouse(){
-      const index = this.warehouseList.indexOf(this.selectedWarehouse);
-      if (index !== -1) {
-        this.warehouseList.splice(index, 1);
-        this.handleCancel()
-      }
-    },
-    addWarehouse(newWarehouseData) {
-      const name = newWarehouseData.name;
-      const address = newWarehouseData.address;
-      const postalCode =newWarehouseData.postalCode;
-      const city = newWarehouseData.city;
-      const newWarehouse = new Warehouse(name, address, postalCode,city);
-      this.warehouseList.push(newWarehouse);
-      this.handleCancel();
-    },
-    saveWarehouse(updatedWarehouseData) {
-      if (this.selectedWarehouse) {
-        this.selectedWarehouse.name = updatedWarehouseData.name;
-        this.selectedWarehouse.address = updatedWarehouseData.address;
-        this.selectedWarehouse.postalCode = updatedWarehouseData.postalCode;
-        this.selectedWarehouse.city = updatedWarehouseData.city;
-
-      }
+      console.log(this.checkedWarehouses);
+    }, getSelectedUsers() {
+      return this.warehouses.filter(warehouse => this.checkedWarehouses.includes(warehouse.id));
     }
   },
 }
 </script>
 
+<template>
+  <div class="users-header">
+    <TitleComponent page-title="Warehouse"></TitleComponent>
+  </div>
+
+  <div class="users-body">
+    <div class="users-container">
+      <div class="users-action-row">
+        <!-- Action Dropdown Button -->
+        <SolarDropdownMenuButton text-button="Action">
+          <SolarDropdownMenuItem text-menu-item="Edit Warehouse" @click="openEditUserModal(getSelectedUsers()[0])"></SolarDropdownMenuItem>
+          <SolarDropdownMenuItem text-menu-item="Delete Warehouse" @click="openDeleteUserModal"></SolarDropdownMenuItem>
+        </SolarDropdownMenuButton>
+
+        <!-- Searchbar -->
+        <SearchBarComponent place-holder="Search For Warehouses" class="ml-auto" @input="handleInputValueChange"
+        ></SearchBarComponent>
+        <ButtonComponent button-text="Add Warehouse" :onClick="openEditUserModal"></ButtonComponent>
+      </div>
+
+      <SolarTable :columns="['Warehouse', 'Address', 'Postalcode']">
+        <WarehouseRowComponent
+            v-for="(warehouse, index) in warehouses"
+            :key="index"
+            :warehouse="warehouse"
+            :isChecked="warehouse.isChecked"
+            @click-edit-user="openEditUserModal"
+            @toggle-checkbox="toggleCheckbox(warehouse, $event)" ><!-- Pass user and checkbox state -->
+        </WarehouseRowComponent>
+      </SolarTable>
+
+
+    </div>
+  </div>
+
+<!--  <ProjectEditComponent v-if="isEditUserModalOpen" :on-close="closeEditUserModal" :project="selectedProject" ></ProjectEditComponent>-->
+
+</template>
+
 <style scoped>
-.box{
+.users-header {
+  flex-direction: row;
   display: flex;
-  justify-content: center;
-  align-content: center;
+  padding: 1rem;
 }
 
-.content{
-  text-align: center;
-  height: fit-content;
-  width: 60%;
-  border-radius: 20px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  margin: 15px 0 30px 0;
+.users-action-row {
+  display: flex;
+  margin-bottom: 1rem /* 16px */;
 }
 
-.content-header{
-  height: 175px;
-  background: url("../../../static/images/manageDetailHeader3.jpg") center no-repeat;
-  background-size: cover;
-  border-radius: 20px 20px 0 0 ;
+.users-body {
+  position: relative;
+  overflow-x: auto;
 }
 
-.content-box{
-  margin: 30px 0 30px 0;
-}
-.content-box-text{
-  margin: 0 15% 0 15%;
-  text-align: left;
-}
-
-button{
-  margin: 35px 20px 20px 0;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background: #c7d02c;
-  color: #fff;
-}
-
-table{
-  border-collapse: collapse;
-  width: 100%;
-}
-
-tr{
-  border: 1px solid black;
-  padding: 10px;
-}
-
-tr:hover{
-  color: #818181;
-  cursor: pointer;
-}
-
-.selected{
-  background: #c7d02c;
+.users-container {
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem /* 16px */;
+  background-color: white;
 }
 </style>
