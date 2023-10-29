@@ -72,11 +72,10 @@ export default {
 }
 
 @media only screen and (max-width: 750px) {
-
   .router-view {
-    width: 100svw;
+    width: calc(100svw - 70px);
+    margin-left: auto;
   }
-
 }
 
 </style>

@@ -3,7 +3,7 @@
   <div class="create-user-modal" tabindex="0">
     <div class="create-user-modal-container">
       <!-- Modal content -->
-      <form @submit.prevent="saveUser" class="create-user-form shadow ">
+      <form @submit.prevent="createUser" class="create-user-form shadow ">
 
         <!-- Modal header -->
         <div class="create-user-modal-header">
@@ -25,7 +25,7 @@
               <input
                   type="text"
                   v-model="user.name"
-                  class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
+                  class="modal-input shadow-sm"
                   placeholder="Name"
                   required>
             </div>
@@ -35,14 +35,14 @@
               <input
                   type="email"
                   v-model="user.email"
-                  class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
+                  class="modal-input shadow-sm "
                   placeholder="Email"
                   required>
             </div>
 
             <div class="col-span-6 sm:col-span-3">
               <label for="user-role" class="modal-label">Function</label>
-              <select v-model="user.userRole" class="role-select">
+              <select v-model="user.userRole" class="role-select" required>
                 <option v-for="userRole in UserRoleOptions" :key="userRole" :value="userRole">{{ userRole }}</option>
               </select>
             </div>
@@ -53,7 +53,7 @@
                   v-model="user.password"
                   type="password"
                   placeholder="Password"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
+                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5"
                   required>
             </div>
 
@@ -63,6 +63,7 @@
         <!-- Modal footer -->
         <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
           <button type="submit" class="submit-button">Create User</button>
+          <button @click="onClose" class="cancel-button">Cancel</button>
         </div>
       </form>
     </div>
@@ -78,10 +79,11 @@ export default {
     return {
       UserRoleOptions: User.UserRole,
       user: {
+        id: 12,
         name: '',
         email: '',
         userRole: '',
-        password: ''
+        password: '',
       }
     }
   },
@@ -92,19 +94,18 @@ export default {
     },
   },
   methods: {
-    saveUser() {
-      //  TODO Fix hardcoded user iD
-      const newUser = {
-        id: 12,
-        name: this.user.name,
-        email: this.user.email,
-        userRole: this.user.userRole,
-        password: this.user.password,
-        lastLoggedIn: "Not Logged in yet",
-      };
+    createUser() {
+      const newUser = new User(
+          this.user.id,
+          this.user.email,
+          this.user.name,
+          this.user.userRole,
+          "Not Logged in yet",
+          this.user.password,
+      );
 
-      // Add the new user to the users array
-      this.$emit('addUser', newUser);
+      // Emit an event to the parent component to handle user creation
+      this.$emit("create-user", newUser);
 
       // Close the modal
       this.onClose();
@@ -233,9 +234,25 @@ export default {
   border-radius: 0.5rem;
 }
 
+.cancel-button {
+  color: rgb(17 24 39);
+  background-color: rgb(229 231 235);
+  font-weight: 500;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding: 0.625rem 1.25rem;
+  text-align: center;
+}
+
+.cancel-button:hover {
+  background-color: rgb(206 212 218);
+}
+
+
 @media (min-width: 768px) {
   .create-user-modal-container {
-    width: 50%;
+    width: 60%;
     padding: 4rem;
     margin-left: 0;
   }

@@ -29,8 +29,8 @@ export default {
 <style scoped>
 .solar-table-container {
   width: 100%;
-  font-size: 0.875rem /* 14px */;
-  line-height: 1.25rem /* 20px */;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   text-align: left;
   color: rgb(107 114 128);
 }

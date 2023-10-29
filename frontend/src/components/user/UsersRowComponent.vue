@@ -28,7 +28,7 @@ export default {
       this.$emit('on-click-delete-user', this.user); // Emit the userModel directly
     },
     toggleCheckbox() {
-      this.$emit('toggle-checkbox', this.checked); // Emit an event to toggle the checked value
+      this.$emit('toggle-checkbox', this.user.id);
     },
   }
 }
@@ -41,7 +41,8 @@ export default {
       <div class="flex items-center">
         <input
             type="checkbox"
-            :checked="checked" v-model="checked" @change="toggleCheckbox"
+            :checked="isChecked"
+            @change="toggleCheckbox"
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
       </div>
     </td>

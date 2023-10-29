@@ -7,9 +7,9 @@ import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButto
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
 
 import Team from "@/models/team";
-import TeamsRowComponent from "@/Teams/TeamsRowComponent.vue";
-import TeamsEditComponent from "@/Teams/TeamsEditComponent.vue";
-import TeamsAddComponent from "@/Teams/TeamsAddComponent.vue";
+import TeamsRowComponent from "@/components/team/TeamsRowComponent.vue";
+import TeamsEditComponent from "@/components/team/TeamsEditComponent.vue";
+import TeamsAddComponent from "@/components/team/TeamsAddComponent.vue";
 
 
 export default {
@@ -49,7 +49,7 @@ export default {
     }
   },computed: {
     filteredTeams() {
-      // Filter teams based on inputValue (you may need to adjust the property you're filtering by)
+      // Filter teams based on filterValue (you may need to adjust the property you're filtering by)
       return this.teams.filter(team => team.name.includes(this.inputValue));
     },
   },
@@ -57,7 +57,7 @@ export default {
     handleInputValueChange(value) {
       console.log(value);
       this.inputValue = value;
-      // Use this.inputValue to search in the table
+      // Use this.filterValue to search in the table
     },
     openEditUserModal(team) {
       if (!team) {

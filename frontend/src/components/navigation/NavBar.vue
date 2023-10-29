@@ -8,7 +8,7 @@ export default {
   data() {
     return {
       activePage: 'overview', // Default overview page
-      userRole: 'viewer', // Viewer or Admin role
+      userRole: 'admin', // Viewer or Admin role
       sidebarIsExpanded: false,
       logoExpanded: logoExpanded,
       logoCollapsed: logoCollapsed
@@ -112,7 +112,7 @@ export default {
             v-if="(userRole === 'admin')" to="/users" class="nav-button"
             :class="{ active: isPageActive('users') }"
             @click="handleNavClick('users')">
-          <span class="material-symbols-outlined nav-icon">person</span>
+          <span class="material-symbols-outlined nav-icon">manage_accounts</span>
           <p class="nav-text">Users</p>
         </router-link>
       </div>
