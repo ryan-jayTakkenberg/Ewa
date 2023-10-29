@@ -91,7 +91,7 @@ export default {
       // Clear the checkedUsers array
       this.checkedUsers = [];
     },
-    updateSelectedUsers(){
+    updateSelectedUsers() {
       //TODO
 
     },
@@ -141,10 +141,8 @@ export default {
   <div class="users-header">
     <TitleComponent page-title="Users"></TitleComponent>
   </div>
-
   <div class="users-body">
     <div class="users-container">
-
       <div class="users-action-row">
         <SolarDropdownMenuButton text-button="Action">
           <!-- Edit multiple Users -->
@@ -152,15 +150,9 @@ export default {
           <!-- Delete multiple Users -->
           <SolarDropdownMenuItem text-menu-item="Delete Users" @click="deleteSelectedUsers"></SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
-
-        <SolarSearchbar
-            place-holder="Search For Users"
-            @input="handleInputValueChange">
-        </SolarSearchbar>
-
+        <SolarSearchbar place-holder="Search For Users" @input="handleInputValueChange"></SolarSearchbar>
         <SolarButton class="ml-auto" button-text="Add User" @click="openCreateModal"></SolarButton>
       </div>
-
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
         <UsersRowComponent
             v-for="(user, index) in filterUsers"
@@ -174,25 +166,13 @@ export default {
       </SolarTable>
     </div>
   </div>
-
   <!-- Conditionally render modals based on route -->
   <CreateUserModal
-      v-if="$route.path.includes('create')"
-      :on-close="closeModal"
-      @create-user="createUser"
-  />
+      v-if="$route.path.includes('create')" :on-close="closeModal" @create-user="createUser"/>
   <EditUserModal
-      v-if="$route.path.includes('edit')"
-      :user="selectedUser"
-      :on-close="closeModal"
-      @update-user="updateUser"
-  />
+      v-if="$route.path.includes('edit')" :user="selectedUser" :on-close="closeModal" @update-user="updateUser"/>
   <DeleteUserModal
-      v-if="$route.path.includes('delete')"
-      :user="selectedUser"
-      @delete-user="deleteUser"
-      :on-close="closeModal"
-  />
+      v-if="$route.path.includes('delete')" :user="selectedUser" @delete-user="deleteUser" :on-close="closeModal"/>
 </template>
 
 <style scoped>
