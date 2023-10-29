@@ -2,19 +2,20 @@
 import User from "@/models/user";
 
 import TitleComponent from "@/components/general/SolarTitle.vue";
-import ButtonComponent from "@/components/general/SolarButton.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
-import EditUserModal from "@/components/user/EditUserModal.vue";
+import EditUserModal from "@/components/user/UpdateUserModal.vue";
 import DeleteUserModal from "@/components/user/DeleteUserModal.vue";
 import CreateUserModal from "@/components/user/CreateUserModal.vue";
 import SolarSearchbar from "@/components/general/SolarSearchbar.vue";
+import SolarButton from "@/components/general/SolarButton.vue";
 
 export default {
   name: "UsersOverview",
   components: {
+    SolarButton,
     SolarSearchbar,
     CreateUserModal,
     DeleteUserModal,
@@ -23,7 +24,6 @@ export default {
     UsersRowComponent,
     SolarTable,
     TitleComponent,
-    ButtonComponent,
     EditUserModal,
   },
   data() {
@@ -62,12 +62,45 @@ export default {
     },
     createUser(newUser) {
       this.users.push(newUser);
-      console.log(newUser);
       this.closeModal();
+    },
+    updateUser(updatedUser) {
+      // Find the index of the user to be updated in the users array
+      const index = this.users.findIndex(user => user.id === updatedUser.id);
+      if (index !== -1) {
+        // Update the user data in the array
+        this.users[index] = updatedUser;
+      }
+      this.closeModal(); // Close the modal
     },
     deleteUser(userID) {
       this.users = this.users.filter(user => user.id !== userID)
       this.closeModal();
+    },
+    getSelectedUsers() {
+      return this.users.filter(user => this.checkedUsers.includes(user.id));
+    },
+    deleteSelectedUsers() {
+      // Remove the selected users from the users array
+      this.checkedUsers.forEach(userId => {
+        const index = this.users.findIndex(user => user.id === userId);
+        if (index !== -1) {
+          this.users.splice(index, 1);
+        }
+      })
+      // Clear the checkedUsers array
+      this.checkedUsers = [];
+    },
+    updateSelectedUsers(){
+      //TODO
+
+    },
+    findSelectedRouteFromParam(route) {
+      if (route && route.params.id) {
+        const userId = parseInt(route.params.id);
+        return this.users.find(user => user.id === userId);
+      }
+      return null;
     },
     handleInputValueChange(value) {
       console.log(value);
@@ -95,30 +128,6 @@ export default {
       }
       console.log(this.checkedUsers);
     },
-    getSelectedUsers() {
-      return this.users.filter(user => this.checkedUsers.includes(user.id));
-    },
-    deleteSelectedUsers() {
-      // Remove the selected users from the users array
-      this.checkedUsers.forEach(userId => {
-        const index = this.users.findIndex(user => user.id === userId);
-        if (index !== -1) {
-          this.users.splice(index, 1);
-        }
-      })
-      // Clear the checkedUsers array
-      this.checkedUsers = [];
-    },
-    editSelectedUsers(){
-
-    },
-    findSelectedRouteFromParam(route) {
-      if (route && route.params.id) {
-        const userId = parseInt(route.params.id);
-        return this.users.find(user => user.id === userId);
-      }
-      return null;
-    },
   },
   watch: {
     '$route'(to) {
@@ -139,7 +148,7 @@ export default {
       <div class="users-action-row">
         <SolarDropdownMenuButton text-button="Action">
           <!-- Edit multiple Users -->
-          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="editSelectedUsers"></SolarDropdownMenuItem>
+          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="updateSelectedUsers"></SolarDropdownMenuItem>
           <!-- Delete multiple Users -->
           <SolarDropdownMenuItem text-menu-item="Delete Users" @click="deleteSelectedUsers"></SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
@@ -150,7 +159,7 @@ export default {
             @input="handleInputValueChange">
         </SolarSearchbar>
 
-        <ButtonComponent button-text="Add User" @click="openCreateModal"></ButtonComponent>
+        <SolarButton button-text="Add User" @click="openCreateModal"></SolarButton>
       </div>
 
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
@@ -177,6 +186,7 @@ export default {
       v-if="$route.path.includes('edit')"
       :user="selectedUser"
       :on-close="closeModal"
+      @update-user="updateUser"
   />
   <DeleteUserModal
       v-if="$route.path.includes('delete')"
@@ -195,7 +205,8 @@ export default {
 
 .users-action-row {
   display: flex;
-  margin-bottom: 1rem /* 16px */;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
 }
 
 .users-body {

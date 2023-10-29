@@ -61,9 +61,9 @@
         </div>
 
         <!-- Modal footer -->
-        <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
-          <button type="submit" class="submit-button">Create User</button>
+        <div class="flex items-center p-6  border-t border-gray-200 rounded-b">
           <button @click="onClose" class="cancel-button">Cancel</button>
+          <button type="submit" class="ml-auto submit-button">Create User</button>
         </div>
       </form>
     </div>

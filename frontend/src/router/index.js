@@ -7,13 +7,14 @@ import NotFoundComponent from "@/components/NotFoundComponent.vue";
 import ProductOverview from "@/components/product/ProductOverview";
 import ProjectDetailComponent from "@/components/project/ProjectDetailComponent.vue";
 import ReportComponent from "@/components/manage/ReportComponent.vue";
-import UsersOverview from "@/components/user/UsersOverview.vue";
 import TeamsDetailComponent from "@/components/team/TeamsDetailComponent.vue";
-import EditUserModal from "@/components/user/EditUserModal.vue";
-import DeleteUserModal from "@/components/user/DeleteUserModal.vue";
-import CreateUserModal from "@/components/user/CreateUserModal.vue";
 import warehouseOverviewComponent from "@/components/warehouseView/warehouseOverviewComponent.vue";
 
+// User
+import UsersOverview from "@/components/user/UsersOverview.vue";
+import CreateUserModal from "@/components/user/CreateUserModal.vue";
+import UpdateUserModal from "@/components/user/UpdateUserModal.vue";
+import DeleteUserModal from "@/components/user/DeleteUserModal.vue";
 
 const routes = [
     {path: '/', redirect: '/overview'},
@@ -29,7 +30,7 @@ const routes = [
         children:
             [
                 {path: 'create', component: CreateUserModal},
-                {path: 'edit/:id', component: EditUserModal},
+                {path: 'edit/:id', component: UpdateUserModal},
                 {path: 'delete/:id', component: DeleteUserModal},
             ]
     },
