@@ -1,5 +1,5 @@
 <template>
-  <div class="relative ml-2 mr-2">
+  <div class="relative ml-2 mr-2" >
     <!-- Dropdown button -->
     <button
         @click="toggleDropdown"
@@ -45,7 +45,7 @@ export default {
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     hideDropdown() {
-      setTimeout(() => this.isDropdownOpen = false, 100);
+      this.isDropdownOpen = false;
     },
   }
 };
