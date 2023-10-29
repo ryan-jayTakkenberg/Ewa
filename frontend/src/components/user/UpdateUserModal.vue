@@ -140,7 +140,8 @@ export default {
         <!-- Modal footer -->
         <div class="flex items-center p-6 border-t border-gray-200 rounded-b">
           <button @click="onClose" class="cancel-button">Cancel</button>
-          <button type="submit" class="ml-auto submit-button" :disabled="!hasChanged" @click="updateUser">Save Changes</button>
+          <button type="submit" class="ml-auto submit-button" :disabled="!hasChanged" @click="updateUser">Save Changes
+          </button>
         </div>
       </form>
     </div>
@@ -163,10 +164,12 @@ export default {
   height: 42px;
   cursor: pointer;
 }
+
 .submit-button:disabled, .submit-button:disabled:hover {
-  background-color: rgb(206 212 218);
+  opacity: 40%;
   cursor: not-allowed; /* Change the cursor to not-allowed */
 }
+
 .submit-button {
   color: white;
   background-color: rgb(29 78 216);

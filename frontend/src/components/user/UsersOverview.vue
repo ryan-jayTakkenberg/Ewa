@@ -154,12 +154,11 @@ export default {
         </SolarDropdownMenuButton>
 
         <SolarSearchbar
-            class="ml-auto"
             place-holder="Search For Users"
             @input="handleInputValueChange">
         </SolarSearchbar>
 
-        <SolarButton button-text="Add User" @click="openCreateModal"></SolarButton>
+        <SolarButton class="ml-auto" button-text="Add User" @click="openCreateModal"></SolarButton>
       </div>
 
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">

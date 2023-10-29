@@ -63,7 +63,7 @@
         <!-- Modal footer -->
         <div class="flex items-center p-6  border-t border-gray-200 rounded-b">
           <button @click="onClose" class="cancel-button">Cancel</button>
-          <button type="submit" class="ml-auto submit-button">Create User</button>
+          <button type="submit" :disabled="isAnyFieldEmpty" class="ml-auto submit-button">Create User</button>
         </div>
       </form>
     </div>
@@ -86,6 +86,16 @@ export default {
         password: '',
       }
     }
+  },
+  computed: {
+    isAnyFieldEmpty() {
+      return (
+          this.user.name.trim() === '' ||
+          this.user.email.trim() === '' ||
+          this.user.userRole.trim() === '' ||
+          this.user.password.trim() === ''
+      );
+    },
   },
   props: {
     onClose: {
@@ -192,6 +202,11 @@ export default {
   background-color: rgb(249 250 251);
   height: 42px;
   cursor: pointer;
+}
+
+.submit-button:disabled, .submit-button:disabled:hover {
+  opacity: 40%;
+  cursor: not-allowed; /* Change the cursor to not-allowed */
 }
 
 .submit-button {
