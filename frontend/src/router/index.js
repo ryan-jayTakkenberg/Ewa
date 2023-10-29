@@ -12,9 +12,9 @@ import warehouseOverviewComponent from "@/components/warehouseView/warehouseOver
 
 // User
 import UsersOverview from "@/components/user/UsersOverview.vue";
-import CreateUserModal from "@/components/user/CreateUserModal.vue";
-import UpdateUserModal from "@/components/user/UpdateUserModal.vue";
-import DeleteUserModal from "@/components/user/DeleteUserModal.vue";
+import CreateUserModal from "@/components/user/user-components/CreateUserModal.vue";
+import UpdateUserModal from "@/components/user/user-components/UpdateUserModal.vue";
+import DeleteUserModal from "@/components/user/user-components/DeleteUserModal.vue";
 
 const routes = [
     {path: '/', redirect: '/overview'},

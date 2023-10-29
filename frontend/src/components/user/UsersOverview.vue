@@ -3,28 +3,28 @@ import User from "@/models/user";
 
 import TitleComponent from "@/components/general/SolarTitle.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
-import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
-import EditUserModal from "@/components/user/UpdateUserModal.vue";
-import DeleteUserModal from "@/components/user/DeleteUserModal.vue";
-import CreateUserModal from "@/components/user/CreateUserModal.vue";
 import SolarSearchbar from "@/components/general/SolarSearchbar.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
+import DeleteUserModal from "@/components/user/user-components/DeleteUserModal.vue";
+import UsersRowComponent from "@/components/user/user-components/UsersRowComponent.vue";
+import UpdateUserModal from "@/components/user/user-components/UpdateUserModal.vue";
+import CreateUserModal from "@/components/user/user-components/CreateUserModal.vue";
 
 export default {
   name: "UsersOverview",
   components: {
-    SolarButton,
-    SolarSearchbar,
-    CreateUserModal,
-    DeleteUserModal,
+    TitleComponent,
     SolarDropdownMenuItem,
     SolarDropdownMenuButton,
-    UsersRowComponent,
+    SolarSearchbar,
+    SolarButton,
     SolarTable,
-    TitleComponent,
-    EditUserModal,
+    UsersRowComponent,
+    CreateUserModal,
+    DeleteUserModal,
+    UpdateUserModal,
   },
   data() {
     return {
@@ -169,7 +169,7 @@ export default {
   <!-- Conditionally render modals based on route -->
   <CreateUserModal
       v-if="$route.path.includes('create')" :on-close="closeModal" @create-user="createUser"/>
-  <EditUserModal
+  <UpdateUserModal
       v-if="$route.path.includes('edit')" :user="selectedUser" :on-close="closeModal" @update-user="updateUser"/>
   <DeleteUserModal
       v-if="$route.path.includes('delete')" :user="selectedUser" @delete-user="deleteUser" :on-close="closeModal"/>
