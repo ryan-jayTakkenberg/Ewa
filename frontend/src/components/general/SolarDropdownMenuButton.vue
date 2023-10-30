@@ -1,22 +1,24 @@
 <template>
-  <div class="relative ml-2 mr-2">
-    <!-- Dropdown button -->
-    <button
-        @click="toggleDropdown"
-        @blur="hideDropdown"
-        :class="{ 'dropdown-btn-open': isDropdownOpen, 'dropdown-btn': !isDropdownOpen }"
-        :disabled="disabled">
-      {{ textButton }}
-      <svg class="w-2.5 h-2.5 ml-2.5" fill="none" viewBox="0 0 10 6">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-      </svg>
-    </button>
+  <div>
+    <div class="relative ml-2 mr-2">
+      <!-- Dropdown button -->
+      <button
+          @click="toggleDropdown"
+          @blur="hideDropdown"
+          :class="{ 'dropdown-btn-open': isDropdownOpen, 'dropdown-btn': !isDropdownOpen }"
+          :disabled="disabled">
+        {{ textButton }}
+        <svg class="w-2.5 h-2.5 ml-2.5" fill="none" viewBox="0 0 10 6">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+        </svg>
+      </button>
 
-    <!-- Dropdown menu -->
-    <div v-if="isDropdownOpen" class="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-      <ul class="py-2 text-sm text-gray-700">
-        <slot></slot>
-      </ul>
+      <!-- Dropdown menu -->
+      <div v-if="isDropdownOpen" class="absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+        <ul class="py-2 text-sm text-gray-700">
+          <slot></slot>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -45,7 +47,7 @@ export default {
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     hideDropdown() {
-      setTimeout(() => this.isDropdownOpen = false, 100);
+      this.isDropdownOpen = false;
     },
   }
 };
@@ -61,6 +63,8 @@ export default {
   text-align: center;
   display: inline-flex;
   align-items: center;
+  font-size: 0.875rem/* 14px */;
+  line-height: 1.25rem/* 20px */
 }
 
 .dropdown-btn-open {
@@ -72,6 +76,8 @@ export default {
   text-align: center;
   display: inline-flex;
   align-items: center;
+  font-size: 0.875rem/* 14px */;
+  line-height: 1.25rem/* 20px */
 }
 
 .dropdown-btn:hover {

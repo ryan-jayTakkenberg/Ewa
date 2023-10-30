@@ -16,7 +16,9 @@ export default {
 </script>
 
 <template>
-  <button type="button" class="solar-button" :disabled="disabled">{{ buttonText }}</button>
+  <div class="relative ml-2 mr-2">
+    <button type="button" class="solar-button" :disabled="disabled">{{ buttonText }}</button>
+  </div>
 </template>
 
 <style scoped>
@@ -26,13 +28,11 @@ export default {
   background-color: #c7d02c;
   font-weight: 500;
   border-radius: 0.5rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
   padding: 0.5rem 1.0rem;;
-  margin: 0 0.5rem;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  font-size: 0.875rem/* 14px */;
+  line-height: 1.25rem/* 20px */
 }
 
 .solar-button:hover {

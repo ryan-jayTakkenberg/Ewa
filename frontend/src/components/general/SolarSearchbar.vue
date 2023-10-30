@@ -34,7 +34,6 @@ export default {
 <style scoped>
 .searchbar {
   position: relative;
-  margin: 0.25rem;
 }
 
 .searchbar-container {

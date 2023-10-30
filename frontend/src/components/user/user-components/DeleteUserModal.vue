@@ -21,9 +21,11 @@
           <p>Are you sure you want to delete the user: <strong>{{ user.name }}</strong>?</p>
         </div>
 
-        <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
-          <button @click="deleteUser" class="delete-button">Delete</button>
+        <div class="flex items-center p-6 border-t border-gray-200 rounded-b">
           <button @click="onClose" class="cancel-button">Cancel</button>
+
+          <button @click="deleteUser" class="ml-auto delete-button">Delete</button>
+
         </div>
       </div>
     </div>

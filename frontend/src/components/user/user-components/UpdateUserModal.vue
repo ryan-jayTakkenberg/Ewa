@@ -4,6 +4,7 @@ import User from "@/models/user";
 
 export default {
   name: "EditUserModal",
+  emits: ['update-user'],
   data() {
     return {
       UserRoleOptions: User.UserRole,
@@ -13,6 +14,16 @@ export default {
     }
   },
   computed: {
+    hasChanged() {
+      return (
+          this.user.id !== this.clonedUser.id ||
+          this.user.email !== this.clonedUser.email ||
+          this.user.userRole !== this.clonedUser.userRole ||
+          this.user.name !== this.clonedUser.name ||
+          this.user.lastLoggedIn !== this.clonedUser.lastLoggedIn ||
+          this.user.password !== this.clonedUser.password
+      );
+    },
     currentPasswordFieldType() {
       return this.currentPasswordVisible ? 'text' : 'password';
     },
@@ -31,9 +42,9 @@ export default {
     },
   },
   methods: {
-    saveUser() {
-      // Save the edited user and close the modal
-      console.log("Saving user:", this.clonedUser);
+    updateUser() {
+      // Emit the updated scooter
+      this.$emit('update-user', this.clonedUser);
       this.onClose();
     },
     toggleCurrentPasswordVisibility() {
@@ -52,13 +63,13 @@ export default {
 
 <template>
   <!-- Edit user modal -->
-  <div class="edit-user-modal" tabindex="0">
-    <div class="edit-user-modal-container">
+  <div class="update-user-modal" tabindex="0">
+    <div class="update-user-modal-container">
       <!-- Modal content -->
-      <form @submit.prevent="saveUser" class="edit-user-form shadow ">
+      <form @submit.prevent="updateUser" class="edit-user-form shadow ">
 
         <!-- Modal header -->
-        <div class="edit-user-modal-header">
+        <div class="update-user-modal-header">
           <h3 class="text-xl font-bold text-gray-900 ">Edit user</h3>
           <button type="button" @click="onClose" class="close-modal-btn">
             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -127,9 +138,10 @@ export default {
           </div>
         </div>
         <!-- Modal footer -->
-        <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
-          <button type="submit" class="submit-button">Save Changes</button>
+        <div class="flex items-center p-6 border-t border-gray-200 rounded-b">
           <button @click="onClose" class="cancel-button">Cancel</button>
+          <button type="submit" class="ml-auto submit-button" :disabled="!hasChanged" @click="updateUser">Save Changes
+          </button>
         </div>
       </form>
     </div>
@@ -151,6 +163,11 @@ export default {
   background-color: rgb(249 250 251);
   height: 42px;
   cursor: pointer;
+}
+
+.submit-button:disabled, .submit-button:disabled:hover {
+  opacity: 40%;
+  cursor: not-allowed; /* Change the cursor to not-allowed */
 }
 
 .submit-button {
@@ -229,7 +246,7 @@ export default {
   border-radius: 0.5rem;
 }
 
-.edit-user-modal {
+.update-user-modal {
   position: fixed;
   inset: 0;
   display: flex;
@@ -242,7 +259,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-.edit-user-modal-header {
+.update-user-modal-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -252,7 +269,7 @@ export default {
   border-top-right-radius: 0.25rem;
 }
 
-.edit-user-modal-container {
+.update-user-modal-container {
   position: relative;
   margin-left: auto;
   width: calc(100% - 70px);
@@ -275,7 +292,7 @@ export default {
 }
 
 @media (min-width: 768px) {
-  .edit-user-modal-container {
+  .update-user-modal-container {
     width: 50%;
     padding: 4rem;
     margin-left: 0;
