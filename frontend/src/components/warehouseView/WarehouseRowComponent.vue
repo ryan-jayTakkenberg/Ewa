@@ -3,12 +3,7 @@
     <!-- Check box -->
     <td class="w-4 p-4">
       <div class="flex items-center">
-        <input
-            type="checkbox"
-            :checked="checked"
-            @change="toggleCheckbox"
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-        >
+      
       </div>
     </td>
 
