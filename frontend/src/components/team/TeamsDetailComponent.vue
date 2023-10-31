@@ -11,10 +11,13 @@ import TeamsRowComponent from "@/components/team/TeamsRowComponent.vue";
 import TeamsEditComponent from "@/components/team/TeamsEditComponent.vue";
 import TeamsAddComponent from "@/components/team/TeamsAddComponent.vue";
 
+import TeamsDeleteComponent from "@/components/team/TeamsDeleteComponent.vue";
+
 
 export default {
   name: "UsersOverview",
   components: {
+    TeamsDeleteComponent,
     SolarDropdownMenuItem,
     SolarDropdownMenuButton,
     TeamsRowComponent,
@@ -35,6 +38,7 @@ export default {
       isEditTeamModalOpen: false,
       isAddTeamsOpen: false,
       checkedTeams: [],
+      isDeleteTeamModalOpen: false,
     };
   },
   created() {
@@ -77,6 +81,18 @@ export default {
     closeEditUserModal() {
       this.isEditTeamModalOpen = false;
     },
+    closeDeleteTeamModal(){
+      this.isDeleteTeamModalOpen = false;
+    },
+    openDeleteUserModal(team){
+      if (!team) {
+        // No user selected
+        return;
+      }
+      this.selectedTeam = team;  // Set the selected user// Open the modal
+
+      this.isDeleteTeamModalOpen = true;
+    },
 
     closeAddTeamsModal(){
       this.isAddTeamsOpen = false;
@@ -90,6 +106,11 @@ export default {
       console.log(this.checkedTeams);
     }, getSelectedteams() {
       return this.projects.filter(team => this.checkedTeams.includes(team.id));
+    },
+    deleteTeam(teamID) {
+      console.log("HALLO")
+      this.teams = this.teams.filter(team => team.id !== teamID)
+      this.closeDeleteTeamModal()
     },
   },
 }
@@ -106,7 +127,7 @@ export default {
         <!-- Action Dropdown Button -->
         <SolarDropdownMenuButton text-button="Action">
           <SolarDropdownMenuItem text-menu-item="Edit Team" @click="openEditUserModal(getSelectedteams()[0])"></SolarDropdownMenuItem>
-          <SolarDropdownMenuItem text-menu-item="Delete Team" @click="openDeleteUserModal"></SolarDropdownMenuItem>
+          <SolarDropdownMenuItem text-menu-item="Delete Team" @click="openDeleteUserModal(getSelectedteams()[0])"></SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
 
         <!-- Searchbar -->
@@ -121,7 +142,8 @@ export default {
             :key="index"
             :teams="team"
             :isChecked="team.isChecked"
-            @click-edit-user="openEditUserModal"
+            @click-delete-team="openDeleteUserModal"
+            @click-edit-team="openEditUserModal"
             @toggle-checkbox="toggleCheckbox(team, $event)" ><!-- Pass user and checkbox state -->
         </TeamsRowComponent>
       </SolarTable>
@@ -131,6 +153,13 @@ export default {
   <TeamsEditComponent v-if="isEditTeamModalOpen" :on-close="closeEditUserModal" :team="selectedTeam" >
 
   </TeamsEditComponent>
+  <TeamsDeleteComponent
+      v-if="isDeleteTeamModalOpen "
+      :team="selectedTeam"
+      :on-close="closeDeleteTeamModal"
+      @delete-team="deleteTeam"
+  >
+  </TeamsDeleteComponent>
 </template>
 
 <style scoped>

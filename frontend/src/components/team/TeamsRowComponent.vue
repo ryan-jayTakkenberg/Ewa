@@ -20,13 +20,16 @@ export default {
     }
   },
   methods: {
-    editProject() {
-      this.$emit('click-edit-user', this.teams);  // Emit the userModel directly
+    editTeam() {
+      this.$emit('click-edit-team', this.teams);  // Emit the userModel directly
     },
     toggleCheckbox() {
       // Emit an event to toggle the isChecked value
       this.$emit('toggle-checkbox', !this.isChecked);
     },
+    deleteTeam(){
+      this.$emit('click-delete-team', this.teams);
+    }
   }
 }
 </script>
@@ -58,20 +61,30 @@ export default {
 
     <!-- Edit User -->
     <td class="px-6 py-4">
-      <div @click="editProject" class="edit-user-btn">Edit teams</div>
+      <div @click="editTeam" class="edit-team-btn">Edit teams</div>
+      <div @click="deleteTeam" class="delete-team-btn">delete teams</div>
     </td>
 
   </tr>
 </template>
 
 <style scoped>
-.edit-user-btn {
+.edit-team-btn {
   font-weight: 500;
   color: rgb(37 99 235);
   cursor: pointer;
 }
 
-.edit-user-btn:hover {
+.edit-team-btn:hover {
+  text-decoration-line: underline;
+}
+.delete-team-btn {
+  font-weight: 500;
+  color: red;
+  cursor: pointer;
+}
+
+.delete-team-btn:hover {
   text-decoration-line: underline;
 }
 
