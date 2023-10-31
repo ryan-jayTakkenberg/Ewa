@@ -53,14 +53,19 @@ export default {
     }
   },computed: {
     filteredTeams() {
-      // Filter teams based on filterValue (you may need to adjust the property you're filtering by)
-      return this.teams.filter(team => team.name.includes(this.inputValue));
-    },
+      return this.teams.filter(p => {
+        for (let key of Object.keys(p)) {
+          if (`${p[key]}`.toLowerCase().includes(this.inputValue)) {
+            return true;
+          }
+        }
+        return false;
+      });},
   },
   methods: {
     handleInputValueChange(value) {
       console.log(value);
-      this.inputValue = value;
+      this.inputValue = value.trim().toLowerCase();
       // Use this.filterValue to search in the table
     },
     openEditUserModal(team) {
@@ -131,7 +136,7 @@ export default {
         </SolarDropdownMenuButton>
 
         <!-- Searchbar -->
-        <SearchBarComponent place-holder="Search For Teams" class="ml-auto" @input="handleInputValueChange"
+        <SearchBarComponent place-holder="Search For Teams" class="ml-auto" @search="handleInputValueChange"
         ></SearchBarComponent>
         <ButtonComponent button-text="Add Team" @click="openAddTeam"></ButtonComponent>
       </div>
