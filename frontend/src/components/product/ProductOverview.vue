@@ -108,7 +108,10 @@ export default {
       for (let edited of this.selectedProducts) {
         let index = this.products.findIndex(p => p.id === edited.id);
         edited.injectAttributes(updated);
-        this.products[index] = await edited.putDatabase();
+        let product = await edited.putDatabase();
+        if (product) {
+          this.products[index] = product;
+        }
       }
       this.closeModal();
     },
@@ -119,9 +122,12 @@ export default {
         await deleted.delDatabase();
       }
     },
-    async create(product) {
+    async create(creation) {
       this.closeModal();
-      this.products.push(await product.putDatabase());
+      let product = await creation.putDatabase();
+      if (product) {
+        this.products.push(product);
+      }
     },
     handleSearchChange(value) {
       this.filterValue = value.trim().toLowerCase();

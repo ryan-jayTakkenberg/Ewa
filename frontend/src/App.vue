@@ -71,12 +71,16 @@ export default {
   height: 100%;
 }
 
+/* Uitgecomment want het doet niks en het verpest de login page als die onder 750px komt omdat er geen sidebar is... sry */
+
+/*
 @media only screen and (max-width: 750px) {
   .router-view {
     width: calc(100svw - 70px);
     margin-left: auto;
   }
 }
+*/
 
 </style>
 

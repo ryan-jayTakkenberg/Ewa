@@ -3,40 +3,42 @@
     <div class="backgroundImgContainer">
 
     </div>
-    <div class="container">
+    <div class="loginContainer">
       <div class="logoContainer"></div>
-      <div class="welcomeContainer">
-        <div class="title">Welcome</div>
-        <div class="description">This is Solar Sedum's management system. This system keeps track of the inventory. Please login as admin or user.</div>
+      <div class="welcomeContainer" v-show="!showLoginForm">
+        <h1 class="title">Welcome</h1>
+        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam delectus deleniti dolorem eius fuga hic iste iure minus.</p>
+        <button class="showLoginFormButton" v-on:click="showLogin()">Login</button>
       </div>
 
-      <div class="loginContainer">
-        <div class="buttonContainer">
-          <button class="adminButton" v-on:click="showLogin('Admin')">Login as admin</button>
-          <button class="userButton" v-on:click="showLogin('User')">Login as user</button>
-        </div>
-
-        <form v-on:submit.prevent="submitForm">
+        <form v-on:submit.prevent="submitForm" v-show="showLoginForm">
           <div class="headerWrapper">
-            <div class="typeOfUser"><span class="material-symbols-outlined">person</span> {{ typeOfUser }}</div>
             <div class="crossWrapper" v-on:click="hideLogin"><span class="material-symbols-outlined">close</span></div>
           </div>
-          <div class="inputWrapper">
-            <label>Username</label>
-            <input type="text" v-model="usernameInput" placeholder="username">
-            <label>Password</label>
-            <input type="password" v-model="passwordInput" placeholder="password">
-            <div class="errorMessageWrapper" v-show="errorMessage">
-              <div class="errorMessage"> {{ errorMessage }} </div>
-              <span class="material-symbols-outlined report-icon">report</span>
+
+          <div class="inputContainer">
+            <div class="inputWrapper">
+              <input type="text" name="username" v-model="usernameInput" required>
+              <label for="username">Username</label>
+            </div>
+
+            <div class="inputWrapper">
+              <input type="password" name="password" v-model="passwordInput" required>
+              <label for="password">Password</label>
             </div>
           </div>
+
+            <div class="errorMessageWrapper" v-show="errorMessage">
+              <p class="errorMessage"> {{ errorMessage }} </p>
+              <span class="material-symbols-outlined report-icon">report</span>
+            </div>
+
           <button class="loginButton">Login</button>
         </form>
 
+      <div class="linkWrapper">
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Can't sign in?</a>
       </div>
-
-      <div class="information">Need more information? <a href="#">click here</a></div>
 
     </div>
   </div>
@@ -50,9 +52,9 @@ export default {
 
   data() {
     return {
-      typeOfUser: '',
+      showLoginForm: false,
       usernameDummy: 'ewaAdmin1',
-      passwordDummy: 'ewaPW1',
+      passwordDummy: 'ewaAdminPW1',
       usernameInput: '',
       passwordInput: '',
       errorMessage: '',
@@ -61,22 +63,17 @@ export default {
 
   methods: {
 
-    showLogin(type) {
+    showLogin() {
 
-      this.typeOfUser = type;
-
-      this.$el.querySelector('form').style.display = 'flex';
-      this.$el.querySelector('.buttonContainer').style.display = 'none';
-      this.$el.querySelector('.welcomeContainer').style.display = 'none';
+      this.showLoginForm = true;
     },
+
     hideLogin() {
 
       this.errorMessage = '';
       this.usernameInput = '';
       this.passwordInput = '';
-      this.$el.querySelector('form').style.display = 'none';
-      this.$el.querySelector('.buttonContainer').style.display = 'flex';
-      this.$el.querySelector('.welcomeContainer').style.display = 'flex';
+      this.showLoginForm = false;
     },
 
     submitForm() {
@@ -96,11 +93,12 @@ export default {
 
       } else {
         this.$el.querySelector('.errorMessageWrapper').style.display = 'none';
-        localStorage.setItem('userRole', this.typeOfUser);
         this.$router.push('/overview');
       }
     },
+
   },
+
 }
 </script>
 
@@ -120,18 +118,21 @@ export default {
   background-size: cover;
 }
 
-.container {
+.loginContainer {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   height: 100svh;
   width: 25%;
-  padding: 2rem;
-  background: #f5f5f5;
-  border-left: 1px solid #e5e5e5;
+  padding: 0 4rem;
+  background: #ffffff;
 }
 
 .logoContainer {
+  position: absolute;
+  top: 5%;
   height: 125px;
   width: 200px;
   background: url("../../../static/images/solar_sedum_logo.svg") center no-repeat;
@@ -142,8 +143,7 @@ export default {
   display: flex;
   flex-direction: column;
   height: auto;
-  width: 80%;
-  margin-top: 5rem;
+  width: 100%;
   animation: fadeWelcome 0.5s ease-in-out;
 }
 
@@ -159,6 +159,7 @@ export default {
 }
 
 .title {
+  text-align: left;
   font-size: 30px;
   font-weight: 700;
   color: #222;
@@ -170,32 +171,27 @@ export default {
   color: #999;
 }
 
-.loginContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: auto;
-  width: 80%;
-  margin-top: 3rem;
-}
-
-.loginContainer .buttonContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 2rem;
+.showLoginFormButton {
+  padding: 1.5em 1em;
+  border-radius: 5px;
+  text-transform: uppercase;
+  font-size: 1em;
+  font-weight: 600;
+  background: transparent;
+  border: 2px solid #222;
+  color: #222;
+  margin-top: 2rem;
+  cursor: pointer;
   transition: 0.2s ease-in-out;
 }
 
-.loginContainer form {
-  display: none;
+form {
+  display: flex;
   flex-direction: column;
   width: 100%;
   padding: 1rem;
-  border: 3px solid #e5e5e5;
-  border-radius: 10px;
-  margin-top: 4rem;
+  border: 2px solid #222;
+  border-radius: 5px;
   animation: fadeForm 0.3s ease-in-out;
 }
 
@@ -210,37 +206,99 @@ export default {
   }
 }
 
-
-form .inputWrapper {
+form .inputContainer {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
+}
+
+form .inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4em;
+  border-radius: 3px;
+}
+
+form .input-value + * {
+  clear: both;
 }
 
 form input {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  padding: 1.35em 0.65em 0 0.65em;
   border: none;
-  padding: 0.5rem;
-  border-radius: 5px;
-  font-size: 15px;
-  font-weight: 400;
-  outline: 1px solid #ccc;
+  outline: none;
+  background: #f5f5f5;
+  border-radius: 3px;
+  font-size: 0.85em;
+  font-weight: 700;
+  color: #222;
+  z-index: 1;
+}
+
+form label {
+  position: absolute;
+  font-size: 0.75em;
+  font-weight: 700;
+  color: #747474;
+  text-transform: uppercase;
+  padding-left: 1rem;
+  z-index: 2;
+  pointer-events: none;
+  animation: labelIn;
+  animation-duration: 0.2s;
+  animation-direction: reverse;
+  animation-fill-mode: forwards;
 }
 
 form input:focus {
   outline: 2px solid #222;
+  background: none;
 }
 
-button {
-  padding: 1.5em 1em;
-  border-radius: 5px;
-  text-transform: uppercase;
-  font-size: 1em;
-  font-weight: 600;
-  background: transparent;
-  border: 2px solid #222;
-  color: #222;
-  cursor: pointer;
-  transition: 0.2s ease-in-out;
+form input:focus + label, form input:valid + label {
+  animation: labelOut;
+  animation-duration: 0.2s;
+  animation-direction: normal;
+  animation-fill-mode: forwards;
+}
+
+@keyframes labelIn {
+
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-25%);
+  }
+
+}
+
+@keyframes labelOut {
+
+  0% {
+    font-size: 0.6em;
+    top: -0.25em;
+    padding-left: 0.75em;
+    transform: translateY(25%);
+    opacity: 0;
+  }
+
+  100% {
+    font-size: 0.6em;
+    top: -0.25em;
+    padding-left: 0.75em;
+    transform: translateY(0);
+    opacity: 1;
+  }
+
 }
 
 .loginButton {
@@ -257,33 +315,19 @@ button {
   transition: 0.2s ease-in-out;
 }
 
-button:hover,
+.showLoginFormButton:hover,
 .loginButton:hover {
   background: #222;
   color: #fff;
-}
-
-label {
-  font-size: 15px;
-  font-weight: 500;
 }
 
 .headerWrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: right;
   height: 50px;
-  margin-bottom: 3rem;
-}
-
-.typeOfUser {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 15px;
-  font-weight: 600;
-  color: #222;
+  margin-bottom: 1rem;
 }
 
 .crossWrapper {
@@ -298,29 +342,39 @@ label {
 }
 
 .crossWrapper:hover {
-  background: #e5e5e5;
+  background: #f5f5f5;
 }
 
 .errorMessageWrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.8em;
-  font-weight: 500;
   border-radius: 5px;
   border: 2px solid red;
   padding: 0.5rem 1rem;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
-.information {
+.errorMessage {
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.linkWrapper {
+  position: absolute;
+  bottom: 5%;
   display: flex;
   align-items: center;
-  margin-top: 3rem;
-  font-size: 12px;
+}
+
+a {
+  font-size: 15px;
   font-weight: 500;
   color: #222;
-  gap: 5px;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 .material-symbols-outlined {
@@ -337,49 +391,99 @@ label {
 }
 
 @media screen and (max-width: 1500px) {
-  .container {
-    padding: 1rem;
+
+  .loginContainer {
+    padding: 0 3rem;
     width: 30%;
   }
 
-  .welcomeContainer {
+}
+
+@media screen and (max-width: 1100px) {
+
+  .loginContainer {
+    padding: 0 3rem;
+    width: 40%;
+  }
+
+}
+
+@media screen and (max-width: 950px) {
+
+  .backgroundImgContainer {
+    display: none;
+  }
+
+  .loginContainer {
+    padding: 0 10rem;
+    width: 100%;
+  }
+
+  .logoContainer {
+    height: 250px;
+    width: 300px;
+  }
+
+  .title {
+    font-size: 40px;
+  }
+
+  .description {
+    font-size: 15px;
+  }
+
+  .showLoginFormButton {
     margin-top: 3rem;
   }
 
-  .loginContainer form {
-    margin-top: 0;
-  }
-
-  button {
-    font-size: 0.8em;
-  }
-
-  .loginButton {
-    font-size: 12px;
-  }
 }
 
-@media screen and (max-width: 1200px) {
-  .container {
-    padding: 0.8rem;
-    width: 35%;
+@media screen and (max-width: 750px) {
+
+  .loginContainer {
+    padding: 0 7.5rem;
+    width: 100%;
   }
 
-  .welcomeContainer {
-    margin-top: 2rem;
+}
+
+@media screen and (max-width: 600px) {
+
+  .backgroundImgContainer {
+    display: none;
   }
 
-  .loginContainer form {
-    margin-top: 0;
+  .loginContainer {
+    padding: 0 5rem;
+    width: 100%;
   }
 
-  button {
-    font-size: 0.7em;
+  .logoContainer {
+    height: 125px;
+    width: 200px;
   }
 
-  .loginButton {
-    font-size: 10px;
+  .errorMessage {
+    font-size: 0.65em;
   }
+
+  .title {
+    font-size: 30px;
+  }
+
+  .description {
+    font-size: 12px;
+  }
+
+}
+
+@media screen and (max-width: 400px) {
+
+  .loginContainer {
+    padding: 0 2rem;
+    width: 100%;
+  }
+
 }
 
 </style>
