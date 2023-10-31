@@ -36,14 +36,15 @@ export default {
   },
   computed: {
     filterUsers() {
-      // Create a regular expression with the inputValue and the 'i' flag for case-insensitivity
-      const regex = new RegExp(this.inputValue, 'i');
-
-      // Filter users based on the regular expression matching either name or email
-      return this.users.filter(user => {
-        return regex.test(user.name) || regex.test(user.email);
+      return this.users.filter(p => {
+        for (let key of Object.keys(p)) {
+          if (`${p[key]}`.toLowerCase().includes(this.inputValue)) {
+            return true;
+          }
+        }
+        return false;
       });
-    }
+    },
   },
   created() {
     this.fetchUsers();
@@ -104,7 +105,7 @@ export default {
     },
     handleInputValueChange(value) {
       console.log(value);
-      this.inputValue = value;  // Use this.filterValue to search in the table
+      this.inputValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
     },
     openCreateModal() {
       this.$router.push(`${this.$route.matched[0].path}/create`);
@@ -150,7 +151,7 @@ export default {
           <!-- Delete multiple Users -->
           <SolarDropdownMenuItem text-menu-item="Delete Users" @click="deleteSelectedUsers"></SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
-        <SolarSearchbar place-holder="Search For Users" @input="handleInputValueChange"></SolarSearchbar>
+        <SolarSearchbar place-holder="Search For Users" @search="handleInputValueChange"></SolarSearchbar>
         <SolarButton class="ml-auto" button-text="Add User" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
