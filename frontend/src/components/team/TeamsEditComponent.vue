@@ -1,42 +1,48 @@
 <script>
-
 import Team from "@/models/team";
 
-
 export default {
-  name: "EditTeamModal",
+  name: "TeamsEditComponent",
   data() {
     return {
       editedTeam: null
-    }
+    };
   },
   props: {
     team: {
-      type: Team,
-      required: true,
+      type: Team, // Wijzig het type van de prop naar Object
+      required: true
     },
     onClose: {
       type: Function,
-      required: true,
+      required: true
     },
+    onEditTeam: {
+      type: Function,
+      required: true
+    }
   },
   methods: {
-    saveProject() {
-      // Save the edited user and close the modal
-      // Implement the logic to save the edited user details
-      console.log("Saving team:", this.editedTeam);
+    saveTeam() {
+      // Update the edited team and close the modal
+      this.onEditTeam(this.editedTeam); // Pass the editedTeam to the parent component
       this.onClose();
+    },
+    cloneTeam(team) {
+      // Define a custom clone method for the Team object
+      return {
+        id: team.id,
+        name: team.name,
+        warehouse: team.warehouse,
+        project: team.project
+      };
     }
   },
   created() {
-    this.editedTeam = this.team.clone();
-    console.log(this.editedTeam);
-      // Wijs de waarde van de 'team' prop toe aan de 'editedTeam' lokale variabele
-      this.editedTeam = { ...this.team }; // Hier maak je een kopie om onbedoelde mutatie te voorkomen
-
-  },
-
-}
+    // Clone the team prop to the editedTeam data property using the custom clone method
+    this.editedTeam = this.cloneTeam(this.team);
+  }
+};
 </script>
 
 <template>
@@ -44,10 +50,10 @@ export default {
   <div class="edit-user-modal" tabindex="0">
     <div class="edit-user-modal-container">
       <!-- Modal content -->
-      <form @submit.prevent="saveProject" class="edit-user-form shadow ">
+      <form @submit.prevent="saveTeam" class="edit-user-form shadow ">
         <!-- Modal header -->
         <div class="edit-user-modal-header">
-          <h3 class="text-xl font-bold text-gray-900 ">Edit project</h3>
+          <h3 class="text-xl font-bold text-gray-900 ">Edit team</h3>
           <button type="button" @click="onClose" class="close-modal-btn">
             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -67,7 +73,7 @@ export default {
                      :placeholder="team.name" required>
             </div>
             <div class="col-span-6 sm:col-span-3">
-              <label for="email" class="modal-label">warehouse</label>
+              <label for="warehouse" class="modal-label">warehouse</label>
               <input
                   type="text"
                   v-model="this.editedTeam.warehouse"
@@ -75,7 +81,7 @@ export default {
                   required>
             </div>
             <div class="col-span-6 sm:col-span-3">
-              <label for="dateOfInstallation" class="modal-label">project</label>
+              <label for="project" class="modal-label">project</label>
               <input
                   type="text"
                   v-model="this.editedTeam.project"

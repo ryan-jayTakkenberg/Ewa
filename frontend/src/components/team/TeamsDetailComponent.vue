@@ -98,6 +98,15 @@ export default {
 
       this.isDeleteTeamModalOpen = true;
     },
+    editTeam(editedTeam) {
+      const index = this.teams.findIndex(team => team.id === editedTeam.id);
+      if (index !== -1) {
+        // Update the team data in the array
+        this.teams[index] = editedTeam;
+      }
+      this.closeEditUserModal();
+
+    },
 
     closeAddTeamsModal(){
       this.isAddTeamsOpen = false;
@@ -113,7 +122,6 @@ export default {
       return this.projects.filter(team => this.checkedTeams.includes(team.id));
     },
     deleteTeam(teamID) {
-      console.log("HALLO")
       this.teams = this.teams.filter(team => team.id !== teamID)
       this.closeDeleteTeamModal()
     },
@@ -155,7 +163,7 @@ export default {
     </div>
   </div>
   <TeamsAddComponent v-if="isAddTeamsOpen" :on-close="closeAddTeamsModal" @addUser="addTeam"></TeamsAddComponent>
-  <TeamsEditComponent v-if="isEditTeamModalOpen" :on-close="closeEditUserModal" :team="selectedTeam" >
+  <TeamsEditComponent v-if="isEditTeamModalOpen" :on-close="closeEditUserModal" :team="selectedTeam" @edit-team="editTeam">
 
   </TeamsEditComponent>
   <TeamsDeleteComponent
