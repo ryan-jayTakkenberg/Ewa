@@ -1,6 +1,7 @@
 package app.authentication;
 
 import app.exceptions.ForbiddenException;
+import app.exceptions.NotFoundException;
 import app.models.Product;
 import app.models.User;
 import app.models.Warehouse;
@@ -24,11 +25,18 @@ public class Perms {
         return Product.list;
     }
 
-    public List<Warehouse> getWarehouses() {
+//    public List<Warehouse> getWarehouses() {
+//        if (user.getPermissionLevel() == PermissionLevel.ADMIN) {
+//            return Warehouse.list;
+//        }
+//        return Warehouse.list.stream().filter(warehouse -> user.warehouseIds.contains(warehouse.getId())).toList();
+//    }
+
+    public List<User> getUsers() {
         if (user.getPermissionLevel() == PermissionLevel.ADMIN) {
-            return Warehouse.list;
+            return User.list;
         }
-        return Warehouse.list.stream().filter(warehouse -> user.warehouseIds.contains(warehouse.getId())).toList();
+        return List.of(user);
     }
 
 

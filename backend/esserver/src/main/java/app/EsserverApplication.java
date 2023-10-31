@@ -1,9 +1,12 @@
 package app;
 
+import app.authentication.PermissionLevel;
 import app.models.Product;
 import app.models.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.time.LocalDate;
 
 @SpringBootApplication
 public class EsserverApplication {
@@ -13,7 +16,8 @@ public class EsserverApplication {
     public static void main(String[] args) {
         SpringApplication.run(EsserverApplication.class, args);
 
-        User.list.add(new User("550e8400-e29b-41d4-a716-446655440000"));
+        User.list.add(new User("550e8400-e29b-41d4-a716-446655440000", PermissionLevel.ADMIN.toString(), "admin", "admin@admin.com", LocalDate.now().toString(), "admin"));
+        User.list.add(new User("550e8400-e29b-41d4-a716-446655440001", PermissionLevel.VIEWER.toString(), "viewer", "viewer@viewer.com", LocalDate.now().toString(), "viewer"));
 
         Product.list.add(new Product(0, "Zonnepaneel", 150.123, "Heeft een vermogen van 430 Wattpiek en beschikt over 108 cellen."));
     }

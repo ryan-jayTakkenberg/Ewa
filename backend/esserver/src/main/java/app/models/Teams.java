@@ -85,9 +85,9 @@ public class Teams {
             // TODO: Implement the logic to get all teams from the database
             //  Update "teams" with the response
             return Arrays.asList(
-                    new Teams(232, "TeamWest", "Amsterdam West", "Hva", Arrays.asList(new User("Persoon 1 "))),
-                    new Teams(235, "SolarPaneel", "Amsterdam West", "Hva", Arrays.asList(new User("Persoon 2 "))),
-                    new Teams(237, "Solar2", "Amsterdam West", "Hva", Arrays.asList(new User("Persoon 3 ")))
+                    new Teams(232, "TeamWest", "Amsterdam West", "Hva", Arrays.asList()),
+                    new Teams(235, "SolarPaneel", "Amsterdam West", "Hva", Arrays.asList()),
+                    new Teams(237, "Solar2", "Amsterdam West", "Hva", Arrays.asList())
             );
         }
 
