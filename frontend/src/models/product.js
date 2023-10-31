@@ -24,7 +24,7 @@ export default class Product {
             return false;
         }
         for (let attr of Object.keys(this)) {
-            if (from[attr]) {
+            if (from[attr] !== null && from[attr] !== undefined) {
                 this[attr] = from[attr];
             }
         }
