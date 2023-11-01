@@ -1,13 +1,15 @@
 <script>
 
 import User from "@/models/user";
+import SolarModal from "@/components/general/SolarModal.vue";
 
 export default {
-  name: "EditUserModal",
+  name: "UpdateUserModal",
+  components: {SolarModal},
   emits: ['update-user'],
   data() {
     return {
-      UserRoleOptions: User.UserRole,
+      PermissionLevelOptions: User.PermissionLevel,
       clonedUser: null,
       currentPasswordVisible: false,
       newPasswordVisible: false,
@@ -18,7 +20,7 @@ export default {
       return (
           this.user.id !== this.clonedUser.id ||
           this.user.email !== this.clonedUser.email ||
-          this.user.userRole !== this.clonedUser.userRole ||
+          this.user.permissionLevel !== this.clonedUser.permissionLevel ||
           this.user.name !== this.clonedUser.name ||
           this.user.lastLoggedIn !== this.clonedUser.lastLoggedIn ||
           this.user.password !== this.clonedUser.password
@@ -62,91 +64,156 @@ export default {
 </script>
 
 <template>
-  <!-- Edit user modal -->
-  <div class="update-user-modal" tabindex="0">
-    <div class="update-user-modal-container">
-      <!-- Modal content -->
-      <form @submit.prevent="updateUser" class="edit-user-form shadow ">
+  <SolarModal title="Edit User" @close-modal="onClose">
+    <form @submit.prevent="updateUser">
+      <div class="modal-grid">
 
-        <!-- Modal header -->
-        <div class="update-user-modal-header">
-          <h3 class="text-xl font-bold text-gray-900 ">Edit user</h3>
-          <button type="button" @click="onClose" class="close-modal-btn">
-            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-            </svg>
-          </button>
+        <div class="col-span-6 sm:col-span-3">
+          <label for="name" class="modal-label ">Name</label>
+          <input
+              type="text"
+              v-model="this.clonedUser.name"
+              class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
+              placeholder="Name"
+              required>
         </div>
 
-        <!-- Modal body -->
-        <div class="modal-body">
-          <div class="modal-grid">
+        <div class="col-span-6 sm:col-span-3">
+          <label for="email" class="modal-label">Email</label>
+          <input
+              type="email"
+              v-model="this.clonedUser.email"
+              class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
+              placeholder="Email"
+              required>
+        </div>
+        <div class="col-span-6 sm:col-span-3">
+          <label for="user-role" class="modal-label">Function</label>
 
-            <div class="col-span-6 sm:col-span-3">
-              <label for="name" class="modal-label ">Name</label>
-              <input
-                  type="text"
-                  v-model="this.clonedUser.name"
-                  class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
-                  placeholder="Name"
-                  required>
-            </div>
+          <select v-model="this.clonedUser.permissionLevel" class="role-select">
+            <option v-for="permissionLevel in PermissionLevelOptions"
+                    :key="permissionLevel"
+                    :value="permissionLevel">{{ permissionLevel }}
+            </option>
+          </select>
+        </div>
 
-            <div class="col-span-6 sm:col-span-3">
-              <label for="email" class="modal-label">Email</label>
-              <input
-                  type="email"
-                  v-model="this.clonedUser.email"
-                  class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
-                  placeholder="Email"
-                  required>
-            </div>
-            <div class="col-span-6 sm:col-span-3">
-              <label for="user-role" class="modal-label">Function</label>
+        <div class="col-span-6 sm:col-span-3">
+          <label for="current-password" class="modal-label ">Current Password</label>
+          <input
+              v-model="this.clonedUser.password"
+              :type="currentPasswordFieldType" placeholder="••••••••"
+              class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
+              required>
+          <button @click="toggleCurrentPasswordVisibility" type="button" class="toggle-password-button">
+            {{ currentPasswordFieldType === 'password' ? 'Show' : 'Hide' }}
+          </button>
 
-              <select v-model="this.clonedUser.userRole" class="role-select">
-                <option v-for="userRole in UserRoleOptions"
-                        :key="userRole"
-                        :value="userRole">{{ userRole }}
-                </option>
-              </select>
-            </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="new-password" class="modal-label ">New Password</label>
+            <input :type="newPasswordFieldType" placeholder="New Password"
+                   class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5">
 
-            <div class="col-span-6 sm:col-span-3">
-              <label for="current-password" class="modal-label ">Current Password</label>
-              <input
-                  v-model="this.clonedUser.password"
-                  :type="currentPasswordFieldType" placeholder="••••••••"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
-                  required>
-              <button @click="toggleCurrentPasswordVisibility" type="button" class="toggle-password-button">
-                {{ currentPasswordFieldType === 'password' ? 'Show' : 'Hide' }}
-              </button>
-
-              <div class="col-span-6 sm:col-span-3">
-                <label for="new-password" class="modal-label ">New Password</label>
-                <input :type="newPasswordFieldType" placeholder="New Password"
-                       class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5">
-
-                <button @click="toggleNewPasswordVisibility" type="button" class="toggle-password-button">
-                  {{ newPasswordFieldType === 'password' ? 'Show' : 'Hide' }}
-                </button>
-              </div>
-            </div>
-
+            <button @click="toggleNewPasswordVisibility" type="button" class="toggle-password-button">
+              {{ newPasswordFieldType === 'password' ? 'Show' : 'Hide' }}
+            </button>
           </div>
         </div>
-        <!-- Modal footer -->
-        <div class="flex items-center p-6 border-t border-gray-200 rounded-b">
-          <button @click="onClose" class="cancel-button">Cancel</button>
-          <button type="submit" class="ml-auto submit-button" :disabled="!hasChanged" @click="updateUser">Save Changes
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-  <div class="modal-label"></div>
+      </div>
+    </form>
+    <!-- Modal footer -->
+    <template v-slot:footer>
+      <button @click="onClose" class="cancel-button">Cancel</button>
+      <button type="submit" class="ml-auto submit-button" :disabled="!hasChanged" @click="updateUser">Save changes
+      </button>
+    </template>
+
+  </SolarModal>
+  <!--  &lt;!&ndash; Edit user modal &ndash;&gt;-->
+  <!--  <div class="update-user-modal" tabindex="0">-->
+  <!--    <div class="update-user-modal-container">-->
+  <!--      &lt;!&ndash; Modal content &ndash;&gt;-->
+  <!--      <form @submit.prevent="updateUser" class="edit-user-form shadow ">-->
+
+  <!--        &lt;!&ndash; Modal header &ndash;&gt;-->
+  <!--        <div class="update-user-modal-header">-->
+  <!--          <h3 class="text-xl font-bold text-gray-900 ">Edit user</h3>-->
+  <!--          <button type="button" @click="onClose" class="close-modal-btn">-->
+  <!--            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">-->
+  <!--              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+  <!--                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>-->
+  <!--            </svg>-->
+  <!--          </button>-->
+  <!--        </div>-->
+
+  <!--        &lt;!&ndash; Modal body &ndash;&gt;-->
+  <!--        <div class="modal-body">-->
+  <!--          <div class="modal-grid">-->
+
+  <!--            <div class="col-span-6 sm:col-span-3">-->
+  <!--              <label for="name" class="modal-label ">Name</label>-->
+  <!--              <input-->
+  <!--                  type="text"-->
+  <!--                  v-model="this.clonedUser.name"-->
+  <!--                  class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"-->
+  <!--                  placeholder="Name"-->
+  <!--                  required>-->
+  <!--            </div>-->
+
+  <!--            <div class="col-span-6 sm:col-span-3">-->
+  <!--              <label for="email" class="modal-label">Email</label>-->
+  <!--              <input-->
+  <!--                  type="email"-->
+  <!--                  v-model="this.clonedUser.email"-->
+  <!--                  class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"-->
+  <!--                  placeholder="Email"-->
+  <!--                  required>-->
+  <!--            </div>-->
+  <!--            <div class="col-span-6 sm:col-span-3">-->
+  <!--              <label for="user-role" class="modal-label">Function</label>-->
+
+  <!--              <select v-model="this.clonedUser.permissionLevel" class="role-select">-->
+  <!--                <option v-for="permissionLevel in UserRoleOptions"-->
+  <!--                        :key="permissionLevel"-->
+  <!--                        :value="permissionLevel">{{ permissionLevel }}-->
+  <!--                </option>-->
+  <!--              </select>-->
+  <!--            </div>-->
+
+  <!--            <div class="col-span-6 sm:col-span-3">-->
+  <!--              <label for="current-password" class="modal-label ">Current Password</label>-->
+  <!--              <input-->
+  <!--                  v-model="this.clonedUser.password"-->
+  <!--                  :type="currentPasswordFieldType" placeholder="••••••••"-->
+  <!--                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"-->
+  <!--                  required>-->
+  <!--              <button @click="toggleCurrentPasswordVisibility" type="button" class="toggle-password-button">-->
+  <!--                {{ currentPasswordFieldType === 'password' ? 'Show' : 'Hide' }}-->
+  <!--              </button>-->
+
+  <!--              <div class="col-span-6 sm:col-span-3">-->
+  <!--                <label for="new-password" class="modal-label ">New Password</label>-->
+  <!--                <input :type="newPasswordFieldType" placeholder="New Password"-->
+  <!--                       class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5">-->
+
+  <!--                <button @click="toggleNewPasswordVisibility" type="button" class="toggle-password-button">-->
+  <!--                  {{ newPasswordFieldType === 'password' ? 'Show' : 'Hide' }}-->
+  <!--                </button>-->
+  <!--              </div>-->
+  <!--            </div>-->
+
+  <!--          </div>-->
+  <!--        </div>-->
+  <!--        &lt;!&ndash; Modal footer &ndash;&gt;-->
+  <!--        <div class="flex items-center p-6 border-t border-gray-200 rounded-b">-->
+  <!--          <button @click="onClose" class="cancel-button">Cancel</button>-->
+  <!--          <button type="submit" class="ml-auto submit-button" :disabled="!hasChanged" @click="updateUser">Save Changes-->
+  <!--          </button>-->
+  <!--        </div>-->
+  <!--      </form>-->
+  <!--    </div>-->
+  <!--  </div>-->
+  <!--  <div class="modal-label"></div>-->
 </template>
 
 <style scoped>

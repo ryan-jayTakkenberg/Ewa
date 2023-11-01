@@ -1,27 +1,27 @@
 <template>
-<!--  if multiple users title is delete users-->
-  <SolarModal title="Delete User" @close-modal="onClose">
-    <p>Are you sure you want to delete the user:
-      <br/><br/><strong>{{ user.name }}</strong><br/>{{ user.email }}?</p>
-
-    <!-- Modal footer -->
+  <SolarModal title="Delete Users" @close-modal="onClose">
+    <div>
+      <p>Are you sure you want to delete the following users:</p>
+      <div v-for="user in usersToDelete" :key="user.id">
+        <br/><br/><strong>{{ user.name }}</strong><br/>{{ user.email }}
+      </div>
+    </div>
     <template v-slot:footer>
       <button @click="onClose" class="cancel-button">Cancel</button>
-      <button @click="deleteUser" class="ml-auto delete-button">Delete User</button>
+      <button @click="deleteUsers" class="ml-auto delete-button">Delete Users</button>
     </template>
   </SolarModal>
 </template>
 
 <script>
-import User from "@/models/user";
 import SolarModal from "@/components/general/SolarModal.vue";
 
 export default {
-  name: "DeleteUserModal",
+  name: "DeleteMultipleUsersModal",
   components: {SolarModal},
   props: {
-    user: {
-      type: User,
+    usersToDelete: {
+      type: Array,
       required: true,
     },
     onClose: {
@@ -30,10 +30,11 @@ export default {
     },
   },
   methods: {
-    deleteUser() {
-      this.$emit('delete-user', this.user.id); // Emit an event to toggle the checked value
+    deleteUsers() {
+      const userIDs = this.usersToDelete.map(user => user.id);
+      this.$emit("delete-users", userIDs);
     },
-  }
+  },
 };
 </script>
 

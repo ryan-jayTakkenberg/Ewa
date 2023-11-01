@@ -54,7 +54,7 @@ export default {
         <div class="font-normal text-gray-500">{{ user.email }}</div>
       </div>
     </th>
-    <td class="px-6 py-4">{{ user.userRole }}</td>
+    <td class="px-6 py-4">{{ user.permissionLevel}}</td>
     <td class="px-6 py-4">
       <div class="flex items-center">{{ user.lastLoggedIn }}</div>
     </td>

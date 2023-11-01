@@ -18,8 +18,8 @@ public class EsserverApplication {
 
         User.list.add(new User("550e8400-e29b-41d4-a716-446655440000", PermissionLevel.ADMIN.toString(), "admin", "admin@admin.com", LocalDate.now().toString(), "admin"));
         User.list.add(new User("550e8400-e29b-41d4-a716-446655440001", PermissionLevel.VIEWER.toString(), "viewer", "viewer@viewer.com", LocalDate.now().toString(), "viewer"));
-
-        Product.list.add(new Product(0, "Zonnepaneel", 150.123, "Heeft een vermogen van 430 Wattpiek en beschikt over 108 cellen."));
+        User.list.add(new User("550e8400-e29b-41d4-a716-446655440002", PermissionLevel.VIEWER.toString(), "test name", "test@test.com", LocalDate.now().toString(), "test"));
+        Product.list.add(new Product(0, "Solar panel", 150.123, "Heeft een vermogen van 430 Wattpiek en beschikt over 108 cellen."));
     }
 
 }

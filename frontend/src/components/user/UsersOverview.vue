@@ -11,10 +11,12 @@ import DeleteUserModal from "@/components/user/user-components/DeleteUserModal.v
 import UsersRowComponent from "@/components/user/user-components/UsersRowComponent.vue";
 import UpdateUserModal from "@/components/user/user-components/UpdateUserModal.vue";
 import CreateUserModal from "@/components/user/user-components/CreateUserModal.vue";
+import DeleteMultipleUsersModal from "@/components/user/user-components/DeleteMultipleUsersModal.vue";
 
 export default {
   name: "UsersOverview",
   components: {
+    DeleteMultipleUsersModal,
     TitleComponent,
     SolarDropdownMenuItem,
     SolarDropdownMenuButton,
@@ -31,7 +33,7 @@ export default {
       inputValue: '', // Store the input value for searching users
       users: [],
       selectedUser: null,  // The selected user for editing / deleting
-      checkedUsers: [], // A list of the selected users ID's for editing / deleting multiple users at once
+      checkedUsers: [], // A list of the selected users for editing / deleting multiple users at once
     };
   },
   computed: {
@@ -81,7 +83,7 @@ export default {
     getSelectedUsers() {
       return this.users.filter(user => this.checkedUsers.includes(user.id));
     },
-    deleteSelectedUsers() {
+    deleteCheckedUsers() {
       // Remove the selected users from the users array
       this.checkedUsers.forEach(userId => {
         const index = this.users.findIndex(user => user.id === userId);
@@ -118,14 +120,17 @@ export default {
       this.$router.push(`${this.$route.matched[0].path}/delete/${user.id}`);
       this.selectedUser = user;
     },
+    openDeleteMultipleUsersModal(){
+      this.$router.push(`${this.$route.matched[0].path}/delete-users`);
+    },
     closeModal() {
       this.$router.push(this.$route.matched[0].path);
     },
     toggleCheckbox(user, isChecked) {
       if (isChecked) {
-        this.checkedUsers.push(user.id);
+        this.checkedUsers.push(user);
       } else {
-        this.checkedUsers = this.checkedUsers.filter(id => id !== user.id);
+        this.checkedUsers = this.checkedUsers.filter(u => u.id !== user.id);
       }
       console.log(this.checkedUsers);
     },
@@ -149,7 +154,7 @@ export default {
           <!-- Edit multiple Users -->
           <SolarDropdownMenuItem text-menu-item="Edit Users" @click="updateSelectedUsers"></SolarDropdownMenuItem>
           <!-- Delete multiple Users -->
-          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="deleteSelectedUsers"></SolarDropdownMenuItem>
+          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteMultipleUsersModal"></SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
         <SolarSearchbar place-holder="Search For Users" @search="handleInputValueChange"></SolarSearchbar>
         <SolarButton class="ml-auto" button-text="Add User" @click="openCreateModal"></SolarButton>
@@ -167,13 +172,26 @@ export default {
       </SolarTable>
     </div>
   </div>
+
   <!-- Conditionally render modals based on route -->
   <CreateUserModal
-      v-if="$route.path.includes('create')" :on-close="closeModal" @create-user="createUser"/>
+      v-if="$route.path.includes('create')"
+      :on-close="closeModal"
+      @create-user="createUser"/>
   <UpdateUserModal
-      v-if="$route.path.includes('edit')" :user="selectedUser" :on-close="closeModal" @update-user="updateUser"/>
+      v-if="$route.path.includes('edit')"
+      :user="selectedUser" :on-close="closeModal"
+      @update-user="updateUser"/>
   <DeleteUserModal
-      v-if="$route.path.includes('delete')" :user="selectedUser" @delete-user="deleteUser" :on-close="closeModal"/>
+      v-if="$route.path.includes('delete') && selectedUser != null"
+      :user="selectedUser" :on-close="closeModal"
+      @delete-user="deleteUser"/>
+  <DeleteMultipleUsersModal
+      v-if="$route.path.includes('delete-users')"
+      :users-to-delete="checkedUsers" :on-close="closeModal"
+      @delete-user="deleteCheckedUsers">
+  </DeleteMultipleUsersModal>
+
 </template>
 
 <style scoped>

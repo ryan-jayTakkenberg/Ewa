@@ -8,7 +8,7 @@ export default {
   data() {
     return {
       activePage: 'overview', // Default overview page
-      userRole: 'admin', // Viewer or Admin role
+      permissionLevel: 'admin', // Viewer or Admin role
       sidebarIsExpanded: false,
       logoExpanded: logoExpanded,
       logoCollapsed: logoCollapsed
@@ -56,7 +56,7 @@ export default {
         </router-link>
 
         <router-link
-            v-if="(userRole === 'viewer')"
+            v-if="(permissionLevel === 'viewer')"
             to="/warehouseViewer"
             class="nav-button"
             :class="{ active: isPageActive('teams') }"
@@ -66,7 +66,7 @@ export default {
         </router-link>
 
         <router-link
-            v-if="(userRole === 'viewer')"
+            v-if="(permissionLevel === 'viewer')"
             to="/test"
             class="nav-button"
             :class="{ active: isPageActive('reports') }"
@@ -77,7 +77,7 @@ export default {
         </router-link>
 
         <router-link
-            v-if="(userRole === 'admin')" to="/warehouses" class="nav-button"
+            v-if="(permissionLevel === 'admin')" to="/warehouses" class="nav-button"
             :class="{ active: isPageActive('warehouses') }"
             @click="handleNavClick('warehouses')">
           <span class="material-symbols-outlined nav-icon">warehouse</span>
@@ -85,7 +85,7 @@ export default {
         </router-link>
 
         <router-link
-            v-if="(userRole === 'admin')" to="/projects" class="nav-button"
+            v-if="(permissionLevel === 'admin')" to="/projects" class="nav-button"
             :class="{ active: isPageActive('projects') }"
             @click="handleNavClick('projects')">
           <span class="material-symbols-outlined nav-icon">assignment</span>
@@ -93,7 +93,7 @@ export default {
         </router-link>
 
         <router-link
-            v-if="(userRole === 'admin')" to="/teams" class="nav-button"
+            v-if="(permissionLevel === 'admin')" to="/teams" class="nav-button"
             :class="{ active: isPageActive('teams') }"
             @click="handleNavClick('teams')">
           <span class="material-symbols-outlined nav-icon">groups</span>
@@ -101,7 +101,7 @@ export default {
         </router-link>
 
         <router-link
-            v-if="(userRole === 'admin')" to="/products" class="nav-button"
+            v-if="(permissionLevel === 'admin')" to="/products" class="nav-button"
             :class="{ active: isPageActive('products') }"
             @click="handleNavClick('products')">
           <span class="material-symbols-outlined nav-icon">inventory_2</span>
@@ -109,7 +109,7 @@ export default {
         </router-link>
 
         <router-link
-            v-if="(userRole === 'admin')" to="/users" class="nav-button"
+            v-if="(permissionLevel === 'admin')" to="/users" class="nav-button"
             :class="{ active: isPageActive('users') }"
             @click="handleNavClick('users')">
           <span class="material-symbols-outlined nav-icon">manage_accounts</span>

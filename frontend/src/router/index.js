@@ -15,6 +15,7 @@ import UsersOverview from "@/components/user/UsersOverview.vue";
 import CreateUserModal from "@/components/user/user-components/CreateUserModal.vue";
 import UpdateUserModal from "@/components/user/user-components/UpdateUserModal.vue";
 import DeleteUserModal from "@/components/user/user-components/DeleteUserModal.vue";
+import DeleteMultipleUsersModal from "@/components/user/user-components/DeleteMultipleUsersModal.vue";
 
 const routes = [
     {path: '/', redirect: '/overview'},
@@ -32,6 +33,7 @@ const routes = [
                 {path: 'create', component: CreateUserModal},
                 {path: 'edit/:id', component: UpdateUserModal},
                 {path: 'delete/:id', component: DeleteUserModal},
+                {path: 'delete-users', component: DeleteMultipleUsersModal},
             ]
     },
     {path: '/reports', component: ReportComponent},

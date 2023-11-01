@@ -4,16 +4,16 @@ import app.EsserverApplication;
 import app.authentication.Credentials;
 import app.authentication.Perms;
 import app.database.DatabaseHelper;
-import app.models.Product;
 import app.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin(origins = EsserverApplication.CROSS_ORIGIN)
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserRoutes {
 
     @GetMapping
@@ -30,13 +30,12 @@ public class UserRoutes {
         DatabaseHelper.addUser(permission, user);
         return user;
     }
-//
-//    @DeleteMapping("/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    private void deleteProduct(@RequestHeader("Authorization") String authorization, @PathVariable Long id) {
-//        Perms permission = Credentials.getPermissions(authorization);
-//        permission.canDelete();
-//        DatabaseHelper.deleteProduct(id);
-//    }
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    private void deleteProduct(@RequestHeader("Authorization") String authorization, @PathVariable UUID id) {
+        Perms permission = Credentials.getPermissions(authorization);
+        permission.canDelete();
+        DatabaseHelper.deleteUser(id);
+    }
 
 }

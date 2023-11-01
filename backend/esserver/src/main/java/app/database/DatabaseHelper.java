@@ -5,6 +5,7 @@ import app.exceptions.BadRequestException;
 import app.exceptions.NotFoundException;
 import app.models.Product;
 import app.models.User;
+import com.sun.net.httpserver.Authenticator;
 
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -36,6 +37,21 @@ public class DatabaseHelper {
         Product.list.remove(index);
     }
 
+    public static void deleteUser(UUID id) {
+        if (id == null) {
+            throw new BadRequestException("Invalid user ID");
+        }
+
+        UUID userId = UUID.fromString(String.valueOf(id));
+
+        int index = IntStream.range(0, User.list.size())
+                .filter(i -> User.list.get(i).getId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("No User found for this ID"));
+
+        User.list.remove(index);
+    }
+
     public static void addUser(Perms permissions, User user) {
         int index = IntStream.range(0, User.list.size()).filter(i -> User.list.get(i).getId().equals(user.getId())).findFirst().orElse(-1);
         if (index < 0) {
@@ -44,6 +60,7 @@ public class DatabaseHelper {
             UUID userId = UUID.randomUUID(); // get this from auto increment in database
             user.setId(userId);
             User.list.add(user);
+
             // TODO insert into database
         } else {
             permissions.canUpdate();
@@ -52,4 +69,6 @@ public class DatabaseHelper {
             // TODO update database
         }
     }
+
+
 }

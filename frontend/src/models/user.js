@@ -2,22 +2,22 @@ import Team from "@/models/team";
 
 export default class User {
 
-    static UserRole = {
+    static PermissionLevel = {
         VIEWER: "Viewer",
         ADMIN: "Admin",
     }
 
-   constructor(id, email, name, userRole, dateLastLoggedIn, password) {
+   constructor(id, email, name, permissionLevel, dateLastLoggedIn, password) {
        this.id = id;
        this.email = email;
        this.name = name;
-       this.userRole = userRole;
+       this.permissionLevel = permissionLevel;
        this.lastLoggedIn = dateLastLoggedIn;
        this.password = password;
    }
 
     clone() {
-        return new User(this.id, this.email, this.name, this.userRole, this.lastLoggedIn, this.password);
+        return new User(this.id, this.email, this.name, this.permissionLevel, this.lastLoggedIn, this.password);
     }
 
     equals(other) {
@@ -36,8 +36,8 @@ export default class User {
         return Team.teams.filter(team => team.users.includes(this));
     }
 
-    static createNewUser(email, name, userRole, dateLastLoggedIn, password) {
-        return new User(-1, email, name, userRole, dateLastLoggedIn, password);
+    static createNewUser(email, name, permissionLevel, dateLastLoggedIn, password) {
+        return new User(-1, email, name, permissionLevel, dateLastLoggedIn, password);
     }
 
     /**
