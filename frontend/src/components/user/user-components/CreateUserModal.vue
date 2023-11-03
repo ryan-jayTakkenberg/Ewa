@@ -1,50 +1,54 @@
 <template>
-  <SolarModal title="Create User" @close-modal="onClose" class="modal">
-    <div class="modal-grid">
-      <div class="col-span-6 sm:col-span-3">
-        <label for="name" class="modal-label">Name</label>
-        <input
-            type="text"
-            v-model="user.name"
-            class="modal-input shadow-sm"
-            placeholder="Name"
-            required>
+  <form @submit.prevent="createUser">
+    <SolarModal title="Create User" @close-modal="onClose" class="modal">
+      <div class="modal-grid">
+        <div class="col-span-6 sm:col-span-3">
+          <label for="name" class="modal-label">Name</label>
+          <input
+              type="text"
+              v-model="user.name"
+              class="modal-input shadow-sm"
+              placeholder="Name"
+              required>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label for="email" class="modal-label">Email</label>
+          <input
+              type="email"
+              v-model="user.email"
+              class="modal-input shadow-sm"
+              placeholder="Email"
+              required>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label for="user-role" class="modal-label">Function</label>
+          <select v-model="user.permissionLevel" class="role-select" required>
+            <option v-for="permissionLevel in PermissionLevelOptions" :key="permissionLevel" :value="permissionLevel">
+              {{ permissionLevel }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label for="password" class="modal-label">Password</label>
+          <input
+              v-model="user.password"
+              type="password"
+              placeholder="Password"
+              class="modal-input shadow-sm"
+              required>
+        </div>
       </div>
 
-      <div class="col-span-6 sm:col-span-3">
-        <label for="email" class="modal-label">Email</label>
-        <input
-            type="email"
-            v-model="user.email"
-            class="modal-input shadow-sm"
-            placeholder="Email"
-            required>
-      </div>
-
-      <div class="col-span-6 sm:col-span-3">
-        <label for="user-role" class="modal-label">Function</label>
-        <select v-model="user.permissionLevel" class="role-select" required>
-          <option v-for="permissionLevel in PermissionLevelOptions" :key="permissionLevel" :value="permissionLevel">{{ permissionLevel }}</option>
-        </select>
-      </div>
-
-      <div class="col-span-6 sm:col-span-3">
-        <label for="password" class="modal-label">Password</label>
-        <input
-            v-model="user.password"
-            type="password"
-            placeholder="Password"
-            class="modal-input shadow-sm"
-            required>
-      </div>
-    </div>
-
-    <!-- Modal footer -->
-    <template v-slot:footer>
+      <!-- Modal footer -->
+      <template v-slot:footer>
         <button @click="onClose" class="cancel-button">Cancel</button>
-        <button type="submit" :disabled="isAnyFieldEmpty" class="ml-auto submit-button" @click="createUser">Create User</button>
-    </template>
-  </SolarModal>
+        <button type="submit" class="ml-auto submit-button">Create User</button>
+      </template>
+    </SolarModal>
+  </form>
 </template>
 
 <script>
@@ -63,18 +67,8 @@ export default {
         email: '',
         permissionLevel: '',
         password: '',
-      }
-    }
-  },
-  computed: {
-    isAnyFieldEmpty() {
-      return (
-          this.user.name.trim() === '' ||
-          this.user.email.trim() === '' ||
-          this.user.permissionLevel.trim() === '' ||
-          this.user.password.trim() === ''
-      );
-    },
+      },
+    };
   },
   props: {
     onClose: {
@@ -84,29 +78,40 @@ export default {
   },
   methods: {
     createUser() {
-      const newUser = new User(
-          this.user.id,
-          this.user.email,
-          this.user.name,
-          this.user.permissionLevel,
-          "Not Logged in yet",
-          this.user.password,
+      if (this.validateForm) {
+        // Perform form submission logic here
+        const newUser = new User(
+            this.user.id,
+            this.user.email,
+            this.user.name,
+            this.user.permissionLevel,
+            "Not Logged in yet",
+            this.user.password
+        );
+
+        // Emit an event to the parent component to handle user creation
+        this.$emit("create-user", newUser);
+
+        // Close the modal
+        this.onClose();
+      }
+    },
+    validateForm() {
+      return !this.isAnyFieldEmpty;
+    },
+    isAnyFieldEmpty() {
+      return (
+          this.user.name.trim() === '' ||
+          this.user.email.trim() === '' ||
+          this.user.permissionLevel.trim() === '' ||
+          this.user.password.trim() === ''
       );
-
-      // Emit an event to the parent component to handle user creation
-      this.$emit("create-user", newUser);
-
-      // Close the modal
-      this.onClose();
     },
   },
 }
 </script>
 
 <style scoped>
-.modal{
-
-}
 .modal-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -169,6 +174,7 @@ export default {
 .submit-button:hover {
   background-color: rgb(30 64 175);
 }
+
 .cancel-button {
   color: rgb(17 24 39);
   background-color: rgb(229 231 235);

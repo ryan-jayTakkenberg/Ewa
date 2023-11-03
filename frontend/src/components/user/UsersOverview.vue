@@ -16,7 +16,6 @@ import DeleteMultipleUsersModal from "@/components/user/user-components/DeleteMu
 export default {
   name: "UsersOverview",
   components: {
-    DeleteMultipleUsersModal,
     TitleComponent,
     SolarDropdownMenuItem,
     SolarDropdownMenuButton,
@@ -25,8 +24,12 @@ export default {
     SolarTable,
     UsersRowComponent,
     CreateUserModal,
-    DeleteUserModal,
     UpdateUserModal,
+    DeleteUserModal,
+    DeleteMultipleUsersModal,
+  },
+  created() {
+    this.fetchUsers();
   },
   data() {
     return {
@@ -47,9 +50,9 @@ export default {
         return false;
       });
     },
-  },
-  created() {
-    this.fetchUsers();
+    isActionButtonDisabled() {
+      return this.checkedUsers.length === 0;
+    },
   },
   methods: {
     fetchUsers() {
@@ -74,7 +77,7 @@ export default {
         // Update the user data in the array
         this.users[index] = updatedUser;
       }
-      this.closeModal(); // Close the modal
+      this.closeModal();
     },
     deleteUser(userID) {
       this.users = this.users.filter(user => user.id !== userID)
@@ -85,18 +88,12 @@ export default {
     },
     deleteCheckedUsers() {
       // Remove the selected users from the users array
-      this.checkedUsers.forEach(userId => {
-        const index = this.users.findIndex(user => user.id === userId);
-        if (index !== -1) {
-          this.users.splice(index, 1);
-        }
-      })
-      // Clear the checkedUsers array
-      this.checkedUsers = [];
+      this.users = this.users.filter(user => !this.checkedUsers.find(deleted => user.id === deleted.id));
+      this.checkedUsers = []; // Clear the checkedUsers array
+      this.closeModal();
     },
     updateSelectedUsers() {
-      //TODO
-
+      //TODO Edit Users Recursively
     },
     findSelectedRouteFromParam(route) {
       if (route && route.params.id) {
@@ -128,9 +125,9 @@ export default {
     },
     toggleCheckbox(user, isChecked) {
       if (isChecked) {
-        this.checkedUsers.push(user);
+        this.checkedUsers.push(user); // Push the user's ID to the checkedUsers array
       } else {
-        this.checkedUsers = this.checkedUsers.filter(u => u.id !== user.id);
+        this.checkedUsers = this.checkedUsers.filter(id => id !== user.id);
       }
       console.log(this.checkedUsers);
     },
@@ -150,7 +147,7 @@ export default {
   <div class="users-body">
     <div class="users-container">
       <div class="users-action-row">
-        <SolarDropdownMenuButton text-button="Action">
+        <SolarDropdownMenuButton :disabled="isActionButtonDisabled" text-button="Action">
           <!-- Edit multiple Users -->
           <SolarDropdownMenuItem text-menu-item="Edit Users" @click="updateSelectedUsers"></SolarDropdownMenuItem>
           <!-- Delete multiple Users -->
@@ -164,10 +161,9 @@ export default {
             v-for="(user, index) in filterUsers"
             :key="index"
             :user="user"
-            @on-click-edit-user="openEditModal"
-            @on-click-delete-user="openDeleteModal"
-            @toggle-checkbox="toggleCheckbox(user, $event)"
-            :is-checked="checkedUsers.includes(user.id)"> <!-- Pass user and checkbox state -->
+            @edit="openEditModal"
+            @delete="openDeleteModal"
+            @toggle="toggleCheckbox(user, $event)"> <!-- Pass user and checkbox state -->
         </UsersRowComponent>
       </SolarTable>
     </div>
@@ -189,7 +185,7 @@ export default {
   <DeleteMultipleUsersModal
       v-if="$route.path.includes('delete-users')"
       :users-to-delete="checkedUsers" :on-close="closeModal"
-      @delete-user="deleteCheckedUsers">
+      @delete-users="deleteCheckedUsers">
   </DeleteMultipleUsersModal>
 
 </template>

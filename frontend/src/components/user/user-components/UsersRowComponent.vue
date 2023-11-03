@@ -3,32 +3,27 @@ import User from "@/models/user";
 
 export default {
   name: "UsersRowComponent",
-  emits: ["on-click-edit-user", "on-click-delete-user", "toggle-checkbox"],
+  emits: ["toggle", "edit", "delete"],
   props: {
     user: {
       type: User,  // Use the UserModel as the prop type
       required: true,
     },
-    isChecked: {
-      type: Boolean,
-      default: false,
-      required: true,
-    },
   },
   data() {
     return {
-      checked: this.isChecked, // for two-way binding
-    }
+      checked: false, // Initialize the checked state to false
+    };
   },
   methods: {
-    onClickEditUser() {
-      this.$emit('on-click-edit-user', this.user); // Emit the userModel directly
+    emitToggle() {
+      this.$emit("toggle", this.checked); // Toggle the checked state for the user
     },
-    onClickDeleteUser() {
-      this.$emit('on-click-delete-user', this.user); // Emit the userModel directly
+    emitEdit() {
+      this.$emit("edit", this.user);
     },
-    toggleCheckbox() {
-      this.$emit('toggle-checkbox', this.user.id);
+    emitDelete() {
+      this.$emit("delete", this.user);
     },
   }
 }
@@ -41,12 +36,12 @@ export default {
       <div class="flex items-center">
         <input
             type="checkbox"
-            :checked="isChecked"
-            @change="toggleCheckbox"
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded cursor-pointer">
+            :checked="checked"
+            v-model="checked"
+            @change="emitToggle"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
       </div>
     </td>
-
     <!--User Item-->
     <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
       <div class="pl-3">
@@ -54,17 +49,15 @@ export default {
         <div class="font-normal text-gray-500">{{ user.email }}</div>
       </div>
     </th>
-    <td class="px-6 py-4">{{ user.permissionLevel}}</td>
+    <td class="px-6 py-4">{{ user.permissionLevel }}</td>
     <td class="px-6 py-4">
       <div class="flex items-center">{{ user.lastLoggedIn }}</div>
     </td>
-
     <!-- Edit User -->
     <td class="px-6 py-4 row">
-      <div @click="onClickEditUser" class="edit-user-btn">Edit user</div>
-      <div @click="onClickDeleteUser" class="delete-user-btn">Delete user</div>
+      <div @click="emitEdit" class="edit-user-btn">Edit user</div>
+      <div @click="emitDelete" class="delete-user-btn">Delete user</div>
     </td>
-
   </tr>
 </template>
 

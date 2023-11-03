@@ -17,14 +17,12 @@ export default {
   },
   computed: {
     hasChanged() {
-      return (
-          this.user.id !== this.clonedUser.id ||
-          this.user.email !== this.clonedUser.email ||
-          this.user.permissionLevel !== this.clonedUser.permissionLevel ||
-          this.user.name !== this.clonedUser.name ||
-          this.user.lastLoggedIn !== this.clonedUser.lastLoggedIn ||
-          this.user.password !== this.clonedUser.password
-      );
+      for (const key in this.user) {
+        if (this.user[key] !== this.clonedUser[key]) {
+          return true;
+        }
+      }
+      return false;
     },
     currentPasswordFieldType() {
       return this.currentPasswordVisible ? 'text' : 'password';
@@ -64,10 +62,9 @@ export default {
 </script>
 
 <template>
+  <form @submit.prevent="updateUser">
   <SolarModal title="Edit User" @close-modal="onClose">
-    <form @submit.prevent="updateUser">
       <div class="modal-grid">
-
         <div class="col-span-6 sm:col-span-3">
           <label for="name" class="modal-label ">Name</label>
           <input
@@ -120,100 +117,14 @@ export default {
           </div>
         </div>
       </div>
-    </form>
-    <!-- Modal footer -->
-    <template v-slot:footer>
-      <button @click="onClose" class="cancel-button">Cancel</button>
-      <button type="submit" class="ml-auto submit-button" :disabled="!hasChanged" @click="updateUser">Save changes
-      </button>
-    </template>
-
+      <!-- Modal footer -->
+      <template v-slot:footer>
+        <button @click="onClose" class="cancel-button">Cancel</button>
+        <button type="submit" class="ml-auto submit-button" :disabled="!hasChanged">Save changes
+        </button>
+      </template>
   </SolarModal>
-  <!--  &lt;!&ndash; Edit user modal &ndash;&gt;-->
-  <!--  <div class="update-user-modal" tabindex="0">-->
-  <!--    <div class="update-user-modal-container">-->
-  <!--      &lt;!&ndash; Modal content &ndash;&gt;-->
-  <!--      <form @submit.prevent="updateUser" class="edit-user-form shadow ">-->
-
-  <!--        &lt;!&ndash; Modal header &ndash;&gt;-->
-  <!--        <div class="update-user-modal-header">-->
-  <!--          <h3 class="text-xl font-bold text-gray-900 ">Edit user</h3>-->
-  <!--          <button type="button" @click="onClose" class="close-modal-btn">-->
-  <!--            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">-->
-  <!--              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
-  <!--                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>-->
-  <!--            </svg>-->
-  <!--          </button>-->
-  <!--        </div>-->
-
-  <!--        &lt;!&ndash; Modal body &ndash;&gt;-->
-  <!--        <div class="modal-body">-->
-  <!--          <div class="modal-grid">-->
-
-  <!--            <div class="col-span-6 sm:col-span-3">-->
-  <!--              <label for="name" class="modal-label ">Name</label>-->
-  <!--              <input-->
-  <!--                  type="text"-->
-  <!--                  v-model="this.clonedUser.name"-->
-  <!--                  class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"-->
-  <!--                  placeholder="Name"-->
-  <!--                  required>-->
-  <!--            </div>-->
-
-  <!--            <div class="col-span-6 sm:col-span-3">-->
-  <!--              <label for="email" class="modal-label">Email</label>-->
-  <!--              <input-->
-  <!--                  type="email"-->
-  <!--                  v-model="this.clonedUser.email"-->
-  <!--                  class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"-->
-  <!--                  placeholder="Email"-->
-  <!--                  required>-->
-  <!--            </div>-->
-  <!--            <div class="col-span-6 sm:col-span-3">-->
-  <!--              <label for="user-role" class="modal-label">Function</label>-->
-
-  <!--              <select v-model="this.clonedUser.permissionLevel" class="role-select">-->
-  <!--                <option v-for="permissionLevel in UserRoleOptions"-->
-  <!--                        :key="permissionLevel"-->
-  <!--                        :value="permissionLevel">{{ permissionLevel }}-->
-  <!--                </option>-->
-  <!--              </select>-->
-  <!--            </div>-->
-
-  <!--            <div class="col-span-6 sm:col-span-3">-->
-  <!--              <label for="current-password" class="modal-label ">Current Password</label>-->
-  <!--              <input-->
-  <!--                  v-model="this.clonedUser.password"-->
-  <!--                  :type="currentPasswordFieldType" placeholder="••••••••"-->
-  <!--                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"-->
-  <!--                  required>-->
-  <!--              <button @click="toggleCurrentPasswordVisibility" type="button" class="toggle-password-button">-->
-  <!--                {{ currentPasswordFieldType === 'password' ? 'Show' : 'Hide' }}-->
-  <!--              </button>-->
-
-  <!--              <div class="col-span-6 sm:col-span-3">-->
-  <!--                <label for="new-password" class="modal-label ">New Password</label>-->
-  <!--                <input :type="newPasswordFieldType" placeholder="New Password"-->
-  <!--                       class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5">-->
-
-  <!--                <button @click="toggleNewPasswordVisibility" type="button" class="toggle-password-button">-->
-  <!--                  {{ newPasswordFieldType === 'password' ? 'Show' : 'Hide' }}-->
-  <!--                </button>-->
-  <!--              </div>-->
-  <!--            </div>-->
-
-  <!--          </div>-->
-  <!--        </div>-->
-  <!--        &lt;!&ndash; Modal footer &ndash;&gt;-->
-  <!--        <div class="flex items-center p-6 border-t border-gray-200 rounded-b">-->
-  <!--          <button @click="onClose" class="cancel-button">Cancel</button>-->
-  <!--          <button type="submit" class="ml-auto submit-button" :disabled="!hasChanged" @click="updateUser">Save Changes-->
-  <!--          </button>-->
-  <!--        </div>-->
-  <!--      </form>-->
-  <!--    </div>-->
-  <!--  </div>-->
-  <!--  <div class="modal-label"></div>-->
+  </form>
 </template>
 
 <style scoped>
@@ -233,7 +144,7 @@ export default {
 }
 
 .submit-button:disabled, .submit-button:disabled:hover {
-  opacity: 40%;
+  opacity: 0.4;
   cursor: not-allowed; /* Change the cursor to not-allowed */
 }
 
@@ -274,73 +185,10 @@ export default {
   color: rgb(17 24 39);
 }
 
-
-.modal-body {
-  padding: 1.5rem;
-  --tw-space-y-reverse: 0;
-  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
-}
-
 .modal-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 1.5rem;
-}
-
-.close-modal-btn {
-  color: rgb(156 163 175);
-  background-color: transparent;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  width: 2rem;
-  height: 2rem;
-  margin-left: auto;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.close-modal-btn:hover {
-  background-color: rgb(229 231 235);
-  color: rgb(17 24 39);
-}
-
-.edit-user-form {
-  position: relative;
-  background-color: white;
-  border-radius: 0.5rem;
-}
-
-.update-user-modal {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow-x: hidden;
-  overflow-y: auto;
-  height: calc(100% - 1rem);
-  max-height: 100%;
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.update-user-modal-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 1rem;
-  border-bottom-width: 1px;
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-}
-
-.update-user-modal-container {
-  position: relative;
-  margin-left: auto;
-  width: calc(100% - 70px);
-  max-height: 100%;
 }
 
 .cancel-button {
@@ -356,13 +204,5 @@ export default {
 
 .cancel-button:hover {
   background-color: rgb(206 212 218);
-}
-
-@media (min-width: 768px) {
-  .update-user-modal-container {
-    width: 50%;
-    padding: 4rem;
-    margin-left: 0;
-  }
 }
 </style>

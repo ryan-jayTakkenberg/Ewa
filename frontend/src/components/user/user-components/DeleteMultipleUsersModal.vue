@@ -31,8 +31,7 @@ export default {
   },
   methods: {
     deleteUsers() {
-      const userIDs = this.usersToDelete.map(user => user.id);
-      this.$emit("delete-users", userIDs);
+      this.$emit("delete-users");
     },
   },
 };

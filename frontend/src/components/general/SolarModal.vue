@@ -2,7 +2,6 @@
   <div class="modal">
     <div class="modal-container">
       <div class="modal-content shadow">
-
         <div class="modal-header">
           <h3 class="text-xl font-bold text-gray-900">{{ title }}</h3>
           <button type="button" @click="closeModal" class="close-modal-btn">
@@ -12,13 +11,11 @@
             </svg>
           </button>
         </div>
-
         <div class="modal-body p-4">
           <slot></slot>
         </div>
-
         <div class="modal-footer">
-          <div class="flex items-center p-6  border-t border-gray-200 rounded-b">
+          <div class="flex items-center p-6 border-t border-gray-200 rounded-b">
             <slot name="footer"></slot>
           </div>
         </div>
@@ -105,7 +102,6 @@ export default {
   background-color: rgb(229 231 235);
   color: rgb(17 24 39);
 }
-
 
 @media (min-width: 768px) {
   .modal-container {
