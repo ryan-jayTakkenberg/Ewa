@@ -1,10 +1,16 @@
 <script>
 export default {
   name: "SolarDropdownMenuItem",
+  emits: ["item-click"],
   props: {
     textMenuItem: {
       type: String,
       required: true,
+    },
+  },
+  methods: {
+    handleClick() {
+      this.$emit("item-click");
     },
   }
 }
@@ -12,7 +18,7 @@ export default {
 
 <template>
   <li>
-    <p class="menuItem">{{ textMenuItem }}</p>
+    <p class="menuItem" @click="handleClick">{{ textMenuItem }}</p>
   </li>
 </template>
 

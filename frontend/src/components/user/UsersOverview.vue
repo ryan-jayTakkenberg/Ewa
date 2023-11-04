@@ -80,16 +80,24 @@ export default {
       this.closeModal();
     },
     deleteUser(userID) {
-      this.users = this.users.filter(user => user.id !== userID)
+      this.users = this.users.filter(user => user.id !== userID);
       this.closeModal();
     },
-    getSelectedUsers() {
-      return this.users.filter(user => this.checkedUsers.includes(user.id));
-    },
     deleteCheckedUsers() {
-      // Remove the selected users from the users array
-      this.users = this.users.filter(user => !this.checkedUsers.find(deleted => user.id === deleted.id));
-      this.checkedUsers = []; // Clear the checkedUsers array
+      // Get the IDs of the users to delete
+      const userIdsToDelete = this.checkedUsers.map(user => user.id);
+
+      // Uncheck the selected users in the UsersRowComponent
+      this.users.forEach(user => {
+        user.isChecked = false;
+      });
+
+      // Remove the selected users from the users array based on their IDs
+      this.users = this.users.filter(user => !userIdsToDelete.includes(user.id));
+
+      // Clear the checkedUsers array
+      this.checkedUsers = [];
+
       this.closeModal();
     },
     updateSelectedUsers() {
@@ -117,19 +125,26 @@ export default {
       this.$router.push(`${this.$route.matched[0].path}/delete/${user.id}`);
       this.selectedUser = user;
     },
-    openDeleteMultipleUsersModal(){
+    openDeleteMultipleUsersModal() {
       this.$router.push(`${this.$route.matched[0].path}/delete-users`);
     },
     closeModal() {
       this.$router.push(this.$route.matched[0].path);
     },
-    toggleCheckbox(user, isChecked) {
-      if (isChecked) {
-        this.checkedUsers.push(user); // Push the user's ID to the checkedUsers array
+    toggleCheckbox(user) {
+      const userIndex = this.checkedUsers.findIndex(u => u.id === user.id);
+
+      if (userIndex !== -1) {
+        // User is checked, so remove them from the array
+        this.checkedUsers = this.checkedUsers.filter(u => u.id !== user.id);
       } else {
-        this.checkedUsers = this.checkedUsers.filter(id => id !== user.id);
+        // User is not checked, so add them to the array
+        this.checkedUsers = [...this.checkedUsers, user];
       }
       console.log(this.checkedUsers);
+    },
+    closeDropdown() {
+      this.$refs.dropdownButton.hideDropdown(); // Call the hideDropdown method from the ref
     },
   },
   watch: {
@@ -147,20 +162,25 @@ export default {
   <div class="users-body">
     <div class="users-container">
       <div class="users-action-row">
-        <SolarDropdownMenuButton :disabled="isActionButtonDisabled" text-button="Action">
+        <SolarDropdownMenuButton :disabled="isActionButtonDisabled" text-button="Action" ref="dropdownButton">
           <!-- Edit multiple Users -->
-          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="updateSelectedUsers"></SolarDropdownMenuItem>
+          <SolarDropdownMenuItem
+              text-menu-item="Edit Users"
+              @click="updateSelectedUsers" @item-click="closeDropdown">
+          </SolarDropdownMenuItem>
           <!-- Delete multiple Users -->
-          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteMultipleUsersModal"></SolarDropdownMenuItem>
+          <SolarDropdownMenuItem
+              text-menu-item="Delete Users"
+              @click="openDeleteMultipleUsersModal" @item-click="closeDropdown">
+          </SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
         <SolarSearchbar place-holder="Search For Users" @search="handleInputValueChange"></SolarSearchbar>
         <SolarButton class="ml-auto" button-text="Add User" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
+
         <UsersRowComponent
-            v-for="(user, index) in filterUsers"
-            :key="index"
-            :user="user"
+            v-for="(user) in filterUsers" :key="user.id" :user="user"
             @edit="openEditModal"
             @delete="openDeleteModal"
             @toggle="toggleCheckbox(user, $event)"> <!-- Pass user and checkbox state -->

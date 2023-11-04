@@ -45,7 +45,7 @@
       <!-- Modal footer -->
       <template v-slot:footer>
         <button @click="onClose" class="cancel-button">Cancel</button>
-        <button type="submit" class="ml-auto submit-button">Create User</button>
+        <button type="submit" :disabled="isAnyFieldEmpty" class="ml-auto submit-button">Create User</button>
       </template>
     </SolarModal>
   </form>
@@ -68,6 +68,14 @@ export default {
         permissionLevel: '',
         password: '',
       },
+      passwordRequirements: {
+        minLength: 8, // Minimum password length
+        hasUppercase: false, // Whether it requires an uppercase letter
+        hasLowercase: false, // Whether it requires a lowercase letter
+        hasNumber: false, // Whether it requires a number
+        hasSpecialChar: false, // Whether it requires a special character
+      },
+      passwordIsValid: false,
     };
   },
   props: {
@@ -76,38 +84,38 @@ export default {
       required: true,
     },
   },
-  methods: {
-    createUser() {
-      if (this.validateForm) {
-        // Perform form submission logic here
-        const newUser = new User(
-            this.user.id,
-            this.user.email,
-            this.user.name,
-            this.user.permissionLevel,
-            "Not Logged in yet",
-            this.user.password
-        );
-
-        // Emit an event to the parent component to handle user creation
-        this.$emit("create-user", newUser);
-
-        // Close the modal
-        this.onClose();
-      }
-    },
-    validateForm() {
-      return !this.isAnyFieldEmpty;
-    },
+  computed: {
     isAnyFieldEmpty() {
       return (
           this.user.name.trim() === '' ||
           this.user.email.trim() === '' ||
-          this.user.permissionLevel.trim() === '' ||
+          this.user.permissionLevel === '' ||
           this.user.password.trim() === ''
       );
     },
   },
+  methods: {
+    createUser() {
+      // Perform form submission logic here
+      const newUser = new User(
+          this.user.id,
+          this.user.email,
+          this.user.name,
+          this.user.permissionLevel,
+          "Not Logged in yet",
+          this.user.password
+      );
+
+      // Emit an event to the parent component to handle user creation
+      this.$emit("create-user", newUser);
+
+      // Close the modal
+      this.onClose();
+    },
+    validateForm() {
+      return !this.isAnyFieldEmpty;
+    },
+  }
 }
 </script>
 

@@ -4,20 +4,20 @@ import User from "@/models/user";
 export default {
   name: "UsersRowComponent",
   emits: ["toggle", "edit", "delete"],
-  props: {
-    user: {
-      type: User,  // Use the UserModel as the prop type
-      required: true,
-    },
-  },
   data() {
     return {
-      checked: false, // Initialize the checked state to false
+      checked: false, // Initialize the checked state from the prop
     };
+  },
+  props: {
+    user: {
+      type: User,
+      required:true,
+    },
   },
   methods: {
     emitToggle() {
-      this.$emit("toggle", this.checked); // Toggle the checked state for the user
+      this.$emit("toggle", this.user);
     },
     emitEdit() {
       this.$emit("edit", this.user);
@@ -36,9 +36,7 @@ export default {
       <div class="flex items-center">
         <input
             type="checkbox"
-            :checked="checked"
-            v-model="checked"
-            @change="emitToggle"
+            v-model="checked" @change="emitToggle"
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
       </div>
     </td>

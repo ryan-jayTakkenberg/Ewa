@@ -2,7 +2,7 @@
   <SolarModal title="Delete Users" @close-modal="onClose">
     <div>
       <p>Are you sure you want to delete the following users:</p>
-      <div v-for="user in usersToDelete" :key="user.id">
+      <div v-for="user in usersToDelete" :key="user">
         <br/><br/><strong>{{ user.name }}</strong><br/>{{ user.email }}
       </div>
     </div>
