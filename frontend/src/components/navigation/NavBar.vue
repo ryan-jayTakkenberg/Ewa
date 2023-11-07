@@ -147,11 +147,11 @@ export default {
   display: flex;
   flex-direction: column;
   z-index: 1;
-  width: 200px;
+  width: 240px;
   height: 100vh;
   background-color: #fff;
   border-right: 1px solid #e5e5e5;
-  transition: 0.3s ease-in-out;
+  transition: 0.3s;
 }
 
 .nav-header {
@@ -182,7 +182,7 @@ export default {
 }
 
 .logoCollapsed {
-  transform: rotate(180deg);
+  transform: scaleX(-1);
   transition: 0.2s ease-in-out;
 }
 
@@ -206,6 +206,10 @@ export default {
   padding: 1.0rem 1.5rem;
   width: 100%;
   cursor: pointer;
+}
+
+.log-out-button{
+  align-items: flex-end;
 }
 
 .log-out-button:hover .nav-text,
@@ -272,7 +276,7 @@ export default {
 
 .navbar.collapsed .notification-indicator {
   position: relative;
-  left: -20px;
+  left: -30px;
   top: -22px;
 }
 
