@@ -100,15 +100,16 @@ export default {
 
       this.closeModal();
     },
-    updateSelectedUsers() {
-      //TODO Edit Users Recursively
-    },
-    findSelectedRouteFromParam(route) {
-      if (route && route.params.id) {
-        const userId = parseInt(route.params.id);
-        return this.users.find(user => user.id === userId);
-      }
-      return null;
+    editCheckedUsersOneByOne() {
+      // TODO edit checkedUsers oneByONe
+      //  Check if there are any selected users
+      // if (this.checkedUsers.length > 0) {
+      //   const userToEdit = this.checkedUsers[0];
+      //   this.openEditModal(userToEdit);
+      //
+      //   // Remove the first user from the array
+      //   this.checkedUsers.splice(0, 1);
+      // }
     },
     handleInputValueChange(value) {
       console.log(value);
@@ -146,6 +147,13 @@ export default {
     closeDropdown() {
       this.$refs.dropdownButton.hideDropdown(); // Call the hideDropdown method from the ref
     },
+    findSelectedRouteFromParam(route) {
+      if (route && route.params.id) {
+        const userId = parseInt(route.params.id);
+        return this.users.find(user => user.id === userId);
+      }
+      return null;
+    },
   },
   watch: {
     '$route'(to) {
@@ -156,19 +164,17 @@ export default {
 </script>
 
 <template>
-  <div class="users-header">
-    <TitleComponent page-title="Users"></TitleComponent>
-  </div>
-  <div class="users-body">
-    <div class="users-container">
-      <div class="users-action-row">
-        <SolarDropdownMenuButton :disabled="isActionButtonDisabled" text-button="Action" ref="dropdownButton">
-          <!-- Edit multiple Users -->
+  <TitleComponent class="header" page-title="Users"></TitleComponent>
+  <div class="body">
+    <div class="body-container">
+      <div class="action-row">
+        <SolarDropdownMenuButton
+            text-button="Action" ref="dropdownButton"
+            :disabled="isActionButtonDisabled">
           <SolarDropdownMenuItem
               text-menu-item="Edit Users"
-              @click="updateSelectedUsers" @item-click="closeDropdown">
+              @click="editCheckedUsersOneByOne" @item-click="closeDropdown">
           </SolarDropdownMenuItem>
-          <!-- Delete multiple Users -->
           <SolarDropdownMenuItem
               text-menu-item="Delete Users"
               @click="openDeleteMultipleUsersModal" @item-click="closeDropdown">
@@ -177,8 +183,8 @@ export default {
         <SolarSearchbar place-holder="Search For Users" @search="handleInputValueChange"></SolarSearchbar>
         <SolarButton class="ml-auto" button-text="Add User" @click="openCreateModal"></SolarButton>
       </div>
-      <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
 
+      <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
         <UsersRowComponent
             v-for="(user) in filterUsers" :key="user.id" :user="user"
             @edit="openEditModal"
@@ -196,43 +202,44 @@ export default {
       @create-user="createUser"/>
   <UpdateUserModal
       v-if="$route.path.includes('edit')"
-      :user="selectedUser" :on-close="closeModal"
+      :on-close="closeModal"
+      :user="selectedUser"
       @update-user="updateUser"/>
   <DeleteUserModal
       v-if="$route.path.includes('delete') && selectedUser != null"
-      :user="selectedUser" :on-close="closeModal"
+      :on-close="closeModal"
+      :user="selectedUser"
       @delete-user="deleteUser"/>
   <DeleteMultipleUsersModal
       v-if="$route.path.includes('delete-users')"
-      :users-to-delete="checkedUsers" :on-close="closeModal"
+      :on-close="closeModal"
+      :users-to-delete="checkedUsers"
       @delete-users="deleteCheckedUsers">
   </DeleteMultipleUsersModal>
-
 </template>
 
 <style scoped>
-.users-header {
+.header {
   flex-direction: row;
   display: flex;
   padding: 1rem;
 }
 
-.users-action-row {
-  display: flex;
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-}
-
-.users-body {
+.body {
   position: relative;
   overflow-x: auto;
 }
 
-.users-container {
+.body-container {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 1rem /* 16px */;
+  padding-bottom: 1rem;
   background-color: white;
+}
+
+.action-row {
+  display: flex;
+  margin-bottom: 1rem;
 }
 </style>
