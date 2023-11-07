@@ -147,8 +147,8 @@ export default {
   display: flex;
   flex-direction: column;
   z-index: 1;
-  width: 15svw;
-  height: 100svh;
+  width: 200px;
+  height: 100vh;
   background-color: #fff;
   border-right: 1px solid #e5e5e5;
   transition: 0.3s ease-in-out;
@@ -276,53 +276,12 @@ export default {
   top: -22px;
 }
 
-@media only screen and (max-width: 1500px) {
-
-  .navbar {
-    width: 20svw;
-  }
-
-}
-
-@media only screen and (max-width: 1250px) {
-
-  .navbar {
-    width: 25svw;
-  }
-
-}
-
-@media only screen and (max-width: 1100px) {
-
-  .navbar {
-    width: 30svw;
-  }
-
-}
-
-@media only screen and (max-width: 1050px) {
-
-  .navbar {
-    width: 35svw;
-  }
-
-}
-
-@media only screen and (max-width: 850px) {
-
-  .navbar {
-    width: 40svw;
-  }
-
-}
-
 @media only screen and (max-width: 750px) {
-
   .navbar {
-    position: absolute;;
-    width: 100svw;
+    position: absolute;
+    width: 60vw;
+    display: flex;
   }
-
 }
 
 </style>

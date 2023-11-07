@@ -12,10 +12,10 @@ import warehouseOverviewComponent from "@/components/warehouseView/warehouseOver
 
 // User
 import UsersOverview from "@/components/user/UsersOverview.vue";
-import CreateUserModal from "@/components/user/user-components/CreateUserModal.vue";
-import UpdateUserModal from "@/components/user/user-components/UpdateUserModal.vue";
-import DeleteUserModal from "@/components/user/user-components/DeleteUserModal.vue";
-import DeleteMultipleUsersModal from "@/components/user/user-components/DeleteMultipleUsersModal.vue";
+import CreateUserModal from "@/components/user/user-modals/CreateUserModal.vue";
+import UpdateUserModal from "@/components/user/user-modals/UpdateUserModal.vue";
+import DeleteUserModal from "@/components/user/user-modals/DeleteUserModal.vue";
+import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultipleUsersModal.vue";
 
 const routes = [
     {path: '/', redirect: '/overview'},

@@ -7,11 +7,11 @@ import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButto
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
 import SolarSearchbar from "@/components/general/SolarSearchbar.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
-import DeleteUserModal from "@/components/user/user-components/DeleteUserModal.vue";
-import UsersRowComponent from "@/components/user/user-components/UsersRowComponent.vue";
-import UpdateUserModal from "@/components/user/user-components/UpdateUserModal.vue";
-import CreateUserModal from "@/components/user/user-components/CreateUserModal.vue";
-import DeleteMultipleUsersModal from "@/components/user/user-components/DeleteMultipleUsersModal.vue";
+import DeleteUserModal from "@/components/user/user-modals/DeleteUserModal.vue";
+import UpdateUserModal from "@/components/user/user-modals/UpdateUserModal.vue";
+import CreateUserModal from "@/components/user/user-modals/CreateUserModal.vue";
+import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultipleUsersModal.vue";
+import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
 
 export default {
   name: "UsersOverview",
@@ -222,7 +222,8 @@ export default {
 .header {
   flex-direction: row;
   display: flex;
-  padding: 1rem;
+  padding-left: 1rem;
+  padding-top: 1rem;
 }
 
 .body {
@@ -240,6 +241,7 @@ export default {
 
 .action-row {
   display: flex;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
 }
 </style>

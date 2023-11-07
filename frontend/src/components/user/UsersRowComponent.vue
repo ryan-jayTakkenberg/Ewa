@@ -6,7 +6,7 @@ export default {
   emits: ["toggle", "edit", "delete"],
   data() {
     return {
-      checked: false, // Initialize the checked state from the prop
+      checked: false,
     };
   },
   props: {

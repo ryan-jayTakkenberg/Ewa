@@ -6,7 +6,7 @@
         @sidebar-expanded="updateSidebarState"
     ></NavBar>
 
-    <div class="router-view">
+    <div class="router-view" :class="{ 'router-view-responsive': isLoggedIn }">
       <router-view></router-view>
     </div>
 
@@ -50,7 +50,6 @@ export default {
 </script>
 
 <style>
-
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -62,25 +61,26 @@ export default {
 .app-container {
   display: flex;
   flex-direction: row;
-  height: 100svh;
-  width: 100svw;
+  height: 100vh;
+  width: 100vw;
 }
 
 .router-view {
-  width: 100%;
+  width: 100vw;
   height: 100%;
+  margin-left: auto;
+  overflow: auto;
 }
 
-/* Uitgecomment want het doet niks en het verpest de login page als die onder 750px komt omdat er geen sidebar is... sry */
+body{
+  overflow: hidden;
+}
 
-/*
 @media only screen and (max-width: 750px) {
-  .router-view {
-    width: calc(100svw - 70px);
+  .router-view-responsive {
+    width: calc(100vw - 70px);
     margin-left: auto;
   }
 }
-*/
-
 </style>
 
