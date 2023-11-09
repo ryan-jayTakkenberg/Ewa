@@ -2,9 +2,11 @@
 
 
 
+import Team from "@/models/team";
+
 export default {
   name: "AddTeamModal",
-  idAutoIncrement: 12,
+
 
   data() {
     return {
@@ -15,7 +17,8 @@ export default {
         project:'',
         users:[],
 
-      }
+      },
+      idAutoIncrement: 12,
     }
   },
   props: {
@@ -34,7 +37,7 @@ export default {
     saveTeam() {
       //  TODO Fix hardcoded user iD
       const newUser = {
-        id: this.idAutoIncrement++,
+        id: Team.getAutoIncrementId(),
         name: this.team.name,
         users: [],
         warehouse: this.team.warehouse,
@@ -61,7 +64,7 @@ export default {
 
         <!-- Modal header -->
         <div class="create-user-modal-header">
-          <h3 class="text-xl font-bold text-gray-900">Create user</h3>
+          <h3 class="text-xl font-bold text-gray-900">Create team</h3>
           <button type="button" @click="onClose" class="close-modal-btn">
             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

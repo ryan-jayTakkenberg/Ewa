@@ -13,10 +13,13 @@ import TeamsAddComponent from "@/components/team/TeamsAddComponent.vue";
 
 import TeamsDeleteComponent from "@/components/team/TeamsDeleteComponent.vue";
 
+import DeleteMultipleTeams from "@/components/team/DeleteMultipleTeams.vue";
+
 
 export default {
-  name: "UsersOverview",
+  name: "TeamsDetailComponent",
   components: {
+    DeleteMultipleTeams,
     TeamsDeleteComponent,
     SolarDropdownMenuItem,
     SolarDropdownMenuButton,
@@ -27,8 +30,6 @@ export default {
     ButtonComponent,
     TeamsEditComponent,
     TeamsAddComponent,
-
-
   },
   data() {
     return {
@@ -105,7 +106,23 @@ export default {
         this.teams[index] = editedTeam;
       }
       this.closeEditUserModal();
+    },
+    deleteCheckedTeams() {
+      // Get the IDs of the users to delete
+      const teamsIdsToDelete = this.checkedTeams.map(team => team.id);
 
+      // Uncheck the selected users in the UsersRowComponent
+      this.teams.forEach(team => {
+        team.isChecked = false;
+      });
+
+      // Remove the selected users from the users array based on their IDs
+      this.teams = this.teams.filter(user => !teamsIdsToDelete.includes(user.id));
+
+      // Clear the checkedUsers array
+      this.checkedTeams = [];
+
+      this.closeModal();
     },
 
     closeAddTeamsModal(){
@@ -151,8 +168,8 @@ export default {
 
       <SolarTable :columns="['Team', 'warehouse', 'project', 'Action']">
         <TeamsRowComponent
-            v-for="(team, index) in filteredTeams"
-            :key="index"
+            v-for="(team) in filteredTeams"
+            :key="team.id"
             :teams="team"
             :isChecked="team.isChecked"
             @click-delete-team="openDeleteUserModal"
@@ -173,6 +190,11 @@ export default {
       @delete-team="deleteTeam"
   >
   </TeamsDeleteComponent>
+  <DeleteMultipleTeams
+      v-if="$route.path.includes('delete-teams')"
+      :users-to-delete="checkedTeams" :on-close="closeModal"
+      @delete-teams="deleteCheckedTeams">
+  </DeleteMultipleTeams>
 </template>
 
 <style scoped>
