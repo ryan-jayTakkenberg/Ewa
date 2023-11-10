@@ -197,5 +197,11 @@ export default {
 .cancel-button:hover {
   background-color: rgb(206 212 218);
 }
+
+@media (max-width: 768px) {
+  .modal-grid{
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
 </style>
 

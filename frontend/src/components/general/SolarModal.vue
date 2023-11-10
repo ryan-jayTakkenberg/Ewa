@@ -66,6 +66,7 @@ export default {
 .modal-content{
   background-color: white;
   border-radius: 0.5rem;
+  height: 100vh;
 }
 
 .modal-header {
@@ -106,6 +107,9 @@ export default {
     width: 60%;
     padding: 4rem;
     margin-left: 0;
+  }
+  .modal-content{
+    height: 100%;
   }
 }
 </style>
