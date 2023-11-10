@@ -32,12 +32,12 @@ export default {
   font-size: 0.875rem;
   line-height: 1.25rem;
   text-align: left;
-  color: rgb(107 114 128);
+  color: rgb(51, 51, 51);
 }
 
 .solar-table-header {
   color: rgb(55 65 81);
   text-transform: uppercase;
-  background-color: rgb(249 250 251);
+  background-color: rgb(248, 248, 248);
 }
 </style>

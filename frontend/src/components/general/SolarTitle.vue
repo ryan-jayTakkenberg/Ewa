@@ -6,7 +6,6 @@ export default {
       type: String,
     }
   }
-
 }
 </script>
 
@@ -18,5 +17,6 @@ export default {
 .page-title{
   font-weight: 700;
   font-size: 2rem;
+  color: #333333;
 }
 </style>
