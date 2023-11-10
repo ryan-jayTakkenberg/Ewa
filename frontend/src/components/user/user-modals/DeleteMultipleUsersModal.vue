@@ -1,10 +1,15 @@
 <template>
   <SolarModal title="Delete Users" @close-modal="onClose">
-    <div>
-      <p>Are you sure you want to delete the following users:</p>
-      <div v-for="user in usersToDelete" :key="user">
-        <br/><br/><strong>{{ user.name }}</strong><br/>{{ user.email }}
-      </div>
+    <div class="p-4 md:p-5 text-center">
+      <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true"
+           xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+      </svg>
+      <p>Are you sure you want to delete the users:</p>
+    </div>
+    <div v-for="user in usersToDelete" :key="user">
+      <br/><br/><strong>{{ user.name }}</strong><br/>{{ user.email }}
     </div>
     <template v-slot:footer>
       <button @click="onClose" class="cancel-button">Cancel</button>
@@ -54,8 +59,8 @@ export default {
 }
 
 .cancel-button {
-  color: rgb(17 24 39);
-  background-color: rgb(229 231 235);
+  color: #333333;
+  background-color:  #f8f8f8;
   font-weight: 500;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -65,6 +70,6 @@ export default {
 }
 
 .cancel-button:hover {
-  background-color: rgb(206 212 218);
+  background-color: #bfbfbf;
 }
 </style>

@@ -65,7 +65,7 @@ export default {
 
 .modal-content{
   background-color: white;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
 }
 
 .modal-header {
@@ -74,8 +74,6 @@ export default {
   justify-content: space-between;
   padding: 1rem;
   border-bottom-width: 1px;
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
 }
 
 .modal-body {

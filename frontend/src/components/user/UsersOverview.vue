@@ -1,6 +1,5 @@
 <script>
 import User from "@/models/user";
-
 import TitleComponent from "@/components/general/SolarTitle.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
@@ -34,9 +33,13 @@ export default {
   data() {
     return {
       inputValue: '', // Store the input value for searching users
-      users: [],
+      users: [...User.users],
       selectedUser: null,  // The selected user for editing / deleting
       checkedUsers: [], // A list of the selected users for editing / deleting multiple users at once
+      showCreateModal: false,
+      showUpdateModal: false,
+      showDeleteModal: false,
+      showDeleteMultipleModal: false,
     };
   },
   computed: {
@@ -106,6 +109,7 @@ export default {
       // if (this.checkedUsers.length > 0) {
       //   const userToEdit = this.checkedUsers[0];
       //   this.openEditModal(userToEdit);
+      // this.closeDropdown();
       //
       //   // Remove the first user from the array
       //   this.checkedUsers.splice(0, 1);
@@ -116,21 +120,27 @@ export default {
       this.inputValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
     },
     openCreateModal() {
-      this.$router.push(`${this.$route.matched[0].path}/create`);
+      this.showCreateModal = true;
     },
     openEditModal(user) {
-      this.$router.push(`${this.$route.matched[0].path}/edit/${user.id}`);
       this.selectedUser = user;
+      this.showUpdateModal = true;
     },
     openDeleteModal(user) {
-      this.$router.push(`${this.$route.matched[0].path}/delete/${user.id}`);
       this.selectedUser = user;
+      this.showDeleteModal = true;
     },
     openDeleteMultipleUsersModal() {
-      this.$router.push(`${this.$route.matched[0].path}/delete-users`);
+      console.log("test before");
+      this.showDeleteMultipleModal = true;
+      console.log("test after");
+      this.closeDropdown();
     },
     closeModal() {
-      this.$router.push(this.$route.matched[0].path);
+      this.showCreateModal = false;
+      this.showUpdateModal = false;
+      this.showDeleteModal = false;
+      this.showDeleteMultipleModal = false;
     },
     toggleCheckbox(user) {
       const userIndex = this.checkedUsers.findIndex(u => u.id === user.id);
@@ -173,11 +183,11 @@ export default {
             :disabled="isActionButtonDisabled">
           <SolarDropdownMenuItem
               text-menu-item="Edit Users"
-              @click="editCheckedUsersOneByOne" @item-click="closeDropdown">
+              @click="editCheckedUsersOneByOne">
           </SolarDropdownMenuItem>
           <SolarDropdownMenuItem
               text-menu-item="Delete Users"
-              @click="openDeleteMultipleUsersModal" @item-click="closeDropdown">
+              @click="openDeleteMultipleUsersModal">
           </SolarDropdownMenuItem>
         </SolarDropdownMenuButton>
         <SolarSearchbar place-holder="Search For Users" @search="handleInputValueChange"></SolarSearchbar>
@@ -195,27 +205,23 @@ export default {
     </div>
   </div>
 
-  <!-- Conditionally render modals based on route -->
+  <!-- Conditionally render modals based on boolean modal states -->
   <CreateUserModal
-      v-if="$route.path.includes('create')"
-      :on-close="closeModal"
-      @create-user="createUser"/>
+      v-if="showCreateModal" :on-close="closeModal"
+      @create-user="createUser"
+  />
   <UpdateUserModal
-      v-if="$route.path.includes('edit')"
-      :on-close="closeModal"
-      :user="selectedUser"
-      @update-user="updateUser"/>
+      v-if="showUpdateModal" :on-close="closeModal"
+      :user="selectedUser" @update-user="updateUser"
+  />
   <DeleteUserModal
-      v-if="$route.path.includes('delete') && selectedUser != null"
-      :on-close="closeModal"
-      :user="selectedUser"
-      @delete-user="deleteUser"/>
+      v-if="showDeleteModal" :on-close="closeModal"
+      :user="selectedUser" @delete-user="deleteUser"
+  />
   <DeleteMultipleUsersModal
-      v-if="$route.path.includes('delete-users')"
-      :on-close="closeModal"
-      :users-to-delete="checkedUsers"
-      @delete-users="deleteCheckedUsers">
-  </DeleteMultipleUsersModal>
+      v-if="showDeleteMultipleModal" :on-close="closeModal"
+      :users-to-delete="checkedUsers" @delete-users="deleteCheckedUsers"
+  />
 </template>
 
 <style scoped>

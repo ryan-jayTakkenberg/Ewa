@@ -9,13 +9,7 @@ import ProjectDetailComponent from "@/components/project/ProjectDetailComponent.
 import ReportComponent from "@/components/manage/ReportComponent.vue";
 import TeamsDetailComponent from "@/components/team/TeamsDetailComponent.vue";
 import warehouseOverviewComponent from "@/components/warehouseView/warehouseOverviewComponent.vue";
-
-// User
 import UsersOverview from "@/components/user/UsersOverview.vue";
-import CreateUserModal from "@/components/user/user-modals/CreateUserModal.vue";
-import UpdateUserModal from "@/components/user/user-modals/UpdateUserModal.vue";
-import DeleteUserModal from "@/components/user/user-modals/DeleteUserModal.vue";
-import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultipleUsersModal.vue";
 
 const routes = [
     {path: '/', redirect: '/overview'},
@@ -25,17 +19,7 @@ const routes = [
     {path: '/projects', component: ProjectDetailComponent},
     {path: '/teams', component: TeamsDetailComponent},
     {path: '/products', component: ProductOverview},
-    {
-        path: '/users',
-        component: UsersOverview,
-        children:
-            [
-                {path: 'create', component: CreateUserModal},
-                {path: 'edit/:id', component: UpdateUserModal},
-                {path: 'delete/:id', component: DeleteUserModal},
-                {path: 'delete-users', component: DeleteMultipleUsersModal},
-            ]
-    },
+    {path: '/users', component: UsersOverview,},
     {path: '/reports', component: ReportComponent},
     {path: '/warehouseViewer', component: warehouseOverviewComponent},
     {path: '/:pathMatch(.*)*', component: NotFoundComponent}

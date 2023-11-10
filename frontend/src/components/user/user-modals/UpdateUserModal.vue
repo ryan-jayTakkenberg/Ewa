@@ -17,6 +17,10 @@ export default {
   },
   computed: {
     hasChanged() {
+      if (!this.clonedUser) {
+        return false; // No changes if clonedUser is null
+      }
+
       for (const key in this.user) {
         if (this.user[key] !== this.clonedUser[key]) {
           return true;
@@ -193,7 +197,7 @@ export default {
 
 .cancel-button {
   color: rgb(17 24 39);
-  background-color: rgb(229 231 235);
+  background-color: #bfbfbf;
   font-weight: 500;
   border-radius: 0.5rem;
   font-size: 0.875rem;
