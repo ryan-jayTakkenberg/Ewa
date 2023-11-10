@@ -1,13 +1,11 @@
 package app.routes;
 
-import app.authentication.Credentials;
 import app.EsserverApplication;
-import app.authentication.Perms;
-import app.database.DatabaseHelper;
-import app.models.Product;
 import app.models.Teams;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 

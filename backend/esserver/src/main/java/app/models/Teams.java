@@ -85,9 +85,9 @@ public class Teams {
             // TODO: Implement the logic to get all teams from the database
             //  Update "teams" with the response
             return Arrays.asList(
-                    new Teams(232, "TeamWest", "Amsterdam West", "Hva", Arrays.asList()),
-                    new Teams(235, "SolarPaneel", "Amsterdam West", "Hva", Arrays.asList()),
-                    new Teams(237, "Solar2", "Amsterdam West", "Hva", Arrays.asList())
+                    new Teams(232, "TeamWest", "Amsterdam West", "Hva", null),
+                    new Teams(235, "SolarPaneel", "Amsterdam West", "Hva", null),
+                    new Teams(237, "Solar2", "Amsterdam West", "Hva", null)
             );
         }
 
@@ -97,5 +97,45 @@ public class Teams {
 
     public static Teams createNewTeam(String name, List<User> users, String warehouse, String project) {
         return new Teams(-1, name, warehouse, project, users);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public String getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(String warehouse) {
+        this.warehouse = warehouse;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 }
