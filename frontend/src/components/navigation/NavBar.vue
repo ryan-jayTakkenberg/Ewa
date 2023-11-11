@@ -249,7 +249,7 @@ export default {
 .nav-text {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #222;
+  color: #333333;
   width: 100%;
   max-height: 20px;
 }
