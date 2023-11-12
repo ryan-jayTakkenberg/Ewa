@@ -1,16 +1,14 @@
 package app.models;
 
-import java.time.LocalDate;
-
 public class Warehouse {
 
     private int id = 2000;
     private String name;
-    private City city;
+    private String city;
     private String address;
     private String postalCode;
 
-    public Warehouse(int id, String name, City city, String address, String postalCode) {
+    public Warehouse(int id, String name, String city, String address, String postalCode) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -24,7 +22,7 @@ public class Warehouse {
 
     public static Warehouse createSampleOffer(int id){
         String name = "Warehouse " + id;
-        City city = City.values()[(int)(Math.random() * City.values().length)];
+        String city = String.valueOf(City.values()[(int)(Math.random() * City.values().length)]);
         String address = "Street" + id;
         int number1 = (int) Math.floor((Math.random() * 9 + 1));
         int number2 = (int) Math.floor((Math.random() * 9 + 1));
@@ -56,7 +54,7 @@ public class Warehouse {
         return name;
     }
 
-    public City getCity() {
+    public String getCity() {
         return city;
     }
 
@@ -76,7 +74,7 @@ public class Warehouse {
         this.name = name;
     }
 
-    public void setCity(City city) {
+    public void setCity(String city) {
         this.city = city;
     }
 

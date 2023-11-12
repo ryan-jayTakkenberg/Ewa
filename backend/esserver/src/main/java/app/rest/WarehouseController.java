@@ -1,4 +1,4 @@
-package app.Rest;
+package app.rest;
 
 import app.exceptions.BadRequestException;
 import app.exceptions.NotFoundException;

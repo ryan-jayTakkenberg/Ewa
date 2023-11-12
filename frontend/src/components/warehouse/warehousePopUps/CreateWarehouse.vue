@@ -37,7 +37,7 @@ export default {
   data(){
     return {
       warehouse: {
-        id: '',
+        id: 0,
         name: '',
         city: '',
         address: '',

@@ -31,27 +31,38 @@ export class WarehouseAdaptor {
         return this.fetchJson(this.resourcesUrl + "/" + id);
     }
 
-    async asyncSave(warehouse) {
-        let url = `${this.resourcesUrl}`;
-        if (warehouse.id !== 0) {
-            url += `/${warehouse.id}`;
-        }else {
-            url += `/warehouses`;
-        }
-        const method = warehouse.id === 0 ? 'POST' : 'PUT';
+    async asyncAddNew(warehouse) {
+        const url = `${this.resourcesUrl}`;
         const options = {
-            method,
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(warehouse)
         };
         const response = await this.fetchJson(url, options);
-        if (method === 'POST' && response.id) {
+
+        if (response.id) {
             warehouse.id = response.id;
         }
+
         return response;
     }
+
+    async asyncUpdate(warehouse) {
+        const url = `${this.resourcesUrl}/${warehouse.id}`;
+        const options = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(warehouse)
+        };
+        const response = await this.fetchJson(url, options);
+
+        return response;
+    }
+
 
     async asyncDeleteById(id) {
         return this.fetchJson(this.resourcesUrl + "/" + id,

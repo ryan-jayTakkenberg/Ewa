@@ -67,7 +67,6 @@ export default {
   data() {
     return {
       warehouses: [],
-      warehouseId: 2000,
       selectedWarehouse: null,
       showCreateWarehouse: false,
       showUpdateWarehouse: false,
@@ -77,24 +76,40 @@ export default {
       await this.getWarehouseList();
   },
   methods: {
-    createWarehouse(newWarehouse){
-      newWarehouse.id = this.warehouseId += Math.floor(Math.random() * 9 + 1);
-      this.warehouses.push(newWarehouse);
+    async createWarehouse(newWarehouse){
+      try {
+        await this.warehouseService.asyncAddNew(newWarehouse)
+        await this.getWarehouseList();
+      }catch (error){
+        console.error("Error occurred during creation of new warehouse", error)
+      }
     },
-    updateWarehouse(warehouse){
-      Object.assign(this.selectedWarehouse, warehouse);
-      this.selectedWarehouse = null
+    async updateWarehouse(warehouse){
+      try {
+        await this.warehouseService.asyncUpdate(warehouse)
+        await this.getWarehouseList();
+      } catch (error){
+        console.error("Error occurred during saving of existing warehouse", error)
+      }
     },
-    deleteWarehouse(warehouse){
+    async deleteWarehouse(warehouse){
       // Use the browser-native confirmation dialog
       const confirmed = window.confirm("Are you sure you want to delete the warehouse?");
 
       if (confirmed) {
-        const index = this.warehouses.findIndex(w => w.id === warehouse.id);
-
-        if (index !== -1) {
-          this.warehouses.splice(index, 1);
+        try {
+          await this.warehouseService.asyncDeleteById(warehouse.id);
+          await this.getWarehouseList();
+        } catch (error){
+          console.error("Error occurred during deleting process", error)
         }
+      }
+    },
+    async getWarehouseList(){
+      try {
+        this.warehouses = await this.warehouseService.asyncFindAll()
+      } catch (error){
+        console.error("Error occurred while getting the data from the backend", error)
       }
     },
     openUpdateWarehouse(warehouse){
@@ -104,13 +119,6 @@ export default {
     closePopUp(){
       this.showCreateWarehouse = false;
       this.showUpdateWarehouse = false;
-    },
-    async getWarehouseList(){
-      try {
-        this.warehouses = await this.warehouseService.asyncFindAll()
-      } catch (error){
-        console.error("Error occurred while getting the data from the backend", error)
-      }
     }
   }
 }
