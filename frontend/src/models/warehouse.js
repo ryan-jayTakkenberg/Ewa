@@ -27,6 +27,18 @@ export default class Warehouse {
         this.city = city;
     }
 
+    static createSampleOffer(pId = 0) {
+        const id = pId;
+        const name = "A Warehouse";
+        const address = "Straat 1";
+        const postalCodeValues = Object.values(Warehouse.PostalCode);
+        const postalCode =postalCodeValues[Math.floor(Math.random() * postalCodeValues.length)]
+        const cityValues = Object.values(Warehouse.City)
+        const city = cityValues[Math.floor(Math.random() * cityValues.length)]
+
+        return new Warehouse(id, name, address, postalCode, city  );
+    }
+
     clone() {
         return new Warehouse(this.id, this.name, this.address, this.postalCode, this.city);
     }

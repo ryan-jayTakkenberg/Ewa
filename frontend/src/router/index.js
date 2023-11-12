@@ -2,7 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router';
 
 import LoginComponent from "@/components/login/LoginComponent.vue";
 import OverviewComponent from "@/components/OverviewComponent.vue";
-import WarehouseDetailComponent from "@/components/warehouse/WarehouseDetailComponent.vue";
+import WarehousePageComponent from "@/components/warehouse/WarehousePageComponent.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";
 import ProductOverview from "@/components/product/ProductOverview";
 import ProjectDetailComponent from "@/components/project/ProjectDetailComponent.vue";
@@ -15,7 +15,7 @@ const routes = [
     {path: '/', redirect: '/overview'},
     {path: '/login', component: LoginComponent},
     {path: '/overview', component: OverviewComponent},
-    {path: '/warehouses', component: WarehouseDetailComponent},
+    {path: '/warehouses', component: WarehousePageComponent},
     {path: '/projects', component: ProjectDetailComponent},
     {path: '/teams', component: TeamsDetailComponent},
     {path: '/products', component: ProductOverview},
