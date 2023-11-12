@@ -4,7 +4,7 @@
     <div class="contentBox">
       <div class="contentHeader">
         <SolarSearchbar place-holder="Search For Warehouses"></SolarSearchbar>
-        <SolarButton class="ml-auto" button-text="Add Warehouse" @click="openCreateWarehouse"></SolarButton>
+        <SolarButton class="ml-auto" button-text="Add Warehouse" @click="showCreateWarehouse = true"></SolarButton>
       </div>
       <SolarTable :columns="['Name', 'Address', 'Postal code', 'Action']">
         <tr class="tableRow" v-for="warehouse in warehouses" :key="warehouse.id">
@@ -24,19 +24,25 @@
           <td class="px-6 py-4">{{warehouse.address}}</td>
           <td class="px-6 py-4">{{warehouse.postalCode}}</td>
           <td>
-            <div class="editWarehouseButton">Edit Warehouse</div>
-            <div class="deleteWarehouseButton">Delete Warehouse</div>
+            <div class="editWarehouseButton" @click="openUpdateWarehouse(warehouse)" >Edit Warehouse</div>
+            <div class="deleteWarehouseButton" @click="deleteWarehouse(warehouse)">Delete Warehouse</div>
           </td>
         </tr>
       </SolarTable>
     </div>
   </div>
-
   <CreateWarehouse
     v-if="showCreateWarehouse"
     @close-pop-up="closePopUp"
     @create-warehouse="createWarehouse"
   />
+  <UpdateWarehouse
+    v-if="showUpdateWarehouse"
+    :warehouse="selectedWarehouse"
+    @close-pop-up="closePopUp"
+    @update-warehouse="updateWarehouse"
+  />
+
 </template>
 
 <script>
@@ -46,10 +52,12 @@ import SolarButton from "@/components/general/SolarButton";
 import SolarTable from "@/components/general/SolarTable";
 import CreateWarehouse from "@/components/warehouse/warehousePopUps/CreateWarehouse";
 import Warehouse from "@/models/warehouse";
+import UpdateWarehouse from "@/components/warehouse/warehousePopUps/UpdateWarehouse";
 
 export default {
   name: "warehousePageComponent",
   components: {
+    UpdateWarehouse,
     SolarTitle,
     SolarSearchbar,
     SolarButton,
@@ -62,6 +70,7 @@ export default {
       warehouseId: 2000,
       selectedWarehouse: null,
       showCreateWarehouse: false,
+      showUpdateWarehouse: false,
     };
   },
   created() {
@@ -78,11 +87,29 @@ export default {
       newWarehouse.id = this.warehouseId += Math.floor(Math.random() * 9 + 1);
       this.warehouses.push(newWarehouse);
     },
-    openCreateWarehouse(){
-      this.showCreateWarehouse = true;
+    updateWarehouse(warehouse){
+      Object.assign(this.selectedWarehouse, warehouse);
+      this.selectedWarehouse = null
+    },
+    deleteWarehouse(warehouse){
+      // Use the browser-native confirmation dialog
+      const confirmed = window.confirm("Are you sure you want to delete the warehouse?");
+
+      if (confirmed) {
+        const index = this.warehouses.findIndex(w => w.id === warehouse.id);
+
+        if (index !== -1) {
+          this.warehouses.splice(index, 1);
+        }
+      }
+    },
+    openUpdateWarehouse(warehouse){
+      this.selectedWarehouse = warehouse;
+      this.showUpdateWarehouse = true;
     },
     closePopUp(){
       this.showCreateWarehouse = false;
+      this.showUpdateWarehouse = false;
     }
   }
 }

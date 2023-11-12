@@ -10,12 +10,17 @@ import ReportComponent from "@/components/manage/ReportComponent.vue";
 import TeamsDetailComponent from "@/components/team/TeamsDetailComponent.vue";
 import warehouseOverviewComponent from "@/components/warehouseView/warehouseOverviewComponent.vue";
 import UsersOverview from "@/components/user/UsersOverview.vue";
+import UpdateWarehouse from "@/components/warehouse/warehousePopUps/UpdateWarehouse";
 
 const routes = [
     {path: '/', redirect: '/overview'},
     {path: '/login', component: LoginComponent},
     {path: '/overview', component: OverviewComponent},
-    {path: '/warehouses', component: WarehousePageComponent},
+    {path: '/warehouses', component: WarehousePageComponent,
+        children: [
+            {path: ":id", component: UpdateWarehouse}
+        ]
+    },
     {path: '/projects', component: ProjectDetailComponent},
     {path: '/teams', component: TeamsDetailComponent},
     {path: '/products', component: ProductOverview},
