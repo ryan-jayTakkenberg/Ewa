@@ -4,7 +4,7 @@
     <div class="contentBox">
       <div class="contentHeader">
         <SolarSearchbar place-holder="Search For Warehouses"></SolarSearchbar>
-        <SolarButton class="ml-auto" button-text="Add Warehouse"></SolarButton>
+        <SolarButton class="ml-auto" button-text="Add Warehouse" @click="openCreateWarehouse"></SolarButton>
       </div>
       <SolarTable :columns="['Name', 'Address', 'Postal code', 'Action']">
         <tr class="tableRow" v-for="warehouse in warehouses" :key="warehouse.id">
@@ -31,6 +31,12 @@
       </SolarTable>
     </div>
   </div>
+
+  <CreateWarehouse
+    v-if="showCreateWarehouse"
+    @close-pop-up="closePopUp"
+    @create-warehouse="createWarehouse"
+  />
 </template>
 
 <script>
@@ -38,6 +44,7 @@ import SolarTitle from "@/components/general/SolarTitle";
 import SolarSearchbar from "@/components/general/SolarSearchbar";
 import SolarButton from "@/components/general/SolarButton";
 import SolarTable from "@/components/general/SolarTable";
+import CreateWarehouse from "@/components/warehouse/warehousePopUps/CreateWarehouse";
 import Warehouse from "@/models/warehouse";
 
 export default {
@@ -47,12 +54,14 @@ export default {
     SolarSearchbar,
     SolarButton,
     SolarTable,
+    CreateWarehouse,
   },
   data() {
     return {
       warehouses: [],
       warehouseId: 2000,
       selectedWarehouse: null,
+      showCreateWarehouse: false,
     };
   },
   created() {
@@ -62,6 +71,18 @@ export default {
       const newWarehouse = Warehouse.createSampleOffer(this.warehouseId);
       this.warehouses.push(newWarehouse);
       this.warehouseId += Math.floor(Math.random() * 9 + 1);
+    }
+  },
+  methods: {
+    createWarehouse(newWarehouse){
+      newWarehouse.id = this.warehouseId += Math.floor(Math.random() * 9 + 1);
+      this.warehouses.push(newWarehouse);
+    },
+    openCreateWarehouse(){
+      this.showCreateWarehouse = true;
+    },
+    closePopUp(){
+      this.showCreateWarehouse = false;
     }
   }
 }
