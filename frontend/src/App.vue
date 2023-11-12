@@ -21,6 +21,8 @@ import Product from "@/models/product";
 import Project from "@/models/project";
 import Warehouse from "@/models/warehouse";
 import NavBar from "@/components/navigation/NavBar.vue";
+import {WarehouseAdaptor} from "@/service/warehouse-adaptor";
+import CONFIG from "@/app-config";
 
 // This only fetches the data accessible to the logged in user
 // // TODO should be placed at the login page if no session is present
@@ -39,6 +41,11 @@ export default {
     return {
       isLoggedIn: true,
       isSideBarExpanded: false,
+    }
+  },
+  provide() {
+    return {
+      warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/warehouses")
     }
   },
   methods: {

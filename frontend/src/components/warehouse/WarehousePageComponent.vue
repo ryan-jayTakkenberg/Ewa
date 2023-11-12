@@ -51,11 +51,11 @@ import SolarSearchbar from "@/components/general/SolarSearchbar";
 import SolarButton from "@/components/general/SolarButton";
 import SolarTable from "@/components/general/SolarTable";
 import CreateWarehouse from "@/components/warehouse/warehousePopUps/CreateWarehouse";
-import Warehouse from "@/models/warehouse";
 import UpdateWarehouse from "@/components/warehouse/warehousePopUps/UpdateWarehouse";
 
 export default {
   name: "warehousePageComponent",
+  inject: ['warehouseService'],
   components: {
     UpdateWarehouse,
     SolarTitle,
@@ -73,14 +73,8 @@ export default {
       showUpdateWarehouse: false,
     };
   },
-  created() {
-    const amountOfWarhouses = 6;
-
-    for (let i = 0; i < amountOfWarhouses; i++){
-      const newWarehouse = Warehouse.createSampleOffer(this.warehouseId);
-      this.warehouses.push(newWarehouse);
-      this.warehouseId += Math.floor(Math.random() * 9 + 1);
-    }
+  async created() {
+      await this.getWarehouseList();
   },
   methods: {
     createWarehouse(newWarehouse){
@@ -110,6 +104,13 @@ export default {
     closePopUp(){
       this.showCreateWarehouse = false;
       this.showUpdateWarehouse = false;
+    },
+    async getWarehouseList(){
+      try {
+        this.warehouses = await this.warehouseService.asyncFindAll()
+      } catch (error){
+        console.error("Error occurred while getting the data from the backend", error)
+      }
     }
   }
 }

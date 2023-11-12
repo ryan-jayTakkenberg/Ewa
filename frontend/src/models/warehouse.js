@@ -27,6 +27,17 @@ export default class Warehouse {
         this.city = city;
     }
 
+    static copyConstructor(warehouse){
+       try {
+            if (warehouse == null)return null;
+            let copy = Object.assign(new Warehouse(), warehouse)
+           return copy
+       } catch (error){
+            console.error("Error with copying of warehouse", error)
+           return null;
+       }
+    }
+
     static createSampleOffer(pId = 0) {
         const id = pId;
         const name = "A Warehouse";
