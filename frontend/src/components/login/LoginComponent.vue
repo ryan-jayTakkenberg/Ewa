@@ -37,7 +37,7 @@
         </form>
 
       <div class="linkWrapper">
-        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Can't sign in?</a>
+        <a href="#">Can't sign in?</a>
       </div>
 
     </div>
