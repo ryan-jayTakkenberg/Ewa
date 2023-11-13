@@ -45,7 +45,8 @@ export default {
   },
   provide() {
     return {
-      warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/warehouses")
+      warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/warehouses"),
+      isAdmin: true,
     }
   },
   methods: {

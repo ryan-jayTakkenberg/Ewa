@@ -10,11 +10,11 @@
           <SearchBarComponent place-holder="Search For Products" @search="handleSearchChange" />
         </div>
         <div class="flex">
-          <SolarDropdownMenuButton text-button="Action" :disabled="!checkedProducts.length">
+          <SolarDropdownMenuButton text-button="Action" :disabled="!checkedProducts.length" :hidden="!isAdmin">
             <SolarDropdownMenuItem text-menu-item="Edit Users" @click="openEditModal(getSelected())" />
             <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteModal(getSelected())" />
           </SolarDropdownMenuButton>
-          <ButtonComponent button-text="Create New Product" @click="openCreateModal" />
+          <ButtonComponent button-text="Create New Product" @click="openCreateModal" :hidden="!isAdmin" />
         </div>
       </div>
       <SolarTable :columns="['product', 'price', '']">
@@ -52,6 +52,7 @@ import Product from "@/models/product";
 
 export default {
   name: "UsersOverview",
+  inject: ['isAdmin'],
   components: {
     ProductRowComponent,
     SolarDropdownMenuItem,
