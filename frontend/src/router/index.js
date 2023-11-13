@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router';
 
 import LoginComponent from "@/components/login/LoginComponent.vue";
-// import AdminOverviewComponent from "@/components/overview/AdminOverviewComponent.vue";
+/* import AdminOverviewComponent from "@/components/overview/AdminOverviewComponent.vue"; */
 import ViewerOverviewComponent from "@/components/overview/ViewerOverviewComponent.vue";
 import WarehousePageComponent from "@/components/warehouse/WarehousePageComponent.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";
@@ -16,7 +16,7 @@ import UpdateWarehouse from "@/components/warehouse/warehousePopUps/UpdateWareho
 const routes = [
     {path: '/', redirect: '/overview'},
     {path: '/login', component: LoginComponent},
-    {path: '/overview', component: ViewerOverviewComponent},
+    {path: '/overview', component: ViewerOverviewComponent /*component: AdminOverviewComponent*/},
     {path: '/warehouses', component: WarehousePageComponent,
         children: [
             {path: ":id", component: UpdateWarehouse}
