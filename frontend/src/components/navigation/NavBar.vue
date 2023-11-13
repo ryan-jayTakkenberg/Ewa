@@ -8,7 +8,7 @@ export default {
   data() {
     return {
       activePage: 'overview', // Default overview page
-      permissionLevel: 'admin', // Viewer or Admin role
+      permissionLevel: 'viewer', // Viewer or Admin role
       sidebarIsExpanded: false,
       logoExpanded: logoExpanded,
       logoCollapsed: logoCollapsed
