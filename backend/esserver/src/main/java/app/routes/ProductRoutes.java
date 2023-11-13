@@ -32,7 +32,7 @@ public class ProductRoutes {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    private void deleteProduct(@RequestHeader("Authorization") String authorization, @PathVariable Long id) {
+    private void deleteProduct(@RequestHeader("Authorization") String authorization, @PathVariable Integer id) {
         Perms permission = Credentials.getPermissions(authorization);
         permission.canDelete();
         DatabaseHelper.deleteProduct(id);

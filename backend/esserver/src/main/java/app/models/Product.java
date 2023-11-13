@@ -6,23 +6,23 @@ import java.util.List;
 public class Product {
 
     public static final List<Product> list = new ArrayList<>();
-    private long id;
+    private int id;
     private String name;
     private double price;
     private String description;
 
-    public Product(long id, String name, double price, String description) {
+    public Product(int id, String name, double price, String description) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
