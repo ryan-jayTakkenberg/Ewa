@@ -71,6 +71,7 @@ export default class Product {
             } else {
                 Product.products[Product.products.findIndex(o => o.id === this.id)] = this;
             }
+            this.injectAttributes(response.data);
             return this;
         } catch (e) {
             return null;

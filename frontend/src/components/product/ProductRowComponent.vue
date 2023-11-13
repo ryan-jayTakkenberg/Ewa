@@ -92,7 +92,7 @@ export default {
       <div class="font-light text-gray-500">{{ maxTextLength(product['description'], 10 * screenSizeFactor) }}</div>
     </td>
 
-    <td class="px-6 py-4">€{{ product['price'].toFixed(2) }}</td>
+    <td class="px-6 py-4">€{{ Number(product['price']).toFixed(2) }}</td>
 
     <!-- Edit/Delete Product -->
     <td class="px-6 py-4 row">
