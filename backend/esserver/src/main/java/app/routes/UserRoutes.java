@@ -32,13 +32,13 @@ public class UserRoutes {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     private UserModel postUser(@RequestHeader("Authorization") String authorization, @RequestBody UserModel user) {
-        credentials.checkForAdmin(authorization);
+        credentials.mustBeAdmin(authorization);
         return userRepo.save(user);
     }
 
     @DeleteMapping("/{id}")
     private UserModel deleteProduct(@RequestHeader("Authorization") String authorization, @PathVariable Integer id) {
-        credentials.checkForAdmin(authorization);
+        credentials.mustBeAdmin(authorization);
         if (id == null) {
             throw new BadRequestException("No valid ID provided for product");
         }

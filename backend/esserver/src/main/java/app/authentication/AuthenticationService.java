@@ -41,7 +41,7 @@ public class AuthenticationService {
         return getUser(authorization).getPermissionLevel();
     }
 
-    public void checkForAdmin(String authorization) {
+    public void mustBeAdmin(String authorization) {
         if (getPermissions(authorization) != PermissionLevel.ADMIN) {
             throw new ForbiddenException("Invalid permissions");
         }

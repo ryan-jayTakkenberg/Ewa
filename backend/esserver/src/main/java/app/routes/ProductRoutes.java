@@ -14,6 +14,20 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductRoutes {
 
+    /*
+     * BACKEND: ROUTES
+     * Autowire your JPA Repository (here ProductJPARepository), create one if you haven't already.
+     * The JPA Repository will make all connections to the database, such as 'save()'.
+     * You can use this repository for all the endpoints.
+     *
+     * Autowire the AuthenticationService.
+     * Let's name the AuthenticationService 'credentials'.
+     * Now we can access the user who made the request to the backend using:
+     * 'credentials.getUser(authorization)', where 'authorization' is the authorization string in the header.
+     * There are more methods such as 'credentials.mustBeAdmin(authorization)'.
+     * It shouldn't be necessary to change the AuthenticationService.
+     */
+
     @Autowired
     private ProductJPARepository productRepo;
     @Autowired
@@ -28,13 +42,13 @@ public class ProductRoutes {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     private Product postProduct(@RequestHeader("Authorization") String authorization, @RequestBody Product product) {
-        credentials.checkForAdmin(authorization);
+        credentials.mustBeAdmin(authorization);
         return productRepo.save(product);
     }
 
     @DeleteMapping("/{id}")
     private Product deleteProduct(@RequestHeader("Authorization") String authorization, @PathVariable Integer id) {
-        credentials.checkForAdmin(authorization);
+        credentials.mustBeAdmin(authorization);
         if (id == null) {
             throw new BadRequestException("No valid ID provided for product");
         }
