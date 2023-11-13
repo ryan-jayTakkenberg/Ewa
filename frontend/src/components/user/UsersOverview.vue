@@ -68,20 +68,43 @@ export default {
           }
         }, 100);
       }
+      console.log(this.users)
     },
-    createUser(newUser) {
-      this.users.push(newUser);
+    async createUser(createdUser) {
       this.closeModal();
-    },
-    updateUser(updatedUser) {
-      // Find the index of the user to be updated in the users array
-      const index = this.users.findIndex(user => user.id === updatedUser.id);
-      if (index !== -1) {
-        // Update the user data in the array
-        this.users[index] = updatedUser;
+      let newUser = await createdUser.putDatabase();
+      if (newUser) {
+        this.users.push(newUser);
       }
-      this.closeModal();
     },
+
+    // async edit(updated) {
+    //   // Assuming there is only one product in this.selectedProducts
+    //   let edited = this.selectedUser;
+    //
+    //   if (edited) {
+    //     let index = this.products.findIndex(p => p.id === edited.id);
+    //     edited.injectAttributes(updated);
+    //     let product = await edited.putDatabase();
+    //
+    //     if (product) {
+    //       this.products[index] = product;
+    //     }
+    //   }
+    //
+    //   this.closeModal();
+    // }
+
+    // async updateUser(updatedUser) {
+    //   // Find the index of the user to be updated in the users array
+    //   const index = this.users.findIndex(user => user.id === updatedUser.id);
+    //
+    //   if (index !== -1) {
+    //     // Update the user data in the array
+    //     this.users[index] = updatedUser;
+    //   }
+    //   this.closeModal();
+    // },
     deleteUser(userID) {
       this.users = this.users.filter(user => user.id !== userID);
       this.closeModal();
@@ -164,7 +187,8 @@ export default {
       }
       return null;
     },
-  },
+  }
+  ,
   watch: {
     '$route'(to) {
       this.selectedUser = this.findSelectedRouteFromParam(to);

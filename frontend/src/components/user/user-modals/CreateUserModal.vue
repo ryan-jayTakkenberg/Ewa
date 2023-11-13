@@ -62,7 +62,7 @@ export default {
     return {
       PermissionLevelOptions: User.PermissionLevel,
       user: {
-        id: 12,
+        id: '',
         name: '',
         email: '',
         permissionLevel: '',
@@ -96,24 +96,11 @@ export default {
   },
   methods: {
     createUser() {
-      // Perform form submission logic here
-      const newUser = new User(
-          this.user.id,
-          this.user.email,
-          this.user.name,
-          this.user.permissionLevel,
-          "Not Logged in yet",
-          this.user.password
-      );
-
-      // Emit an event to the parent component to handle user creation
-      this.$emit("create-user", newUser);
-
+      let userClass = new User();
+      userClass.injectAttributes(this.user);
+      this.$emit('create-user', userClass);
       // Close the modal
       this.onClose();
-    },
-    validateForm() {
-      return !this.isAnyFieldEmpty;
     },
   }
 }
@@ -199,7 +186,7 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .modal-grid{
+  .modal-grid {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 }

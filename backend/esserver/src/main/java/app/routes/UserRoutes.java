@@ -30,6 +30,7 @@ public class UserRoutes {
         DatabaseHelper.addUser(permission, user);
         return user;
     }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     private void deleteProduct(@RequestHeader("Authorization") String authorization, @PathVariable UUID id) {

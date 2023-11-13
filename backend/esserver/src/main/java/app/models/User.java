@@ -10,7 +10,6 @@ import java.util.UUID;
 public class User {
 
     public static List<User> list = new ArrayList<>();
-
     private UUID id;
     private PermissionLevel permissionLevel;
     private String name;
@@ -23,7 +22,7 @@ public class User {
         this.permissionLevel = permissionLevel != null ? PermissionLevel.valueOf(permissionLevel.toUpperCase()) : null;
         this.name = name;
         this.email = email;
-        this.lastLogin = lastLogin != null ? LocalDate.parse(lastLogin) : null;
+        this.lastLogin = LocalDate.parse(lastLogin);
         this.password = password;
     }
 

@@ -1,4 +1,7 @@
 import Team from "@/models/team";
+import axios from "@/axios-config";
+import {getKey} from "@/data";
+import {classToObject} from "@/models/helper";
 
 export default class User {
 
@@ -7,17 +10,29 @@ export default class User {
         ADMIN: "Admin",
     }
 
-   constructor(id, email, name, permissionLevel, dateLastLoggedIn, password) {
-       this.id = id;
-       this.email = email;
-       this.name = name;
-       this.permissionLevel = permissionLevel;
-       this.lastLoggedIn = dateLastLoggedIn;
-       this.password = password;
-   }
+    constructor(id, email, name, permissionLevel, lastLogin, password) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.permissionLevel = permissionLevel;
+        this.lastLogin = lastLogin;
+        this.password = password;
+    }
 
     clone() {
-        return new User(this.id, this.email, this.name, this.permissionLevel, this.lastLoggedIn, this.password);
+        return new User(this.id, this.email, this.name, this.permissionLevel, this.lastLogin, this.password);
+    }
+
+    injectAttributes(from) {
+        if (!(from instanceof Object)) {
+            return false;
+        }
+        for (let attr of Object.keys(this)) {
+            if (from[attr] !== null && from[attr] !== undefined) {
+                this[attr] = from[attr];
+            }
+        }
+        return true;
     }
 
     equals(other) {
@@ -48,17 +63,24 @@ export default class User {
     async putDatabase() {
         try {
             const isNewUser = this.id < 0;
-            // TODO make a post request to the backend
-            //  if the current user id is -1, receive the new user id
+            let response = await axios.post("/api/users", classToObject(this), {
+                headers: {
+                    "Authorization": getKey(),
+                    'Content-Type': 'application/json'
+                }
+            });
+            // make a post request to the backend
+            // if the current user id is -1, receive the new user id
             if (isNewUser) {
-                this.id = 0;// receive the new user id
+                this.id = response.data.id;// receive the new user id
                 User.users.push(this);
             } else {
                 User.users[User.users.findIndex(o => o.id === this.id)] = this;
             }
-            return true;
+
+            return this;
         } catch (e) {
-            return false;
+            console.log(e)
         }
     }
 
@@ -80,20 +102,27 @@ export default class User {
     }
 
     /**
-     * get all the users from the database
+     * get all the products from the database
      */
     static async getDatabase() {
         try {
             this.fetching = true;
-            // TODO make a get request to the backend
-            //  update "users" with the response
-            return [
-                new User(1, "example1@company.com", "Full Name 1", "Admin", "1 February 2023", "1234"),
-                new User(2, "example2@company.com", "Full Name 2", "Viewer", "2 February 2023", "1234"),
-                new User(3, "example3@company.com", "Full Name 3", "Admin", "3 February 2023", "1234"),
-                new User(4, "example4@company.com", "Full Name 4", "Viewer", "4 February 2023", "1234"),
-                new User(5, "example5@company.com", "Full Name 5", "Viewer", "5 July 2023", "1234")
-            ];
+            // make a get request to the backend
+            // update "products" with the response
+            let response = await axios.get("/api/users", {
+                headers: {
+                    "Authorization": getKey()
+                }
+            });
+
+            let users = [];
+            for (let obj of response.data) {
+                let user = new User();
+                if (user.injectAttributes(obj)) {
+                    users.push(user);
+                }
+            }
+            return users;
         } catch (e) {
             return [];
         } finally {

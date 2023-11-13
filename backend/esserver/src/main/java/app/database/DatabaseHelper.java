@@ -56,7 +56,7 @@ public class DatabaseHelper {
         int index = IntStream.range(0, User.list.size()).filter(i -> User.list.get(i).getId().equals(user.getId())).findFirst().orElse(-1);
         if (index < 0) {
             permissions.canCreate();
-            // Creating a new product
+            // Creating a new user
             UUID userId = UUID.randomUUID(); // get this from auto increment in database
             user.setId(userId);
             User.list.add(user);
