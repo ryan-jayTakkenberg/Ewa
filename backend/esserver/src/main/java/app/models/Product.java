@@ -1,12 +1,21 @@
 package app.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Product {
 
     public static final List<Product> list = new ArrayList<>();
+
+    @Id
+    @GeneratedValue
     private int id;
+
     private String name;
     private double price;
     private String description;
@@ -16,6 +25,10 @@ public class Product {
         this.name = name;
         this.price = price;
         this.description = description;
+    }
+
+    public Product() {
+
     }
 
     public int getId() {

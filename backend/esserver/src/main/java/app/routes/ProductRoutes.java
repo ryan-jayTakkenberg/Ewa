@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = EsserverApplication.CROSS_ORIGIN)
+//@CrossOrigin(origins = EsserverApplication.CROSS_ORIGIN)
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/product")
 public class ProductRoutes {
 
     @GetMapping

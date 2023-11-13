@@ -10,9 +10,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@CrossOrigin(origins = EsserverApplication.CROSS_ORIGIN)
+//@CrossOrigin(origins = EsserverApplication.CROSS_ORIGIN)
 @RestController
-@RequestMapping("/api/teams")
+@RequestMapping("/teams")
 public class TeamsRoutes {
 
     private final TeamsRepository teamsRepository;

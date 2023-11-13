@@ -1,10 +1,10 @@
 package app.authentication;
 
 import app.exceptions.ForbiddenException;
-import app.exceptions.NotFoundException;
 import app.models.Product;
 import app.models.User;
-import app.models.Warehouse;
+import app.repositories.ProductJPARepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -21,16 +21,13 @@ public class Perms {
         this.user = user;
     }
 
+    /*
+     Permission actions
+     */
+
     public List<Product> getProducts() {
         return Product.list;
     }
-
-//    public List<Warehouse> getWarehouses() {
-//        if (user.getPermissionLevel() == PermissionLevel.ADMIN) {
-//            return Warehouse.list;
-//        }
-//        return Warehouse.list.stream().filter(warehouse -> user.warehouseIds.contains(warehouse.getId())).toList();
-//    }
 
     public List<User> getUsers() {
         if (user.getPermissionLevel() == PermissionLevel.ADMIN) {
@@ -39,9 +36,10 @@ public class Perms {
         return List.of(user);
     }
 
+    /*
+     CRUD actions
+     */
 
-
-    // CRUD actions
     public void canCreate() {
         if (user.getPermissionLevel() != PermissionLevel.ADMIN) {
             throw new ForbiddenException("You are not allowed to create");

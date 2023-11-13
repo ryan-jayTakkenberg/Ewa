@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin(origins = EsserverApplication.CROSS_ORIGIN)
+//@CrossOrigin(origins = EsserverApplication.CROSS_ORIGIN)
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserRoutes {
 
     @GetMapping
