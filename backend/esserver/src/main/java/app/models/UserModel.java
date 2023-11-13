@@ -1,37 +1,47 @@
 package app.models;
 
 import app.authentication.PermissionLevel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-public class User {
+@Entity
+public class UserModel {
 
-    public static List<User> list = new ArrayList<>();
-    private UUID id;
+    @Id
+    @GeneratedValue
+    private int id;
+
+    private UUID uuid;
     private PermissionLevel permissionLevel;
+
     private String name;
     private String email;
     private LocalDate lastLogin;
     private String password;
 
-    public User(String id, String permissionLevel, String name, String email, String lastLogin, String password) {
-        this.id = id != null ? UUID.fromString(id) : null;
-        this.permissionLevel = permissionLevel != null ? PermissionLevel.valueOf(permissionLevel.toUpperCase()) : null;
+    public UserModel(UUID uuid, PermissionLevel permissionLevel, String name, String email, LocalDate lastLogin, String password) {
+        this.uuid = uuid;
+        this.permissionLevel = permissionLevel;
         this.name = name;
         this.email = email;
-        this.lastLogin = LocalDate.parse(lastLogin);
+        this.lastLogin = lastLogin;
         this.password = password;
     }
 
-    public UUID getId() {
-        return id;
+    public UserModel() {
+
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public PermissionLevel getPermissionLevel() {

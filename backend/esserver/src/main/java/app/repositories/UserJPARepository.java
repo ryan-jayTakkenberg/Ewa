@@ -1,6 +1,6 @@
 package app.repositories;
 
-import app.models.Product;
+import app.models.UserModel;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -11,28 +11,28 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class ProductJPARepository implements EntityRepositoryJPA<Product> {
+public class UserJPARepository implements EntityRepositoryJPA<UserModel> {
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    public List<Product> findAll() {
-        TypedQuery<Product> query = this.em.createQuery("select a from Product a", Product.class);
+    public List<UserModel> findAll() {
+        TypedQuery<UserModel> query = this.em.createQuery("select a from UserModel a", UserModel.class);
         return query.getResultList();
     }
 
     @Override
-    public Product findById(int id) {
-        return em.find(Product.class, id);
+    public UserModel findById(int id) {
+        return em.find(UserModel.class, id);
     }
 
     @Override
-    public Product save(Product entity) {
+    public UserModel save(UserModel entity) {
         return this.em.merge(entity);
     }
 
     @Override
-    public Product delete(Product entity) {
+    public UserModel delete(UserModel entity) {
         em.remove(entity);
         return entity;
     }

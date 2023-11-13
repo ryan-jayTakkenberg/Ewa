@@ -1,42 +1,54 @@
 package app.routes;
 
-import app.EsserverApplication;
-import app.authentication.Credentials;
-import app.authentication.Perms;
-import app.database.DatabaseHelper;
-import app.models.User;
+import app.authentication.AuthenticationService;
+import app.authentication.PermissionLevel;
+import app.exceptions.BadRequestException;
+import app.models.UserModel;
+import app.repositories.UserJPARepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
-//@CrossOrigin(origins = EsserverApplication.CROSS_ORIGIN)
 @RestController
 @RequestMapping("/users")
 public class UserRoutes {
 
+    @Autowired
+    private UserJPARepository userRepo;
+    @Autowired
+    private AuthenticationService credentials;
+
     @GetMapping
-    private List<User> getUsers(@RequestHeader("Authorization") String authorization) {
-        Perms permission = Credentials.getPermissions(authorization);
-        permission.canRead();
-        return permission.getUsers();
+    private List<UserModel> getUsers(@RequestHeader("Authorization") String authorization) {
+        UserModel user = credentials.getUser(authorization);
+        if (user.getPermissionLevel() == PermissionLevel.ADMIN) {
+            return userRepo.findAll();
+        }
+        return List.of(user);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private User postUser(@RequestHeader("Authorization") String authorization, @RequestBody User user) {
-        Perms permission = Credentials.getPermissions(authorization);
-        DatabaseHelper.addUser(permission, user);
-        return user;
+    private UserModel postUser(@RequestHeader("Authorization") String authorization, @RequestBody UserModel user) {
+        credentials.checkForAdmin(authorization);
+        return userRepo.save(user);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    private void deleteProduct(@RequestHeader("Authorization") String authorization, @PathVariable UUID id) {
-        Perms permission = Credentials.getPermissions(authorization);
-        permission.canDelete();
-        DatabaseHelper.deleteUser(id);
+    private UserModel deleteProduct(@RequestHeader("Authorization") String authorization, @PathVariable Integer id) {
+        credentials.checkForAdmin(authorization);
+        if (id == null) {
+            throw new BadRequestException("No valid ID provided for product");
+        }
+
+        UserModel user = userRepo.findById(id);
+        if (user == null) {
+            throw new BadRequestException("No product found for such id");
+        }
+
+        return userRepo.delete(user);
     }
 
 }

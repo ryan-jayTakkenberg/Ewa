@@ -4,14 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 public class Product {
-
-    public static final List<Product> list = new ArrayList<>();
-
     @Id
     @GeneratedValue
     private int id;
@@ -20,8 +14,7 @@ public class Product {
     private double price;
     private String description;
 
-    public Product(int id, String name, double price, String description) {
-        this.id = id;
+    public Product(String name, double price, String description) {
         this.name = name;
         this.price = price;
         this.description = description;

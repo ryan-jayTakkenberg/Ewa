@@ -1,7 +1,6 @@
 package app.repository;
 
 import app.models.Teams;
-import app.models.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

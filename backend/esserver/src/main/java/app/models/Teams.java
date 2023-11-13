@@ -1,19 +1,17 @@
 package app.models;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class Teams {
 
     private int id;
     private String name;
-    private List<User> users;
+    private List<UserModel> users;
     private String warehouse;
     private String project;
 
-    public Teams(int id, String name, String warehouse, String project, List<User> users) {
+    public Teams(int id, String name, String warehouse, String project, List<UserModel> users) {
         this.id = id;
         this.name = name;
         this.warehouse = warehouse;
@@ -38,11 +36,11 @@ public class Teams {
         this.name = name;
     }
 
-    public List<User> getUsers() {
+    public List<UserModel> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(List<UserModel> users) {
         this.users = users;
     }
 
