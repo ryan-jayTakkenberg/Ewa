@@ -47,7 +47,7 @@ export default {
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     hideDropdown() {
-      this.isDropdownOpen = false;
+      setTimeout(() => this.isDropdownOpen = false, 200);
     },
   }
 };
