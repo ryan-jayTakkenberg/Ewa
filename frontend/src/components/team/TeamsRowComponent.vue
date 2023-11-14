@@ -4,6 +4,7 @@ import Team from "@/models/team";
 
 export default {
   name: "teamsRowComponent",
+  inject: ["teamsAdaptor"],
   props: {
     teams: {
       type: Team,  // Use the UserModel as the prop type

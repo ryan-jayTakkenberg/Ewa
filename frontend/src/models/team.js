@@ -1,12 +1,14 @@
 export default class Team {
     static idAutoIncrement = 12;
-    constructor(id, name,warehouse,project, users = []) {
+    constructor(id, name,warehouse,project, users = null) {
         this.id = id;
         this.name = name;
         this.users = users;
         this.warehouse = warehouse
         this.project = project;
     }
+
+
     static getAutoIncrementId() {
         return Team.idAutoIncrement++;
     }
@@ -84,9 +86,7 @@ export default class Team {
     static fetching = true;
     static teams = [];
 
-    static createNewTeam(name, users,warehouse,project) {
-        return new Team(-1, name, users, warehouse,project);
-    }
+
 
 
 }

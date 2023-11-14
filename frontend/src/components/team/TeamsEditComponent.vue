@@ -3,6 +3,7 @@ import Team from "@/models/team";
 
 export default {
   name: "TeamsEditComponent",
+  inject: ["teamsAdaptor"],
   data() {
     return {
       editedTeam: null
@@ -24,9 +25,8 @@ export default {
   },
   methods: {
     saveTeam() {
-      // Update the edited team and close the modal
-      this.onEditTeam(this.editedTeam); // Pass the editedTeam to the parent component
-      this.onClose();
+      this.$emit("editTeam", this.editedTeam); // Emit the "edit-team" event
+      this.onClose(); // Close the modal
     },
     cloneTeam(team) {
       // Define a custom clone method for the Team object

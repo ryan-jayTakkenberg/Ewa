@@ -1,7 +1,10 @@
 package app.routes;
 
 import app.EsserverApplication;
+import app.exceptions.BadRequestException;
+import app.exceptions.NotFoundException;
 import app.models.Teams;
+import app.models.Warehouse;
 import app.repository.TeamsRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +44,21 @@ public class TeamsRoutes {
                 .toUri();
 
         return ResponseEntity.created(location).body(addedTeam);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Teams> updateWarehouse(@PathVariable long id, @RequestBody Teams updatedTeams) {
+        Teams existingTeam = teamsRepository.findById(id);
+        if (existingTeam != null) {
+            if (id != updatedTeams.getId()) {
+                throw new BadRequestException("ID in path does not match ID in request.");
+            }
+
+            updatedTeams.setId((int) id);
+            Teams savedTeams = teamsRepository.save(updatedTeams);
+            return ResponseEntity.ok(savedTeams);
+        } else {
+            throw new NotFoundException("Warehouse not found with ID: " + id);
+        }
     }
 
 

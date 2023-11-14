@@ -1,25 +1,22 @@
 <script>
-
-
-
 import Team from "@/models/team";
 
 export default {
   name: "AddTeamModal",
-
+  inject: ["teamsAdaptor"],
+  emits: ['addUser'],
 
   data() {
     return {
       team: {
         id: '',
         name: '',
-        warehouse:'',
-        project:'',
-        users:[],
-
+        warehouse: '',
+        project: '',
+        users: [],
       },
       idAutoIncrement: 12,
-    }
+    };
   },
   props: {
     onClose: {
@@ -29,31 +26,24 @@ export default {
   },
   methods: {
     saveProject() {
-      // Save the edited user and close the modal
-      // Implement the logic to save the edited user details
       console.log("Saving team:", this.editedTeam);
       this.onClose();
     },
     saveTeam() {
-      //  TODO Fix hardcoded user iD
-      const newUser = {
-        id: Team.getAutoIncrementId(),
+      const newTeam = {
         name: this.team.name,
-        users: [],
         warehouse: this.team.warehouse,
         project: this.team.project,
+        users: null, // or provide an array of users if needed
       };
 
-      // Add the new user to the users array
-      this.$emit('addUser', newUser);
-
-      // Close the modal
+      this.$emit('addUser', newTeam); // emit the custom 'addUser' event
       this.onClose();
     },
   },
-}
-
+};
 </script>
+
 
 <template>
   <!-- Create user modal -->

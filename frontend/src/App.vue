@@ -22,6 +22,7 @@ import Project from "@/models/project";
 import Warehouse from "@/models/warehouse";
 import NavBar from "@/components/navigation/NavBar.vue";
 import {WarehouseAdaptor} from "@/service/warehouse-adaptor";
+import {TeamsAdaptor} from "@/service/teams-adaptor";
 import CONFIG from "@/app-config";
 import {getKey} from "@/data";
 
@@ -46,7 +47,8 @@ export default {
   },
   provide() {
     return {
-      warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/api/warehouses"),
+      warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/warehouses"),
+      teams: new TeamsAdaptor(CONFIG.BACKEND_URL+"api/teams")
     }
   },
   methods: {

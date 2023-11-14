@@ -15,9 +15,11 @@ import TeamsDeleteComponent from "@/components/team/TeamsDeleteComponent.vue";
 
 import DeleteMultipleTeams from "@/components/team/DeleteMultipleTeams.vue";
 
-
+import { TeamsAdaptor } from "@/service/teams-adaptor";
 export default {
   name: "TeamsDetailComponent",
+  inject: ["teamsAdaptor"],
+
   components: {
     DeleteMultipleTeams,
     TeamsDeleteComponent,
@@ -30,8 +32,11 @@ export default {
     ButtonComponent,
     TeamsEditComponent,
     TeamsAddComponent,
+  }, provide: {
+    teamsAdaptor: new TeamsAdaptor("http://localhost:8085/api/teams"),
   },
   data() {
+
     return {
       inputValue: '', // Store the input value for searching users
       teams: [...Team.teams],
@@ -40,19 +45,18 @@ export default {
       isAddTeamsOpen: false,
       checkedTeams: [],
       isDeleteTeamModalOpen: false,
+      teamsAdaptor: new TeamsAdaptor("http://localhost:8085/api/teams"),
     };
   },
-  created() {
-    if (!this.projects?.length) {
-      // Keep updating the list if the database has not returned all the data yet
-      const fetchingInterval = setInterval(() => {
-        if (!Team.fetching) {
-          this.teams = [...Team.teams];
-          clearInterval(fetchingInterval);
-        }
-      }, 100);
+  async created() {
+    try {
+      this.teams = await this.teamsAdaptor.asyncFindAll()
+      console.log(this.teams)
+    } catch (error) {
+      console.error("Error occurred while getting the data from the backend", error)
     }
-  },computed: {
+
+  }, computed: {
     filteredTeams() {
       return this.teams.filter(p => {
         for (let key of Object.keys(p)) {
@@ -61,7 +65,8 @@ export default {
           }
         }
         return false;
-      });},
+      });
+    },
   },
   methods: {
     handleInputValueChange(value) {
@@ -69,6 +74,7 @@ export default {
       this.inputValue = value.trim().toLowerCase();
       // Use this.filterValue to search in the table
     },
+
     openEditUserModal(team) {
       if (!team) {
         // No user selected
@@ -78,19 +84,16 @@ export default {
       this.isEditTeamModalOpen = true;  // Open the modal
 
     },
-    addTeam(newTeam){
-      this.teams.push(newTeam)
-    },
-    openAddTeam(){
+    openAddTeam() {
       this.isAddTeamsOpen = true;
     },
     closeEditUserModal() {
       this.isEditTeamModalOpen = false;
     },
-    closeDeleteTeamModal(){
+    closeDeleteTeamModal() {
       this.isDeleteTeamModalOpen = false;
     },
-    openDeleteUserModal(team){
+    openDeleteUserModal(team) {
       if (!team) {
         // No user selected
         return;
@@ -99,7 +102,7 @@ export default {
 
       this.isDeleteTeamModalOpen = true;
     },
-    editTeam(editedTeam) {
+    async editTeam(editedTeam) {
       const index = this.teams.findIndex(team => team.id === editedTeam.id);
       if (index !== -1) {
         // Update the team data in the array
@@ -123,27 +126,69 @@ export default {
       this.checkedTeams = [];
 
       this.closeModal();
+    }, methods: {
+
     },
 
-    closeAddTeamsModal(){
-      this.isAddTeamsOpen = false;
-    },
-    toggleCheckbox(team, isChecked) {
-      if (isChecked) {
-        this.checkedTeams.push(team.id);
-      } else {
-        this.checkedTeams = this.checkedTeams.filter(id => id !== team.id);
-      }
-      console.log(this.checkedTeams);
-    }, getSelectedteams() {
-      return this.projects.filter(team => this.checkedTeams.includes(team.id));
-    },
-    deleteTeam(teamID) {
-      this.teams = this.teams.filter(team => team.id !== teamID)
-      this.closeDeleteTeamModal()
-    },
-  },
-}
+
+    closeAddTeamsModal() {
+        this.isAddTeamsOpen = false;
+      },
+      toggleCheckbox(team, isChecked) {
+        if (isChecked) {
+          this.checkedTeams.push(team.id);
+        } else {
+          this.checkedTeams = this.checkedTeams.filter(id => id !== team.id);
+        }
+        console.log(this.checkedTeams);
+      }, getSelectedteams() {
+        return this.projects.filter(team => this.checkedTeams.includes(team.id));
+      },
+      async asyncDeleteTeamById(teamId) {
+        try {
+          await this.teamsAdaptor.asyncDeleteById(teamId);
+          this.teams = this.teams.filter((team) => team.id !== teamId);
+          this.isDeleteTeamModalOpen = false;
+        } catch (error) {
+          console.error("Error deleting team:", error);
+        }
+      },
+      async asyncUpdateTeamById(teamId) {
+        console.log("asyncUpdateTeamById - Team ID:", teamId);
+
+        try {
+          if (teamId) {
+            await this.teamsAdaptor.asyncUpdateTeam(teamId);
+            await this.getTeams();
+          } else {
+            console.error("Team ID is undefined or not valid");
+          }
+        } catch (error) {
+          console.error("Error updating team:", error);
+        }
+      },
+
+      async asyncAddTeam(newTeam) {
+        try {
+          await this.teamsAdaptor.asyncSaveTeam(newTeam);
+          await this.getTeams();
+          console.log(this.teams);
+          this.isAddTeamsOpen = false; // Close the modal
+
+        } catch (error) {
+          console.error("Error adding team:", error);
+        }
+      }, async getTeams() {
+        try {
+          this.teams = await this.teamsAdaptor.asyncFindAll()
+        } catch (error) {
+          console.error("Error occurred while getting the data from the backend", error)
+        }
+      },
+    }
+  }
+
+
 </script>
 
 <template>
@@ -168,7 +213,7 @@ export default {
 
       <SolarTable :columns="['Team', 'warehouse', 'project', 'Action']">
         <TeamsRowComponent
-            v-for="(team) in filteredTeams"
+            v-for="(team) in teams"
             :key="team.id"
             :teams="team"
             :isChecked="team.isChecked"
@@ -179,20 +224,24 @@ export default {
       </SolarTable>
     </div>
   </div>
-  <TeamsAddComponent v-if="isAddTeamsOpen" :on-close="closeAddTeamsModal" @addUser="addTeam"></TeamsAddComponent>
-  <TeamsEditComponent v-if="isEditTeamModalOpen" :on-close="closeEditUserModal" :team="selectedTeam" @edit-team="editTeam">
+  <TeamsAddComponent v-if="isAddTeamsOpen" :on-close="closeAddTeamsModal" @addUser="asyncAddTeam"></TeamsAddComponent>
+  <TeamsEditComponent
+      v-if="isEditTeamModalOpen"
+      :on-close="closeEditUserModal"
+      :team="selectedTeam"
+      @editTeam="asyncUpdateTeamById"
+  ></TeamsEditComponent>
 
-  </TeamsEditComponent>
   <TeamsDeleteComponent
       v-if="isDeleteTeamModalOpen "
       :team="selectedTeam"
       :on-close="closeDeleteTeamModal"
-      @delete-team="deleteTeam"
+      @delete-team="asyncDeleteTeamById"
   >
   </TeamsDeleteComponent>
   <DeleteMultipleTeams
       v-if="$route.path.includes('delete-teams')"
-      :users-to-delete="checkedTeams" :on-close="closeModal"
+      :users-to-delete="checkedTeams" :on-close="closeDeleteTeamModal"
       @delete-teams="deleteCheckedTeams">
   </DeleteMultipleTeams>
 </template>

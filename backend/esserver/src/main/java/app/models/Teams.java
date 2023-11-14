@@ -18,7 +18,38 @@ public class Teams {
         this.project = project;
         this.users = users != null ? new ArrayList<>(users) : new ArrayList<>();
     }
+    public enum Name {
+        TeamWest("TeamWest"),
+        TeamNoord("TeamNoord"),
+        TeamOost("TeamOost"),
+        TeamZuid("TeamZuid");
+        private final String name;
+        Name(String name) {
+            this.name = name;
+        }
+    }
 
+    public enum Project {
+        Hva("Hva"),
+        Mediamarkt("Mediamarkt"),
+        Overheid("Overheid"),
+        Politie("Politie");
+        private final String project;
+        Project(String name) {
+            this.project = name;
+        }
+    }
+
+
+
+    public static Teams createSampleTeam(int pId) {
+        int id = pId;
+        String name = String.valueOf(Teams.Name.values()[(int)(Math.random() * Teams.Name.values().length)]);
+        String warehouse = ("warehouse " + id );
+        String project = String.valueOf(Teams.Project.values()[(int)(Math.random() * Teams.Project.values().length)]);
+
+        return new Teams(id, name, warehouse, project, null);
+    }
 
     public int getId() {
         return id;
