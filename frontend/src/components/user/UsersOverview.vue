@@ -111,13 +111,24 @@ export default {
         user.isChecked = false;
       });
 
-      // Remove the selected users from the users array based on their IDs
-      this.users = this.users.filter(user => !userIdsToDelete.includes(user.id));
+      // Use Promise.all to delete each user and update the users array
+      Promise.all(
+          userIdsToDelete.map(async (userId) => {
+            const deletedUser = this.users.find(user => user.id === userId);
+            if (deletedUser) {
+              await deletedUser.delDatabase();
+            }
+          })
+      ).then(() => {
+        // Remove the selected users from the users array based on their IDs
+        this.users = this.users.filter(user => !userIdsToDelete.includes(user.id));
 
-      // Clear the checkedUsers array
-      this.checkedUsers = [];
+        // Clear the checkedUsers array
+        this.checkedUsers = [];
 
-      this.closeModal();
+        // Close the modal
+        this.closeModal();
+      });
     },
     editCheckedUsersOneByOne() {
       // TODO edit checkedUsers oneByONe
@@ -198,10 +209,10 @@ export default {
         <SolarDropdownMenuButton
             text-button="Action" ref="dropdownButton"
             :disabled="isActionButtonDisabled">
-          <SolarDropdownMenuItem
-              text-menu-item="Edit Users"
-              @click="editCheckedUsersOneByOne">
-          </SolarDropdownMenuItem>
+<!--          <SolarDropdownMenuItem-->
+<!--              text-menu-item="Edit Users"-->
+<!--              @click="editCheckedUsersOneByOne">-->
+<!--          </SolarDropdownMenuItem>-->
           <SolarDropdownMenuItem
               text-menu-item="Delete Users"
               @click="openDeleteMultipleUsersModal">
