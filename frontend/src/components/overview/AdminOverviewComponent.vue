@@ -1,256 +1,486 @@
-<template>
-  <div class="overviewContainer">
-    <div class="statsOverview">
-      <div class="sectionTitle">Total Stock:</div>
-      <div class="sectionDescription">View stock of all warehouses. Lorum ipsum text information lorum ipsum.</div>
-      <div class="statsContainer">
-        <div class="child">
-          <div class="statTitle">Total</div>
-          <div class="statValue">150</div>
-        </div>
-        <div class="child">
-          <div class="statTitle">Solar Panels</div>
-          <div class="statValue">48</div>
-        </div>
-        <div class="child">
-          <div class="statTitle">Switches</div>
-          <div class="statValue">35</div>
-        </div>
-        <div class="child">
-          <div class="statTitle">Other</div>
-          <div class="statValue">...</div>
-        </div>
-      </div>
-    </div>
-    <div class="warehouseOverview">
-      <div class="sectionTitle">View stock per warehouse:</div>
-      <div class="sectionDescription">Select a warehouse to view:</div>
-      <div class="warehouseContainer">
-        <div class="warehouseHeader">
-          <select name="warehouses" v-model="selectedWarehouse">
-            <option value="warehouse1">Warehouse 1</option>
-            <option value="warehouse2">Warehouse 2</option>
-            <option value="warehouse3">Warehouse 3</option>
-            <option value="warehouse4">Warehouse 4</option>
-          </select>
-          <div class="closeBtn" @click="closeWarehouse" v-if="selectedWarehouse !== ''">
-            <span class="material-symbols-outlined">close</span>
-          </div>
-        </div>
-        <div class="warehouseContent" v-if="selectedWarehouse !== ''">
-          <div class="infoContainer">
-            <div class="stockInfo">
-              <h3 class="infoHeader">Stock Information</h3>
-              <div class="infoContent">
-                <ul>
-                  <li v-for="(value, key) in stockInfo[selectedWarehouse]" :key="key">
-                    {{ key }}: <span class="stockValue">{{ value }}</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="forecastInfo">
-              <h3 class="infoHeader">Stock Forecast</h3>
-              <div class="infoContent">
-                <p v-if="forecastInfo[selectedWarehouse] === 'Yes'">
-                  Expected to Deplete Before Restock:
-                  <span class="forecastValue">
-                    {{ forecastInfo[selectedWarehouse] }}
-                    (Estimated Time: {{ estimatedTime[selectedWarehouse] }})
-                  </span>
-                </p>
-                <p v-else>
-                  Expected to Deplete Before Restock:
-                  <span class="forecastValue">
-                    {{ forecastInfo[selectedWarehouse] }}
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
 export default {
-  name: "OverviewComponent",
+
+  name: "AdminOverviewComponent",
+
   data() {
     return {
-      selectedWarehouse: "",
-      activeTab: "stock",
-      stockInfo: {
-        warehouse1: {Total: 150, SolarPanels: 48, Switches: 35},
-        warehouse2: {Total: 100, SolarPanels: 20, Switches: 30},
-      },
-      forecastInfo: {
-        warehouse1: "No",
-        warehouse2: "Yes",
-      },
-      estimatedTime: {
-        warehouse1: "N/A",
-        warehouse2: "2 Weeks",
-      },
-    };
+      productsSold: '75',
+      ongoingProjects: '15',
+      unresolvedReports: '2',
+      warehousesLowStock: '3',
+      globalTotalStock: '350',
+      selectedMessages: [],
+
+      projects: [
+        { title: 'Project Green', team: '1' },
+        { title: 'Project Blue', team: '2' },
+        { title: 'Project Red', team: '1' },
+        { title: 'Project Yellow', team: '3' },
+      ],
+      projectDescriptions: [
+        { title: 'Planned from: 17/10/2023 to 25/10/2023' },
+        { title: 'Planned from: 19/10/2023 to 23/10/2023' },
+        { title: 'Planned from: 20/10/2023 to 27/10/2023' },
+        { title: 'Planned from: 25/10/2023 to 31/10/2023' },
+      ],
+      sampleMessages: [
+        {
+          sender: 'Forecasting Alert!',
+          content: 'There are 3 Warehouses low on stock at the moment!'
+        },
+        {
+          sender: 'Warehouse 3',
+          content: 'There was a miscommunication with receiving the incoming stock delivery. they gave us 3 solar panels extra. '
+        },
+        {
+          sender: 'Warehouse 2',
+          content: 'The name of our employee Niels Dekker is spelled incorrectly can this be fixed?'        },
+      ],
+    }
   },
+
   methods: {
-    closeWarehouse() {
-      this.selectedWarehouse = "";
+    getRandomColor() {
+      const colors = ['#00d315', '#ff0000'];
+      const randomIndex = Math.floor(Math.random() * colors.length);
+      return colors[randomIndex];
+    },
+    toggleSelected(index) {
+      if (this.selectedMessages.includes(index)) {
+        this.selectedMessages = this.selectedMessages.filter((item) => item !== index);
+      } else {
+        this.selectedMessages.push(index);
+      }
     },
   },
-};
+
+  computed: {
+    dayOfTheWeek() {
+      const today = new Date();
+      today.setDate(today.getDate());
+      const options = { weekday: 'short' };
+
+      return today.toLocaleDateString(undefined, options);
+    },
+    numberOfTheDay() {
+      const today = new Date();
+      return today.getUTCDate()
+    },
+  },
+
+}
+
 </script>
+
+<template>
+
+  <!--- Persona ---------------------------------------------------------------------------------->
+  <div class="personaContainer">
+
+    <div class="welcomeContainer">
+      <p class="description">Welcome to the Solar Sedum AdminOverview.</p>
+    </div>
+    <div class="profilePicContainer">
+      <div class="profilePic"></div>
+    </div>
+
+  </div>
+  <div id="sectionTitles">
+    <h2 class="sectionHeading">Analytics</h2>
+    <h2 class="sectionHeading">Forecasting</h2>
+  </div>
+
+  <!--- Agenda ---------------------------------------------------------------------------------->
+  <div class="sectionContainer agenda">
+
+    <div class="dateContainer">
+      <p class="dayOfTheWeek">{{ dayOfTheWeek }}</p>
+      <p class="dayOfTheWeekNum">{{ numberOfTheDay }}</p>
+    </div>
+
+    <div class="insightContainer">
+      <p class="medium"> Products sold this week:</p>
+      <div class="meetingWrapper">
+        <div id="textBigGreen"> {{ productsSold }} </div>
+      </div>
+    </div>
+
+    <div class="insightContainer">
+      <p class="medium">Total Ongoing Projects:</p>
+      <div class="meetingWrapper">
+        <div id="textBig"> {{ ongoingProjects }} </div>
+      </div>
+    </div>
+
+    <div class="insightContainer">
+      <p class="medium">Unresolved Reports:</p>
+      <div class="meetingWrapper">
+        <div id="textBigRed"> {{ unresolvedReports }} </div>
+      </div>
+    </div>
+
+    <!--- forecasting ------------------------------------------------------------------------------->
+    <div class="insightContainer">
+      <p class="medium"> Global Amount of Stock:</p>
+      <div class="meetingWrapper">
+        <div id="textBig"> {{ globalTotalStock }} </div>
+      </div>
+    </div>
+
+    <div class="insightContainer">
+      <p class="medium">Amount of warehouses with low stock:</p>
+      <div class="meetingWrapper">
+        <div id="textBigRed"> {{ warehousesLowStock }} </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!--- projects ---------------------------------------------------------------------------------->
+  <div class="sectionContainer">
+
+    <h1 class="sectionTitle">Ongoing Projects</h1>
+    <label for="warehouseSelect">Choose a warehouse:</label>
+    <select id="warehouseSelect" name="warehouse">
+      <option value="warehouse1">Warehouse 1</option>
+      <option value="warehouse2">Warehouse 2</option>
+      <option value="warehouse3">Warehouse 3</option>
+      <option value="warehouse4">Warehouse 4</option>
+      <option value="warehouse5">Warehouse 5</option>
+    </select>
+
+    <div class="projectContainer">
+
+      <div class="projectWrapper" v-for="(project, index) in projects" :key="index">
+        <div class="projectHeader">
+          <div class="projectTitle"> {{ project.title }}</div>
+          <div class="statusWrapper">
+            <div class="projectStatus"> Status: </div>
+            <div :style="{ backgroundColor: getRandomColor() }" class="statusColor"></div>
+          </div>
+        </div>
+        <div class="projectDescription">{{ projectDescriptions[index].title }}<br>
+          Team: {{ project.team }}</div>
+        <p>Click for more details</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!--- messages ---------------------------------------------------------------------------------->
+  <div class="sectionContainer">
+
+    <div class="messageHeader">
+      <h1 class="sectionTitle">Messages</h1>
+      <div class="buttonContainer">
+        <button class="deleteMessage">
+          <span class="material-symbols-outlined button">delete</span>
+        </button>
+        <button class="filterMessage">
+          <span class="material-symbols-outlined button">filter_alt</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="messageContainer">
+      <div
+          class="messageWrapper"
+          v-for="(message, index) in sampleMessages"
+          :key="index"
+          @click="toggleSelected(index)"
+          :class="{ 'selected': selectedMessages.includes(index) }">
+        <div class="messageSender"> {{ message.sender }} </div>
+        <div class="message"> {{ message.content }} </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</template>
 
 <style scoped>
 
-/* overview */
-.overviewContainer {
+.personaContainer {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 2rem 3rem 0 3rem;
+}
+
+.welcomeContainer {
+  display: flex;
+  align-items: flex-start;
   flex-direction: column;
-  gap: 2rem;
-  padding: 2rem;
 }
 
-.statsOverview,
-.warehouseOverview {
-  padding-bottom: 2rem;
-  border-bottom: 2px solid #e5e5e5;
-}
-
-.sectionTitle {
-  font-size: 1em;
-  font-weight: 600;
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
   color: #222;
 }
 
-.sectionDescription {
-  font-size: 1em;
-  font-weight: 300;
-  width: 500px;
-  color: #ccc;
+.description {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #aaa;
 }
 
-.statsContainer {
-  display: flex;
-  gap: 5rem;
-  height: auto;
-  padding: 2rem;
+.profilePicContainer {
+  height: 100px;
+  width: 100px;
+  background: #f5f5f5;
+  border-radius: 50%;
+}
+
+.sectionContainer {
   width: 100%;
-  margin-top: 1rem;
-  border-radius: 15px;
-  background: #24313b;
+  padding: 2rem 3rem;
+  border-bottom: 2px solid #e5e5e5;
 }
 
-.statsContainer .child {
+.agenda {
+  display: flex;
+}
+
+.dateContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 150px;
+  height: 150px;
+  border: 2px solid #e5e5e5;
+  border-radius: 15px;
+}
+
+.dayOfTheWeek {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 0.8;
+  color: #222;
+}
+
+.dayOfTheWeekNum {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 0.8;
+  color: #222;
+}
+
+.insightContainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 150px;
-}
-
-.statTitle {
-  font-size: 20px;
-  font-weight: 400;
-  color: #fff;
-}
-
-.statValue {
-  font-size: 70px;
-  font-weight: 500;
-  color: #fff;
-}
-
-.warehouseContainer {
-  height: auto;
   padding: 1rem;
-  width: 100%;
-  margin-top: 1rem;
-  background: none;
-  border: 2px solid #212d37;
-  border-radius: 15px;
-  transition: 0.3s ease-in-out;
+
+}
+.insightContainer:nth-child(4) {
+  border-right: 2px solid #e5e5e5;
+  padding-right: 1rem;
+  margin-right: 1rem;
 }
 
-.warehouseHeader {
+.meetingWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  gap: 0.5rem;
+  flex-direction: row;
+}
+
+.medium {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.sectionTitle {
+  text-align: left;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.projectContainer {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  height: auto;
+  padding: 1rem 0.15rem;
+  overflow-x: scroll;
+  margin-top: 1rem;
+}
+
+.projectWrapper {
+  min-width: 500px;
+  width: auto;
+  flex: 0 0 auto;
+  background: #f5f5f5;
+  border-radius: 5px;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.projectWrapper:hover {
+  outline: 2px solid #222;
+}
+
+.projectHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  margin-bottom: 2rem;
 }
 
-select {
+.projectTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.statusWrapper {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 50px;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  border-radius: 10px;
-  border: 1px solid #eee;
-  outline: none;
+}
+
+.projectStatus {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #222;
+}
+
+.statusColor {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  margin-left: 0.5rem;
+}
+
+p {
+  margin-top: 1rem;
+  font-weight: 300;
+  color: #222;
+}
+
+.messageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  height: 500px;
+  width: 50%;
   background: #f5f5f5;
+  border-radius: 10px;
+  overflow-y: scroll;
 }
 
-.closeBtn {
+.messageHeader {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  width: 50%;
+  margin-bottom: 1rem;
+}
+
+.messageWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  min-height: 150px;
+  height: auto;
+  flex: 0 0 auto;
+  background: #fff;
   padding: 1rem;
   border-radius: 5px;
   cursor: pointer;
-  transition: 0.2s ease-in-out;
 }
 
-.closeBtn:hover {
-  background: #f5f5f5;
+.messageSender {
+  width: 100%;
+  font-weight: 600;
+  color: #222;
+  border-bottom: 1px solid #e5e5e5;
 }
 
-.warehouseContent {
+.selected {
+  background-color: #e5e5e5;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+button {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 1rem;
-  height: 500px;
-  width: 100%;
-  background: #c7d02c;
-}
-
-@media (max-width: 768px) {
-}
-
-.infoContainer {
-  display: flex;
-  justify-content: space-between;
+  height: 50px;
+  width: 50px;
   background: #f5f5f5;
-  padding: 1rem;
-  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+button:hover {
+  outline: 2px solid #222;
+}
+
+#textBig, #textBigRed, #textBigGreen {
+  font-size: 4rem;
+  text-align: center;
   width: 100%;
-  height: 100%;
+  font-weight: 500;
+  line-height: 0.8;
 }
 
-.stockInfo,
-.forecastInfo {
-  flex: 1;
-  padding: 1rem;
-  box-sizing: border-box;
-  width: 50%;
+#textBigGreen{
+  color: green;
 }
-
-.infoHeader {
-  font-size: 1.5em;
+#textBigRed{
+  color: red;
+}
+.sectionHeading {
+  font-size: 2.5rem;
   font-weight: bold;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid #007bff;
+  color: #222;
+  text-align: center;
+  margin: 2rem 0 1rem;
 }
 
-.infoContent {
-  font-size: 1.2em;
+#sectionTitles {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
 }
 
-.stockValue,
-.forecastValue {
-  font-weight: normal;
-  color: #007bff;
-}</style>
+.agenda {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.insightContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  flex: 1 0 auto;
+  margin: 0.5rem;
+  min-width: 250px;
+}
+
+#warehouseSelect {
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+
+
+</style>
+
