@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <NavBar
-        v-if="isLoggedIn === true"
+        v-if="isLoggedIn"
         :sidebarIsExpanded="isSideBarExpanded"
         @sidebar-expanded="updateSidebarState"
     ></NavBar>
@@ -23,6 +23,7 @@ import Warehouse from "@/models/warehouse";
 import NavBar from "@/components/navigation/NavBar.vue";
 import {WarehouseAdaptor} from "@/service/warehouse-adaptor";
 import CONFIG from "@/app-config";
+import {getKey} from "@/data";
 
 // This only fetches the data accessible to the logged in user
 // // TODO should be placed at the login page if no session is present
@@ -39,7 +40,7 @@ export default {
   components: {NavBar},
   data() {
     return {
-      isLoggedIn: true,
+      isLoggedIn: getKey(),
       isSideBarExpanded: false,
     }
   },
@@ -52,7 +53,13 @@ export default {
     updateSidebarState(isExpanded) {
       this.isSideBarExpanded = isExpanded;
     }
-  }
+  },
+  watch: {
+    '$route'() {
+      console.log(getKey());
+      this.isLoggedIn = getKey();
+    }
+  },
 }
 </script>
 

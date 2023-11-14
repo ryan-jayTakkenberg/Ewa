@@ -2,6 +2,7 @@
 
 import logoExpanded from '/static/images/solar_sedum_logo.svg'
 import logoCollapsed from '/static/images/solar_sedum_logo_small.svg'
+import {setKey} from "@/data";
 
 export default {
   name: 'NavBar',
@@ -20,6 +21,9 @@ export default {
     },
     logOut() {
       // TODO actually log out
+
+      setKey("");
+
       this.$router.push('/login');
     },
     isPageActive(page) {

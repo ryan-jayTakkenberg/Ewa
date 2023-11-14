@@ -47,6 +47,8 @@
 
 <script>
 
+import {setKey} from "@/data";
+
 export default {
   name: 'LoginComponent',
 
@@ -93,6 +95,9 @@ export default {
 
       } else {
         this.$el.querySelector('.errorMessageWrapper').style.display = 'none';
+
+        setKey("550e8400-e29b-41d4-a716-446655440000");
+
         this.$router.push('/overview');
       }
     },
