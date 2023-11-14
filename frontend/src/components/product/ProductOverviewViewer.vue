@@ -9,16 +9,9 @@
         <div>
           <SearchBarComponent place-holder="Search For Products" @search="handleSearchChange" />
         </div>
-        <div class="flex">
-          <SolarDropdownMenuButton text-button="Action" :disabled="!checkedProducts.length">
-            <SolarDropdownMenuItem text-menu-item="Edit Users" @click="openEditModal(getSelected())" />
-            <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteModal(getSelected())" />
-          </SolarDropdownMenuButton>
-          <ButtonComponent button-text="Create New Product" @click="openCreateModal" />
-        </div>
       </div>
       <SolarTable :columns="['product', 'price', '']">
-        <ProductRowComponent
+        <ProductRowComponentViewer
             ref="rowComponent"
             v-for="(product, index) in filteredProducts"
             :key="index"
@@ -26,7 +19,7 @@
             @edit="openEditModal"
             @delete="openDeleteModal"
             @toggle="toggleCheckbox(product, $event)"> <!-- Pass user and checkbox state -->
-        </ProductRowComponent>
+        </ProductRowComponentViewer>
       </SolarTable>
     </div>
   </div>
@@ -40,11 +33,8 @@
 <script>
 import TitleComponent from "@/components/general/SolarTitle.vue";
 import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
-import ButtonComponent from "@/components/general/SolarButton.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
-import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
-import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
-import ProductRowComponent from "@/components/product/ProductRowComponent";
+import ProductRowComponentViewer from "@/components/product/ProductRowComponentViewer";
 import DeleteProductModal from "@/components/product/DeleteProductModal";
 import EditProductModal from "@/components/product/EditProductModal";
 import CreateProductModal from "@/components/product/CreateProductModal";
@@ -52,14 +42,12 @@ import Product from "@/models/product";
 
 export default {
   name: "UsersOverview",
+  inject: ['isAdmin'],
   components: {
-    ProductRowComponent,
-    SolarDropdownMenuItem,
-    SolarDropdownMenuButton,
+    ProductRowComponentViewer,
     SolarTable,
     TitleComponent,
     SearchBarComponent,
-    ButtonComponent,
     DeleteProductModal,
     EditProductModal,
     CreateProductModal,

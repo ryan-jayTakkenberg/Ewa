@@ -67,6 +67,16 @@ export default {
 
         <router-link
             v-if="(permissionLevel === 'viewer')"
+            to="/productViewer"
+            class="nav-button"
+            :class="{ active: isPageActive('productViewer') }"
+            @click="handleNavClick('productViewer')">
+          <span class="material-symbols-outlined nav-icon">inventory_2</span>
+          <p class="nav-text">Product</p>
+        </router-link>
+
+        <router-link
+            v-if="(permissionLevel === 'viewer')"
             to="/test"
             class="nav-button"
             :class="{ active: isPageActive('reports') }"
