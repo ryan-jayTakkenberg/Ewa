@@ -1,23 +1,18 @@
 <template>
-  <div class="p-4">
-    <TitleComponent page-title="Products" />
-  </div>
+  <TitleComponent class="header" page-title="Products"></TitleComponent>
 
-  <div class="">
-    <div class="">
-      <div class="flex justify-between mb-4 mx-4">
-        <div class="flex">
-          <SolarDropdownMenuButton text-button="Action" :disabled="!checkedProducts.length">
-            <SolarDropdownMenuItem text-menu-item="Edit Users" @click="openEditModal(getSelected())" />
-            <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteModal(getSelected())" />
-          </SolarDropdownMenuButton>
-          <div>
-            <SearchBarComponent place-holder="Search For Products" @search="handleSearchChange" />
-          </div>
-        </div>
-        <ButtonComponent button-text="Create New Product" @click="openCreateModal" />
+  <div class="body">
+    <div class="body-container">
+      <div class="action-row">
+        <SolarDropdownMenuButton text-button="Action" :disabled="!checkedProducts.length">
+          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="openEditModal(getSelected())"/>
+          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteModal(getSelected())"/>
+        </SolarDropdownMenuButton>
+        <SearchBarComponent place-holder="Search For Products" @search="handleSearchChange"/>
+        <SolarButton class="ml-auto" button-text="Create New Product" @click="openCreateModal"/>
       </div>
-      <SolarTable :columns="['product', 'price', '']">
+
+      <SolarTable :columns="['Product', 'Price', 'Action']">
         <ProductRowComponent
             ref="rowComponent"
             v-for="(product, index) in filteredProducts"
@@ -32,9 +27,9 @@
   </div>
 
   <!-- Modals -->
-  <CreateProductModal v-if="modal === 'create'" @close="closeModal" @create="create" />
-  <EditProductModal v-if="modal === 'edit'" :products="selectedProducts" @close="closeModal" @save="edit" />
-  <DeleteProductModal v-if="modal === 'delete'" :products="selectedProducts" @close="closeModal" @delete="remove" />
+  <CreateProductModal v-if="modal === 'create'" @close="closeModal" @create="create"/>
+  <EditProductModal v-if="modal === 'edit'" :products="selectedProducts" @close="closeModal" @save="edit"/>
+  <DeleteProductModal v-if="modal === 'delete'" :products="selectedProducts" @close="closeModal" @delete="remove"/>
 </template>
 
 <script>
@@ -49,10 +44,12 @@ import DeleteProductModal from "@/components/product/admin/modals/DeleteProductM
 import EditProductModal from "@/components/product/admin/modals/EditProductModal";
 import CreateProductModal from "@/components/product/admin/modals/CreateProductModal";
 import Product from "@/models/product";
+import SolarButton from "@/components/general/SolarButton.vue";
 
 export default {
   name: "UsersOverview",
   components: {
+    SolarButton,
     ProductRowComponent,
     SolarDropdownMenuItem,
     SolarDropdownMenuButton,
@@ -166,5 +163,31 @@ export default {
 </script>
 
 <style scoped>
+.header {
+  flex-direction: row;
+  display: flex;
+  padding-left: 1rem;
+  padding-top: 1rem;
+}
+
+.body {
+  position: relative;
+  overflow-x: auto;
+}
+
+.body-container {
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  background-color: white;
+}
+
+.action-row {
+  display: flex;
+  overflow: auto;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
 
 </style>
