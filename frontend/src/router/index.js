@@ -4,14 +4,14 @@ import LoginComponent from "@/components/login/LoginComponent.vue";
 /* import AdminOverviewComponent from "@/components/overview/AdminOverviewComponent.vue"; */
 import WarehousePageComponent from "@/components/warehouse/WarehousePageComponent.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";
-import ProductOverview from "@/components/product/ProductOverview";
+import ProductOverview from "@/components/product/admin/ProductOverview";
 import ProjectDetailComponent from "@/components/project/ProjectDetailComponent.vue";
 import ReportComponent from "@/components/manage/ReportComponent.vue";
 import TeamsDetailComponent from "@/components/team/TeamsDetailComponent.vue";
 import warehouseOverviewComponent from "@/components/warehouseView/warehouseOverviewComponent.vue";
 import UsersOverview from "@/components/user/UsersOverview.vue";
 import UpdateWarehouse from "@/components/warehouse/warehousePopUps/UpdateWarehouse";
-import ProductOverviewViewer from "@/components/product/ProductOverviewViewer";
+import ProductOverviewViewer from "@/components/product/viewer/ProductOverviewViewer";
 import ViewerOverviewComponent from "@/components/overview/ViewerOverviewComponent";
 import AdminOverviewComponent from "@/components/overview/AdminOverviewComponent";
 

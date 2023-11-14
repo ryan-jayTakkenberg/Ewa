@@ -6,16 +6,16 @@
   <div class="">
     <div class="">
       <div class="flex justify-between mb-4 mx-4">
-        <div>
-          <SearchBarComponent place-holder="Search For Products" @search="handleSearchChange" />
-        </div>
         <div class="flex">
           <SolarDropdownMenuButton text-button="Action" :disabled="!checkedProducts.length">
             <SolarDropdownMenuItem text-menu-item="Edit Users" @click="openEditModal(getSelected())" />
             <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteModal(getSelected())" />
           </SolarDropdownMenuButton>
-          <ButtonComponent button-text="Create New Product" @click="openCreateModal" />
+          <div>
+            <SearchBarComponent place-holder="Search For Products" @search="handleSearchChange" />
+          </div>
         </div>
+        <ButtonComponent button-text="Create New Product" @click="openCreateModal" />
       </div>
       <SolarTable :columns="['product', 'price', '']">
         <ProductRowComponent
@@ -44,10 +44,10 @@ import ButtonComponent from "@/components/general/SolarButton.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
-import ProductRowComponent from "@/components/product/ProductRowComponent";
-import DeleteProductModal from "@/components/product/DeleteProductModal";
-import EditProductModal from "@/components/product/EditProductModal";
-import CreateProductModal from "@/components/product/CreateProductModal";
+import ProductRowComponent from "@/components/product/admin/ProductRowComponent";
+import DeleteProductModal from "@/components/product/admin/modals/DeleteProductModal";
+import EditProductModal from "@/components/product/admin/modals/EditProductModal";
+import CreateProductModal from "@/components/product/admin/modals/CreateProductModal";
 import Product from "@/models/product";
 
 export default {
