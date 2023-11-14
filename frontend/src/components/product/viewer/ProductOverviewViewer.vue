@@ -23,34 +23,22 @@
       </SolarTable>
     </div>
   </div>
-
-  <!-- Modals -->
-  <CreateProductModal v-if="modal === 'create'" @close="closeModal" @create="create" />
-  <EditProductModal v-if="modal === 'edit'" :products="selectedProducts" @close="closeModal" @save="edit" />
-  <DeleteProductModal v-if="modal === 'delete'" :products="selectedProducts" @close="closeModal" @delete="remove" />
 </template>
 
 <script>
 import TitleComponent from "@/components/general/SolarTitle.vue";
 import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
-import ProductRowComponentViewer from "@/components/product/ProductRowComponentViewer";
-import DeleteProductModal from "@/components/product/DeleteProductModal";
-import EditProductModal from "@/components/product/EditProductModal";
-import CreateProductModal from "@/components/product/CreateProductModal";
+import ProductRowComponentViewer from "@/components/product/viewer/ProductRowComponentViewer";
 import Product from "@/models/product";
 
 export default {
   name: "UsersOverview",
-  inject: ['isAdmin'],
   components: {
     ProductRowComponentViewer,
     SolarTable,
     TitleComponent,
     SearchBarComponent,
-    DeleteProductModal,
-    EditProductModal,
-    CreateProductModal,
   },
   data() {
     return {

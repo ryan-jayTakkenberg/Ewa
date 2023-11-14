@@ -47,7 +47,7 @@
           <!-- Modal footer -->
         </div>
         <div class="border-gray-200 border-t p-6">
-          <ButtonComponent button-text="Create" class="text-white py-2 px-4 font-medium hover:bg-green-700" @click="create" :disabled="!canCreate"></ButtonComponent>
+          <ButtonComponent button-text="Create" class="text-white py-2 px-4 font-medium" @click="create" :disabled="!canCreate"></ButtonComponent>
         </div>
       </div>
     </div>
