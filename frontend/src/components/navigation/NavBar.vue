@@ -63,7 +63,7 @@ export default {
             v-if="(permissionLevel === 'admin')"
             to="/admin-overview"
             class="nav-button relative"
-            :class="{ active: isPageActive('overview') }"
+            :class="{ active: isPageActive('overview-admin') }"
             @click="handleNavClick('overview-admin')">
           <span class="material-symbols-outlined nav-icon">overview_key</span>
           <p class="nav-text">Overview</p>
