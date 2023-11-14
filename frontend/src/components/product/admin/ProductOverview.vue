@@ -35,7 +35,6 @@
 <script>
 import TitleComponent from "@/components/general/SolarTitle.vue";
 import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
-import ButtonComponent from "@/components/general/SolarButton.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
@@ -185,7 +184,6 @@ export default {
 
 .action-row {
   display: flex;
-  overflow: auto;
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
 }
