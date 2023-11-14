@@ -209,7 +209,7 @@ export default {
         <SolarDropdownMenuButton
             text-button="Action" ref="dropdownButton"
             :disabled="isActionButtonDisabled">
-<!--          <SolarDropdownMenuItem-->
+<!--    TODO Edit multiple Users     <SolarDropdownMenuItem-->
 <!--              text-menu-item="Edit Users"-->
 <!--              @click="editCheckedUsersOneByOne">-->
 <!--          </SolarDropdownMenuItem>-->
