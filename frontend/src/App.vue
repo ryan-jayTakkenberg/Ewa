@@ -6,7 +6,7 @@
         @sidebar-expanded="updateSidebarState"
     ></NavBar>
 
-    <div class="router-view" :class="{ 'router-view-responsive': isLoggedIn }">
+    <div class="router-view" :class="{ 'router-view-responsive': true }">
       <router-view></router-view>
     </div>
 
@@ -26,16 +26,6 @@ import {TeamsAdaptor} from "@/service/teams-adaptor";
 import CONFIG from "@/app-config";
 import {getKey} from "@/data";
 
-// This only fetches the data accessible to the logged in user
-// // TODO should be placed at the login page if no session is present
-(async () => {
-  Team.teams = await Team.getDatabase();
-  User.users = await User.getDatabase();
-  Product.products = await Product.getDatabase();
-  Project.projects = await Project.getDatabase();
-  Warehouse.warehouses = await Warehouse.getDatabase();
-})();
-
 export default {
   name: 'App',
   components: {NavBar},
@@ -43,6 +33,7 @@ export default {
     return {
       isLoggedIn: getKey(),
       isSideBarExpanded: false,
+      fetchedData: false,
     }
   },
   provide() {
@@ -57,9 +48,38 @@ export default {
     }
   },
   watch: {
-    '$route'() {
-      console.log(getKey());
+    '$route'(from, to) {
+      if (from === to) {
+        return;
+      }
+
       this.isLoggedIn = getKey();
+      if (!this.isLoggedIn) {
+        this.$router.push('/login');
+      } else if (!this.fetchedData) {
+        // This only fetches the data accessible to the logged-in user
+        (async () => {
+          try {
+            const [teams, users, products, projects, warehouses] = await Promise.all([
+              Team.getDatabase(),
+              User.getDatabase(),
+              Product.getDatabase(),
+              Project.getDatabase(),
+              Warehouse.getDatabase(),
+            ]);
+
+            Team.teams = teams;
+            User.users = users;
+            Product.products = products;
+            Project.projects = projects;
+            Warehouse.warehouses = warehouses;
+
+            this.fetchedData = true;
+          } catch (error) {
+            console.error(error);
+          }
+        })();
+      }
     }
   },
 }

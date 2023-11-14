@@ -1,5 +1,5 @@
 <script>
-import Team from "@/models/team";
+// import Team from "@/models/team";
 
 export default {
   name: "AddTeamModal",
