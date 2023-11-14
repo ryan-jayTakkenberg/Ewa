@@ -19,7 +19,7 @@ const routes = [
     {path: '/', redirect: '/overview'},
     {path: '/login', component: LoginComponent},
     {path: '/overview', component: ViewerOverviewComponent},
-    {path: '/adminoverview', component: AdminOverviewComponent},
+    {path: '/admin-overview', component: AdminOverviewComponent},
     {path: '/warehouses', component: WarehousePageComponent,
         children: [
             {path: ":id", component: UpdateWarehouse}

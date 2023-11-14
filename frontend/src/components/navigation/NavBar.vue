@@ -8,7 +8,7 @@ export default {
   data() {
     return {
       activePage: 'overview', // Default overview page
-      permissionLevel: 'viewer', // Viewer or Admin role
+      permissionLevel: 'admin', // Viewer or Admin role
       sidebarIsExpanded: false,
       logoExpanded: logoExpanded,
       logoCollapsed: logoCollapsed
@@ -46,10 +46,22 @@ export default {
     <div class="navigation">
       <div class="nav-items">
         <router-link
+            v-if="(permissionLevel === 'admin')"
+            to="/admin-overview"
+            class="nav-button relative"
+            :class="{ active: isPageActive('overview') }"
+            @click="handleNavClick('overview-admin')">
+          <span class="material-symbols-outlined nav-icon">overview_key</span>
+          <p class="nav-text">Overview</p>
+          <span class="notification-indicator bg-danger-subtle text-danger">3</span>
+        </router-link>
+
+        <router-link
+            v-if="(permissionLevel === 'viewer')"
             to="/overview"
             class="nav-button relative"
             :class="{ active: isPageActive('overview') }"
-            @click="handleNavClick('overview')">
+            @click="handleNavClick('overview-viewer')">
           <span class="material-symbols-outlined nav-icon">overview_key</span>
           <p class="nav-text">Overview</p>
           <span class="notification-indicator bg-danger-subtle text-danger">3</span>
@@ -218,7 +230,7 @@ export default {
   cursor: pointer;
 }
 
-.log-out-button{
+.log-out-button {
   align-items: flex-end;
 }
 
