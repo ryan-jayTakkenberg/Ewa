@@ -55,7 +55,6 @@ export default {
     SolarTable,
     TitleComponent,
     SearchBarComponent,
-    ButtonComponent,
     DeleteProductModal,
     EditProductModal,
     CreateProductModal,
