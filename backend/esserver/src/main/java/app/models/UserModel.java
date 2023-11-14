@@ -1,10 +1,13 @@
 package app.models;
 
+import app.Util;
 import app.authentication.PermissionLevel;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -29,7 +32,7 @@ public class UserModel {
         this.name = name;
         this.email = email;
         this.lastLogin = lastLogin;
-        this.password = password;
+        this.password = Util.hash(password);
     }
 
     public UserModel() {

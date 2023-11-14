@@ -1,5 +1,6 @@
 package app.routes;
 
+import app.Util;
 import app.authentication.AuthenticationService;
 import app.authentication.PermissionLevel;
 import app.exceptions.BadRequestException;
@@ -35,6 +36,13 @@ public class UserRoutes {
     @ResponseStatus(HttpStatus.CREATED)
     private UserModel postUser(@RequestHeader("Authorization") String authorization, @RequestBody UserModel user) {
         credentials.mustBeAdmin(authorization);
+
+        if (user.getPassword() != null) {
+            // Hash given password
+            String hashedPassword = Util.hash(user.getPassword());
+            user.setPassword(hashedPassword);
+        }
+
         boolean isEditing = user.getId() > 0;
         if (isEditing) {
             UserModel currentUser = this.userRepo.findById(user.getId());
@@ -44,7 +52,29 @@ public class UserRoutes {
         } else {
             user.setUuid(UUID.randomUUID());
         }
+
         return userRepo.save(user);
+    }
+
+    @PostMapping("/login")
+    private UserModel postLogin(@RequestBody UserModel login) {
+        if (login.getName() == null) {
+            throw new BadRequestException("Name is required");
+        }
+        if (login.getPassword() == null) {
+            throw new BadRequestException("Password is required");
+        }
+
+        String username = login.getName();
+        String hashedPassword = Util.hash(login.getPassword());
+
+        for (UserModel user : userRepo.findAll()) {
+            if (user.getName().equals(username) && user.getPassword().equals(hashedPassword)) {
+                return user;
+            }
+        }
+
+        return login;
     }
 
     @DeleteMapping("/{id}")
