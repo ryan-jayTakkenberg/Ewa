@@ -11,10 +11,12 @@ import UpdateUserModal from "@/components/user/user-modals/UpdateUserModal.vue";
 import CreateUserModal from "@/components/user/user-modals/CreateUserModal.vue";
 import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultipleUsersModal.vue";
 import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
+import SolarPagination from "@/components/general/SolarPagination.vue";
 
 export default {
   name: "UsersOverview",
   components: {
+    SolarPagination,
     TitleComponent,
     SolarDropdownMenuItem,
     SolarDropdownMenuButton,
@@ -40,9 +42,19 @@ export default {
       showUpdateModal: false,
       showDeleteModal: false,
       showDeleteMultipleModal: false,
+      currentPage: 1,
+      itemsPerPage: 10,
     };
   },
   computed: {
+    totalPages() {
+      return Math.ceil(this.filterUsers.length / this.itemsPerPage);
+    },
+    paginatedUsers() {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.filterUsers.slice(startIndex, endIndex);
+    },
     filterUsers() {
       return this.users.filter(p => {
         for (let key of Object.keys(p)) {
@@ -58,6 +70,17 @@ export default {
     },
   },
   methods: {
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+    nextPage() {
+      const lastPage = Math.ceil(this.filterUsers.length / this.itemsPerPage);
+      if (this.currentPage < lastPage) {
+        this.currentPage++;
+      }
+    },
     fetchUsers() {
       if (!this.users?.length) {
         // Keep updating the list if the database has not returned all the data yet
@@ -130,6 +153,7 @@ export default {
         this.closeModal();
       });
     },
+
     editCheckedUsersOneByOne() {
       // TODO edit checkedUsers oneByONe
       //  Check if there are any selected users
@@ -206,49 +230,50 @@ export default {
   <div class="body">
     <div class="body-container">
       <div class="action-row">
-        <SolarDropdownMenuButton
-            text-button="Action" ref="dropdownButton"
-            :disabled="isActionButtonDisabled">
-<!--    TODO Edit multiple Users     <SolarDropdownMenuItem-->
-<!--              text-menu-item="Edit Users"-->
-<!--              @click="editCheckedUsersOneByOne">-->
-<!--          </SolarDropdownMenuItem>-->
-          <SolarDropdownMenuItem
-              text-menu-item="Delete Users"
-              @click="openDeleteMultipleUsersModal">
-          </SolarDropdownMenuItem>
+        <SolarDropdownMenuButton text-button="Action" ref="dropdownButton" :disabled="isActionButtonDisabled">
+
+          <!--    TODO Edit multiple Users     -->
+<!--          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="editCheckedUsersOneByOne">-->
+          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteMultipleUsersModal"/>
         </SolarDropdownMenuButton>
         <SolarSearchbar place-holder="Search For Users" @search="handleInputValueChange"></SolarSearchbar>
         <SolarButton class="ml-auto" button-text="Add User" @click="openCreateModal"></SolarButton>
       </div>
-
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
         <UsersRowComponent
-            v-for="(user) in filterUsers" :key="user.id" :user="user"
+            v-for="(user) in paginatedUsers" :key="user.id" :user="user"
             @edit="openEditModal"
             @delete="openDeleteModal"
             @toggle="toggleCheckbox(user, $event)"> <!-- Pass user and checkbox state -->
         </UsersRowComponent>
       </SolarTable>
+      <SolarPagination @previous="prevPage" :current-page="currentPage" :total-pages="totalPages" @next="nextPage"/>
     </div>
   </div>
 
   <!-- Conditionally render modals based on boolean modal states -->
   <CreateUserModal
-      v-if="showCreateModal" :on-close="closeModal"
+      v-if="showCreateModal"
+      :on-close="closeModal"
       @create-user="createUser"
   />
   <UpdateUserModal
-      v-if="showUpdateModal" :on-close="closeModal"
-      :user="selectedUser" @update-user="editUser"
+      v-if="showUpdateModal"
+      :on-close="closeModal"
+      :user="selectedUser"
+      @update-user="editUser"
   />
   <DeleteUserModal
-      v-if="showDeleteModal" :on-close="closeModal"
-      :user="selectedUser" @delete-user="deleteUser"
+      v-if="showDeleteModal"
+      :on-close="closeModal"
+      :user="selectedUser"
+      @delete-user="deleteUser"
   />
   <DeleteMultipleUsersModal
-      v-if="showDeleteMultipleModal" :on-close="closeModal"
-      :users-to-delete="checkedUsers" @delete-users="deleteCheckedUsers"
+      v-if="showDeleteMultipleModal"
+      :on-close="closeModal"
+      :users-to-delete="checkedUsers"
+      @delete-users="deleteCheckedUsers"
   />
 </template>
 

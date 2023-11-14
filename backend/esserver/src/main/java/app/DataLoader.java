@@ -54,8 +54,20 @@ public class DataLoader implements CommandLineRunner {
         UserModel viewer4 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440004"), PermissionLevel.VIEWER, "Ryan-Jay Takkenberg", "mark@solar.com", LocalDate.now(), "viewer");
         this.userRepo.save(viewer4);
 
-        UserModel viewer5 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440005"), PermissionLevel.VIEWER, "Hamza Zaraoui", "mark@solar.com", LocalDate.now(), "viewer");
+        UserModel viewer5 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440005"), PermissionLevel.VIEWER, "H1", "test@solar.com", LocalDate.now(), "viewer");
         this.userRepo.save(viewer5);
+
+        UserModel viewer6 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440006"), PermissionLevel.VIEWER, "H2", "test@solar.com", LocalDate.now(), "viewer");
+        this.userRepo.save(viewer6);
+
+        UserModel viewer7 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440007"), PermissionLevel.VIEWER, "H3", "test@solar.com", LocalDate.now(), "viewer");
+        this.userRepo.save(viewer7);
+
+        UserModel viewer8 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440008"), PermissionLevel.VIEWER, "H4", "test@solar.com", LocalDate.now(), "viewer");
+        this.userRepo.save(viewer8);
+
+        UserModel viewer9 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440009"), PermissionLevel.VIEWER, "H5", "test@solar.com", LocalDate.now(), "viewer");
+        this.userRepo.save(viewer9);
 
     }
 
