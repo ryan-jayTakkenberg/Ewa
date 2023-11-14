@@ -35,11 +35,24 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createInitialUsers() {
-        UserModel admin = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"), PermissionLevel.ADMIN, "admin", "admin@admin.com", LocalDate.now(), "admin");
-        this.userRepo.save(admin);
+        UserModel admin1 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"), PermissionLevel.ADMIN, "Kevin Bakker", "kevin@solar.nl", LocalDate.now(), "admin");
+        this.userRepo.save(admin1);
 
-        UserModel viewer = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440001"), PermissionLevel.VIEWER, "viewer", "viewer@viewer.com", LocalDate.now(), "viewer");
-        this.userRepo.save(viewer);
+        UserModel viewer1 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440001"), PermissionLevel.VIEWER, "Léon Dolmans", "leonr@solar.com", LocalDate.now(), "viewer");
+        this.userRepo.save(viewer1);
+
+        UserModel viewer2 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440002"), PermissionLevel.VIEWER, "Mark Dijkstra", "mark@solar.com", LocalDate.now(), "viewer");
+        this.userRepo.save(viewer2);
+
+        UserModel viewer3 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440003"), PermissionLevel.VIEWER, "Tobi Kok", "tobi@solar.com", LocalDate.now(), "viewer");
+        this.userRepo.save(viewer3);
+
+        UserModel viewer4 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440004"), PermissionLevel.VIEWER, "Ryan-Jay Takkenberg", "mark@solar.com", LocalDate.now(), "viewer");
+        this.userRepo.save(viewer4);
+
+        UserModel viewer5 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440005"), PermissionLevel.VIEWER, "Hamza Zaraoui", "mark@solar.com", LocalDate.now(), "viewer");
+        this.userRepo.save(viewer5);
+
     }
 
 }

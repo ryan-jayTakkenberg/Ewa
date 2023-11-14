@@ -6,8 +6,8 @@ import {classToObject} from "@/models/helper";
 export default class User {
 
     static PermissionLevel = {
-        VIEWER: "Viewer",
-        ADMIN: "Admin",
+        VIEWER: "VIEWER",
+        ADMIN: "ADMIN",
     }
 
     constructor(id, email, name, permissionLevel, lastLogin, password) {
@@ -56,31 +56,34 @@ export default class User {
     }
 
     /**
-     * put this user into the database
-     * will add a new user to the database if no user exists
-     * will override the existing user with the new user if the user already exists
+     * put this product into the database
+     * will add a new product to the database if no product exists
+     * will override the existing product with the new product if the product already exists
      */
     async putDatabase() {
         try {
-            const isNewUser = this.id < 0;
+            const isNewUser= this.id < 0;
+
+
             let response = await axios.post("/api/users", classToObject(this), {
                 headers: {
                     "Authorization": getKey(),
                     'Content-Type': 'application/json'
                 }
             });
+
             // make a post request to the backend
-            // if the current user id is -1, receive the new user id
+            // if the current product id is -1, receive the new product id
             if (isNewUser) {
-                this.id = response.data.id;// receive the new user id
+                this.id = response.data.id;// receive the new product id
                 User.users.push(this);
             } else {
                 User.users[User.users.findIndex(o => o.id === this.id)] = this;
             }
-
+            this.injectAttributes(response.data);
             return this;
         } catch (e) {
-            console.log(e)
+            return null;
         }
     }
 
@@ -93,7 +96,12 @@ export default class User {
             if (isNewUser) {
                 return false;
             }
-            // TODO make a delete request to the backend
+            // make a delete request to the backend
+            await axios.delete(`/api/users/${this.id}`, {
+                headers: {
+                    "Authorization": getKey()
+                }
+            });
             User.users = User.users.filter(o => o.id !== this.id);
             return true;
         } catch (e) {

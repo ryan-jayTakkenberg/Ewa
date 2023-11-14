@@ -53,8 +53,8 @@ export default {
   data() {
     return {
       showLoginForm: false,
-      usernameDummy: 'ewaAdmin1',
-      passwordDummy: 'ewaAdminPW1',
+      usernameDummy: 'test',
+      passwordDummy: 'test',
       usernameInput: '',
       passwordInput: '',
       errorMessage: '',

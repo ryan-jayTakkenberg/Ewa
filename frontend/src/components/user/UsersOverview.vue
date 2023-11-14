@@ -78,37 +78,30 @@ export default {
       }
     },
 
-    // async edit(updated) {
-    //   // Assuming there is only one product in this.selectedProducts
-    //   let edited = this.selectedUser;
-    //
-    //   if (edited) {
-    //     let index = this.products.findIndex(p => p.id === edited.id);
-    //     edited.injectAttributes(updated);
-    //     let product = await edited.putDatabase();
-    //
-    //     if (product) {
-    //       this.products[index] = product;
-    //     }
-    //   }
-    //
-    //   this.closeModal();
-    // }
+    async editUser(updated) {
+      // Assuming there is only one user in this.selectedProducts
+      let edited = this.selectedUser;
 
-    // async updateUser(updatedUser) {
-    //   // Find the index of the user to be updated in the users array
-    //   const index = this.users.findIndex(user => user.id === updatedUser.id);
-    //
-    //   if (index !== -1) {
-    //     // Update the user data in the array
-    //     this.users[index] = updatedUser;
-    //   }
-    //   this.closeModal();
-    // },
-    deleteUser(userID) {
-      this.users = this.users.filter(user => user.id !== userID);
+      if (edited) {
+        let index = this.users.findIndex(p => p.id === edited.id);
+        edited.injectAttributes(updated);
+        let user = await edited.putDatabase();
+
+        if (user) {
+          this.users[index] = user;
+        }
+      }
+
       this.closeModal();
     },
+
+    async deleteUser() {
+      this.closeModal();
+      const deletedUser = this.selectedUser;
+      this.users = this.users.filter(user => user.id !== deletedUser.id);
+      await deletedUser.delDatabase();
+    },
+
     deleteCheckedUsers() {
       // Get the IDs of the users to delete
       const userIdsToDelete = this.checkedUsers.map(user => user.id);
@@ -236,7 +229,7 @@ export default {
   />
   <UpdateUserModal
       v-if="showUpdateModal" :on-close="closeModal"
-      :user="selectedUser" @update-user="updateUser"
+      :user="selectedUser" @update-user="editUser"
   />
   <DeleteUserModal
       v-if="showDeleteModal" :on-close="closeModal"

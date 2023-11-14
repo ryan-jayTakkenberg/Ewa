@@ -62,7 +62,6 @@ export default {
     return {
       PermissionLevelOptions: User.PermissionLevel,
       user: {
-        id: '',
         name: '',
         email: '',
         permissionLevel: '',

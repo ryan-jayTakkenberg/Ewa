@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -17,6 +18,7 @@ public class UserRoutes {
 
     @Autowired
     private UserJPARepository userRepo;
+
     @Autowired
     private AuthenticationService credentials;
 
@@ -33,6 +35,15 @@ public class UserRoutes {
     @ResponseStatus(HttpStatus.CREATED)
     private UserModel postUser(@RequestHeader("Authorization") String authorization, @RequestBody UserModel user) {
         credentials.mustBeAdmin(authorization);
+        boolean isEditing = user.getId() > 0;
+        if (isEditing) {
+            UserModel currentUser = this.userRepo.findById(user.getId());
+            if (user.getUuid() == null) {
+                user.setUuid(currentUser.getUuid());
+            }
+        } else {
+            user.setUuid(UUID.randomUUID());
+        }
         return userRepo.save(user);
     }
 
@@ -44,6 +55,7 @@ public class UserRoutes {
         }
 
         UserModel user = userRepo.findById(id);
+
         if (user == null) {
             throw new BadRequestException("No product found for such id");
         }
