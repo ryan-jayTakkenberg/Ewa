@@ -30,8 +30,9 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createInitialProducts() {
-        Product product = new Product("Solar panel", 150.123, "Heeft een vermogen van 430 Wattpiek en beschikt over 108 cellen.");
-        this.productRepo.save(product);
+        this.productRepo.save(new Product("Solar panel", 150.123, "Heeft een vermogen van 430 Wattpiek en beschikt over 108 cellen."));
+        this.productRepo.save(new Product("Motor", 32.54, "Heeft een vermogen van 1000 Watt, 72V"));
+        this.productRepo.save(new Product("Frame", 5423.23, "Sterk frame van goede metalen"));
     }
 
     private void createInitialUsers() {
