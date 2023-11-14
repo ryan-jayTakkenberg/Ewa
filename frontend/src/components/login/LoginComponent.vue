@@ -47,7 +47,13 @@
 
 <script>
 
-import {setKey} from "@/data";
+import {setAdmin, setKey} from "@/data";
+import axios from "@/axios-config";
+import Team from "@/models/team";
+import User from "@/models/user";
+import Product from "@/models/product";
+import Project from "@/models/project";
+import Warehouse from "@/models/warehouse";
 
 export default {
   name: 'LoginComponent',
@@ -78,27 +84,43 @@ export default {
       this.showLoginForm = false;
     },
 
-    submitForm() {
+    async submitForm() {
+      let response = await axios.post("/api/users/login", {
+        name: this.usernameInput,
+        password: this.passwordInput,
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
 
-      if (this.usernameInput !== this.usernameDummy && this.passwordInput !== this.passwordDummy) {
-        this.errorMessage = 'Invalid Username & Password'
-        return false;
+      let uuid = response.data.uuid;
+      if (!uuid) {
+        this.errorMessage = 'Invalid Username & Password';
+        return;
       }
 
-      if (this.usernameInput !== this.usernameDummy) {
-        this.errorMessage = 'Invalid Username'
-        return false;
+      setKey(uuid);
+      setAdmin(response.data.permissionLevel === "ADMIN");
 
-      } if (this.passwordInput !== this.passwordDummy) {
-        this.errorMessage = 'Invalid Password'
-        return false;
+      try {
+        const [teams, users, products, projects, warehouses] = await Promise.all([
+          Team.getDatabase(),
+          User.getDatabase(),
+          Product.getDatabase(),
+          Project.getDatabase(),
+          Warehouse.getDatabase(),
+        ]);
 
-      } else {
-        this.$el.querySelector('.errorMessageWrapper').style.display = 'none';
-
-        setKey("550e8400-e29b-41d4-a716-446655440000");
+        Team.teams = teams;
+        User.users = users;
+        Product.products = products;
+        Project.projects = projects;
+        Warehouse.warehouses = warehouses;
 
         this.$router.push('/overview');
+      } catch (error) {
+        console.error(error);
       }
     },
 

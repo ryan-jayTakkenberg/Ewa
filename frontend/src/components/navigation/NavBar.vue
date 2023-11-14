@@ -2,14 +2,14 @@
 
 import logoExpanded from '/static/images/solar_sedum_logo.svg'
 import logoCollapsed from '/static/images/solar_sedum_logo_small.svg'
-import {setKey} from "@/data";
+import {isAdmin, setAdmin, setKey} from "@/data";
 
 export default {
   name: 'NavBar',
   data() {
     return {
       activePage: 'overview', // Default overview page
-      permissionLevel: 'admin', // Viewer or Admin role
+      permissionLevel: isAdmin() ? 'admin' : 'viewer', // Viewer or Admin role
       sidebarIsExpanded: false,
       logoExpanded: logoExpanded,
       logoCollapsed: logoCollapsed
@@ -23,6 +23,7 @@ export default {
       // TODO actually log out
 
       setKey("");
+      setAdmin(false);
 
       this.$router.push('/login');
     },
@@ -32,6 +33,15 @@ export default {
     toggleSidebar() {
       this.sidebarIsExpanded = !this.sidebarIsExpanded;
       this.$emit('sidebar-expanded', this.sidebarIsExpanded); // Use for adjusting sizing of page when sidebar is collapsed
+    }
+  },
+  watch: {
+    '$route'(from, to) {
+      if (from === to) {
+        return;
+      }
+
+      this.permissionLevel = isAdmin() ? 'admin' : 'viewer'; // Viewer or Admin role
     }
   },
 }

@@ -3,10 +3,13 @@ export function setKey(key) {
 }
 
 export function getKey() {
-    return localStorage.getItem("key") ?? "";// 550e8400-e29b-41d4-a716-446655440000 = debug admin key
+    return localStorage.getItem("key") ?? "";
+}
+
+export function setAdmin(bool) {
+    localStorage.setItem("admin", bool);
 }
 
 export function isAdmin() {
-    // TODO add functionality
-    return true;
+    return (localStorage.getItem("admin") ?? "false") === "true";
 }

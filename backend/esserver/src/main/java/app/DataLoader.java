@@ -36,6 +36,9 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createInitialUsers() {
+        this.userRepo.save(new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440010"), PermissionLevel.ADMIN, "admin", "admin@solar.nl", LocalDate.now(), "admin"));
+        this.userRepo.save(new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440011"), PermissionLevel.VIEWER, "viewer", "viewer@solar.nl", LocalDate.now(), "viewer"));
+
         UserModel admin1 = new UserModel(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"), PermissionLevel.ADMIN, "Kevin Bakker", "kevin@solar.nl", LocalDate.now(), "admin");
         this.userRepo.save(admin1);
 
