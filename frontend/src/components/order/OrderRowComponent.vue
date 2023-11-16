@@ -62,34 +62,43 @@ export default {
     <td class="px-6 py-4">Warehouse Solar 4</td>
     <!-- Todo for i product in products -->
     <td class="px-6 py-4">{{order.totalPrice}}</td>
-    <td @click="emitView" class="edit-user-btn">View products</td>
     <td class="px-6 py-4">{{order.status}}</td>
     <!-- Edit User -->
     <td class="px-6 py-4 row">
-      <div @click="emitEdit" class="edit-user-btn">Complete order</div>
-      <div @click="emitDelete" class="delete-user-btn">Report order</div>
+      <div @click="emitView" class="view-btn">View products</div>
+      <div @click="emitComplete" class="complete-btn">Complete</div>
+      <div @click="emitDelete" class="delete-btn">Report</div>
     </td>
   </tr>
 </template>
 
 <style scoped>
-.edit-user-btn {
+.complete-btn {
+  font-weight: 500;
+  color: #C7D02C;
+  cursor: pointer;
+}
+
+.view-btn {
   font-weight: 500;
   color: rgb(37 99 235);
   cursor: pointer;
 }
 
-.delete-user-btn {
+.delete-btn {
   font-weight: 500;
   color: red;
   cursor: pointer;
 }
 
-.delete-user-btn:hover {
+.delete-btn:hover {
+  text-decoration-line: underline;
+}
+.view-btn:hover {
   text-decoration-line: underline;
 }
 
-.edit-user-btn:hover {
+.complete-btn:hover {
   text-decoration-line: underline;
 }
 

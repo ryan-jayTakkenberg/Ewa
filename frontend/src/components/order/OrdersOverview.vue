@@ -227,7 +227,7 @@ export default {
         <SolarSearchbar place-holder="Search For Orders" @search="handleInputValueChange"></SolarSearchbar>
         <SolarButton class="ml-auto" button-text="Create Order" @click="openCreateModal"></SolarButton>
       </div>
-      <SolarTable :columns="['order number', 'order date', 'estimated delivery date', 'ordered for warehouse', 'total price', 'products', 'status', 'action']">
+      <SolarTable :columns="['order number', 'order date', 'estimated delivery date', 'ordered for warehouse', 'total price', 'status', 'action']">
         <OrderRowComponent
             v-for="(order) in paginatedOrders" :key="order.id" :order="order"
             @edit="openEditModal"
