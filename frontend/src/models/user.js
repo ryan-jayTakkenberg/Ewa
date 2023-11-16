@@ -64,7 +64,6 @@ export default class User {
         try {
             const isNewUser= this.id < 0;
 
-
             let response = await axios.post("/api/users", classToObject(this), {
                 headers: {
                     "Authorization": getKey(),

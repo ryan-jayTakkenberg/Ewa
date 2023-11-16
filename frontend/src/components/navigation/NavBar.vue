@@ -59,17 +59,8 @@ export default {
 
     <div class="navigation">
       <div class="nav-items">
-        <router-link
-            v-if="(permissionLevel === 'admin')"
-            to="/admin-overview"
-            class="nav-button relative"
-            :class="{ active: isPageActive('overview-admin') }"
-            @click="handleNavClick('overview-admin')">
-          <span class="material-symbols-outlined nav-icon">overview_key</span>
-          <p class="nav-text">Overview</p>
-          <span class="notification-indicator bg-danger-subtle text-danger">3</span>
-        </router-link>
 
+        <!-- Viewer Todo order viewer-->
         <router-link
             v-if="(permissionLevel === 'viewer')"
             to="/overview"
@@ -110,6 +101,29 @@ export default {
           <span class="material-symbols-outlined nav-icon">report</span>
           <p class="nav-text">My Reports</p>
           <span class="notification-indicator">3</span>
+        </router-link>
+
+        <!-- Admin -->
+        <router-link
+            v-if="(permissionLevel === 'admin')"
+            to="/admin-overview"
+            class="nav-button relative"
+            :class="{ active: isPageActive('overview-admin') }"
+            @click="handleNavClick('overview-admin')">
+          <span class="material-symbols-outlined nav-icon">overview_key</span>
+          <p class="nav-text">Overview</p>
+          <span class="notification-indicator bg-danger-subtle text-danger">3</span>
+        </router-link>
+
+        <router-link
+            v-if="(permissionLevel === 'admin')"
+            to="/orders"
+            class="nav-button relative"
+            :class="{ active: isPageActive('orders-admin') }"
+            @click="handleNavClick('orders-admin')">
+          <span class="material-symbols-outlined nav-icon">orders</span>
+          <p class="nav-text">Orders</p>
+          <span class="notification-indicator bg-danger-subtle text-danger">3</span>
         </router-link>
 
         <router-link

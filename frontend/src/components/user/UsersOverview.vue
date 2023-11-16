@@ -12,6 +12,7 @@ import CreateUserModal from "@/components/user/user-modals/CreateUserModal.vue";
 import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultipleUsersModal.vue";
 import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
 import SolarPagination from "@/components/general/SolarPagination.vue";
+import {getKey} from "@/data";
 
 export default {
   name: "UsersOverview",
@@ -56,13 +57,13 @@ export default {
       return this.filterUsers.slice(startIndex, endIndex);
     },
     filterUsers() {
+
+      // Assuming getKey() returns the id of the user to be hidden
+      const userIdToHide = getKey();
+
       return this.users.filter(p => {
-        for (let key of Object.keys(p)) {
-          if (`${p[key]}`.toLowerCase().includes(this.inputValue)) {
-            return true;
-          }
-        }
-        return false;
+        // Exclude the user with userIdToHide from the filtered list
+        return p.id !== userIdToHide && Object.keys(p).some(key => `${p[key]}`.toLowerCase().includes(this.inputValue));
       });
     },
     isActionButtonDisabled() {
@@ -125,47 +126,45 @@ export default {
       await deletedUser.delDatabase();
     },
 
-    deleteCheckedUsers() {
-      // Get the IDs of the users to delete
-      const userIdsToDelete = this.checkedUsers.map(user => user.id);
+    async deleteCheckedUsers() {
+      // Close the modal
+      this.closeModal();
 
       // Uncheck the selected users in the UsersRowComponent
       this.users.forEach(user => {
         user.isChecked = false;
       });
 
-      // Use Promise.all to delete each user and update the users array
-      Promise.all(
-          userIdsToDelete.map(async (userId) => {
-            const deletedUser = this.users.find(user => user.id === userId);
-            if (deletedUser) {
-              await deletedUser.delDatabase();
-            }
-          })
-      ).then(() => {
-        // Remove the selected users from the users array based on their IDs
-        this.users = this.users.filter(user => !userIdsToDelete.includes(user.id));
+      // Get the IDs of the users to delete
+      const userIdsToDelete = this.checkedUsers.map(user => user.id);
 
-        // Clear the checkedUsers array
-        this.checkedUsers = [];
+      // Delete users one by one
+      for (const userId of userIdsToDelete) {
+        const deletedUserIndex = this.users.findIndex(user => user.id === userId);
 
-        // Close the modal
-        this.closeModal();
-      });
+        if (deletedUserIndex !== -1) {
+          const deletedUser = this.users[deletedUserIndex];
+
+          // Delete user
+          await deletedUser.delDatabase();
+
+          // Remove the user from the users array
+          this.users.splice(deletedUserIndex, 1);
+        }
+      }
+      // Clear the checkedUsers array
+      this.checkedUsers = [];
     },
-
-    editCheckedUsersOneByOne() {
-      // TODO edit checkedUsers oneByONe
-      //  Check if there are any selected users
-      // if (this.checkedUsers.length > 0) {
-      //   const userToEdit = this.checkedUsers[0];
-      //   this.openEditModal(userToEdit);
-      // this.closeDropdown();
-      //
-      //   // Remove the first user from the array
-      //   this.checkedUsers.splice(0, 1);
-      // }
-    },
+    // TODO edit checkedUsers oneByONe
+    //  Check if there are any selected users
+    // if (this.checkedUsers.length > 0) {
+    //   const userToEdit = this.checkedUsers[0];
+    //   this.openEditModal(userToEdit);
+    // this.closeDropdown();
+    //
+    //   // Remove the first user from the array
+    //   this.checkedUsers.splice(0, 1);
+    // }
     handleInputValueChange(value) {
       console.log(value);
       this.inputValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
@@ -215,8 +214,7 @@ export default {
       }
       return null;
     },
-  }
-  ,
+  },
   watch: {
     '$route'(to) {
       this.selectedUser = this.findSelectedRouteFromParam(to);
@@ -233,11 +231,11 @@ export default {
         <SolarDropdownMenuButton text-button="Action" ref="dropdownButton" :disabled="isActionButtonDisabled">
 
           <!--    TODO Edit multiple Users     -->
-<!--          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="editCheckedUsersOneByOne">-->
+          <!--          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="editCheckedUsersOneByOne">-->
           <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteMultipleUsersModal"/>
         </SolarDropdownMenuButton>
         <SolarSearchbar place-holder="Search For Users" @search="handleInputValueChange"></SolarSearchbar>
-        <SolarButton class="ml-auto" button-text="Add User" @click="openCreateModal"></SolarButton>
+        <SolarButton class="ml-auto" button-text="Create User" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
         <UsersRowComponent

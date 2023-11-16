@@ -14,12 +14,14 @@ import UpdateWarehouse from "@/components/warehouse/warehousePopUps/UpdateWareho
 import ProductOverviewViewer from "@/components/product/viewer/ProductOverviewViewer";
 import ViewerOverviewComponent from "@/components/overview/ViewerOverviewComponent";
 import AdminOverviewComponent from "@/components/overview/AdminOverviewComponent";
+import OrdersOverview from "@/components/order/OrdersOverview.vue";
 
 const routes = [
     {path: '/', redirect: '/overview'},
     {path: '/login', component: LoginComponent},
     {path: '/overview', component: ViewerOverviewComponent},
     {path: '/admin-overview', component: AdminOverviewComponent},
+    {path: '/orders', component: OrdersOverview},
     {path: '/warehouses', component: WarehousePageComponent,
         children: [
             {path: ":id", component: UpdateWarehouse}
