@@ -38,7 +38,7 @@ export default {
   },
   provide() {
     return {
-      warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/warehouses"),
+      warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/api/warehouses"),
       teams: new TeamsAdaptor(CONFIG.BACKEND_URL+"api/teams")
     }
   },
