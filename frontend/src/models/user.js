@@ -1,6 +1,6 @@
 import Team from "@/models/team";
 import axios from "@/axios-config";
-import {getKey} from "@/data";
+import {getJWT} from "@/data";
 import {classToObject} from "@/models/helper";
 
 export default class User {
@@ -66,8 +66,7 @@ export default class User {
 
             let response = await axios.post("/api/users", classToObject(this), {
                 headers: {
-                    "Authorization": getKey(),
-                    'Content-Type': 'application/json'
+                    "Authorization": getJWT(),
                 }
             });
 
@@ -98,7 +97,7 @@ export default class User {
             // make a delete request to the backend
             await axios.delete(`/api/users/${this.id}`, {
                 headers: {
-                    "Authorization": getKey()
+                    "Authorization": getJWT()
                 }
             });
             User.users = User.users.filter(o => o.id !== this.id);
@@ -118,7 +117,7 @@ export default class User {
             // update "products" with the response
             let response = await axios.get("/api/users", {
                 headers: {
-                    "Authorization": getKey()
+                    "Authorization": getJWT()
                 }
             });
 

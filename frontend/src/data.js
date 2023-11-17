@@ -1,9 +1,13 @@
-export function setKey(key) {
-    localStorage.setItem("key", key);
+export function setJWT(jwt) {
+    localStorage.setItem("jwt", jwt);
 }
 
-export function getKey() {
-    return localStorage.getItem("key") ?? "";
+export function getJWT() {
+    return localStorage.getItem("jwt") ?? "";
+}
+
+export function removeJWT() {
+    localStorage.removeItem("jwt");
 }
 
 export function setAdmin(bool) {
@@ -12,4 +16,20 @@ export function setAdmin(bool) {
 
 export function isAdmin() {
     return (localStorage.getItem("admin") ?? "false") === "true";
+}
+
+export function removeAdmin() {
+    localStorage.removeItem("admin");
+}
+
+export function setId(id) {
+    return localStorage.setItem("id", id);
+}
+
+export function getId() {
+    return localStorage.getItem("id") ?? -1;
+}
+
+export function removeId() {
+    return localStorage.removeItem("id");
 }

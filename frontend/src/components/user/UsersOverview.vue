@@ -12,7 +12,6 @@ import CreateUserModal from "@/components/user/user-modals/CreateUserModal.vue";
 import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultipleUsersModal.vue";
 import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
 import SolarPagination from "@/components/general/SolarPagination.vue";
-import {getKey} from "@/data";
 
 export default {
   name: "UsersOverview",
@@ -58,7 +57,8 @@ export default {
     },
     filterUsers() {
       // Assuming getKey() returns the id of the user to be hidden
-      const userIdToHide = getKey();
+      // TODO getKey() no longer exists and is now replace by getJWT(). User UUID no longer exists, you can use getId() instead to get the id of the user (number)
+      const userIdToHide = 0;
 
       return this.users.filter(p => {
         // Exclude the user with userIdToHide from the filtered list

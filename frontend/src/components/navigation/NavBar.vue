@@ -2,7 +2,7 @@
 
 import logoExpanded from '/static/images/solar_sedum_logo.svg'
 import logoCollapsed from '/static/images/solar_sedum_logo_small.svg'
-import {isAdmin, setAdmin, setKey} from "@/data";
+import {isAdmin, removeAdmin, removeId, removeJWT} from "@/data";
 
 export default {
   name: 'NavBar',
@@ -22,8 +22,9 @@ export default {
     logOut() {
       // TODO actually log out
 
-      setKey("");
-      setAdmin(false);
+      removeJWT();
+      removeAdmin();
+      removeId();
 
       this.$router.push('/login');
     },

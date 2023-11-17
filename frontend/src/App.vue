@@ -24,14 +24,14 @@ import NavBar from "@/components/navigation/NavBar.vue";
 import {WarehouseAdaptor} from "@/service/warehouse-adaptor";
 import {TeamsAdaptor} from "@/service/teams-adaptor";
 import CONFIG from "@/app-config";
-import {getKey} from "@/data";
+import {getJWT} from "@/data";
 
 export default {
   name: 'App',
   components: {NavBar},
   data() {
     return {
-      isLoggedIn: getKey(),
+      isLoggedIn: getJWT().length > 0,
       isSideBarExpanded: false,
       fetchedData: false,
     }
@@ -53,7 +53,7 @@ export default {
         return;
       }
 
-      this.isLoggedIn = getKey();
+      this.isLoggedIn = getJWT().length > 0;
       if (!this.isLoggedIn) {
         this.$router.push('/login');
       } else if (!this.fetchedData) {

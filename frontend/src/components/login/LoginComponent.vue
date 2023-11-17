@@ -47,7 +47,7 @@
 
 <script>
 
-import {setAdmin, setKey} from "@/data";
+import {setAdmin, setId, setJWT} from "@/data";
 import axios from "@/axios-config";
 import Team from "@/models/team";
 import User from "@/models/user";
@@ -85,23 +85,24 @@ export default {
     },
 
     async submitForm() {
-      let response = await axios.post("/api/users/login", {
-        name: this.usernameInput,
+      let response = await axios.post("/api/authentication/login", {
+        username: this.usernameInput,
         password: this.passwordInput,
       }, {
         headers: {
           'Content-Type': 'application/json'
         }
-      });
+      }).catch(() => null);
 
-      let uuid = response.data.uuid;
-      if (!uuid) {
+      let jwt = response?.headers?.authorization;
+      if (!jwt) {
         this.errorMessage = 'Invalid Username & Password';
         return;
       }
 
-      setKey(uuid);
+      setJWT(jwt);
       setAdmin(response.data.permissionLevel === "ADMIN");
+      setId(response.data.id);
 
       try {
         const [teams, users, products, projects, warehouses] = await Promise.all([

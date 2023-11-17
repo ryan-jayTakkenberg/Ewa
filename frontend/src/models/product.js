@@ -1,4 +1,4 @@
-import { getKey } from "../data";
+import {getJWT} from "../data";
 import axios from "../axios-config";
 import {classToObject} from "@/models/helper";
 
@@ -58,8 +58,7 @@ export default class Product {
 
             let response = await axios.post("/api/product", classToObject(this), {
                 headers: {
-                    "Authorization": getKey(),
-                    'Content-Type': 'application/json'
+                    "Authorization": getJWT(),
                 }
             });
 
@@ -91,7 +90,7 @@ export default class Product {
             // make a delete request to the backend
             await axios.delete(`/api/product/${this.id}`, {
                 headers: {
-                    "Authorization": getKey()
+                    "Authorization": getJWT()
                 }
             });
 
@@ -112,7 +111,7 @@ export default class Product {
             // update "products" with the response
             let response = await axios.get("/api/product", {
                 headers: {
-                    "Authorization": getKey()
+                    "Authorization": getJWT()
                 }
             });
 
