@@ -1,10 +1,8 @@
-package app.routes;
+package app.controllers;
 
-import app.EsserverApplication;
 import app.exceptions.BadRequestException;
 import app.exceptions.NotFoundException;
 import app.models.Teams;
-import app.models.Warehouse;
 import app.repository.TeamsRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +14,11 @@ import java.util.List;
 //@CrossOrigin(origins = EsserverApplication.CROSS_ORIGIN)
 @RestController
 @RequestMapping("/teams")
-public class TeamsRoutes {
+public class TeamsController {
 
     private final TeamsRepository teamsRepository;
 
-    public TeamsRoutes(TeamsRepository teamsRepository) {
+    public TeamsController(TeamsRepository teamsRepository) {
         this.teamsRepository = teamsRepository;
     }
 

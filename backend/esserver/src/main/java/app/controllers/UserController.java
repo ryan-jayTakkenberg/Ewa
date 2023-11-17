@@ -1,4 +1,4 @@
-package app.routes;
+package app.controllers;
 
 import app.Util;
 import app.exceptions.BadRequestException;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-public class UserRoutes {
+public class UserController {
 
     @Autowired
     private UserJPARepository userRepo;

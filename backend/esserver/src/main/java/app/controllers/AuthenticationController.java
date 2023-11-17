@@ -1,4 +1,4 @@
-package app.routes;
+package app.controllers;
 
 import app.jwt.JWTConfig;
 import app.jwt.JWToken;

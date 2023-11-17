@@ -8,8 +8,8 @@ public class EsserverApplication {
 
     /*
      * BACKEND:
-     * Check out basic info about routes at 'app/routes/ProductRoutes'
-     * Check out basic info about models at 'app/models/Product'
+     * If you need to create something, and you don't know where to start, look at ProductController, it has endpoints with the most CRUD actions
+     * Also take a look at the Product model
      */
 
     public static void main(String[] args) {
