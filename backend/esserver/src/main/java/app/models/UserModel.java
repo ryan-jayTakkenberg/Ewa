@@ -16,7 +16,7 @@ public class UserModel {
 
     @Id
     @GeneratedValue
-    private int id;
+    private long id;
 
     private UUID uuid;
     private PermissionLevel permissionLevel;
@@ -87,7 +87,7 @@ public class UserModel {
         this.password = password;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 }

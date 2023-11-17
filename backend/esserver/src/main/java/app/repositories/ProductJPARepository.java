@@ -22,7 +22,7 @@ public class ProductJPARepository implements EntityRepositoryJPA<Product> {
     }
 
     @Override
-    public Product findById(int id) {
+    public Product findById(long id) {
         return em.find(Product.class, id);
     }
 

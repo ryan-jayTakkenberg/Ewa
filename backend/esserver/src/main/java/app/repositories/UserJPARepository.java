@@ -22,7 +22,7 @@ public class UserJPARepository implements EntityRepositoryJPA<UserModel> {
     }
 
     @Override
-    public UserModel findById(int id) {
+    public UserModel findById(long id) {
         return em.find(UserModel.class, id);
     }
 
