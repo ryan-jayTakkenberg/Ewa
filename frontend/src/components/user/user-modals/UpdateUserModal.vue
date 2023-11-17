@@ -28,12 +28,6 @@ export default {
       }
       return false;
     },
-    currentPasswordFieldType() {
-      return this.currentPasswordVisible ? 'text' : 'password';
-    },
-    newPasswordFieldType() {
-      return this.newPasswordVisible ? 'text' : 'password';
-    },
   },
   props: {
     user: {
@@ -90,35 +84,12 @@ export default {
         </div>
         <div class="col-span-6 sm:col-span-3">
           <label for="user-role" class="modal-label">Function</label>
-
           <select v-model="this.clonedUser.permissionLevel" class="role-select">
             <option v-for="permissionLevel in PermissionLevelOptions"
                     :key="permissionLevel"
                     :value="permissionLevel">{{ permissionLevel }}
             </option>
           </select>
-        </div>
-
-        <div class="col-span-6 sm:col-span-3">
-          <label for="current-password" class="modal-label ">Current Password</label>
-          <input
-              v-model="this.clonedUser.password"
-              :type="currentPasswordFieldType" placeholder="••••••••"
-              class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5"
-              required>
-          <button @click="toggleCurrentPasswordVisibility" type="button" class="toggle-password-button">
-            {{ currentPasswordFieldType === 'password' ? 'Show' : 'Hide' }}
-          </button>
-
-          <div class="col-span-6 sm:col-span-3">
-            <label for="new-password" class="modal-label ">New Password</label>
-            <input :type="newPasswordFieldType" placeholder="New Password"
-                   class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5">
-
-            <button @click="toggleNewPasswordVisibility" type="button" class="toggle-password-button">
-              {{ newPasswordFieldType === 'password' ? 'Show' : 'Hide' }}
-            </button>
-          </div>
         </div>
       </div>
       <!-- Modal footer -->
@@ -197,7 +168,7 @@ export default {
 
 .cancel-button {
   color: rgb(17 24 39);
-  background-color: #bfbfbf;
+  background-color: rgb(229 231 235);
   font-weight: 500;
   border-radius: 0.5rem;
   font-size: 0.875rem;
