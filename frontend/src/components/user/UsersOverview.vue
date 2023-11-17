@@ -57,7 +57,6 @@ export default {
       return this.filterUsers.slice(startIndex, endIndex);
     },
     filterUsers() {
-
       // Assuming getKey() returns the id of the user to be hidden
       const userIdToHide = getKey();
 
@@ -155,16 +154,6 @@ export default {
       // Clear the checkedUsers array
       this.checkedUsers = [];
     },
-    // TODO edit checkedUsers oneByONe
-    //  Check if there are any selected users
-    // if (this.checkedUsers.length > 0) {
-    //   const userToEdit = this.checkedUsers[0];
-    //   this.openEditModal(userToEdit);
-    // this.closeDropdown();
-    //
-    //   // Remove the first user from the array
-    //   this.checkedUsers.splice(0, 1);
-    // }
     handleInputValueChange(value) {
       console.log(value);
       this.inputValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
@@ -229,9 +218,6 @@ export default {
     <div class="body-container">
       <div class="action-row">
         <SolarDropdownMenuButton text-button="Action" ref="dropdownButton" :disabled="isActionButtonDisabled">
-
-          <!--    TODO Edit multiple Users     -->
-          <!--          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="editCheckedUsersOneByOne">-->
           <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteMultipleUsersModal"/>
         </SolarDropdownMenuButton>
         <SolarSearchbar place-holder="Search For Users" @search="handleInputValueChange"></SolarSearchbar>
