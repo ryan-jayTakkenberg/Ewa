@@ -53,15 +53,14 @@ export default {
 
 .modal-container {
   position: relative;
-  margin-left: auto;
-  width: calc(100% - 70px);
-  max-height: 100%;
+  margin-left: 0;
+  width: 100%;
+  padding: 1rem;
 }
 
 .modal-content {
   background-color: white;
   border-radius: 0.5rem;
-  height: 100vh;
 }
 
 .modal-header {
@@ -80,8 +79,7 @@ export default {
 
 @media (min-width: 768px) {
   .modal-container {
-    width: 100%;
-    padding: 4rem;
+    width: 50%;
     margin-left: 0;
   }
 

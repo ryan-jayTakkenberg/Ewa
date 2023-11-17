@@ -10,7 +10,7 @@ import ProjectRowComponent from "@/components/project/ProjectRowComponent.vue";
 import ProjectEditComponent from "@/components/project/ProjectEditComponent.vue";
 
 export default {
-  name: "UsersOverview",
+  name: "ProjectOverview",
   components: {
     SolarDropdownMenuItem,
     SolarDropdownMenuButton,
@@ -20,11 +20,10 @@ export default {
     SearchBarComponent,
     ButtonComponent,
     ProjectEditComponent,
-
   },
   data() {
     return {
-      inputValue: '', // Store the input value for searching users
+      inputValue: '', // Store the input value for searching projects
       projects: [...Project.projects],
       selectedProject: null,  // Track the selected user for editing
       isEditUserModalOpen: false,
@@ -66,7 +65,8 @@ export default {
         this.checkedProjects = this.checkedProjects.filter(id => id !== project.id);
       }
       console.log(this.checkedProjects);
-    }, getSelectedUsers() {
+    },
+    getSelectedProjects() {
       return this.projects.filter(project => this.checkedProjects.includes(project.id));
     }
   },
@@ -74,23 +74,15 @@ export default {
 </script>
 
 <template>
-  <div class="users-header">
-    <TitleComponent page-title="Projects"></TitleComponent>
-  </div>
-
-  <div class="users-body">
-    <div class="users-container">
-      <div class="users-action-row">
-        <!-- Action Dropdown Button -->
+  <TitleComponent class="header" page-title="Projects"></TitleComponent>
+  <div class="body">
+    <div class="body-container">
+      <div class="action-row">
         <SolarDropdownMenuButton text-button="Action">
-          <SolarDropdownMenuItem text-menu-item="Edit Project" @click="openEditUserModal(getSelectedUsers()[0])"></SolarDropdownMenuItem>
-          <SolarDropdownMenuItem text-menu-item="Delete Project" @click="openDeleteUserModal"></SolarDropdownMenuItem>
+          <SolarDropdownMenuItem text-menu-item="Delete Project" @click="openDeleteProjectsModal"/>
         </SolarDropdownMenuButton>
-
-        <!-- Searchbar -->
-        <SearchBarComponent place-holder="Search For Projects" class="ml-auto" @input="handleInputValueChange"
-        ></SearchBarComponent>
-        <ButtonComponent button-text="Add Project" :onClick="openEditUserModal"></ButtonComponent>
+        <SearchBarComponent place-holder="Search For Projects" @input="handleInputValueChange"/>
+        <ButtonComponent class="ml-auto" button-text="Add Project" :onClick="openEditUserModal"></ButtonComponent>
       </div>
 
       <SolarTable :columns="['Project', 'Client', 'dateOfInstallation', 'Action']">
@@ -100,40 +92,39 @@ export default {
             :project="project"
             :isChecked="project.isChecked"
             @click-edit-user="openEditUserModal"
-            @toggle-checkbox="toggleCheckbox(project, $event)" ><!-- Pass user and checkbox state -->
+            @toggle-checkbox="toggleCheckbox(project, $event)"><!-- Pass user and checkbox state -->
         </ProjectRowComponent>
       </SolarTable>
-
-
     </div>
   </div>
-
-  <ProjectEditComponent v-if="isEditUserModalOpen" :on-close="closeEditUserModal" :project="selectedProject" ></ProjectEditComponent>
-
+  <ProjectEditComponent v-if="isEditUserModalOpen" :on-close="closeEditUserModal" :project="selectedProject"/>
 </template>
 
 <style scoped>
-.users-header {
+.header {
   flex-direction: row;
   display: flex;
-  padding: 1rem;
+  padding-left: 1rem;
+  padding-top: 1rem;
 }
 
-.users-action-row {
-  display: flex;
-  margin-bottom: 1rem /* 16px */;
-}
-
-.users-body {
+.body {
   position: relative;
   overflow-x: auto;
 }
 
-.users-container {
+.body-container {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 1rem /* 16px */;
+  padding-bottom: 1rem;
   background-color: white;
 }
+
+.action-row {
+  display: flex;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
 </style>

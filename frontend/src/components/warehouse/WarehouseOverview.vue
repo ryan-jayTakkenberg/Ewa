@@ -1,19 +1,15 @@
 <template>
-<solarTitle class="title" page-title="Warehouse"></solarTitle>
+<SolarTitle class="header" page-title="Warehouse"></SolarTitle>
   <div class="body">
-    <div class="contentBox">
-      <div class="contentHeader">
-        <SolarSearchbar place-holder="Search For Warehouses"></SolarSearchbar>
+    <div class="body-container">
+      <div class="action-row">
+        <SolarSearchbar class="ml-2" place-holder="Search For Warehouses" @input="handleInputValueChange"></SolarSearchbar>
         <SolarButton class="ml-auto" button-text="Add Warehouse" @click="showCreateWarehouse = true"></SolarButton>
       </div>
+
       <SolarTable :columns="['Name', 'Address', 'Postal code', 'Action']">
-        <tr class="tableRow" v-for="warehouse in warehouses" :key="warehouse.id">
+        <tr class="tableRow" v-for="(warehouse) in warehouses" :key="warehouse.id">
           <td class="w-4 p-4">
-            <div class="flex items-center">
-              <input v-show="false"
-                     type="checkbox"
-                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-            </div>
           </td>
           <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
             <div class="pl-3">
@@ -52,11 +48,13 @@ import SolarButton from "@/components/general/SolarButton";
 import SolarTable from "@/components/general/SolarTable";
 import CreateWarehouse from "@/components/warehouse/warehousePopUps/CreateWarehouse";
 import UpdateWarehouse from "@/components/warehouse/warehousePopUps/UpdateWarehouse";
+import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
 
 export default {
-  name: "warehousePageComponent",
+  name: "WarehouseOverview",
   inject: ['warehouseService'],
   components: {
+    UsersRowComponent,
     UpdateWarehouse,
     SolarTitle,
     SolarSearchbar,
@@ -74,6 +72,14 @@ export default {
   },
   async created() {
       await this.getWarehouseList();
+  },
+
+  computed: {
+    filteredWarehouses() {
+      return this.warehouses.filter(p => {
+        return Object.keys(p).some(key => `${p[key]}`.toLowerCase().includes(this.inputValue));
+      })
+    },
   },
   methods: {
     async createWarehouse(newWarehouse){
@@ -119,13 +125,19 @@ export default {
     closePopUp(){
       this.showCreateWarehouse = false;
       this.showUpdateWarehouse = false;
-    }
+    },
+    handleInputValueChange(value) {
+      console.log(value);
+      this.inputValue = value;
+      // Use this.filterValue to search in the table
+    },
   }
 }
 </script>
 
 <style scoped>
-.title {
+
+.header {
   flex-direction: row;
   display: flex;
   padding-left: 1rem;
@@ -135,18 +147,18 @@ export default {
 .body {
   position: relative;
   overflow-x: auto;
+  color: #C7D02C;
 }
 
-.contentBox{
+.body-container {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   padding-bottom: 1rem;
-  padding-left: 1rem;
   background-color: white;
 }
 
-.contentHeader{
+.action-row {
   display: flex;
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;

@@ -32,12 +32,12 @@ export default {
 <template>
   <tr class="table-row">
     <!-- Check box  -->
-    <td class="w-4 p-4">
-      <div class="flex items-center">
+    <td class="w-2 p-4">
+      <div class="flex items-center ">
         <input
             type="checkbox"
             v-model="checked" @change="emitToggle"
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+            class="w-4 h-4 border-gray-300 rounded">
       </div>
     </td>
     <!--User Item-->

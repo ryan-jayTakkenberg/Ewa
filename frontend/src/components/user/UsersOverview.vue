@@ -225,7 +225,7 @@ export default {
       </div>
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
         <UsersRowComponent
-            v-for="(user) in paginatedUsers" :key="user.id" :user="user"
+            v-for="(user) in filterUsers" :key="user.id" :user="user"
             @edit="openEditModal"
             @delete="openDeleteModal"
             @toggle="toggleCheckbox(user, $event)"> <!-- Pass user and checkbox state -->
