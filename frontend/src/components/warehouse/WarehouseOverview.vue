@@ -48,13 +48,11 @@ import SolarButton from "@/components/general/SolarButton";
 import SolarTable from "@/components/general/SolarTable";
 import CreateWarehouse from "@/components/warehouse/warehousePopUps/CreateWarehouse";
 import UpdateWarehouse from "@/components/warehouse/warehousePopUps/UpdateWarehouse";
-import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
 
 export default {
   name: "WarehouseOverview",
   inject: ['warehouseService'],
   components: {
-    UsersRowComponent,
     UpdateWarehouse,
     SolarTitle,
     SolarSearchbar,
