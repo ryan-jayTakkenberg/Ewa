@@ -1,4 +1,4 @@
-package app.authentication;
+package app.enums;
 
 public enum PermissionLevel {
     ADMIN, VIEWER;

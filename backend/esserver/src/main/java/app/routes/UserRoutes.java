@@ -1,18 +1,16 @@
 package app.routes;
 
 import app.Util;
-import app.authentication.AuthenticationService;
-import app.authentication.PermissionLevel;
 import app.exceptions.BadRequestException;
+import app.exceptions.ForbiddenException;
+import app.jwt.JWToken;
 import app.models.UserModel;
 import app.repositories.UserJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -21,22 +19,21 @@ public class UserRoutes {
     @Autowired
     private UserJPARepository userRepo;
 
-    @Autowired
-    private AuthenticationService credentials;
-
     @GetMapping
-    private List<UserModel> getUsers(@RequestHeader("Authorization") String authorization) {
-        UserModel user = credentials.getUser(authorization);
-        if (user.getPermissionLevel() == PermissionLevel.ADMIN) {
+    private List<UserModel> getUsers(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
+        if (jwtInfo.isAdmin()) {
             return userRepo.findAll();
         }
-        return List.of(user);
+
+        return List.of(userRepo.findById(jwtInfo.getId()));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private UserModel postUser(@RequestHeader("Authorization") String authorization, @RequestBody UserModel user) {
-        credentials.mustBeAdmin(authorization);
+    private UserModel postUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody UserModel user) {
+        if (!jwtInfo.isAdmin()) {
+            throw new ForbiddenException("Admin role is required to create an user");
+        }
 
         if (user.getPassword() != null) {
             // Hash given password
@@ -47,41 +44,18 @@ public class UserRoutes {
         boolean isEditing = user.getId() > 0;
         if (isEditing) {
             UserModel currentUser = this.userRepo.findById(user.getId());
-            if (user.getUuid() == null) {
-                user.setUuid(currentUser.getUuid());
-            }
-        } else {
-            user.setUuid(UUID.randomUUID());
+            // TODO
         }
 
         return userRepo.save(user);
     }
 
-    @PostMapping("/login")
-    private UserModel postLogin(@RequestBody UserModel login) {
-        if (login.getName() == null) {
-            throw new BadRequestException("Name is required");
-        }
-        if (login.getPassword() == null) {
-            throw new BadRequestException("Password is required");
-        }
-
-        String username = login.getName();
-        String hashedPassword = Util.hash(login.getPassword());
-
-        for (UserModel user : userRepo.findAll()) {
-            if (user.getName().equals(username) && user.getPassword().equals(hashedPassword)) {
-                user.setLastLogin(LocalDate.now());
-                return userRepo.save(user);
-            }
-        }
-
-        return login;
-    }
-
     @DeleteMapping("/{id}")
-    private UserModel deleteProduct(@RequestHeader("Authorization") String authorization, @PathVariable Integer id) {
-        credentials.mustBeAdmin(authorization);
+    private UserModel deleteProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
+        if (!jwtInfo.isAdmin()) {
+            throw new ForbiddenException("Admin role is required to delete an user");
+        }
+
         if (id == null) {
             throw new BadRequestException("No valid ID provided for product");
         }

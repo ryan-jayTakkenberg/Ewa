@@ -1,15 +1,12 @@
 package app.models;
 
 import app.Util;
-import app.authentication.PermissionLevel;
+import app.enums.PermissionLevel;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 public class UserModel {
@@ -18,7 +15,6 @@ public class UserModel {
     @GeneratedValue
     private long id;
 
-    private UUID uuid;
     private PermissionLevel permissionLevel;
 
     private String name;
@@ -26,8 +22,7 @@ public class UserModel {
     private LocalDate lastLogin;
     private String password;
 
-    public UserModel(UUID uuid, PermissionLevel permissionLevel, String name, String email, LocalDate lastLogin, String password) {
-        this.uuid = uuid;
+    public UserModel(PermissionLevel permissionLevel, String name, String email, LocalDate lastLogin, String password) {
         this.permissionLevel = permissionLevel;
         this.name = name;
         this.email = email;
@@ -39,13 +34,7 @@ public class UserModel {
 
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
 
     public PermissionLevel getPermissionLevel() {
         return permissionLevel;
