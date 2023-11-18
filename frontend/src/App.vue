@@ -25,6 +25,7 @@ import {WarehouseAdaptor} from "@/service/warehouse-adaptor";
 import {TeamsAdaptor} from "@/service/teams-adaptor";
 import CONFIG from "@/app-config";
 import {getJWT} from "@/data";
+import {getAPI, responseOk} from "@/backend";
 
 export default {
   name: 'App',
@@ -48,17 +49,19 @@ export default {
     }
   },
   watch: {
-    '$route'(from, to) {
+    async '$route'(to, from) {
       if (from === to) {
         return;
       }
 
-      this.isLoggedIn = getJWT().length > 0;
-      if (!this.isLoggedIn) {
-        this.$router.push('/login');
-      } else if (!this.fetchedData) {
-        // This only fetches the data accessible to the logged-in user
-        (async () => {
+      this.isLoggedIn = responseOk(await getAPI("/api/authentication/status"));
+      if (this.isLoggedIn) {
+        if (to.path === '/login') {
+          this.$router.push('/overview');
+          return;
+        }
+        if (!this.fetchedData) {
+          // This only fetches the data accessible to the logged-in user
           try {
             const [teams, users, products, projects, warehouses] = await Promise.all([
               Team.getDatabase(),
@@ -78,7 +81,9 @@ export default {
           } catch (error) {
             console.error(error);
           }
-        })();
+        }
+      } else if (to.path !== '/login') {
+        this.$router.push('/login');
       }
     }
   },
