@@ -1,6 +1,5 @@
-import {getJWT} from "../data";
-import axios from "../axios-config";
 import {classToObject} from "@/models/helper";
+import {deleteAPI, getAPI, postAPI, responseOk} from "@/backend";
 
 export default class Product {
     id;
@@ -56,11 +55,10 @@ export default class Product {
         try {
             const isNewProduct = this.id < 0;
 
-            let response = await axios.post("/api/product", classToObject(this), {
-                headers: {
-                    "Authorization": getJWT(),
-                }
-            });
+            let response = await postAPI("/api/product", classToObject(this));
+            if (!responseOk(response)) {
+                return;
+            }
 
             // make a post request to the backend
             // if the current product id is -1, receive the new product id
@@ -88,11 +86,7 @@ export default class Product {
             }
 
             // make a delete request to the backend
-            await axios.delete(`/api/product/${this.id}`, {
-                headers: {
-                    "Authorization": getJWT()
-                }
-            });
+            await deleteAPI(`/api/product/${this.id}`);
 
             Product.products = Product.products.filter(o => o.id !== this.id);
             return true;
@@ -109,11 +103,10 @@ export default class Product {
             this.fetching = true;
             // make a get request to the backend
             // update "products" with the response
-            let response = await axios.get("/api/product", {
-                headers: {
-                    "Authorization": getJWT()
-                }
-            });
+            let response = await getAPI("/api/product");
+            if (!responseOk(response)) {
+                return;
+            }
 
             let products = [];
             for (let obj of response.data) {

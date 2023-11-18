@@ -32,3 +32,7 @@ export async function deleteAPI(endpoint) {
         },
     }).catch(r => r?.response);
 }
+
+export function responseOk(response) {
+    return response?.status && response.status >= 200 && response.status < 300;
+}
