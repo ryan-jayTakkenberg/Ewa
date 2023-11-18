@@ -1,98 +1,77 @@
-
 import Team from "@/models/team";
+import {deleteAPI, getAPI, postAPI, putAPI, responseOk} from "@/backend";
+import {classToObject} from "@/models/helper";
+
 export class TeamsAdaptor {
-    resourcesUrl;
-
-    constructor(resourcesURL) {
-        this.resourcesUrl = resourcesURL;
-    }
-
-    async fetchJson(url, options = null) {
-        try {
-            let response = await fetch(url, options);
-
-            console.log(response); // Log the response for debugging
-
-            if (response.ok) {
-                return await response.json();
-            } else {
-                console.log(response, !response.bodyUsed ? await response.text() : "");
-                return null;
-            }
-        } catch (error) {
-            console.error("Error fetching JSON:", error);
-            return null;
-        }
-    }
 
     async asyncFindAll() {
-        const teamsData = await this.fetchJson(this.resourcesUrl);
-        if (Array.isArray(teamsData)) {
-            return teamsData.map(data => new Team(data.id, data.name, data.warehouse, data.project));
-        } else {
-            console.error('Geen geldige JSON-array ontvangen.');
+        const response = await getAPI("/api/teams");
+        if (!responseOk(response)) {
+            console.error(response.data);
             return [];
         }
+
+        if (!Array.isArray(response.data)) {
+            console.error('Geen geldige JSON-array ontvangen: ' + response.data);
+            return [];
+        }
+
+        return response.data.map(data => new Team(data.id, data.name, data.warehouse, data.project));
     }
 
     async asyncFindById(id) {
-        return this.fetchJson(this.resourcesUrl + "/" + id);
+        const response = await getAPI(`/api/teams/${id}`);
+        if (!responseOk(response)) {
+            console.error(response.data);
+            return {};
+        }
+
+        return response.data;
     }
 
     async asyncSaveTeam(team) {
-        console.log(team)
-        const url = `${this.resourcesUrl}`;
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(team)
-        };
-        const response = await this.fetchJson(url, options);
-
-        if (response.id) {
-            team.id = response.id;
+        const response = await postAPI("/api/teams", classToObject(team));
+        if (!responseOk(response)) {
+            console.error(response.data);
+            return {};
         }
 
-        return response;
+        if (response.data.id) {
+            team.id = response.data.id;
+        }
+
+        return response.data;
     }
 
 
     async asyncUpdateTeam(team) {
-        try {
-            const url = `${this.resourcesUrl}/${team.id}`;
-            const options = {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(team),
-            };
-
-            const response = await this.fetchJson(url, options);
-
-            if (!response) {
-                throw new Error('Failed to update team. Empty response.');
-            }
-
-            // Assuming the response contains the updated team information
-            const updatedTeam = new Team(response.id, response.name, response.warehouse, response.project);
-
-            return updatedTeam;
-        } catch (error) {
-            console.error('Error updating team:', error);
-            throw error; // Rethrow the error to handle it in the calling code
+        const response = await putAPI(`/api/teams/${team.id}`, classToObject(team));
+        if (!responseOk(response)) {
+            console.error(response.data);
+            return {};
         }
+
+        const data = response.data;
+
+        // Checking if the response contains the updated team information
+        if (!data.id || !data.name || !data.warehouse || !data.project) {
+            console.error("Failed to update team. Empty response: " + data);
+            return {};
+        }
+
+        return new Team(data.id, data.name, data.warehouse, data.project);
     }
 
 
 
 
     async asyncDeleteById(id) {
-        return this.fetchJson(this.resourcesUrl + "/" + id,
-            {
-                method: 'DELETE'
-            })
+        const response = await deleteAPI(`/api/teams/${id}`);
+        if (!responseOk(response)) {
+            console.error(response.data);
+            return {};
+        }
+
+        return response.data;
     }
 }
