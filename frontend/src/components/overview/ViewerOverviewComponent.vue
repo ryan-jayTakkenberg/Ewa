@@ -2,11 +2,14 @@
 export default {
 
   name: "UserOverviewComponent",
-  inject: ['viewerOverviewService'],
+  /* inject: ['viewerOverviewService'], */
 
   data() {
     return {
-      userName: 'Jason',
+      viewerName: null,
+      viewerTeam: null,
+      viewerProjects: [],
+      viewerReports: [],
       meetingTime: '11:30 - 12:30',
       meetingLocation: 'Warehouse 2',
       selectedMessages: [],
@@ -40,7 +43,35 @@ export default {
       }
     },
 
+  mounted() {
+    // this.fetchData();
+  },
+
   methods: {
+
+    // async fetchData() {
+    //
+    //   this.viewerName = await this.viewerOverviewService.fetchViewerName(this.viewerId);
+    //
+    //   this.viewerTeam = await this.viewerOverviewService.fetchViewerTeam(this.viewerId);
+    //
+    //   this.viewerProjects = await this.viewerOverviewService.fetchViewerProjects(this.viewerId);
+    //
+    //   this.viewerReports = await this.viewerOverviewService.fetchViewerReports(this.viewerId);
+    // },
+
+    /* async postReport() {
+
+      const reportData = {
+        // Report data
+      };
+
+      const postedReport = await this.viewerOverviewService.postViewerReports(this.viewerId, reportData);
+      console.log('Posted Report:', postedReport);
+    },
+
+    */
+
     getRandomColor() {
       const colors = ['#00d315', '#ff0000'];
       const randomIndex = Math.floor(Math.random() * colors.length);
@@ -79,7 +110,7 @@ export default {
   <div class="personaContainer">
 
     <div class="welcomeContainer">
-      <h1>Hi {{ userName }}.</h1>
+      <h1>Hi {{ viewerName }}.</h1>
       <p class="description">This is an overview of information that is important to you.</p>
     </div>
     <div class="profilePicContainer">

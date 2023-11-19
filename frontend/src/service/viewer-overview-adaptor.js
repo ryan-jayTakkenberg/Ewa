@@ -1,9 +1,20 @@
-export class ViewerOverviewAdaptor {
+/* export class ViewerOverviewAdaptor {
 
     resourcesURL;
 
     constructor(resourcesURL) {
         this.resourcesUrl = resourcesURL;
+    }
+
+    async fetchViewerName(id) {
+
+        try {
+            let response = await fetch(this.resourcesUrl`/${id}`);
+            console.log(response.status);
+            return await response.json();
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async fetchViewerTeam(id) {
@@ -63,3 +74,4 @@ export class ViewerOverviewAdaptor {
         }
     }
 }
+*/
