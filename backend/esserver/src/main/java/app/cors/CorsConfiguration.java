@@ -17,8 +17,8 @@ public class CorsConfiguration {
                 registry.addMapping("/**")
                         .allowedOriginPatterns("http://localhost:*", "http://*.hva.nl:*")
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE)
-                        .exposedHeaders(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE)
+                        .allowedHeaders("*")
+                        .exposedHeaders("*")
                         .allowCredentials(true);
             }
         };

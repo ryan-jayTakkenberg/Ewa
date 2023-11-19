@@ -48,12 +48,12 @@
 <script>
 
 import {setAdmin, setId, setJWT} from "@/data";
-import axios from "@/axios-config";
 import Team from "@/models/team";
 import User from "@/models/user";
 import Product from "@/models/product";
 import Project from "@/models/project";
 import Warehouse from "@/models/warehouse";
+import {postAPI} from "@/backend";
 
 export default {
   name: 'LoginComponent',
@@ -85,16 +85,15 @@ export default {
     },
 
     async submitForm() {
-      let response = await axios.post("/api/authentication/login", {
+      let response = await postAPI("/api/authentication/login", {
         username: this.usernameInput,
         password: this.passwordInput,
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }).catch(() => null);
+      });
+
+      console.log(response);
 
       let jwt = response?.headers?.authorization;
+      console.log(jwt);
       if (!jwt) {
         this.errorMessage = 'Invalid Username & Password';
         return;

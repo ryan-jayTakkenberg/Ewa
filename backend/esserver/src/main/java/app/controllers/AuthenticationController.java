@@ -59,7 +59,7 @@ public class AuthenticationController {
 
     @GetMapping(path = "/status")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void authenticateAccount(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
-
+    public void authenticateAccount() {
+        // Returns status 204 (No content) when JWT is valid, otherwise returns status 401 (Unauthorized) when JWT is invalid
     }
 }
