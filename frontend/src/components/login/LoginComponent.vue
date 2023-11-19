@@ -90,10 +90,7 @@ export default {
         password: this.passwordInput,
       });
 
-      console.log(response);
-
       let jwt = response?.headers?.authorization;
-      console.log(jwt);
       if (!jwt) {
         this.errorMessage = 'Invalid Username & Password';
         return;

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {
@@ -18,7 +19,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // Exclude the login endpoint from JWT validation
-        if (request.getRequestURI().endsWith("/authentication/login")) {
+        if (request.getRequestURI().endsWith("/authentication/login") || "OPTIONS".equals(request.getMethod())) {
             chain.doFilter(request, response);
             return;
         }
