@@ -2,6 +2,7 @@
 export default {
 
   name: "UserOverviewComponent",
+  inject: ['viewerOverviewService'],
 
   data() {
     return {
