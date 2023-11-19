@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
+@Entity
 public class Report {
 
     /*
@@ -29,6 +30,11 @@ public class Report {
         this.date = date;
         this.sender = sender;
         this.receiver = receiver;
+    }
+
+    // TODO why do I need to add a second constructor when I add @Entity above the model?
+    public Report() {
+
     }
 
     public long getId() {
