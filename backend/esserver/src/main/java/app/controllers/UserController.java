@@ -28,6 +28,11 @@ public class UserController {
         return List.of(userRepo.findById(jwtInfo.getId()));
     }
 
+    @GetMapping("/{id}")
+    private UserModel getUserById(@PathVariable long id) {
+        return userRepo.findById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     private UserModel postUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody UserModel user) {

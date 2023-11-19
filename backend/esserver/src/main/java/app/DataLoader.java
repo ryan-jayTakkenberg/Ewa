@@ -3,8 +3,10 @@ package app;
 import app.enums.PermissionLevel;
 import app.models.Product;
 import app.models.UserModel;
+import app.models.Report;
 import app.repositories.ProductJPARepository;
 import app.repositories.UserJPARepository;
+import app.repositories.ReportJPARepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -19,6 +21,8 @@ public class DataLoader implements CommandLineRunner {
     private ProductJPARepository productRepo;
     @Autowired
     private UserJPARepository userRepo;
+    @Autowired
+    private ReportJPARepository reportRepo;
 
     @Transactional
     @Override
@@ -32,6 +36,12 @@ public class DataLoader implements CommandLineRunner {
         this.productRepo.save(new Product("Solar panel", 150.123, "Heeft een vermogen van 430 Wattpiek en beschikt over 108 cellen."));
         this.productRepo.save(new Product("Motor", 32.54, "Heeft een vermogen van 1000 Watt, 72V"));
         this.productRepo.save(new Product("Frame", 5423.23, "Sterk frame van goede metalen"));
+    }
+
+    private void createSampleReports() {
+        this.reportRepo.save(new Report(1, "lorem ipsum", "19/11/2023", "admin", "viewer"));
+        this.reportRepo.save(new Report(2, "lorem ipsum", "19/11/2023", "viewer", "admin"));
+        this.reportRepo.save(new Report(3, "lorem ipsum", "19/11/2023", "admin", "viewer"));
     }
 
     private void createInitialUsers() {
