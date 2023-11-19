@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/overview") // TODO update correct path
+@RequestMapping("/order") // TODO update correct path
 public class OrderController {
 
     /*
