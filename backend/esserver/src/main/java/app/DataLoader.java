@@ -30,6 +30,7 @@ public class DataLoader implements CommandLineRunner {
         System.out.println("Running CommandLine Startup");
         this.createInitialProducts();
         this.createInitialUsers();
+        this.createSampleReports();
     }
 
     private void createInitialProducts() {
