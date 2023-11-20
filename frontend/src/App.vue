@@ -24,8 +24,8 @@ import NavBar from "@/components/navigation/NavBar.vue";
 import {WarehouseAdaptor} from "@/service/warehouse-adaptor";
 import {TeamsAdaptor} from "@/service/teams-adaptor";
 import CONFIG from "@/app-config";
-import {getJWT} from "@/data";
 import {getAPI, responseOk} from "@/backend";
+import {getJWT} from "@/data";
 /* import {ViewerOverviewAdaptor} from "@/service/viewer-overview-adaptor"; */
 
 export default {
@@ -33,7 +33,7 @@ export default {
   components: {NavBar},
   data() {
     return {
-      isLoggedIn: getJWT().length > 0,
+      isLoggedIn: false,
       isSideBarExpanded: false,
       fetchedData: false,
     }
@@ -89,6 +89,11 @@ export default {
       }
     }
   },
+  created() {
+    if (!getJWT()) {
+      this.$router.push('/login');
+    }
+  }
 }
 </script>
 

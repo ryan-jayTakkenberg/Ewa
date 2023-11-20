@@ -17,7 +17,7 @@ import WarehouseOverview from "@/components/warehouse/WarehouseOverview.vue";
 import warehouseOverview from "@/components/warehouse/WarehouseOverview.vue";
 
 const routes = [
-    {path: '/', redirect: '/overview'},
+    {path: '/', redirect: '/login'},
     {path: '/login', component: LoginComponent},
     {path: '/overview', component: ViewerOverviewComponent},
     {path: '/admin-overview', component: AdminOverviewComponent},

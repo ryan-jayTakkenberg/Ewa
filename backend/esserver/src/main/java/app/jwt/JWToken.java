@@ -9,11 +9,11 @@ import java.security.Key;
 import java.util.Date;
 
 public class JWToken {
-    public static final String JWT_ATTRIBUTE_NAME = "attribute";
+    public static final String JWT_ATTRIBUTE_NAME = "att";
     private static final String JWT_ISSUER_CLAIM = "iss";
     private static final String JWT_CALLNAME_CLAIM = "sub";
     private static final String JWT_ACCOUNTID_CLAIM = "id";
-    private static final String JWT_ROLE_CLAIM = "role";
+    private static final String JWT_ROLE_CLAIM = "rol";
 
     private String callName;
     private long accountId;
@@ -66,6 +66,10 @@ public class JWToken {
         return permissionLevel == PermissionLevel.ADMIN;
     }
 
+    /**
+     * Gets the id of the user (see UserModel)
+     * @return the id of the user
+     */
     public long getId() {
         return accountId;
     }
