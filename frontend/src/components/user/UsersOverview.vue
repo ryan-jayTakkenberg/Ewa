@@ -12,6 +12,7 @@ import CreateUserModal from "@/components/user/user-modals/CreateUserModal.vue";
 import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultipleUsersModal.vue";
 import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
 import SolarPagination from "@/components/general/SolarPagination.vue";
+import {getId} from "@/data";
 
 export default {
   name: "UsersOverview",
@@ -56,13 +57,9 @@ export default {
       return this.filterUsers.slice(startIndex, endIndex);
     },
     filterUsers() {
-      // Assuming getKey() returns the id of the user to be hidden
-      // TODO getKey() no longer exists and is now replace by getJWT(). User UUID no longer exists, you can use getId() instead to get the id of the user (number)
-      const userIdToHide = 0;
-
       return this.users.filter(p => {
-        // Exclude the user with userIdToHide from the filtered list
-        return p.id !== userIdToHide && Object.keys(p).some(key => `${p[key]}`.toLowerCase().includes(this.inputValue));
+        // Perform case-insensitive search
+        return Object.keys(p).some(key => `${p[key]}`.toLowerCase().includes(this.inputValue));
       });
     },
     isActionButtonDisabled() {
@@ -70,28 +67,21 @@ export default {
     },
   },
   methods: {
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-      }
-    },
-    nextPage() {
-      const lastPage = Math.ceil(this.filterUsers.length / this.itemsPerPage);
-      if (this.currentPage < lastPage) {
-        this.currentPage++;
-      }
-    },
     fetchUsers() {
       if (!this.users?.length) {
         // Keep updating the list if the database has not returned all the data yet
         const fetchingInterval = setInterval(() => {
           if (!User.fetching) {
+            // Get the id to hide the current logged-in User TODO does not work?
+            const userIdToHide = getId();
+            // Exclude the current logged-in user with userIdToHide
+            this.users = User.users.filter(user => user.id !== userIdToHide);
+
             this.users = [...User.users];
             clearInterval(fetchingInterval);
           }
         }, 100);
       }
-      console.log(this.users)
     },
     async createUser(createdUser) {
       this.closeModal();
@@ -100,11 +90,9 @@ export default {
         this.users.push(newUser);
       }
     },
-
     async editUser(updated) {
-      // Assuming there is only one user in this.selectedProducts
+      this.closeModal();
       let edited = this.selectedUser;
-
       if (edited) {
         let index = this.users.findIndex(p => p.id === edited.id);
         edited.injectAttributes(updated);
@@ -114,27 +102,19 @@ export default {
           this.users[index] = user;
         }
       }
-
-      this.closeModal();
     },
-
     async deleteUser() {
       this.closeModal();
       const deletedUser = this.selectedUser;
       this.users = this.users.filter(user => user.id !== deletedUser.id);
       await deletedUser.delDatabase();
     },
-
     async deleteCheckedUsers() {
-      // Close the modal
       this.closeModal();
-
       // Uncheck the selected users in the UsersRowComponent
       this.users.forEach(user => {
         user.isChecked = false;
       });
-
-      // Get the IDs of the users to delete
       const userIdsToDelete = this.checkedUsers.map(user => user.id);
 
       // Delete users one by one
@@ -144,18 +124,16 @@ export default {
         if (deletedUserIndex !== -1) {
           const deletedUser = this.users[deletedUserIndex];
 
-          // Delete user
+          // Delete user from database
           await deletedUser.delDatabase();
 
           // Remove the user from the users array
           this.users.splice(deletedUserIndex, 1);
         }
       }
-      // Clear the checkedUsers array
       this.checkedUsers = [];
     },
     handleInputValueChange(value) {
-      console.log(value);
       this.inputValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
     },
     openCreateModal() {
@@ -170,9 +148,7 @@ export default {
       this.showDeleteModal = true;
     },
     openDeleteMultipleUsersModal() {
-      console.log("test before");
       this.showDeleteMultipleModal = true;
-      console.log("test after");
       this.closeDropdown();
     },
     closeModal() {
@@ -191,7 +167,6 @@ export default {
         // User is not checked, so add them to the array
         this.checkedUsers = [...this.checkedUsers, user];
       }
-      console.log(this.checkedUsers);
     },
     closeDropdown() {
       this.$refs.dropdownButton.hideDropdown(); // Call the hideDropdown method from the ref
@@ -202,6 +177,17 @@ export default {
         return this.users.find(user => user.id === userId);
       }
       return null;
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+    nextPage() {
+      const lastPage = Math.ceil(this.filterUsers.length / this.itemsPerPage);
+      if (this.currentPage < lastPage) {
+        this.currentPage++;
+      }
     },
   },
   watch: {
@@ -225,7 +211,7 @@ export default {
       </div>
       <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
         <UsersRowComponent
-            v-for="(user) in filterUsers" :key="user.id" :user="user"
+            v-for="(user) in paginatedUsers" :key="user.id" :user="user"
             @edit="openEditModal"
             @delete="openDeleteModal"
             @toggle="toggleCheckbox(user, $event)"> <!-- Pass user and checkbox state -->

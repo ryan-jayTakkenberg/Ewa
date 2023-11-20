@@ -219,19 +219,17 @@ export default {
     <div class="body-container">
       <div class="action-row">
         <SolarDropdownMenuButton text-button="Action" ref="dropdownButton" :disabled="isActionButtonDisabled">
-
-          <!--    TODO Edit multiple Orders   -->
-          <!--          <SolarDropdownMenuItem text-menu-item="Edit Orders" @click="editCheckedUsersOneByOne">-->
-          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteMultipleUsersModal"/>
+          <SolarDropdownMenuItem text-menu-item="Confirm Orders" @click="openConfirmMultipleOrdersModal"/>
         </SolarDropdownMenuButton>
         <SolarSearchbar place-holder="Search For Orders" @search="handleInputValueChange"></SolarSearchbar>
-        <SolarButton class="ml-auto" button-text="Create Order" @click="openCreateModal"></SolarButton>
+        <SolarButton class="ml-auto" button-text="Create Order" @click="openCreateOrderModal"></SolarButton>
       </div>
-      <SolarTable :columns="['order number', 'order date', 'estimated delivery date', 'ordered for warehouse', 'total price', 'status', 'action']">
+      <SolarTable
+          :columns="['order number', 'order date', 'estimated delivery date', 'ordered for warehouse', 'total price', 'status', 'products', 'action']">
         <OrderRowComponent
             v-for="(order) in paginatedOrders" :key="order.id" :order="order"
-            @edit="openEditModal"
-            @delete="openDeleteModal"
+            @edit="openEditOrderModal"
+            @delete="openDeleteOrderModal"
             @toggle="toggleCheckbox(order, $event)"> <!-- Pass user and checkbox state -->
         </OrderRowComponent>
       </SolarTable>
@@ -239,30 +237,30 @@ export default {
     </div>
   </div>
 
-<!--  &lt;!&ndash; Conditionally render modals based on boolean modal states &ndash;&gt;-->
-<!--  <CreateUserModal-->
-<!--      v-if="showCreateModal"-->
-<!--      :on-close="closeModal"-->
-<!--      @create-user="createUser"-->
-<!--  />-->
-<!--  <UpdateUserModal-->
-<!--      v-if="showUpdateModal"-->
-<!--      :on-close="closeModal"-->
-<!--      :user="selectedUser"-->
-<!--      @update-user="editUser"-->
-<!--  />-->
-<!--  <DeleteUserModal-->
-<!--      v-if="showDeleteModal"-->
-<!--      :on-close="closeModal"-->
-<!--      :user="selectedUser"-->
-<!--      @delete-user="deleteUser"-->
-<!--  />-->
-<!--  <DeleteMultipleUsersModal-->
-<!--      v-if="showDeleteMultipleModal"-->
-<!--      :on-close="closeModal"-->
-<!--      :users-to-delete="checkedUsers"-->
-<!--      @delete-users="deleteCheckedUsers"-->
-<!--  />-->
+  <!--  &lt;!&ndash; Conditionally render modals based on boolean modal states &ndash;&gt;-->
+  <!--  <CreateUserModal-->
+  <!--      v-if="showCreateModal"-->
+  <!--      :on-close="closeModal"-->
+  <!--      @create-user="createUser"-->
+  <!--  />-->
+  <!--  <UpdateUserModal-->
+  <!--      v-if="showUpdateModal"-->
+  <!--      :on-close="closeModal"-->
+  <!--      :user="selectedUser"-->
+  <!--      @update-user="editUser"-->
+  <!--  />-->
+  <!--  <DeleteUserModal-->
+  <!--      v-if="showDeleteModal"-->
+  <!--      :on-close="closeModal"-->
+  <!--      :user="selectedUser"-->
+  <!--      @delete-user="deleteUser"-->
+  <!--  />-->
+  <!--  <DeleteMultipleUsersModal-->
+  <!--      v-if="showDeleteMultipleModal"-->
+  <!--      :on-close="closeModal"-->
+  <!--      :users-to-delete="checkedUsers"-->
+  <!--      @delete-users="deleteCheckedUsers"-->
+  <!--  />-->
 </template>
 
 <style scoped>
