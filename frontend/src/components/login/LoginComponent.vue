@@ -115,7 +115,13 @@ export default {
         Project.projects = projects;
         Warehouse.warehouses = warehouses;
 
-        this.$router.push('/overview');
+        // Check the user's permission level and push the corresponding route
+        if (response.data.permissionLevel === "ADMIN") {
+          this.$router.push('/admin-overview');
+        } else {
+          this.$router.push('/viewer-overview');
+        }
+
       } catch (error) {
         console.error(error);
       }
