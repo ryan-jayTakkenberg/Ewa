@@ -4,19 +4,22 @@ import app.models.Report;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
 @Transactional
 public class ReportJPARepository implements EntityRepositoryJPA<Report> {
+
     @PersistenceContext
     private EntityManager em;
 
     @Override
     public List<Report> findAll() {
-        // TODO
-        return null;
+
+        TypedQuery<Report> query = this.em.createQuery("SELECT r FROM Report r", Report.class);
+        return query.getResultList();
     }
 
     @Override
@@ -27,8 +30,8 @@ public class ReportJPARepository implements EntityRepositoryJPA<Report> {
 
     @Override
     public Report save(Report entity) {
-        // TODO
-        return null;
+
+        return em.merge(entity);
     }
 
     @Override

@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/report") // TODO update correct path
+@RequestMapping("/reports")
 public class ReportController {
 
     /*
-     * PRODUCT CONTROLLER
+     * REPORT CONTROLLER
      * This controller class manages the CRUD (Create, Read, Update, Delete) operations for the 'Report' entity.
      *
      * Endpoints:
@@ -46,12 +46,6 @@ public class ReportController {
     @GetMapping
     private List<Report> getReports(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
 
-        // TODO check logged in user id and fetch their respective reports
-
-//        if (jwtInfo == null) {
-//            throw new ForbiddenException("No token provided");
-//        }
-
         return reportRepo.findAll();
     }
 
@@ -60,13 +54,6 @@ public class ReportController {
     private Report postReport(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Report report) {
 
         // TODO check logged in user id and post new report into their respective database
-
-//        if (jwtInfo == null) {
-//            throw new ForbiddenException("No token provided");
-//        }
-//        if (!jwtInfo.isAdmin()) {
-//            throw new ForbiddenException("Admin role is required to create a product");
-//        }
 
         return reportRepo.save(report);
     }

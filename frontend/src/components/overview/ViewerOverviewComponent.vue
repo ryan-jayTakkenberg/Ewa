@@ -2,17 +2,18 @@
 export default {
 
   name: "UserOverviewComponent",
-  /* inject: ['viewerOverviewService'], */
+  inject: ['viewerOverviewService'],
 
   data() {
     return {
-      viewerName: null,
+      viewerName: '',
       viewerTeam: null,
       viewerProjects: [],
       viewerReports: [],
       meetingTime: '11:30 - 12:30',
       meetingLocation: 'Warehouse 2',
       selectedMessages: [],
+      reportBody: "",
 
       projects: [
         { title: 'Project Green', team: '1' },
@@ -26,57 +27,52 @@ export default {
         { title: 'Planned from: 20/10/2023 to 27/10/2023' },
         { title: 'Planned from: 25/10/2023 to 31/10/2023' },
       ],
-      sampleMessages: [
-        {
-          sender: 'Admin',
-          content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam distinctio, ducimus, fugiat incidunt natus non porro quasi qui recusandae tempora tempore vero vitae voluptatibus! Dolorem esse nemo soluta voluptatem voluptatum.'
-        },
-        {
-          sender: 'Admin',
-          content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam distinctio, ducimus, fugiat incidunt natus non porro quasi qui recusandae tempora tempore vero vitae voluptatibus! Dolorem esse nemo soluta voluptatem voluptatum.'
-        },
-        {
-          sender: 'Warehouse 2',
-          content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam distinctio, ducimus, fugiat incidunt natus non porro quasi qui recusandae tempora tempore vero vitae voluptatibus! Dolorem esse nemo soluta voluptatem voluptatum.'
-        },
-      ],
+
       }
     },
 
   mounted() {
-    // this.fetchData();
+    this.fetchData();
   },
 
   methods: {
 
-    // async fetchData() {
-    //
-    //   this.viewerName = await this.viewerOverviewService.fetchViewerName(this.viewerId);
-    //
-    //   this.viewerTeam = await this.viewerOverviewService.fetchViewerTeam(this.viewerId);
-    //
-    //   this.viewerProjects = await this.viewerOverviewService.fetchViewerProjects(this.viewerId);
-    //
-    //   this.viewerReports = await this.viewerOverviewService.fetchViewerReports(this.viewerId);
-    // },
+    async fetchData() {
 
-    /* async postReport() {
+      this.viewerName = await this.viewerOverviewService.fetchViewerName();
+      //
+      // this.viewerTeam = await this.viewerOverviewService.fetchViewerTeam(this.userId);
+      //
+      // this.viewerProjects = await this.viewerOverviewService.fetchViewerProjects(this.userId);
 
-      const reportData = {
-        // Report data
-      };
-
-      const postedReport = await this.viewerOverviewService.postViewerReports(this.viewerId, reportData);
-      console.log('Posted Report:', postedReport);
+      this.viewerReports = await this.viewerOverviewService.fetchViewerReports();
     },
 
-    */
+    async postReport() {
+
+      const report = {
+        date: new Date().toLocaleDateString(),
+        sender: "viewer",
+        receiver: "admin",
+        body: this.reportBody,
+      };
+
+      await this.viewerOverviewService.postReport(report);
+
+      this.reportBody = '';
+    },
+
+
+    capitalizeFirstLetter(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
 
     getRandomColor() {
       const colors = ['#00d315', '#ff0000'];
       const randomIndex = Math.floor(Math.random() * colors.length);
       return colors[randomIndex];
     },
+
     toggleSelected(index) {
       if (this.selectedMessages.includes(index)) {
         this.selectedMessages = this.selectedMessages.filter((item) => item !== index);
@@ -110,22 +106,19 @@ export default {
   <div class="personaContainer">
 
     <div class="welcomeContainer">
-      <h1>Hi {{ viewerName }}.</h1>
+      <h1>Hi, {{ viewerName }}</h1>
       <p class="description">This is an overview of information that is important to you.</p>
     </div>
-    <div class="profilePicContainer">
-      <div class="profilePic"></div>
+
+    <div class="dateContainer">
+      <p class="dayOfTheWeek">{{ dayOfTheWeek }}</p>
+      <p class="dayOfTheWeekNum">{{ numberOfTheDay }}</p>
     </div>
 
   </div>
 
   <!--- Agenda ---------------------------------------------------------------------------------->
   <div class="sectionContainer agenda">
-
-    <div class="dateContainer">
-      <p class="dayOfTheWeek">{{ dayOfTheWeek }}</p>
-      <p class="dayOfTheWeekNum">{{ numberOfTheDay }}</p>
-    </div>
 
       <div class="insightContainer">
         <p class="medium"> 1 meeting today:</p>
@@ -164,31 +157,56 @@ export default {
     </div>
   </div>
 
-  <!--- messages ---------------------------------------------------------------------------------->
+  <!--- reports ---------------------------------------------------------------------------------->
   <div class="sectionContainer">
 
-    <div class="messageHeader">
-      <h1 class="sectionTitle">Messages</h1>
+    <div class="reportsHeader">
+      <h1 class="sectionTitle">Reports</h1>
       <div class="buttonContainer">
-        <button class="deleteMessage">
-          <span class="material-symbols-outlined button">delete</span>
-        </button>
-        <button class="filterMessage">
-          <span class="material-symbols-outlined button">filter_alt</span>
-        </button>
       </div>
     </div>
 
-    <div class="messageContainer">
-      <div
-          class="messageWrapper"
-          v-for="(message, index) in sampleMessages"
-          :key="index"
-          @click="toggleSelected(index)"
-          :class="{ 'selected': selectedMessages.includes(index) }">
-        <div class="messageSender"> {{ message.sender }} </div>
-        <div class="message"> {{ message.content }} </div>
+    <div class="reportsContainerWrapper">
+
+      <div class="reportsContainer">
+
+        <div class="inboxHeader">
+          <div class="containerTitle">Inbox</div>
+
+          <div class="buttonWrapper">
+            <button class="deleteMessage">
+              <span class="material-symbols-outlined button">delete</span>
+            </button>
+            <button class="filterMessage">
+              <span class="material-symbols-outlined button">filter_alt</span>
+            </button>
+          </div>
+
+        </div>
+        <div
+            class="messageWrapper"
+            v-for="(report, index) in viewerReports"
+            :key="index"
+            @click="toggleSelected(index)"
+            :class="{ 'selected': selectedMessages.includes(index) }">
+
+          <div class="messageHeader">
+            <div class="messageSender"> {{ capitalizeFirstLetter(report.sender) }} </div>
+            <div class="messageDate"> {{ report.date }} </div>
+          </div>
+
+          <div class="message"> {{ report.body }} </div>
+
+        </div>
       </div>
+
+      <div class="sendReportsContainer">
+        <div class="containerTitle">Send a report</div>
+        <textarea v-model="reportBody" placeholder="Type your report here..." class="reportInput"></textarea>
+        <button @click="postReport" class="sendReportButton">Send</button>
+
+      </div>
+
     </div>
 
   </div>
@@ -224,13 +242,6 @@ h1 {
   color: #aaa;
 }
 
-.profilePicContainer {
-  height: 100px;
-  width: 100px;
-  background: #f5f5f5;
-  border-radius: 50%;
-}
-
 .sectionContainer {
   width: 100%;
   padding: 2rem 3rem;
@@ -248,21 +259,21 @@ h1 {
   flex-direction: column;
   width: 150px;
   height: 150px;
-  border: 2px solid #e5e5e5;
-  border-radius: 15px;
+  background: #f5f5f5;
+  border-radius: 10px;
 }
 
 .dayOfTheWeek {
   font-size: 1.5rem;
   font-weight: 700;
-  line-height: 0.8;
+  line-height: 0.5;
   color: #222;
 }
 
 .dayOfTheWeekNum {
   font-size: 3rem;
   font-weight: 800;
-  line-height: 0.8;
+  line-height: 1.2;
   color: #222;
 }
 
@@ -306,14 +317,15 @@ h1 {
   min-width: 500px;
   width: auto;
   flex: 0 0 auto;
-  background: #f5f5f5;
+  background: #fff;
+  border: 2px solid #222;
   border-radius: 5px;
   padding: 1rem;
   cursor: pointer;
 }
 
 .projectWrapper:hover {
-  outline: 2px solid #222;
+  background: #f5f5f5;
 }
 
 .projectHeader {
@@ -353,19 +365,26 @@ p {
   color: #222;
 }
 
-.messageContainer {
+.reportsContainerWrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+.reportsContainer {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   padding: 2rem;
   height: 500px;
-  width: 50%;
+  width: 100%;
   background: #f5f5f5;
   border-radius: 10px;
   overflow-y: scroll;
 }
 
-.messageHeader {
+.reportsHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -387,18 +406,75 @@ p {
   cursor: pointer;
 }
 
-.messageSender {
-  width: 100%;
-  font-weight: 600;
-  color: #222;
-  border-bottom: 1px solid #e5e5e5;
-}
-
 .selected {
   background-color: #e5e5e5;
 }
 
-.buttonContainer {
+.sendReportsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  height: 500px;
+  width: 100%;
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.containerTitle {
+  font-size: 1em;
+  font-weight: 600;
+  color: #222;
+}
+
+.reportInput {
+  height: 80%;
+  padding: 0.5rem;
+  border-radius: 5px;
+  resize: vertical;
+  min-height: 20%;
+  max-height: 70%;
+}
+
+.sendReportButton {
+  width: 100px;
+  background: #c5ce2c;
+  color: #fff;
+  font-size: 1em;
+  font-weight: 600;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+.sendReportButton:hover {
+  outline: 2px solid #222;
+}
+
+.inboxHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.messageHeader {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e5e5;
+  width: 100%;
+}
+
+.messageSender {
+  font-weight: 600;
+  color: #222;
+}
+
+.messageDate {
+  font-weight: 300;
+  color: #c5c5c5;
+}
+
+.buttonWrapper {
   display: flex;
   gap: 1rem;
 }
@@ -409,13 +485,15 @@ button {
   justify-content: center;
   height: 50px;
   width: 50px;
-  background: #f5f5f5;
+  background: none;
   outline: none;
   cursor: pointer;
 }
 
 button:hover {
-  outline: 2px solid #222;
+  background: #e5e5e5;
 }
+
+
 
 </style>

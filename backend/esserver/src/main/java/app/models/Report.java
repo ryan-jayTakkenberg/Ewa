@@ -3,6 +3,8 @@ package app.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import java.util.List;
 
 @Entity
 public class Report {
@@ -32,7 +34,6 @@ public class Report {
         this.receiver = receiver;
     }
 
-    // TODO why do I need to add a second constructor when I add @Entity above the model?
     public Report() {
 
     }
