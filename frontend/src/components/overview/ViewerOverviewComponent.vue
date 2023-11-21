@@ -14,20 +14,6 @@ export default {
       meetingLocation: 'Warehouse 2',
       selectedMessages: [],
       reportBody: "",
-
-      projects: [
-        { title: 'Project Green', team: '1' },
-        { title: 'Project Blue', team: '2' },
-        { title: 'Project Red', team: '1' },
-        { title: 'Project Yellow', team: '3' },
-      ],
-      projectDescriptions: [
-        { title: 'Planned from: 17/10/2023 to 25/10/2023' },
-        { title: 'Planned from: 19/10/2023 to 23/10/2023' },
-        { title: 'Planned from: 20/10/2023 to 27/10/2023' },
-        { title: 'Planned from: 25/10/2023 to 31/10/2023' },
-      ],
-
       }
     },
 
@@ -42,8 +28,8 @@ export default {
       this.viewerName = await this.viewerOverviewService.fetchViewerName();
       //
       // this.viewerTeam = await this.viewerOverviewService.fetchViewerTeam(this.userId);
-      //
-      // this.viewerProjects = await this.viewerOverviewService.fetchViewerProjects(this.userId);
+
+      this.viewerProjects = await this.viewerOverviewService.fetchViewerProjects();
 
       this.viewerReports = await this.viewerOverviewService.fetchViewerReports();
     },
@@ -118,22 +104,22 @@ export default {
   </div>
 
   <!--- Agenda ---------------------------------------------------------------------------------->
-  <div class="sectionContainer agenda">
+<!--  <div class="sectionContainer agenda">-->
 
-      <div class="insightContainer">
-        <p class="medium"> 1 meeting today:</p>
-        <div class="meetingWrapper">
-          <span class="material-symbols-outlined">schedule</span>
-          <div> {{ meetingTime }} </div>
-        </div>
-        <div class="meetingWrapper">
-          <span class="material-symbols-outlined">location_on</span>
-          <div> {{ meetingLocation }} </div>
-        </div>
+<!--      <div class="insightContainer">-->
+<!--        <p class="medium"> 1 meeting today:</p>-->
+<!--        <div class="meetingWrapper">-->
+<!--          <span class="material-symbols-outlined">schedule</span>-->
+<!--          <div> {{ meetingTime }} </div>-->
+<!--        </div>-->
+<!--        <div class="meetingWrapper">-->
+<!--          <span class="material-symbols-outlined">location_on</span>-->
+<!--          <div> {{ meetingLocation }} </div>-->
+<!--        </div>-->
 
-      </div>
+<!--      </div>-->
 
-  </div>
+<!--  </div>-->
 
   <!--- projects ---------------------------------------------------------------------------------->
   <div class="sectionContainer">
@@ -141,19 +127,32 @@ export default {
     <h1 class="sectionTitle">Ongoing Projects</h1>
     <div class="projectContainer">
 
-      <div class="projectWrapper" v-for="(project, index) in projects" :key="index">
+      <div class="projectWrapper" v-for="(project, index) in viewerProjects" :key="index">
         <div class="projectHeader">
-          <div class="projectTitle"> {{ project.title }}</div>
+          <div class="projectTitle">{{ project.projectName }}</div>
           <div class="statusWrapper">
             <div class="projectStatus"> Status: </div>
             <div :style="{ backgroundColor: getRandomColor() }" class="statusColor"></div>
           </div>
         </div>
-        <div class="projectDescription">{{ projectDescriptions[index].title }}<br>
-              Team: {{ project.team }}</div>
-        <p>Click for more details</p>
-      </div>
 
+        <div class="projectDescription">
+          <div class="infoTitle">
+            <div class="descriptionTitle">Client:</div>
+            <div class="descriptionTitle">Team:</div>
+            <div class="descriptionTitle">Warehouse:</div>
+            <div class="descriptionTitle">Install Date:</div>
+          </div>
+          <div class="infoValue">
+            <div class="descriptionValue">{{ project.clientName }}</div>
+            <div class="descriptionValue">{{ project.installTeamId }}</div>
+            <div class="descriptionValue">{{ project.usedWarehouseId }}</div>
+            <div class="descriptionValue">{{ project.installDate }}</div>
+          </div>
+        </div>
+        <p>Click for more details</p>
+
+      </div>
     </div>
   </div>
 
@@ -313,12 +312,16 @@ h1 {
   margin-top: 1rem;
 }
 
+.descriptionTitle {
+  font-weight: 600;
+}
+
 .projectWrapper {
   min-width: 500px;
   width: auto;
   flex: 0 0 auto;
   background: #fff;
-  border: 2px solid #222;
+  border: 2px solid #ccc;
   border-radius: 5px;
   padding: 1rem;
   cursor: pointer;
@@ -339,6 +342,15 @@ h1 {
   font-size: 1.2rem;
   font-weight: 700;
   color: #222;
+}
+
+.projectDescription {
+  display: flex;
+  gap: 2rem;
+}
+
+.descriptionValue {
+  font-weight: 300;
 }
 
 .statusWrapper {

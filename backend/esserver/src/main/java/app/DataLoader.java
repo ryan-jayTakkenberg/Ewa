@@ -1,14 +1,12 @@
 package app;
 
 import app.enums.PermissionLevel;
-import app.models.Product;
-import app.models.UserModel;
-import app.models.Report;
-import app.models.Order;
+import app.models.*;
 import app.repositories.ProductJPARepository;
 import app.repositories.UserJPARepository;
 import app.repositories.ReportJPARepository;
 import app.repositories.OrderJPARepository;
+import app.repositories.ProjectJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -25,6 +23,8 @@ public class DataLoader implements CommandLineRunner {
     private ReportJPARepository reportRepo;
     @Autowired
     private OrderJPARepository orderRepo;
+    @Autowired
+    private ProjectJPARepository projectsRepo;
 
     @Override
     public void run(String... args) {
@@ -34,6 +34,7 @@ public class DataLoader implements CommandLineRunner {
         this.createInitialUsers();
         this.createSampleReports();
         this.createSampleOrders();
+        this.createSampleProjects();
 
         System.out.println("Done!");
     }
@@ -57,6 +58,15 @@ public class DataLoader implements CommandLineRunner {
         this.orderRepo.save(new Order(1, "We need these products ASAP", "19/11/2023", "Solar Panel", 12));
         this.orderRepo.save(new Order(2, "Hi Admin, please order these products", "19/11/2023", "Motor", 8));
         this.orderRepo.save(new Order(3, "We've run out of solar panels", "19/11/2023", "Frame", 20));
+    }
+
+    private void createSampleProjects() {
+
+        LocalDate installDate = LocalDate.of(2023, 11, 21);
+        this.projectsRepo.save(new Project(1, "Blue", "HVA", installDate, "10S", "23E", "Project to install solar panels to Company A"));
+        this.projectsRepo.save(new Project(2, "Red", "Company B", installDate, "3S", "2", "Project to install solar panels to Company B"));
+        this.projectsRepo.save(new Project(3, "Green", "HVA", installDate, "5D", "26E", "Project to install solar panels to Company C"));
+        this.projectsRepo.save(new Project(4, "Yellow", "Company A", installDate, "8T", "15A", "Project to install solar panels to Company D"));
     }
 
     private void createInitialUsers() {
