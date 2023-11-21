@@ -84,8 +84,6 @@ export default {
             console.error(error);
           }
         }
-      } else if (to.path !== '/login') {
-        this.$router.push('/login');
       }
     }
   },
