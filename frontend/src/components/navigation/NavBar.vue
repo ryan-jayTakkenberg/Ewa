@@ -64,7 +64,7 @@ export default {
         <!-- Viewer Todo order viewer-->
         <router-link
             v-if="(permissionLevel === 'viewer')"
-            to="/overview"
+            to="/viewer-overview"
             class="nav-button relative"
             :class="{ active: isPageActive('overview') }"
             @click="handleNavClick('overview-viewer')">
