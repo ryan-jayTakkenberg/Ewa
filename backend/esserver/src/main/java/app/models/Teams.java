@@ -1,23 +1,33 @@
 package app.models;
 
+import app.enums.PermissionLevel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
+@Entity
 public class Teams {
 
+@Id
+@GeneratedValue
     private int id;
     private String name;
-    private List<UserModel> users;
     private String warehouse;
     private String project;
+    private PermissionLevel permissionLevel;
 
-    public Teams(int id, String name, String warehouse, String project, List<UserModel> users) {
+    public Teams(PermissionLevel permissionLevel,int id, String name, String warehouse, String project) {
+        this.permissionLevel = permissionLevel;
         this.id = id;
         this.name = name;
         this.warehouse = warehouse;
         this.project = project;
-        this.users = users != null ? new ArrayList<>(users) : new ArrayList<>();
+    }
+    public Teams(){
+
     }
     public enum Name {
         TeamWest("TeamWest"),
@@ -49,9 +59,17 @@ public class Teams {
 
 
 
-        return new Teams(id, name, warehouse, project, null);
+        return new Teams(PermissionLevel.ADMIN,id, name, warehouse, project);
 
 }
+
+    public PermissionLevel getPermissionLevel() {
+        return permissionLevel;
+    }
+
+    public void setPermissionLevel(PermissionLevel permissionLevel) {
+        this.permissionLevel = permissionLevel;
+    }
 
     public int getId() {
         return id;
@@ -69,13 +87,6 @@ public class Teams {
         this.name = name;
     }
 
-    public List<UserModel> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserModel> users) {
-        this.users = users;
-    }
 
     public String getWarehouse() {
         return warehouse;

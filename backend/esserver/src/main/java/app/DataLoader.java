@@ -1,6 +1,9 @@
 package app;
 
 import app.enums.PermissionLevel;
+import app.models.*;
+import app.repositories.*;
+import jakarta.transaction.Transactional;
 import app.models.Product;
 import app.models.UserModel;
 import app.models.Report;
@@ -25,6 +28,8 @@ public class DataLoader implements CommandLineRunner {
     private ReportJPARepository reportRepo;
     @Autowired
     private OrderJPARepository orderRepo;
+    @Autowired
+    private TeamJPARepository teamRepo;
 
     @Override
     public void run(String... args) {
@@ -34,6 +39,7 @@ public class DataLoader implements CommandLineRunner {
         this.createInitialUsers();
         this.createSampleReports();
         this.createSampleOrders();
+        this.CreateTeamSample();
 
         System.out.println("Done!");
     }
@@ -79,5 +85,20 @@ public class DataLoader implements CommandLineRunner {
         this.userRepo.save(viewer5);
 
     }
+
+
+    private void CreateTeamSample(){
+
+        this.teamRepo.save(new Teams(PermissionLevel.ADMIN,0,"Team Bijlmer", "Warehouse OOST", "HVA"));
+        this.teamRepo.save(new Teams(PermissionLevel.ADMIN,0,"Team Aalsmeer", "Warehouse AALSMEER", "OBA"));
+        this.teamRepo.save(new Teams(PermissionLevel.ADMIN,0,"Team Purmerend", "Warehouse PURMEREND", "POLITIE"));
+        this.teamRepo.save(new Teams(PermissionLevel.VIEWER,0,"Team Zaandam", "Warehouse ZAANDAM", "FVD"));
+        this.teamRepo.save(new Teams(PermissionLevel.VIEWER,0,"Team West", "Warehouse WEST", "OVERHEID"));
+
+
+
+
+    }
+
 
 }
