@@ -1,8 +1,7 @@
 <script>
 import Team from "@/models/team";
 import SolarTitle from "@/components/general/SolarTitle.vue";
-import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
-import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
+
 import SolarSearchbar from "@/components/general/SolarSearchbar.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
@@ -10,7 +9,7 @@ import TeamsRowComponent from "@/components/team/TeamsRowComponent.vue";
 import TeamsEditComponent from "@/components/team/TeamsEditComponent.vue";
 import TeamsAddComponent from "@/components/team/TeamsAddComponent.vue";
 import TeamsDeleteComponent from "@/components/team/TeamsDeleteComponent.vue";
-import DeleteMultipleTeams from "@/components/team/DeleteMultipleTeams.vue";
+
 
 import {TeamsAdaptor} from "@/service/teams-adaptor";
 export default {
@@ -18,10 +17,7 @@ export default {
   inject: ["teamsAdaptor"],
   components: {
     SolarButton,
-    DeleteMultipleTeams,
     TeamsDeleteComponent,
-    SolarDropdownMenuItem,
-    SolarDropdownMenuButton,
     TeamsRowComponent,
     SolarTable,
     SolarTitle,
@@ -186,9 +182,6 @@ export default {
   <div class="body">
     <div class="body-container">
       <div class="action-row">
-        <SolarDropdownMenuButton text-button="Action">
-          <SolarDropdownMenuItem text-menu-item="Delete Team" @click="openDeleteUserModal(getSelectedTeams()[0])"/>
-        </SolarDropdownMenuButton>
         <SolarSearchbar place-holder="Search For Teams" @search="handleInputValueChange"/>
         <SolarButton class="ml-auto" button-text="Create Team" @click="openAddTeam"></SolarButton>
       </div>
@@ -217,11 +210,7 @@ export default {
       :on-close="closeDeleteTeamModal"
       @delete-team="asyncDeleteTeamById">
   </TeamsDeleteComponent>
-  <DeleteMultipleTeams
-      v-if="$route.path.includes('delete-teams')"
-      :users-to-delete="checkedTeams" :on-close="closeDeleteTeamModal"
-      @delete-teams="deleteCheckedTeams">
-  </DeleteMultipleTeams>
+
 </template>
 
 <style scoped>

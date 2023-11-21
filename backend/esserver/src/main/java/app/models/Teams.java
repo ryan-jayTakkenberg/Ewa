@@ -2,6 +2,7 @@ package app.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Teams {
 
@@ -40,16 +41,17 @@ public class Teams {
         }
     }
 
-
-
     public static Teams createSampleTeam(int pId) {
         int id = pId;
-        String name = String.valueOf(Teams.Name.values()[(int)(Math.random() * Teams.Name.values().length)]);
-        String warehouse = ("warehouse " + id );
-        String project = String.valueOf(Teams.Project.values()[(int)(Math.random() * Teams.Project.values().length)]);
+        String name = String.valueOf(Teams.Name.values()[(int) (Math.random() * Teams.Name.values().length)]);
+        String warehouse = ("warehouse " + id);
+        String project = String.valueOf(Teams.Project.values()[(int) (Math.random() * Teams.Project.values().length)]);
+
+
 
         return new Teams(id, name, warehouse, project, null);
-    }
+
+}
 
     public int getId() {
         return id;

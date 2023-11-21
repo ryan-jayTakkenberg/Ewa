@@ -101,7 +101,7 @@ export default {
 
         <!-- Modal footer -->
         <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
-          <button type="submit" class="submit-button">Create User</button>
+          <button type="submit" class="submit-button">Create Team</button>
         </div>
     </div>
       </form>
