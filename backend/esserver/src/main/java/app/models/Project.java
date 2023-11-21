@@ -3,9 +3,7 @@ package app.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 public class Project {
