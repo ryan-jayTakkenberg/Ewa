@@ -1,6 +1,7 @@
 package app.repositories;
 
 import app.models.Report;
+import app.models.Teams;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -24,8 +25,8 @@ public class ReportJPARepository implements EntityRepositoryJPA<Report> {
 
     @Override
     public Report findById(long id) {
-        // TODO
-        return null;
+
+        return em.find(Report.class, id);
     }
 
     @Override
@@ -36,7 +37,8 @@ public class ReportJPARepository implements EntityRepositoryJPA<Report> {
 
     @Override
     public Report delete(Report entity) {
-        // TODO
-        return null;
+
+        em.remove(entity);
+        return entity;
     }
 }

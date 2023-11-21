@@ -1,4 +1,4 @@
-import {getAPI, postAPI, responseOk} from "@/backend";
+import {deleteAPI, getAPI, postAPI, responseOk} from "@/backend";
 import {getJWT} from "@/data";
 
 export class ViewerOverviewAdaptor {
@@ -6,7 +6,7 @@ export class ViewerOverviewAdaptor {
     async fetchViewerReports() {
         try {
             const response = await getAPI("/api/reports");
-            console.log('Response Data:', response.data);
+            console.log('Reports Response Data:', response.data);
 
             if (!responseOk(response)) {
                 console.warn('Response not OK:', response.data);
@@ -29,14 +29,32 @@ export class ViewerOverviewAdaptor {
 
             if (!responseOk(response)) {
                 console.warn('Post Report Response not OK:', response.data);
-                return null; // or handle the error as needed
+                return null;
             }
 
-            return response.data; // return the posted report data if successful
+            return response.data;
 
         } catch (error) {
             console.error('An unexpected error occurred while posting report:', error);
-            return null; // or handle the error as needed
+            return null;
+        }
+    }
+
+    async deleteReport(id) {
+        try {
+            const response = await deleteAPI(`/api/reports/${id}`);
+
+            if (!responseOk(response)) {
+                console.warn('Delete Report Response not OK:', response.data);
+                return null;
+            }
+
+            console.log('Deleted Report:', response.data);
+            return response.data;
+
+        } catch (error) {
+            console.error('An unexpected error occurred while posting report:', error);
+            return null;
         }
     }
 
@@ -64,7 +82,7 @@ export class ViewerOverviewAdaptor {
     async fetchViewerProjects() {
         try {
             const response = await getAPI("/api/projects");
-            console.log('Response Data Projects:', response.data);
+            console.log('Projects Response Data:', response.data);
 
             if (!responseOk(response)) {
                 console.warn('Response not OK:', response.data);

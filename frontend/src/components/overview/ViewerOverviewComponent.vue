@@ -12,7 +12,7 @@ export default {
       viewerReports: [],
       meetingTime: '11:30 - 12:30',
       meetingLocation: 'Warehouse 2',
-      selectedMessages: [],
+      selectedReports: [],
       reportBody: "",
       }
     },
@@ -48,6 +48,21 @@ export default {
       this.reportBody = '';
     },
 
+    async deleteReport() {
+
+      for (const report of this.selectedReports) {
+        await this.viewerOverviewService.deleteReport(report.id);
+
+        // Remove the deleted report from the viewerReports array
+        const indexToDelete = this.viewerReports.findIndex((r) => r.id === report.id);
+        if (indexToDelete !== -1) {
+          this.viewerReports.splice(indexToDelete, 1);
+        }
+      }
+
+      this.selectedReports = [];
+    },
+
 
     capitalizeFirstLetter(str) {
       return str.charAt(0).toUpperCase() + str.slice(1);
@@ -60,10 +75,14 @@ export default {
     },
 
     toggleSelected(index) {
-      if (this.selectedMessages.includes(index)) {
-        this.selectedMessages = this.selectedMessages.filter((item) => item !== index);
+      const selectedReportIndex = this.selectedReports.findIndex((report) => report.id === this.viewerReports[index].id);
+
+      if (selectedReportIndex === -1) {
+        // If not already selected, add to the selectedReports array
+        this.selectedReports.push(this.viewerReports[index]);
       } else {
-        this.selectedMessages.push(index);
+        // If already selected, remove from the selectedReports array
+        this.selectedReports.splice(selectedReportIndex, 1);
       }
     },
   },
@@ -173,7 +192,7 @@ export default {
           <div class="containerTitle">Inbox</div>
 
           <div class="buttonWrapper">
-            <button class="deleteMessage">
+            <button class="deleteMessage" @click="deleteReport">
               <span class="material-symbols-outlined button">delete</span>
             </button>
             <button class="filterMessage">
@@ -187,7 +206,7 @@ export default {
             v-for="(report, index) in viewerReports"
             :key="index"
             @click="toggleSelected(index)"
-            :class="{ 'selected': selectedMessages.includes(index) }">
+            :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
 
           <div class="messageHeader">
             <div class="messageSender"> {{ capitalizeFirstLetter(report.sender) }} </div>
@@ -419,7 +438,7 @@ p {
 }
 
 .selected {
-  background-color: #e5e5e5;
+  outline: 2px solid #222;
 }
 
 .sendReportsContainer {

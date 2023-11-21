@@ -1,11 +1,14 @@
 package app.controllers;
 
 import app.exceptions.BadRequestException;
+import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
 import app.models.Report;
+import app.models.Teams;
 import app.repositories.ReportJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -59,27 +62,16 @@ public class ReportController {
     }
 
     @DeleteMapping("/{id}")
-    private Report deleteReport(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
+    private ResponseEntity<Report> deleteReport(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
 
-        // TODO delete report with given id
+        Report reportToDelete = reportRepo.findById(id);
 
-//        if (jwtInfo == null) {
-//            throw new ForbiddenException("No token provided");
-//        }
-//        if (!jwtInfo.isAdmin()) {
-//            throw new ForbiddenException("Admin role is required to remove a product");
-//        }
-
-        if (id == null) {
-            throw new BadRequestException("No valid ID provided for report");
+        if (reportToDelete != null) {
+            reportRepo.delete(reportToDelete);
+            return ResponseEntity.ok(reportToDelete);
         }
 
-        Report report = reportRepo.findById(id);
-        if (report == null) {
-            throw new BadRequestException("No report found with that id");
-        }
-
-        return reportRepo.delete(report);
+        return ResponseEntity.notFound().build();
     }
 
 }
