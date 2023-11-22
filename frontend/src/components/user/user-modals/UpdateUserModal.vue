@@ -60,7 +60,7 @@ export default {
 </script>
 
 <template>
-  <form @submit.prevent="updateUser">
+  <form @submit.prevent="updateUser" @keydown.enter.prevent="">
   <SolarModal title="Edit User" @close-modal="onClose">
       <div class="modal-grid">
         <div class="col-span-6 sm:col-span-3">

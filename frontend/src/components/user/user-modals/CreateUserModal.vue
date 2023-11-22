@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="createUser">
+  <form @submit.prevent="createUser" @keydown.enter.prevent="">
     <SolarModal title="Create User" @close-modal="onClose" class="modal">
       <div class="modal-grid">
         <div class="col-span-6 sm:col-span-3">

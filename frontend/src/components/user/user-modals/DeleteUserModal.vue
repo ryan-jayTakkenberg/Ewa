@@ -1,5 +1,4 @@
 <template>
-  <!--  if multiple users title is delete users-->
   <SolarModal title="Delete User" @close-modal="onClose">
     <div class="p-4 md:p-5 text-center">
       <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true"
