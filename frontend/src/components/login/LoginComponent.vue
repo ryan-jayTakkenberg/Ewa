@@ -47,7 +47,7 @@
 
 <script>
 
-import {setAdmin, setId, setJWT} from "@/data";
+import {setAdmin, setId, setJWT, setUsername, setUserTeam} from "@/data";
 import Team from "@/models/team";
 import User from "@/models/user";
 import Product from "@/models/product";
@@ -99,6 +99,10 @@ export default {
       setJWT(jwt);
       setAdmin(response.data.permissionLevel === "ADMIN");
       setId(response.data.id);
+      setUsername(response.data.name);
+      setUserTeam(response.data.email);
+
+      console.log(response.data);
 
       try {
         const [teams, users, products, projects, warehouses] = await Promise.all([

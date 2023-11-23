@@ -2,7 +2,7 @@
 
 import logoExpanded from '/static/images/solar_sedum_logo.svg'
 import logoCollapsed from '/static/images/solar_sedum_logo_small.svg'
-import {isAdmin, removeAdmin, removeId, removeJWT} from "@/data";
+import {isAdmin, removeAdmin, removeId, removeJWT, removeUsername} from "@/data";
 
 export default {
   name: 'NavBar',
@@ -25,6 +25,7 @@ export default {
       removeJWT();
       removeAdmin();
       removeId();
+      removeUsername();
 
       this.$router.push('/login');
     },

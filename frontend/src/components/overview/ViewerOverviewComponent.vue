@@ -1,4 +1,7 @@
 <script>
+import {getUsername, getUserTeam} from "@/data";
+import Project from "@/models/project";
+
 export default {
 
   name: "UserOverviewComponent",
@@ -6,9 +9,9 @@ export default {
 
   data() {
     return {
-      viewerName: '',
-      viewerTeam: null,
-      viewerProjects: [],
+      viewerName: getUsername(),
+      viewerTeam: getUserTeam(),
+      viewerProjects: Project.projects,
       viewerReports: [],
       meetingTime: '11:30 - 12:30',
       meetingLocation: 'Warehouse 2',
@@ -18,19 +21,27 @@ export default {
     },
 
   mounted() {
-    this.fetchData();
+    this.fetchProjectsOnce();
+    this.fetchViewerReports();
   },
 
   methods: {
 
-    async fetchData() {
+    async fetchProjectsOnce() {
 
-      this.viewerName = await this.viewerOverviewService.fetchViewerName();
-      //
-      // this.viewerTeam = await this.viewerOverviewService.fetchViewerTeam(this.userId);
+      if (!this.viewerProjects?.length) {
+        // Keep updating the list if the database has not returned all the data yet
+        const fetchingInterval = setInterval(() => {
+          if (!Project.fetching) {
+            this.viewerProjects = [...Project.projects];
+            clearInterval(fetchingInterval);
+          }
+        }, 100);
+      }
 
-      this.viewerProjects = await this.viewerOverviewService.fetchViewerProjects();
+    },
 
+    async fetchViewerReports() {
       this.viewerReports = await this.viewerOverviewService.fetchViewerReports();
     },
 
@@ -113,6 +124,7 @@ export default {
     <div class="welcomeContainer">
       <h1>Hi, {{ viewerName }}</h1>
       <p class="description">This is an overview of information that is important to you.</p>
+      <div class="userData">{{ viewerTeam }}</div>
     </div>
 
     <div class="dateContainer">
@@ -524,7 +536,5 @@ button {
 button:hover {
   background: #e5e5e5;
 }
-
-
 
 </style>

@@ -33,3 +33,27 @@ export function getId() {
 export function removeId() {
     return localStorage.removeItem("id");
 }
+
+export function setUsername(id) {
+    return localStorage.setItem("username", id);
+}
+
+export function getUsername() {
+    return localStorage.getItem("username") ?? "";
+}
+
+export function removeUsername() {
+    return localStorage.removeItem("username");
+}
+
+export function setUserTeam(id) {
+    return localStorage.setItem("team", id);
+}
+
+export function getUserTeam() {
+    return localStorage.getItem("team") ?? "";
+}
+
+export function removeUserTeam() {
+    return localStorage.removeItem("team");
+}

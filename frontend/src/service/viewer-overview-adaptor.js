@@ -1,5 +1,4 @@
 import {deleteAPI, getAPI, postAPI, responseOk} from "@/backend";
-import {getJWT} from "@/data";
 
 export class ViewerOverviewAdaptor {
 
@@ -58,44 +57,23 @@ export class ViewerOverviewAdaptor {
         }
     }
 
-    fetchViewerName() {
-        try {
-            const jwt = getJWT();
-
-            // Check if the JWT is valid
-            if (!jwt) {
-                console.warn('JWT token not available');
-                return null;
-            }
-
-            // Log the JWT contents to the console
-            console.log('JWT:', jwt);
-
-            return jwt.slice(0, 10);
-
-        } catch (error) {
-            console.error('An unexpected error occurred:', error);
-            return null;
-        }
-    }
-
-    async fetchViewerProjects() {
-        try {
-            const response = await getAPI("/api/projects");
-            console.log('Projects Response Data:', response.data);
-
-            if (!responseOk(response)) {
-                console.warn('Response not OK:', response.data);
-                return [];
-            }
-
-            return response.data;
-
-        } catch (error) {
-            console.error('An unexpected error occurred:', error);
-            return [];
-        }
-    }
+    // async fetchViewerProjects() {
+    //     try {
+    //         const response = await getAPI("/api/projects");
+    //         console.log('Projects Response Data:', response.data);
+    //
+    //         if (!responseOk(response)) {
+    //             console.warn('Response not OK:', response.data);
+    //             return [];
+    //         }
+    //
+    //         return response.data;
+    //
+    //     } catch (error) {
+    //         console.error('An unexpected error occurred:', error);
+    //         return [];
+    //     }
+    // }
 
 
 

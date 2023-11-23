@@ -1,3 +1,5 @@
+import {getAPI} from "@/backend";
+
 export default class Project {
     id;
     projectName;
@@ -78,9 +80,8 @@ export default class Project {
     static async getDatabase() {
         try {
             this.fetching = true;
-            // TODO make a get request to the backend
-            //  update "Projects" with the response
-            return [new Project(0, "Project EWA", "HVA", "20-10-2023", 0, 0, "This is a project")];
+            const response = await getAPI("/api/projects");
+            return response.data;
         } catch (e) {
             return [];
         } finally {
