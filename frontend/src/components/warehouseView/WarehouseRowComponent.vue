@@ -28,7 +28,8 @@
   <tr v-if="showedit">
     <td colspan="4">
       <ShowDetailWarehouseComponent
-          :warehouse="warehouse"
+          v-if="product"
+          :product="product"
           :is-open="true"
           @close-detail="closeDetail"
       ></ShowDetailWarehouseComponent>
@@ -39,6 +40,7 @@
 <script>
 import Warehouse from "@/models/warehouse";
 import ShowDetailWarehouseComponent from "@/components/warehouseView/ShowDetailWarehouseComponent.vue";
+import Product from "@/models/product";
 
 export default {
   name: "warehouseRowComponent",
@@ -53,6 +55,9 @@ export default {
       default: false,
       required: true,
     },
+    product:{
+      type: Product,
+    }
   },
   data() {
     return {

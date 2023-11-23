@@ -2,20 +2,19 @@
 <template>
   <div v-if="isOpen" class="detail-warehouse">
     <!-- Hier kun je de inhoud van je detailcomponent plaatsen -->
-    <h2>Details voor {{ warehouse.name }}</h2>
-    <p>Warehouse ID: {{ warehouse.id }}</p>
-    <p>Adres: {{ warehouse.address }}</p>
-    <p>Postcode: {{ warehouse.postalCode }}</p>
-    <p>Stad: {{ warehouse.city }}</p>
+    <h2>Details voor {{ product.name}}</h2>
+    <p>Warehouse ID: {{ product.id }}</p>
+    <p>Adres: {{ product.price }}</p>
+    <p>Postcode: {{ product.description }}</p>
   </div>
 </template>
 
 <script>
-import Warehouse from "@/models/warehouse";
+
 
 export default {
   props: {
-    warehouse: Warehouse,
+    product: Object,
     isOpen: Boolean,
   },
   methods: {

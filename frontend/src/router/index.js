@@ -13,7 +13,7 @@ import AdminOverviewComponent from "@/components/overview/AdminOverviewComponent
 import OrdersOverview from "@/components/order/OrdersOverview.vue";
 import ProjectOverview from "@/components/project/ProjectOverview.vue";
 import WarehouseOverview from "@/components/warehouse/WarehouseOverview.vue";
-import warehouseOverview from "@/components/warehouse/WarehouseOverview.vue";
+import warehouseOverviewComponent from "@/components/warehouseView/warehouseOverviewComponent.vue";
 
 const routes = [
     {path: '/', redirect: '/login'},
@@ -31,7 +31,7 @@ const routes = [
     {path: '/productViewer', component: ProductOverviewViewer},
     {path: '/users', component: UsersOverview,},
     {path: '/reports', component: ReportComponent},
-    {path: '/warehouseViewer', component: warehouseOverview},
+    {path: '/warehouseViewer', component: warehouseOverviewComponent},
     {path: '/:pathMatch(.*)*', component: NotFoundComponent}
 ];
 
