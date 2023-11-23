@@ -100,7 +100,7 @@ export default {
       setAdmin(response.data.permissionLevel === "ADMIN");
       setId(response.data.id);
       setUsername(response.data.name);
-      setUserTeam(response.data.email);
+      // setUserTeam(response.data.team);
 
       console.log(response.data);
 

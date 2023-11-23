@@ -10,7 +10,7 @@ export default {
   data() {
     return {
       viewerName: getUsername(),
-      viewerTeam: getUserTeam(),
+      viewerTeam: getUserTeam(), // TODO
       viewerProjects: Project.projects,
       viewerReports: [],
       meetingTime: '11:30 - 12:30',
@@ -122,9 +122,8 @@ export default {
   <div class="personaContainer">
 
     <div class="welcomeContainer">
-      <h1>Hi, {{ viewerName }}</h1>
-      <p class="description">This is an overview of information that is important to you.</p>
-      <div class="userData">{{ viewerTeam }}</div>
+      <h1>Hi, {{ capitalizeFirstLetter(viewerName) }}</h1>
+      <div class="description">{{ viewerTeam }}</div>
     </div>
 
     <div class="dateContainer">
@@ -278,10 +277,6 @@ h1 {
   border-bottom: 2px solid #e5e5e5;
 }
 
-.agenda {
-  display: flex;
-}
-
 .dateContainer {
   display: flex;
   align-items: center;
@@ -307,24 +302,6 @@ h1 {
   color: #222;
 }
 
-.insightContainer {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-}
-
-.meetingWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  gap: 0.5rem;
-  flex-direction: row;
-}
-
-.medium {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
 
 .sectionTitle {
   text-align: left;
