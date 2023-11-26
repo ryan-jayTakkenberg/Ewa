@@ -27,7 +27,7 @@ export function setId(id) {
 }
 
 export function getId() {
-    return localStorage.getItem("id") ?? -1;
+    return Number(localStorage.getItem("id")) ?? NaN;
 }
 
 export function removeId() {
@@ -56,4 +56,8 @@ export function getUserTeam() {
 
 export function removeUserTeam() {
     return localStorage.removeItem("team");
+}
+
+export function removeAll() {
+    localStorage.clear();
 }

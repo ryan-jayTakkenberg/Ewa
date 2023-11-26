@@ -25,9 +25,6 @@ export default {
     SolarTable,
     SolarPagination,
   },
-  created() {
-    this.fetchOrders();
-  },
   data() {
     return {
       inputValue: '', // Store the input value for searching orders
@@ -71,18 +68,6 @@ export default {
       if (this.currentPage < lastPage) {
         this.currentPage++;
       }
-    },
-    fetchOrders() {
-      if (!this.orders?.length) {
-        // Keep updating the list if the database has not returned all the data yet
-        const fetchingInterval = setInterval(() => {
-          if (!Order.fetching) {
-            this.orders = [...Order.orders];
-            clearInterval(fetchingInterval);
-          }
-        }, 100);
-      }
-      console.log(this.orders)
     },
     // async createUser(createdUser) {
     //   this.closeModal();
