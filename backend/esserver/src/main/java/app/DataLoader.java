@@ -24,6 +24,9 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private TeamJPARepository teamsRepo;
 
+    @Autowired
+    private WarehouseJPARepository warehouseRepo;
+
     @Override
     public void run(String... args) {
         System.out.println("Running CommandLine Startup...");
@@ -34,6 +37,7 @@ public class DataLoader implements CommandLineRunner {
         this.createSampleOrders();
         this.createSampleProjects();
         this.createSampleTeams();
+        this.createSampleWarehouses();
 
         System.out.println("Done!");
     }
@@ -95,6 +99,13 @@ public class DataLoader implements CommandLineRunner {
         UserModel viewer5 = new UserModel(PermissionLevel.VIEWER, "H5", "test5@solar.com", LocalDate.now(), "viewer");
         this.userRepo.save(viewer5);
 
+    }
+
+    private void createSampleWarehouses(){
+        this.warehouseRepo.save(new Warehouse(1, "Solar Sedum", "Amsterdam", "Straat 111", "1234 AB"));
+        this.warehouseRepo.save(new Warehouse(2, "HvA Warehose", "Amsterdam", "Straat 222", "1234 CD"));
+        this.warehouseRepo.save(new Warehouse(3, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF"));
+        this.warehouseRepo.save(new Warehouse(4, "Green Left", "Amsterdam", "Straat 444", "1234 GH"));
     }
 
 }

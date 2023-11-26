@@ -1,8 +1,15 @@
 package app.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity
 public class Warehouse {
 
-    private int id = 2000;
+    @Id
+    @GeneratedValue
+    private int id;
     private String name;
     private String city;
     private String address;
@@ -16,8 +23,8 @@ public class Warehouse {
         this.postalCode = postalCode;
     }
 
-    public Warehouse(String name){
-        this.name = name;
+    public Warehouse(){
+
     }
 
     public static Warehouse createSampleOffer(int id){
