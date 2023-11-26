@@ -30,13 +30,10 @@ export default {
     DeleteUserModal,
     DeleteMultipleUsersModal,
   },
-  created() {
-    this.fetchUsers();
-  },
   data() {
     return {
       inputValue: '', // Store the input value for searching users
-      users: [...User.users],
+      users: [...User.users].filter(user => user.id !== getId()),
       selectedUser: null,  // The selected user for editing / deleting
       checkedUsers: [], // A list of the selected users for editing / deleting multiple users at once
       showCreateModal: false,
@@ -67,22 +64,6 @@ export default {
     },
   },
   methods: {
-    fetchUsers() {
-      if (!this.users?.length) {
-        // Keep updating the list if the database has not returned all the data yet
-        const fetchingInterval = setInterval(() => {
-          if (!User.fetching) {
-            // Get the id to hide the current logged-in User TODO does not work?
-            const userIdToHide = getId();
-            // Exclude the current logged-in user with userIdToHide
-            this.users = User.users.filter(user => user.id !== userIdToHide);
-
-            this.users = [...User.users];
-            clearInterval(fetchingInterval);
-          }
-        }, 100);
-      }
-    },
     async createUser(createdUser) {
       this.closeModal();
       let newUser = await createdUser.putDatabase();

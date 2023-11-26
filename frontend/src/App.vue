@@ -6,7 +6,7 @@
         @sidebar-expanded="updateSidebarState"
     ></NavBar>
 
-    <div class="router-view" :class="{ 'router-view-responsive': true }">
+    <div v-if="fetchedData || !isLoggedIn" class="router-view" :class="{ 'router-view-responsive': true }">
       <router-view></router-view>
     </div>
 
@@ -27,6 +27,7 @@ import CONFIG from "@/app-config";
 import {getAPI, responseOk} from "@/backend";
 import {getJWT} from "@/data";
 import {ViewerOverviewAdaptor} from "@/service/viewer-overview-adaptor";
+import Orders from "@/models/order";
 
 export default {
   name: 'App',
@@ -65,12 +66,13 @@ export default {
         if (!this.fetchedData) {
           // This only fetches the data accessible to the logged-in user
           try {
-            const [teams, users, products, projects, warehouses] = await Promise.all([
-              Team.getDatabase(),
-              User.getDatabase(),
-              Product.getDatabase(),
-              Project.getDatabase(),
-              Warehouse.getDatabase(),
+            const [teams, users, products, projects, warehouses, orders] = await Promise.all([
+                Team.getDatabase(),
+                User.getDatabase(),
+                Product.getDatabase(),
+                Project.getDatabase(),
+                Warehouse.getDatabase(),
+                Orders.getDatabase(),
             ]);
 
             Team.teams = teams;
@@ -78,6 +80,7 @@ export default {
             Product.products = products;
             Project.projects = projects;
             Warehouse.warehouses = warehouses;
+            Orders.orders = orders;
 
             this.fetchedData = true;
           } catch (error) {

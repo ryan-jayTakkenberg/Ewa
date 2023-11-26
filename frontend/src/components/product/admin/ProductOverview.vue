@@ -80,17 +80,6 @@ export default {
       });
     },
   },
-  created() {
-    if (!this.products?.length) {
-      // Keep updating the list if the database has not returned all the data yet
-      const fetchingInterval = setInterval(() => {
-        if (!Product.fetching) {
-          this.products = [...Product.products];
-          clearInterval(fetchingInterval);
-        }
-      }, 100);
-    }
-  },
   methods: {
     closeModal() {
       this.modal = '';

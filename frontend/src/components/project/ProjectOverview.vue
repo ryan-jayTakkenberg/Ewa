@@ -30,17 +30,6 @@ export default {
       checkedProjects: [],
     };
   },
-  created() {
-    if (!this.projects?.length) {
-      // Keep updating the list if the database has not returned all the data yet
-      const fetchingInterval = setInterval(() => {
-        if (!Project.fetching) {
-          this.projects = [...Project.projects];
-          clearInterval(fetchingInterval);
-        }
-      }, 100);
-    }
-  },
   methods: {
     handleInputValueChange(value) {
       console.log(value);
