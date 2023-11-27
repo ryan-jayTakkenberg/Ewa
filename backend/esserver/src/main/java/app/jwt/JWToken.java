@@ -11,26 +11,26 @@ import java.util.Date;
 public class JWToken {
     public static final String JWT_ATTRIBUTE_NAME = "att";
     private static final String JWT_ISSUER_CLAIM = "iss";
-    private static final String JWT_CALLNAME_CLAIM = "sub";
-    private static final String JWT_ACCOUNTID_CLAIM = "id";
+    private static final String JWT_IP_CLAIM = "ipa";
+
     private static final String JWT_ROLE_CLAIM = "rol";
 
-    private String callName;
-    private long accountId;
-    private PermissionLevel permissionLevel;
+    private final long accountId;
+    private final PermissionLevel permissionLevel;
+    private final String ip;
 
-    public JWToken(String callName, long accountId, PermissionLevel permissionLevel) {
-        this.callName = callName;
+    public JWToken(long accountId, PermissionLevel permissionLevel, String ip) {
         this.accountId = accountId;
         this.permissionLevel = permissionLevel;
+        this.ip = ip;
     }
 
     public String encode(String issuer, String passphrase, int expiration) {
         Key key = getKey(passphrase);
         return Jwts.builder()
-                .claim(JWT_CALLNAME_CLAIM, this.callName)
-                .claim(JWT_ACCOUNTID_CLAIM, this.accountId)
                 .claim(JWT_ROLE_CLAIM, this.permissionLevel.toString())
+                .claim(JWT_IP_CLAIM, this.ip)
+                .setId(String.valueOf(this.accountId))
                 .setIssuer(issuer)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000L))
@@ -56,19 +56,43 @@ public class JWToken {
         }
         // build our token from the extracted claims
         return new JWToken(
-                claims.get(JWT_CALLNAME_CLAIM).toString(),
-                Long.parseLong(claims.get(JWT_ACCOUNTID_CLAIM).toString()),
-                PermissionLevel.valueOf(claims.get(JWT_ROLE_CLAIM).toString())
+                Long.parseLong(claims.getId()),
+                PermissionLevel.valueOf(claims.get(JWT_ROLE_CLAIM).toString()),
+                claims.get(JWT_IP_CLAIM).toString()
         );
     }
 
+    /**
+     * Checks if the account connected to this JWT is an admin
+     * @return True if this account is an admin
+     * @see app.models.UserModel
+     */
     public boolean isAdmin() {
         return permissionLevel == PermissionLevel.ADMIN;
     }
 
     /**
-     * Gets the id of the user (see UserModel)
-     * @return the id of the user
+     * Checks if the account connected to this JWT is a viewer
+     * @return True if this account is a viewer
+     * @see app.models.UserModel
+     */
+    public boolean isViewer() {
+        return permissionLevel == PermissionLevel.VIEWER;
+    }
+
+    /**
+     * Gets the permission level of the account connected to this JWT
+     * @return The permission level of the account connected to this JWT
+     * @see app.models.UserModel
+     */
+    public PermissionLevel getPermissionLevel() {
+        return permissionLevel;
+    }
+
+    /**
+     * Gets the id of the user
+     * @return The id of the user
+     * @see app.models.UserModel
      */
     public long getId() {
         return accountId;

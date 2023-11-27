@@ -9,17 +9,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.util.Set;
 
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {
 
-    private static JWTConfig jwtConfig = JWTConfig.getInstance();
+    private static final JWTConfig jwtConfig = JWTConfig.getInstance();
+
+    private final Set<String> NO_TOKEN_ENDPOINTS = Set.of("/authentication/login", "/h2-console");
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // Exclude the login endpoint from JWT validation
-        if (request.getRequestURI().endsWith("/authentication/login") || "OPTIONS".equals(request.getMethod())) {
+        if (NO_TOKEN_ENDPOINTS.stream().anyMatch(s -> request.getRequestURI().toLowerCase().contains(s.toLowerCase())) || "OPTIONS".equals(request.getMethod())) {
             chain.doFilter(request, response);
             return;
         }
