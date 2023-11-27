@@ -1,6 +1,7 @@
 package app.jwt;
 
 import app.enums.PermissionLevel;
+import app.models.User;
 import io.jsonwebtoken.*;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -75,7 +76,7 @@ public class JWToken {
     /**
      * Checks if the account connected to this JWT is an admin
      * @return True if this account is an admin
-     * @see app.models.UserModel
+     * @see User
      */
     public boolean isAdmin() {
         return permissionLevel == PermissionLevel.ADMIN;
@@ -84,7 +85,7 @@ public class JWToken {
     /**
      * Checks if the account connected to this JWT is a viewer
      * @return True if this account is a viewer
-     * @see app.models.UserModel
+     * @see User
      */
     public boolean isViewer() {
         return permissionLevel == PermissionLevel.VIEWER;
@@ -93,7 +94,7 @@ public class JWToken {
     /**
      * Gets the permission level of the account connected to this JWT
      * @return The permission level of the account connected to this JWT
-     * @see app.models.UserModel
+     * @see User
      */
     public PermissionLevel getPermissionLevel() {
         return permissionLevel;
@@ -102,7 +103,7 @@ public class JWToken {
     /**
      * Gets the id of the user
      * @return The id of the user
-     * @see app.models.UserModel
+     * @see User
      */
     public long getId() {
         return accountId;

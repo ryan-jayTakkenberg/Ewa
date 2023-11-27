@@ -4,7 +4,7 @@ import app.jwt.JWTConfig;
 import app.jwt.JWToken;
 import app.Util;
 import app.exceptions.BadRequestException;
-import app.models.UserModel;
+import app.models.User;
 import app.repositories.UserJPARepository;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<UserModel> authenticateAccount(@RequestBody ObjectNode signInInfo, HttpServletRequest request) {
+    public ResponseEntity<User> authenticateAccount(@RequestBody ObjectNode signInInfo, HttpServletRequest request) {
         if (!signInInfo.has("username")) {
             throw new BadRequestException("Username is required");
         }
@@ -39,8 +39,8 @@ public class AuthenticationController {
         String password = signInInfo.get("password").asText();
         String hashedPassword = Util.hash(password);
 
-        UserModel account = null;
-        for (UserModel user : userRepo.findAll()) {
+        User account = null;
+        for (User user : userRepo.findAll()) {
             if (user.getName().equals(username) && user.getPassword().equals(hashedPassword)) {
                 user.setLastLogin(LocalDate.now());
                 account = user;

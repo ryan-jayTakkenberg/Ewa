@@ -1,8 +1,7 @@
 package app.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Report {
@@ -18,14 +17,17 @@ public class Report {
 
     @Id
     @GeneratedValue
-    private long id;
+    private long report_id;
     private String body;
     private String date;
     private String sender;
     private String receiver;
 
-    public Report(long id, String body, String date, String sender, String receiver) {
-        this.id = id;
+    @ManyToOne
+    private User app_user;
+
+    public Report(long report_id, String body, String date, String sender, String receiver) {
+        this.report_id = report_id;
         this.body = body;
         this.date = date;
         this.sender = sender;
@@ -37,11 +39,11 @@ public class Report {
     }
 
     public long getId() {
-        return id;
+        return report_id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setId(long report_id) {
+        this.report_id = report_id;
     }
 
     public String getBody() {

@@ -1,13 +1,11 @@
 package app.models;
 
 import app.enums.PermissionLevel;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.Set;
+
+
 @Entity
 public class Teams {
 

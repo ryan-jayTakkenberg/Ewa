@@ -4,7 +4,7 @@ import app.Util;
 import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
-import app.models.UserModel;
+import app.models.User;
 import app.repositories.UserJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class UserController {
     private UserJPARepository userRepo;
 
     @GetMapping
-    private List<UserModel> getUsers(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
+    private List<User> getUsers(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
         if (jwtInfo.isAdmin()) {
             return userRepo.findAll();
         }
@@ -29,13 +29,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    private UserModel getUserById(@PathVariable long id) {
+    private User getUserById(@PathVariable long id) {
         return userRepo.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private UserModel postUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody UserModel user) {
+    private User postUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody User user) {
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to create an user");
         }
@@ -48,7 +48,7 @@ public class UserController {
 
         boolean isEditing = user.getId() > 0;
         if (isEditing) {
-            UserModel currentUser = this.userRepo.findById(user.getId());
+            User currentUser = this.userRepo.findById(user.getId());
             // TODO
         }
 
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    private UserModel deleteProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
+    private User deleteProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to delete an user");
         }
@@ -65,7 +65,7 @@ public class UserController {
             throw new BadRequestException("No valid ID provided for product");
         }
 
-        UserModel user = userRepo.findById(id);
+        User user = userRepo.findById(id);
 
         if (user == null) {
             throw new BadRequestException("No product found for such id");
