@@ -57,8 +57,8 @@ public class AuthenticationController {
         }
 
         // Issue a token for the account, valid for some time
-        JWToken jwToken = new JWToken(account.getId(), account.getPermissionLevel(), ip);
-        String tokenString = jwToken.encode(jwtConfig.getIssuer(), jwtConfig.getPassphrase(), jwtConfig.getExpiration());
+        JWToken jwToken = new JWToken(account.getId(), account.getPermissionLevel(), ip, jwtConfig.getExpiration());
+        String tokenString = jwToken.encode(jwtConfig.getIssuer(), jwtConfig.getPassphrase());
         return ResponseEntity.accepted()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenString)
                 .body(account);
