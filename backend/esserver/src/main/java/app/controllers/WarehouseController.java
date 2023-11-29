@@ -25,7 +25,7 @@ public class WarehouseController {
 
     @GetMapping
     private List<Warehouse> getWarehouses(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo){
-        if (jwtInfo.isAdmin()){
+        if (jwtInfo.isAdmin() || jwtInfo.isViewer()){
             return warehouseRepository.findAll();
         }
 

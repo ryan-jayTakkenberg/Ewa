@@ -3,7 +3,7 @@
     <div v-for="(product, index) in products" :key="index">
       <!-- Hier kun je de inhoud van je detailcomponent plaatsen -->
       <h2>Details voor {{ product.name }}</h2>
-      <p>Warehouse ID: {{ product.id }}</p>
+      <p>product ID: {{ product.id }}</p>
       <p>Price: {{ product.price }}</p>
       <p>Description: {{ product.description }} </p>
       <p> </p>
