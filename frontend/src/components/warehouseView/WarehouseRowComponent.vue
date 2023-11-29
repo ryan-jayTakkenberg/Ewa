@@ -28,7 +28,6 @@
   <tr v-if="showedit">
     <td colspan="4">
       <ShowDetailWarehouseComponent
-          v-if="product"
           :product="product"
           :is-open="true"
           @close-detail="closeDetail"
