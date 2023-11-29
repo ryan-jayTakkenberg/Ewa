@@ -82,7 +82,7 @@ export default {
   methods: {
     async createWarehouse(newWarehouse){
       try {
-        await this.warehouseService.asyncAddNew(newWarehouse)
+        await this.warehouseService.asyncSaveWarehouse(newWarehouse)
         await this.getWarehouseList();
       }catch (error){
         console.error("Error occurred during creation of new warehouse", error)
@@ -90,7 +90,8 @@ export default {
     },
     async updateWarehouse(warehouse){
       try {
-        await this.warehouseService.asyncUpdate(warehouse)
+        console.log("warehouse update")
+        await this.warehouseService.asyncUpdateWarehouse(warehouse)
         await this.getWarehouseList();
       } catch (error){
         console.error("Error occurred during saving of existing warehouse", error)
