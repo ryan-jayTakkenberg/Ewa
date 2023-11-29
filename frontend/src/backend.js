@@ -1,28 +1,36 @@
 import axios from "./axios-config";
-import {getJWT} from "@/data";
+import {getJWT, setJWT} from "@/data";
 
 export async function getAPI(endpoint) {
-    return await axios.get(endpoint, {
+    const response = await axios.get(endpoint, {
         headers: getHeaders(),
     }).catch(err => handleAPIError(err));
+    handleAPIRequest(response);
+    return response;
 }
 
 export async function postAPI(endpoint, data = {}) {
-    return await axios.post(endpoint, data, {
+    const response = await axios.post(endpoint, data, {
         headers: getHeaders(),
     }).catch(err => handleAPIError(err));
+    handleAPIRequest(response);
+    return response;
 }
 
 export async function putAPI(endpoint, data = {}) {
-    return await axios.put(endpoint, data, {
+    const response = await axios.put(endpoint, data, {
         headers: getHeaders(),
     }).catch(err => handleAPIError(err));
+    handleAPIRequest(response);
+    return response;
 }
 
 export async function deleteAPI(endpoint) {
-    return await axios.delete(endpoint, {
+    const response = await axios.delete(endpoint, {
         headers: getHeaders(),
     }).catch(err => handleAPIError(err));
+    handleAPIRequest(response);
+    return response;
 }
 
 function handleAPIError(error) {
@@ -31,6 +39,13 @@ function handleAPIError(error) {
         location.assign("/login");
     }
     return response;
+}
+
+function handleAPIRequest(response) {
+    const newJWT = response?.headers?.authorization;
+    if (newJWT) {
+        setJWT(newJWT);
+    }
 }
 
 export function getHeaders() {

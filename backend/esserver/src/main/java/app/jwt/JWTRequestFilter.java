@@ -9,17 +9,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.util.Set;
 
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {
 
-    private static JWTConfig jwtConfig = JWTConfig.getInstance();
+    private final JWTConfig jwtConfig = JWTConfig.getInstance();
+
+    private final Set<String> NO_TOKEN_ENDPOINTS = Set.of("/api/authentication/login", "/api/h2-console");
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // Exclude the login endpoint from JWT validation
-        if (request.getRequestURI().endsWith("/authentication/login") || "OPTIONS".equals(request.getMethod())) {
+        String uri = request.getRequestURI().toLowerCase();
+        if (NO_TOKEN_ENDPOINTS.stream().map(String::toLowerCase).anyMatch(uri::startsWith) || "OPTIONS".equals(request.getMethod())) {
             chain.doFilter(request, response);
             return;
         }
@@ -38,6 +41,11 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             // pass-on the token info as an attribute for the request
             request.setAttribute(JWToken.JWT_ATTRIBUTE_NAME, jwToken);
             // proceed along the chain of filters towards the REST controller
+
+            if (jwToken.getMillisecondsUntilExpires() < 5 * 60 * 1000L) {
+                response.addHeader(HttpHeaders.AUTHORIZATION, jwToken.refresh(jwtConfig.getIssuer(), jwtConfig.getPassphrase(), jwtConfig.getExpiration()));
+            }
+
             chain.doFilter(request, response);
         } catch (RuntimeException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage() + " You need to log in first.");

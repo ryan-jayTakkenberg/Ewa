@@ -8,19 +8,15 @@ public class JWTConfig {
         return INSTANCE;
     }
 
-    private String passPhrase = "7208f9bf988221644d40ce501a3afc274ce878254828f5eab38549891c28cae5";
-    private String issuer = "SolarSerum";
-    private int expiration = 1800;
-
     public String getPassphrase() {
-        return passPhrase;
+        return "7208f9bf988221644d40ce501a3afc274ce878254828f5eab38549891c28cae5";
     }
 
     public String getIssuer() {
-        return issuer;
+        return "SolarSerum";
     }
 
     public int getExpiration() {
-        return expiration;
+        return 1800;
     }
 }

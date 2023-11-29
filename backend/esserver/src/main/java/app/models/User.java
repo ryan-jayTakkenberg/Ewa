@@ -2,14 +2,13 @@ package app.models;
 
 import app.Util;
 import app.enums.PermissionLevel;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
-public class UserModel {
+@Table(name = "app_user")
+public class User {
 
     @Id
     @GeneratedValue
@@ -22,7 +21,10 @@ public class UserModel {
     private LocalDate lastLogin;
     private String password;
 
-    public UserModel(PermissionLevel permissionLevel, String name, String email, LocalDate lastLogin, String password) {
+    @OneToMany(mappedBy = "app_user")
+    private Set<Report> reports;
+
+    public User(PermissionLevel permissionLevel, String name, String email, LocalDate lastLogin, String password) {
         this.permissionLevel = permissionLevel;
         this.name = name;
         this.email = email;
@@ -30,7 +32,7 @@ public class UserModel {
         this.password = Util.hash(password);
     }
 
-    public UserModel() {
+    public User() {
 
     }
 
