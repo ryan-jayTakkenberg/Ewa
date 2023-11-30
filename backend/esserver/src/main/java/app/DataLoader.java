@@ -35,8 +35,7 @@ public class DataLoader implements CommandLineRunner {
         this.createInitialUsers();
         this.createSampleReports();
         this.createSampleOrders();
-        this.createSampleProjects();
-        this.createSampleTeams();
+        this.createSampleTeamsAndProjects();
         this.createSampleWarehouses();
 
         System.out.println("Done!");
@@ -62,22 +61,19 @@ public class DataLoader implements CommandLineRunner {
         this.orderRepo.save(new Order(3, "We've run out of solar panels", "19/11/2023", "Frame", 20));
     }
 
-    private void createSampleProjects() {
+    private void createSampleTeamsAndProjects(){
+
+        Teams team1 = this.teamsRepo.save(new Teams(PermissionLevel.ADMIN,0,"Team Bijlmer", "Warehouse OOST"));
+        Teams team2 = this.teamsRepo.save(new Teams(PermissionLevel.ADMIN,0,"Team Aalsmeer", "Warehouse AALSMEER"));
+        Teams team3 = this.teamsRepo.save(new Teams(PermissionLevel.ADMIN,0,"Team Purmerend", "Warehouse PURMEREND"));
+        this.teamsRepo.save(new Teams(PermissionLevel.VIEWER,0,"Team Zaandam", "Warehouse ZAANDAM"));
+        this.teamsRepo.save(new Teams(PermissionLevel.VIEWER,0,"Team West", "Warehouse WEST"));
 
         LocalDate installDate = LocalDate.of(2023, 11, 21);
-        this.projectsRepo.save(new Project(1, "Blue", "HVA", installDate, "10S", "23E", "Project to install solar panels to Company A"));
-        this.projectsRepo.save(new Project(2, "Red", "Company B", installDate, "3S", "2", "Project to install solar panels to Company B"));
-        this.projectsRepo.save(new Project(3, "Green", "HVA", installDate, "5D", "26E", "Project to install solar panels to Company C"));
-        this.projectsRepo.save(new Project(4, "Yellow", "Company A", installDate, "8T", "15A", "Project to install solar panels to Company D"));
-    }
-
-    private void createSampleTeams(){
-
-        this.teamsRepo.save(new Teams(PermissionLevel.ADMIN,0,"Team Bijlmer", "Warehouse OOST", "HVA"));
-        this.teamsRepo.save(new Teams(PermissionLevel.ADMIN,0,"Team Aalsmeer", "Warehouse AALSMEER", "OBA"));
-        this.teamsRepo.save(new Teams(PermissionLevel.ADMIN,0,"Team Purmerend", "Warehouse PURMEREND", "POLITIE"));
-        this.teamsRepo.save(new Teams(PermissionLevel.VIEWER,0,"Team Zaandam", "Warehouse ZAANDAM", "FVD"));
-        this.teamsRepo.save(new Teams(PermissionLevel.VIEWER,0,"Team West", "Warehouse WEST", "OVERHEID"));
+        this.projectsRepo.save(new Project(1, "Blue", "HVA", installDate, "Project to install solar panels to Company A", team1));
+        this.projectsRepo.save(new Project(2, "Red", "Company B", installDate, "Project to install solar panels to Company B", team1));
+        this.projectsRepo.save(new Project(3, "Green", "HVA", installDate, "Project to install solar panels to Company C", team2));
+        this.projectsRepo.save(new Project(4, "Yellow", "Company A", installDate, "Project to install solar panels to Company D", team3));
     }
 
     private void createInitialUsers() {

@@ -1,8 +1,10 @@
 package app.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 @Entity
@@ -17,26 +19,25 @@ public class Project {
      * Remember to set the 'JDBC URL' to 'jdbc:h2:mem:testdb'
      */
 
-    //TODO pass actual Teams object and Warehouse object into this class instead of hardcoded String
-
     @Id
     @GeneratedValue
     private int projectId;
     private String projectName;
     private String clientName;
     private LocalDate installDate;
-    private String installTeamId;
-    private String usedWarehouseId;
     private String notes;
 
-    public Project(int projectId, String projectName, String clientName, LocalDate installDate, String installTeamId, String usedWarehouseId, String notes) {
+    @ManyToOne
+    @JsonIncludeProperties({"id", "name"})
+    private Teams team;
+
+    public Project(int projectId, String projectName, String clientName, LocalDate installDate, String notes, Teams team) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.clientName = clientName;
         this.installDate = installDate;
-        this.installTeamId = installTeamId;
-        this.usedWarehouseId = usedWarehouseId;
         this.notes = notes;
+        this.team = team;
     }
 
     public Project() {
@@ -59,15 +60,11 @@ public class Project {
         return installDate;
     }
 
-    public String getInstallTeamId() {
-        return installTeamId;
-    }
-
-    public String getUsedWarehouseId() {
-        return usedWarehouseId;
-    }
-
     public String getNotes() {
         return notes;
+    }
+
+    public Teams getTeam() {
+        return team;
     }
 }

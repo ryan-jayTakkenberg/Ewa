@@ -25,7 +25,7 @@ public class WarehouseJPARepository implements EntityRepositoryJPA<Warehouse>{
 
     @Override
     public Warehouse findById(long id) {
-        return em.find(Warehouse.class, id);
+        return this.em.find(Warehouse.class, id);
     }
 
     @Override

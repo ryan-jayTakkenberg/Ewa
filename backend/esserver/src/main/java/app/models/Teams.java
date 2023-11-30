@@ -1,28 +1,32 @@
 package app.models;
 
 import app.enums.PermissionLevel;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 
-import java.util.Set;
-
+import java.util.List;
 
 @Entity
 public class Teams {
 
-@Id
-@GeneratedValue
+    @Id
+    @GeneratedValue
     private int id;
     private String name;
     private String warehouse;
-    private String project;
+
+    @OneToMany(mappedBy = "team")
+    @JsonIgnoreProperties({"team"})
+    private List<Project>  projects;
     private PermissionLevel permissionLevel;
 
-    public Teams(PermissionLevel permissionLevel,int id, String name, String warehouse, String project) {
+    public Teams(PermissionLevel permissionLevel,int id, String name, String warehouse) {
         this.permissionLevel = permissionLevel;
         this.id = id;
         this.name = name;
         this.warehouse = warehouse;
-        this.project = project;
     }
     public Teams(){
 
@@ -38,26 +42,12 @@ public class Teams {
         }
     }
 
-    public enum Project {
-        Hva("Hva"),
-        Mediamarkt("Mediamarkt"),
-        Overheid("Overheid"),
-        Politie("Politie");
-        private final String project;
-        Project(String name) {
-            this.project = name;
-        }
-    }
-
     public static Teams createSampleTeam(int pId) {
         int id = pId;
         String name = String.valueOf(Teams.Name.values()[(int) (Math.random() * Teams.Name.values().length)]);
         String warehouse = ("warehouse " + id);
-        String project = String.valueOf(Teams.Project.values()[(int) (Math.random() * Teams.Project.values().length)]);
 
-
-
-        return new Teams(PermissionLevel.ADMIN,id, name, warehouse, project);
+        return new Teams(PermissionLevel.ADMIN,id, name, warehouse);
 
 }
 
@@ -85,7 +75,6 @@ public class Teams {
         this.name = name;
     }
 
-
     public String getWarehouse() {
         return warehouse;
     }
@@ -94,11 +83,7 @@ public class Teams {
         this.warehouse = warehouse;
     }
 
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
+    public List<Project> getProjects() {
+        return projects;
     }
 }

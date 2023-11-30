@@ -1,85 +1,86 @@
 package app.controllers;
 
 import app.exceptions.BadRequestException;
+import app.exceptions.ForbiddenException;
+import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
 import app.models.Project;
 import app.repositories.ProjectJPARepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
 
-    /*
-     * Project CONTROLLER
-     * This controller class manages the CRUD (Create, Read, Update, Delete) operations for the 'Project' entity.
-     *
-     * Endpoints:
-     * - GET /projects: Retrieves a list of all reports that belong to the logged-in user.
-     * - POST /projects: Creates a new report.
-     * - DELETE /projects/{id}: Removes a report by ID.
-     *
-     * Authorization:
-     * - All endpoints require a valid JWT token, and a ForbiddenException is thrown if no token is provided.
-     * - Admin-level token is required for creating and deleting products; otherwise, a ForbiddenException is thrown.
-     *
-     * Error Handling:
-     * - Throws ForbiddenException for authentication and authorization issues.
-     * - Throws BadRequestException for invalid or missing parameters.
-     *
-     * Dependencies:
-     * - Autowired 'ProductJPARepository' for database interaction.
-     * - Utilizes 'JWToken' for extracting JWT information from the request attributes.
-     *
-     * Note:
-     * - The controller assumes a REST structure and adheres to HTTP status codes.
-     * - Ensure that the 'ProductJPARepository' is properly configured for database operations.
-     * - POST can also be used to UPDATE (edit) the entity
-     */
+    private final ProjectJPARepository projectsRepo;
 
-    @Autowired
-    private ProjectJPARepository projectsRepo;
+    public ProjectController(ProjectJPARepository projectJPARepository){
+     this.projectsRepo = projectJPARepository;
+    }
 
     @GetMapping
     private List<Project> getProjects(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
-
-        return projectsRepo.findAll();
+        if (jwtInfo.isAdmin()) {
+            return projectsRepo.findAll();
+        }
+        return List.of(projectsRepo.findById(jwtInfo.getId()));
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    private Project postProject(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Project project) {
+    public ResponseEntity<Project> addNewProject(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Project project) {
+        if (!jwtInfo.isAdmin()){
+            throw new ForbiddenException("Admin role is required to create a project");
+        }
 
-        // TODO check logged in user id and post new report into their respective database
+        if (project == null){
+            return ResponseEntity.badRequest().build();
+        }
 
-        return projectsRepo.save(project);
+        Project addedProject = projectsRepo.save(project);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(addedProject.getProjectId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(addedProject);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Project> updateProject(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtinfo, @PathVariable long id, @RequestBody Project updatedProject){
+        Project existingProject = projectsRepo.findById(id);
+        if (!jwtinfo.isAdmin()){
+            throw new ForbiddenException("Admin role is required to alter a project");
+        }
+
+        if (existingProject != null){
+            if (id != updatedProject.getProjectId()){
+                throw new BadRequestException("ID in path does not match id in request");
+            }
+
+            Project savedProject = projectsRepo.save(updatedProject);
+            return ResponseEntity.ok(savedProject);
+        } else {
+            throw new NotFoundException("Warehouse not found with id: " + id);
+        }
     }
 
     @DeleteMapping("/{id}")
-    private Project deleteProject(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
-
-        // TODO delete report with given id
-
-//        if (jwtInfo == null) {
-//            throw new ForbiddenException("No token provided");
-//        }
-//        if (!jwtInfo.isAdmin()) {
-//            throw new ForbiddenException("Admin role is required to remove a product");
-//        }
-
-        if (id == null) {
-            throw new BadRequestException("No valid ID provided for report");
+    public ResponseEntity<Project> deleteProject(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable long id) {
+        Project projectToDelete = projectsRepo.findById(id);
+        if (!jwtInfo.isAdmin()){
+            throw new ForbiddenException("Admin role is required to delete a project");
         }
-
-        Project project = projectsRepo.findById(id);
-        if (project == null) {
-            throw new BadRequestException("No report found with that id");
+        if (projectToDelete != null){
+            projectsRepo.delete(projectToDelete);
+            return ResponseEntity.ok(projectToDelete);
         }
-
-        return projectsRepo.delete(project);
+        return null;
     }
-
 }

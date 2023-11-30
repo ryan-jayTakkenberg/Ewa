@@ -18,26 +18,23 @@ public class ProjectJPARepository implements EntityRepositoryJPA<Project> {
 
     @Override
     public List<Project> findAll() {
-
         TypedQuery<Project> query = this.em.createQuery("SELECT r FROM Project r", Project.class);
         return query.getResultList();
     }
 
     @Override
     public Project findById(long id) {
-        // TODO
-        return null;
+        return this.em.find(Project.class, id);
     }
 
     @Override
     public Project save(Project entity) {
-
-        return em.merge(entity);
+        return this.em.merge(entity);
     }
 
     @Override
     public Project delete(Project entity) {
-        // TODO
-        return null;
+        this.em.remove(entity);
+        return entity;
     }
 }
