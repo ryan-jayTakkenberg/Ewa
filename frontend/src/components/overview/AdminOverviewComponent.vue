@@ -1,46 +1,39 @@
 <script>
+import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
+
 export default {
 
   name: "AdminOverviewComponent",
+  inject: ['adminOverviewService'],
 
   data() {
     return {
       productsSold: '75',
-      ongoingProjects: '15',
+      ongoingProjects: '0',
       unresolvedReports: '2',
       warehousesLowStock: '3',
       globalTotalStock: '350',
       selectedMessages: [],
 
       projects: [
-        { title: 'Project Green', team: '1' },
-        { title: 'Project Blue', team: '2' },
-        { title: 'Project Red', team: '1' },
-        { title: 'Project Yellow', team: '3' },
+        {title: 'Project Green', team: '1'},
+        {title: 'Project Blue', team: '2'},
+        {title: 'Project Red', team: '1'},
+        {title: 'Project Yellow', team: '3'},
       ],
       projectDescriptions: [
-        { title: 'Planned from: 17/10/2023 to 25/10/2023' },
-        { title: 'Planned from: 19/10/2023 to 23/10/2023' },
-        { title: 'Planned from: 20/10/2023 to 27/10/2023' },
-        { title: 'Planned from: 25/10/2023 to 31/10/2023' },
+        {title: 'Planned from: 17/10/2023 to 25/10/2023'},
+        {title: 'Planned from: 19/10/2023 to 23/10/2023'},
+        {title: 'Planned from: 20/10/2023 to 27/10/2023'},
+        {title: 'Planned from: 25/10/2023 to 31/10/2023'},
       ],
-      sampleMessages: [
-        {
-          sender: 'Forecasting Alert!',
-          content: 'There are 3 Warehouses low on stock at the moment!'
-        },
-        {
-          sender: 'Warehouse 3',
-          content: 'There was a miscommunication with receiving the incoming stock delivery. they gave us 3 solar panels extra. '
-        },
-        {
-          sender: 'Warehouse 2',
-          content: 'The name of our employee Niels Dekker is spelled incorrectly can this be fixed?'        },
-      ],
+      sampleMessages: [],
     }
   },
 
-  methods: {
+  methods:
+
+      {
     getRandomColor() {
       const colors = ['#00d315', '#ff0000'];
       const randomIndex = Math.floor(Math.random() * colors.length);
@@ -53,6 +46,21 @@ export default {
         this.selectedMessages.push(index);
       }
     },
+        async loadOngoingProjectsCount() {
+          const adaptor = new AdminOverviewAdaptor();
+          const count = await adaptor.fetchOngoingProjectsCount();
+          if (count !== null) {
+            this.ongoingProjects = count;
+          }
+    },
+        async loadReports() {
+          const adaptor = new AdminOverviewAdaptor();
+          const reports = await adaptor.fetchReports();
+          this.sampleMessages = reports.map(report => ({
+            sender: report.sender,
+            content: report.body
+          }));
+        }
   },
 
   computed: {
@@ -68,8 +76,12 @@ export default {
       return today.getUTCDate()
     },
   },
-
+  mounted() {
+    this.loadOngoingProjectsCount(); // Fetch the overview information when the component is mounted
+    this.loadReports();
+  },
 }
+
 
 </script>
 

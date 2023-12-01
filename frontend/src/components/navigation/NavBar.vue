@@ -209,7 +209,7 @@ export default {
 }
 
 .nav-header-logo {
-  height: 10svh;
+  height: 10vh;
   width: 125px;
 }
 

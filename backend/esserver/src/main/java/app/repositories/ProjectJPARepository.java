@@ -37,4 +37,9 @@ public class ProjectJPARepository implements EntityRepositoryJPA<Project> {
         this.em.remove(entity);
         return entity;
     }
+
+    public long count() {
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(p) FROM Project p", Long.class);
+        return query.getSingleResult();
+    }
 }
