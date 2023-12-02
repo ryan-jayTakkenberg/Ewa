@@ -512,7 +512,7 @@ p {
 
 .filterMessage:hover,
 .deleteMessage:hover {
-  outline: 2px solid #222;
+  background: #e5e5e5;
 }
 
 #textBig, #textBigRed, #textBigGreen {

@@ -473,10 +473,6 @@ p {
   cursor: pointer;
 }
 
-.sendReportButton:hover {
-  outline: 2px solid #222;
-}
-
 .inboxHeader {
   display: flex;
   align-items: center;
