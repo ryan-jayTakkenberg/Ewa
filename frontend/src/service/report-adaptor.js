@@ -1,6 +1,6 @@
 import {deleteAPI, getAPI, postAPI, responseOk} from "@/backend";
 
-export class ViewerOverviewAdaptor {
+export class ReportAdaptor {
 
     async fetchViewerReports() {
         try {
@@ -12,8 +12,29 @@ export class ViewerOverviewAdaptor {
                 return [];
             }
 
-            // Filter out reports where the sender is "admin"
-            return response.data.filter(report => report.sender !== "viewer");
+            // Filter out reports where the sender is not equal to admin (viewers)
+            // TODO replace with backend query when we have a real database
+            return response.data.filter(report => report.sender !== "admin");
+
+        } catch (error) {
+            console.error('An unexpected error occurred:', error);
+            return [];
+        }
+    }
+
+    async fetchAdminReports() {
+        try {
+            const response = await getAPI("/api/reports");
+            console.log('Reports Response Data:', response.data);
+
+            if (!responseOk(response)) {
+                console.warn('Response not OK:', response.data);
+                return [];
+            }
+
+            // Filter out reports where the sender is equal to "admin"
+            // TODO replace with backend query when we have a real database
+            return response.data.filter(report => report.sender === "admin");
 
         } catch (error) {
             console.error('An unexpected error occurred:', error);

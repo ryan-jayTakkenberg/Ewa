@@ -5,7 +5,7 @@ import Project from "@/models/project";
 export default {
 
   name: "UserOverviewComponent",
-  inject: ['viewerOverviewService'],
+  inject: ['reportService'],
 
   data() {
     return {
@@ -13,8 +13,6 @@ export default {
       viewerTeam: getUserTeam(), // TODO
       viewerProjects: Project.projects,
       viewerReports: [],
-      meetingTime: '11:30 - 12:30',
-      meetingLocation: 'Warehouse 2',
       selectedReports: [],
       reportBody: "",
       }
@@ -42,7 +40,7 @@ export default {
     },
 
     async fetchViewerReports() {
-      this.viewerReports = await this.viewerOverviewService.fetchViewerReports();
+      this.viewerReports = await this.reportService.fetchViewerReports();
     },
 
     async postReport() {
@@ -54,7 +52,7 @@ export default {
         body: this.reportBody,
       };
 
-      await this.viewerOverviewService.postReport(report);
+      await this.reportService.postReport(report);
 
       this.reportBody = '';
     },
@@ -62,7 +60,7 @@ export default {
     async deleteReport() {
 
       for (const report of this.selectedReports) {
-        await this.viewerOverviewService.deleteReport(report.id);
+        await this.reportService.deleteReport(report.id);
 
         // Remove the deleted report from the viewerReports array
         const indexToDelete = this.viewerReports.findIndex((r) => r.id === report.id);
@@ -480,7 +478,7 @@ p {
 .messageHeader {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 2px solid #f5f5f5;
   width: 100%;
 }
 
@@ -490,8 +488,8 @@ p {
 }
 
 .messageDate {
-  font-weight: 300;
-  color: #c5c5c5;
+  font-weight: 400;
+  color: #aaa;
 }
 
 .buttonWrapper {
