@@ -7,6 +7,11 @@
       :selectedReports="selectedReports"
   />
 
+  <div v-if="showSuccessMessage" class="successfulMessageContainer">
+    <div class="successfulMessage">Report successfully deleted</div>
+    <div class="checkmark"><span class="material-symbols-outlined checkmark">check_circle</span></div>
+  </div>
+
   <!--- Persona ---------------------------------------------------------------------------------->
   <div class="personaContainer">
 
@@ -158,6 +163,7 @@ export default {
       receiverId: 1,
 
       modal: false,
+      showSuccessMessage: false,
     }
   },
 
@@ -207,6 +213,11 @@ export default {
 
       this.selectedReports = [];
       this.modal = false;
+      this.showSuccessMessage = true;
+
+      setTimeout(() => {
+        this.showSuccessMessage = false;
+      }, 5000);
     },
 
     showModal() {
@@ -271,7 +282,8 @@ export default {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 2rem 3rem 0 3rem;
+  padding: 2rem 3rem;
+  border-bottom: 2px solid #e5e5e5;
 }
 
 .welcomeContainer {
@@ -323,7 +335,6 @@ h1 {
   color: #222;
 }
 
-
 .sectionTitle {
   text-align: left;
   font-size: 1.5rem;
@@ -337,8 +348,22 @@ h1 {
   width: 100%;
   height: auto;
   padding: 1rem 0.15rem;
-  overflow-x: scroll;
+  overflow-x: auto;
   margin-top: 1rem;
+}
+
+.projectContainer::-webkit-scrollbar {
+  width: 5px;
+}
+
+.projectContainer::-webkit-scrollbar-thumb {
+  background-color: #e5e5e5;
+  border-radius: 10px;
+}
+
+.projectContainer::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+  border-radius: 10px;
 }
 
 .descriptionTitle {
@@ -532,6 +557,69 @@ p {
 .filterMessage:hover,
 .deleteMessage:hover {
   background: #e5e5e5;
+}
+
+.successfulMessageContainer {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem 1rem;
+  height: 50px;
+  background: #fff;
+  border-radius: 5px;
+  right: 5%;
+  bottom: 5%;
+  animation: successful 5.1s ease-in-out;
+  box-shadow: rgba(0, 0, 0, 0.15) 0 0 10px 1px;
+}
+
+@keyframes successful {
+
+  0% {
+    margin-bottom: -15px;
+    opacity: 0;
+  }
+
+  10% {
+    margin-bottom: 0;
+    opacity: 1;
+  }
+
+  90% {
+    margin-bottom: 0;
+    opacity: 1;
+  }
+
+  100% {
+    margin-bottom: 15px;
+    opacity: 0;
+  }
+
+}
+
+.successfulMessage {
+  font-size: 1em;
+  font-weight: 600;
+  color: #222;
+}
+
+.checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.material-symbols-outlined.checkmark {
+  transform: scale(1.1);
+  color: #4fd97f;
+  font-variation-settings:
+     'FILL' 0,
+     'wght' 400,
+     'GRAD' 0,
+     'opsz' 24
 }
 
 </style>
