@@ -31,6 +31,15 @@ public class ProjectController {
         return List.of(projectsRepo.findById(jwtInfo.getId()));
     }
 
+    @GetMapping ("/{id}")
+    private Project getProjectById(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable long id){
+        if (!jwtInfo.isAdmin()){
+            throw new ForbiddenException("Admin role is required to search for a specific search");
+        }
+        return projectsRepo.findById(id);
+    }
+
+
     @PostMapping
     public ResponseEntity<Project> addNewProject(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Project project) {
         if (!jwtInfo.isAdmin()){

@@ -1,26 +1,24 @@
 import {getAPI} from "@/backend";
 
 export default class Project {
-    id;
+    projectId;
     projectName;
     clientName;
     installDate;
-    installTeamId;
-    usedWarehouseId;
     notes;
+    team;
 
-    constructor(id, projectName, clientName, installDate, installTeamId, usedWarehouseId, notes) {
-        this.id = id;
+    constructor(projectId, projectName, clientName, installDate, notes, team) {
+        this.projectId = projectId
         this.projectName = projectName;
         this.clientName = clientName;
         this.installDate = installDate;
-        this.installTeamId = installTeamId
-        this.usedWarehouseId = usedWarehouseId;
         this.notes = notes;
+        this.team = team;
     }
 
     clone() {
-        return new Project(this.id, this.projectName, this.clientName, this.installDate, this.installTeamId, this.usedWarehouseId, this.notes);
+        return new Project(this.projectId, this.projectName, this.clientName, this.installDate, this.notes, this.team);
     }
 
     equals(other) {
