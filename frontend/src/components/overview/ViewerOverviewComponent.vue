@@ -7,10 +7,7 @@
       :selectedReports="selectedReports"
   />
 
-  <div v-if="showSuccessMessage" class="successfulMessageContainer">
-    <div class="successfulMessage">Report successfully deleted</div>
-    <div class="checkmark"><span class="material-symbols-outlined checkmark">check_circle</span></div>
-  </div>
+  <NotificationComponent ref="notificationComponent" />
 
   <!--- Persona ---------------------------------------------------------------------------------->
   <div class="personaContainer">
@@ -138,9 +135,11 @@
 </template>
 
 <script>
+
 import {getId, getUsername, getUserTeam} from "@/data";
 import Project from "@/models/project";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
+import NotificationComponent from "@/components/general/NotificationComponent.vue";
 
 export default {
 
@@ -148,6 +147,7 @@ export default {
   inject: ['reportService', 'projectService'],
   components: {
     OverviewModal,
+    NotificationComponent,
   },
 
   data() {
@@ -163,7 +163,6 @@ export default {
       receiverId: 1,
 
       modal: false,
-      showSuccessMessage: false,
     }
   },
 
@@ -201,6 +200,8 @@ export default {
 
     async deleteReport() {
 
+      const numReportsToDelete = this.selectedReports.length;
+
       for (const report of this.selectedReports) {
         await this.reportService.deleteReport(report.id);
 
@@ -213,11 +214,10 @@ export default {
 
       this.selectedReports = [];
       this.modal = false;
-      this.showSuccessMessage = true;
 
-      setTimeout(() => {
-        this.showSuccessMessage = false;
-      }, 5000);
+      const message = numReportsToDelete > 1 ? 'Reports' : 'Report';
+      this.$refs.notificationComponent.createNotification(`${message} successfully deleted`);
+
     },
 
     showModal() {
@@ -557,69 +557,6 @@ p {
 .filterMessage:hover,
 .deleteMessage:hover {
   background: #e5e5e5;
-}
-
-.successfulMessageContainer {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  padding: 2rem 1rem;
-  height: 50px;
-  background: #fff;
-  border-radius: 5px;
-  right: 5%;
-  bottom: 5%;
-  animation: successful 5.1s ease-in-out;
-  box-shadow: rgba(0, 0, 0, 0.15) 0 0 10px 1px;
-}
-
-@keyframes successful {
-
-  0% {
-    margin-bottom: -15px;
-    opacity: 0;
-  }
-
-  10% {
-    margin-bottom: 0;
-    opacity: 1;
-  }
-
-  90% {
-    margin-bottom: 0;
-    opacity: 1;
-  }
-
-  100% {
-    margin-bottom: 15px;
-    opacity: 0;
-  }
-
-}
-
-.successfulMessage {
-  font-size: 1em;
-  font-weight: 600;
-  color: #222;
-}
-
-.checkmark {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
-.material-symbols-outlined.checkmark {
-  transform: scale(1.1);
-  color: #4fd97f;
-  font-variation-settings:
-     'FILL' 0,
-     'wght' 400,
-     'GRAD' 0,
-     'opsz' 24
 }
 
 </style>
