@@ -1,4 +1,5 @@
 import {deleteAPI, getAPI, postAPI, responseOk} from "@/backend";
+import {getId} from "@/data";
 
 export class ReportAdaptor {
 
@@ -12,9 +13,13 @@ export class ReportAdaptor {
                 return [];
             }
 
-            // Filter out reports where the sender is not equal to admin (viewers)
+            // Get the ID of the logged-in user
+            const userId = getId();
+
             // TODO replace with backend query when we have a real database
-            return response.data.filter(report => report.sender !== "admin");
+            // Filter reports based on the receiver_id matching the logged-in user's ID
+            return response.data.filter(report => parseInt(report.receiverId) === userId);
+
 
         } catch (error) {
             console.error('An unexpected error occurred:', error);
@@ -32,9 +37,9 @@ export class ReportAdaptor {
                 return [];
             }
 
-            // Filter out reports where the sender is equal to "admin"
+            // Filter out all the reports where the receiver is equal to "admin"
             // TODO replace with backend query when we have a real database
-            return response.data.filter(report => report.receiver === "admin");
+            return response.data.filter(report => report.receiverId === "admin");
 
         } catch (error) {
             console.error('An unexpected error occurred:', error);

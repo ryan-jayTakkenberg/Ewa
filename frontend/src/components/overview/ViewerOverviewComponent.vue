@@ -1,5 +1,5 @@
 <script>
-import {getUsername, getUserTeam} from "@/data";
+import {getId, getUsername, getUserTeam} from "@/data";
 import Project from "@/models/project";
 
 export default {
@@ -15,6 +15,7 @@ export default {
       viewerReports: [],
       selectedReports: [],
       reportBody: "",
+      reportSender: getId(),
       }
     },
 
@@ -53,8 +54,8 @@ export default {
 
       const report = {
         date: new Date().toLocaleDateString(),
-        sender: "viewer",
-        receiver: "admin",
+        sender: this.reportSender,
+        receiverId: "admin",
         body: this.reportBody,
       };
 

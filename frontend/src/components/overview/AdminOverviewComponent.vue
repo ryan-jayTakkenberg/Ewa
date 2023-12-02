@@ -60,7 +60,7 @@ export default {
       const report = {
         date: new Date().toLocaleDateString(),
         sender: "admin",
-        receiver: this.reportReceiver,
+        receiverId: this.reportReceiver,
         body: this.reportBody,
       };
 
