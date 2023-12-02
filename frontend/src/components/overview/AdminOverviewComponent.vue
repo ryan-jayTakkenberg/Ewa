@@ -1,5 +1,6 @@
 <script>
 import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
+import {getId, getUsername} from "@/data";
 
 export default {
 
@@ -16,7 +17,9 @@ export default {
       adminReports: [],
       selectedReports: [],
       reportBody: "",
-      reportReceiver: "",
+      receiverId: "",
+      senderId: getId(),
+      senderUsername: getUsername(),
       users: [],
 
       projects: [
@@ -59,8 +62,9 @@ export default {
 
       const report = {
         date: new Date().toLocaleDateString(),
-        sender: "admin",
-        receiverId: this.reportReceiver,
+        senderId: this.senderId,
+        senderName: this.senderUsername,
+        receiverId: this.receiverId,
         body: this.reportBody,
       };
 
@@ -274,7 +278,7 @@ export default {
             :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
 
           <div class="messageHeader">
-            <div class="messageSender"> {{ capitalizeFirstLetter(report.sender) }} </div>
+            <div class="messageSender"> {{ capitalizeFirstLetter(report.senderName) }} </div>
             <div class="messageDate"> {{ report.date }} </div>
           </div>
 
@@ -286,14 +290,14 @@ export default {
       <div class="sendReportsContainer">
         <div class="wrapper">
           <label>Send a report to:</label>
-          <select v-model="reportReceiver" class="reportReceiver">
+          <select v-model="receiverId" class="reportReceiver">
             <option v-for="user in filteredUsers" :value="user.id" :key="user.id">{{ user.name }}</option>
           </select>
         </div>
 
         <textarea v-model="reportBody" placeholder="Type your report here..." class="reportInput"></textarea>
 
-        <button @click="postReport" class="sendReportButton" :class="{ 'disabledButton': !reportReceiver }" :disabled="!reportReceiver">Send</button>
+        <button @click="postReport" class="sendReportButton" :class="{ 'disabledButton': !receiverId }" :disabled="!receiverId">Send</button>
       </div>
 
 

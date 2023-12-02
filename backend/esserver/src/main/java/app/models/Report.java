@@ -17,33 +17,35 @@ public class Report {
 
     @Id
     @GeneratedValue
-    private long report_id;
+    private long reportId;
     private String body;
     private String date;
-    private String sender;
-    private String receiver_id;
+    private int senderId;
+    private String senderName;
+    private int receiverId;
 
     @ManyToOne
     private User app_user;
 
-    public Report(long report_id, String body, String date, String sender, String receiver_id) {
-        this.report_id = report_id;
+    public Report(long reportId, String body, String date, int senderId, String senderName, int receiverId) {
+        this.reportId = reportId;
         this.body = body;
         this.date = date;
-        this.sender = sender;
-        this.receiver_id = receiver_id;
+        this.senderId = senderId;
+        this.senderName = senderName;
+        this.receiverId = receiverId;
     }
 
     public Report() {
 
     }
 
-    public long getId() {
-        return report_id;
+    public long getReportId() {
+        return reportId;
     }
 
-    public void setId(long report_id) {
-        this.report_id = report_id;
+    public void setReportId(long reportId) {
+        this.reportId = reportId;
     }
 
     public String getBody() {
@@ -62,19 +64,27 @@ public class Report {
         this.date = date;
     }
 
-    public String getSender() {
-        return sender;
+    public int getSenderId() {
+        return senderId;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSenderId(int senderId) {
+        this.senderId = senderId;
     }
 
-    public String getReceiverId() {
-        return receiver_id;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setReceiverId(String receiver_id) {
-        this.receiver_id = receiver_id;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public int getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(int receiverId) {
+        this.receiverId = receiverId;
     }
 }

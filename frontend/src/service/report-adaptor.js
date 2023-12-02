@@ -18,7 +18,7 @@ export class ReportAdaptor {
 
             // TODO replace with backend query when we have a real database
             // Filter reports based on the receiver_id matching the logged-in user's ID
-            return response.data.filter(report => parseInt(report.receiverId) === userId);
+            return response.data.filter(report => report.receiverId === userId);
 
 
         } catch (error) {
@@ -39,7 +39,7 @@ export class ReportAdaptor {
 
             // Filter out all the reports where the receiver is equal to "admin"
             // TODO replace with backend query when we have a real database
-            return response.data.filter(report => report.receiverId === "admin");
+            return response.data.filter(report => report.receiverId === 1); // 1 = admin ID
 
         } catch (error) {
             console.error('An unexpected error occurred:', error);
