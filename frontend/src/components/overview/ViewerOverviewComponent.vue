@@ -1,11 +1,11 @@
 <script>
-import {getUsername, getUserTeam} from "@/data";
+import {getId, getUsername, getUserTeam} from "@/data";
 import Project from "@/models/project";
 
 export default {
 
   name: "UserOverviewComponent",
-  inject: ['reportService'],
+  inject: ['reportService', 'projectService'],
 
   data() {
     return {
@@ -15,29 +15,17 @@ export default {
       viewerReports: [],
       selectedReports: [],
       reportBody: "",
+      senderId: getId(),
+      senderName: getUsername(),
+      receiverId: 1,
       }
     },
 
   mounted() {
-    this.fetchProjectsOnce();
     this.fetchViewerReports();
   },
 
   methods: {
-
-    async fetchProjectsOnce() {
-
-      if (!this.viewerProjects?.length) {
-        // Keep updating the list if the database has not returned all the data yet
-        const fetchingInterval = setInterval(() => {
-          if (!Project.fetching) {
-            this.viewerProjects = [...Project.projects];
-            clearInterval(fetchingInterval);
-          }
-        }, 100);
-      }
-
-    },
 
     async fetchViewerReports() {
       this.viewerReports = await this.reportService.fetchViewerReports();
@@ -53,8 +41,9 @@ export default {
 
       const report = {
         date: new Date().toLocaleDateString(),
-        sender: "viewer",
-        receiver: "admin",
+        senderId: this.senderId,
+        senderName: this.senderName,
+        receiverId: this.receiverId,
         body: this.reportBody,
       };
 
@@ -225,7 +214,7 @@ export default {
             :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
 
           <div class="messageHeader">
-            <div class="messageSender"> {{ capitalizeFirstLetter(report.sender) }} </div>
+            <div class="messageSender"> {{ capitalizeFirstLetter(report.senderName) }} </div>
             <div class="messageDate"> {{ report.date }} </div>
           </div>
 
