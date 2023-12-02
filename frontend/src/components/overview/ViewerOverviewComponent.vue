@@ -45,6 +45,12 @@ export default {
 
     async postReport() {
 
+      // Check if the report body is empty
+      if (!this.reportBody.trim()) {
+        alert('Error: Report cannot be empty');
+        return;
+      }
+
       const report = {
         date: new Date().toLocaleDateString(),
         sender: "viewer",
@@ -55,6 +61,7 @@ export default {
       await this.reportService.postReport(report);
 
       this.reportBody = '';
+      alert('Your report was successfully sent!');
     },
 
     async deleteReport() {
@@ -456,6 +463,7 @@ p {
 
 .sendReportButton {
   width: 100px;
+  height: 50px;
   background: #c5ce2c;
   color: #fff;
   font-size: 1em;
@@ -497,7 +505,8 @@ p {
   gap: 1rem;
 }
 
-button {
+.filterMessage,
+.deleteMessage {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -508,7 +517,8 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.filterMessage:hover,
+.deleteMessage:hover {
   background: #e5e5e5;
 }
 

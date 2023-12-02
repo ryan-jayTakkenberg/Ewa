@@ -639,6 +639,7 @@ p {
 
 .sendReportButton {
   width: 100px;
+  height: 50px;
   background: #c5ce2c;
   color: #fff;
   font-size: 1em;
@@ -675,17 +676,6 @@ p {
 .buttonWrapper {
   display: flex;
   gap: 1rem;
-}
-
-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  width: 50px;
-  background: none;
-  outline: none;
-  cursor: pointer;
 }
 
 .disabledButton {
