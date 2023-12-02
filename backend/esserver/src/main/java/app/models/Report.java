@@ -17,21 +17,23 @@ public class Report {
 
     @Id
     @GeneratedValue
-    private long report_id;
+    private long id;
     private String body;
     private String date;
-    private String sender;
-    private String receiver;
+    private int senderId;
+    private String senderName;
+    private int receiverId;
 
     @ManyToOne
     private User app_user;
 
-    public Report(long report_id, String body, String date, String sender, String receiver) {
-        this.report_id = report_id;
+    public Report(long id, String body, String date, int senderId, String senderName, int receiverId) {
+        this.id = id;
         this.body = body;
         this.date = date;
-        this.sender = sender;
-        this.receiver = receiver;
+        this.senderId = senderId;
+        this.senderName = senderName;
+        this.receiverId = receiverId;
     }
 
     public Report() {
@@ -39,11 +41,11 @@ public class Report {
     }
 
     public long getId() {
-        return report_id;
+        return id;
     }
 
-    public void setId(long report_id) {
-        this.report_id = report_id;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getBody() {
@@ -62,19 +64,27 @@ public class Report {
         this.date = date;
     }
 
-    public String getSender() {
-        return sender;
+    public int getSenderId() {
+        return senderId;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSenderId(int senderId) {
+        this.senderId = senderId;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public int getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(int receiverId) {
+        this.receiverId = receiverId;
     }
 }

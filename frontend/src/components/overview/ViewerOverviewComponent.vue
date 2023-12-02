@@ -1,11 +1,11 @@
 <script>
-import {getUsername, getUserTeam} from "@/data";
+import {getId, getUsername, getUserTeam} from "@/data";
 import Project from "@/models/project";
 
 export default {
 
   name: "UserOverviewComponent",
-  inject: ['viewerOverviewService'],
+  inject: ['reportService', 'projectService'],
 
   data() {
     return {
@@ -13,56 +13,50 @@ export default {
       viewerTeam: getUserTeam(), // TODO
       viewerProjects: Project.projects,
       viewerReports: [],
-      meetingTime: '11:30 - 12:30',
-      meetingLocation: 'Warehouse 2',
       selectedReports: [],
       reportBody: "",
+      senderId: getId(),
+      senderName: getUsername(),
+      receiverId: 1,
       }
     },
 
   mounted() {
-    this.fetchProjectsOnce();
     this.fetchViewerReports();
   },
 
   methods: {
 
-    async fetchProjectsOnce() {
-
-      if (!this.viewerProjects?.length) {
-        // Keep updating the list if the database has not returned all the data yet
-        const fetchingInterval = setInterval(() => {
-          if (!Project.fetching) {
-            this.viewerProjects = [...Project.projects];
-            clearInterval(fetchingInterval);
-          }
-        }, 100);
-      }
-
-    },
-
     async fetchViewerReports() {
-      this.viewerReports = await this.viewerOverviewService.fetchViewerReports();
+      this.viewerReports = await this.reportService.fetchViewerReports();
     },
 
     async postReport() {
 
+      // Check if the report body is empty
+      if (!this.reportBody.trim()) {
+        alert('Error: Report cannot be empty');
+        return;
+      }
+
       const report = {
         date: new Date().toLocaleDateString(),
-        sender: "viewer",
-        receiver: "admin",
+        senderId: this.senderId,
+        senderName: this.senderName,
+        receiverId: this.receiverId,
         body: this.reportBody,
       };
 
-      await this.viewerOverviewService.postReport(report);
+      await this.reportService.postReport(report);
 
       this.reportBody = '';
+      alert('Your report was successfully sent!');
     },
 
     async deleteReport() {
 
       for (const report of this.selectedReports) {
-        await this.viewerOverviewService.deleteReport(report.id);
+        await this.reportService.deleteReport(report.id);
 
         // Remove the deleted report from the viewerReports array
         const indexToDelete = this.viewerReports.findIndex((r) => r.id === report.id);
@@ -220,7 +214,7 @@ export default {
             :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
 
           <div class="messageHeader">
-            <div class="messageSender"> {{ capitalizeFirstLetter(report.sender) }} </div>
+            <div class="messageSender"> {{ capitalizeFirstLetter(report.senderName) }} </div>
             <div class="messageDate"> {{ report.date }} </div>
           </div>
 
@@ -458,6 +452,7 @@ p {
 
 .sendReportButton {
   width: 100px;
+  height: 50px;
   background: #c5ce2c;
   color: #fff;
   font-size: 1em;
@@ -465,10 +460,6 @@ p {
   border-radius: 5px;
   outline: none;
   cursor: pointer;
-}
-
-.sendReportButton:hover {
-  outline: 2px solid #222;
 }
 
 .inboxHeader {
@@ -480,7 +471,7 @@ p {
 .messageHeader {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 2px solid #f5f5f5;
   width: 100%;
 }
 
@@ -490,8 +481,8 @@ p {
 }
 
 .messageDate {
-  font-weight: 300;
-  color: #c5c5c5;
+  font-weight: 400;
+  color: #aaa;
 }
 
 .buttonWrapper {
@@ -499,7 +490,8 @@ p {
   gap: 1rem;
 }
 
-button {
+.filterMessage,
+.deleteMessage {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -510,7 +502,8 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.filterMessage:hover,
+.deleteMessage:hover {
   background: #e5e5e5;
 }
 

@@ -1,10 +1,11 @@
 <script>
 import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
+import {getId, getUsername} from "@/data";
 
 export default {
 
   name: "AdminOverviewComponent",
-  inject: ['adminOverviewService'],
+  inject: ['reportService', 'userService'],
 
   data() {
     return {
@@ -13,7 +14,13 @@ export default {
       unresolvedReports: '2',
       warehousesLowStock: '3',
       globalTotalStock: '350',
-      selectedMessages: [],
+      adminReports: [],
+      selectedReports: [],
+      reportBody: "",
+      receiverId: "",
+      senderId: getId(),
+      senderUsername: getUsername(),
+      users: [],
 
       projects: [
         {title: 'Project Green', team: '1'},
@@ -27,43 +34,95 @@ export default {
         {title: 'Planned from: 20/10/2023 to 27/10/2023'},
         {title: 'Planned from: 25/10/2023 to 31/10/2023'},
       ],
-      sampleMessages: [],
     }
   },
 
-  methods:
+  mounted() {
+    this.fetchAdminReports();
+    this.fetchAllUsers();
+  },
 
-      {
+  methods: {
+
+    async fetchAllUsers() {
+      this.users = await this.userService.fetchAllUsers();
+    },
+
+    async fetchAdminReports() {
+      this.adminReports = await this.reportService.fetchAdminReports();
+    },
+
+    async postReport() {
+
+      // Check if the report body is empty
+      if (!this.reportBody.trim()) {
+        alert('Error: Report cannot be empty');
+        return;
+      }
+
+      const report = {
+        date: new Date().toLocaleDateString(),
+        senderId: this.senderId,
+        senderName: this.senderUsername,
+        receiverId: this.receiverId,
+        body: this.reportBody,
+      };
+
+      await this.reportService.postReport(report);
+
+      this.reportBody = '';
+      alert('Your report was successfully sent!');
+    },
+
+    async deleteReport() {
+
+      for (const report of this.selectedReports) {
+        await this.reportService.deleteReport(report.id);
+
+        // Remove the deleted report from the viewerReports array
+        const indexToDelete = this.adminReports.findIndex((r) => r.id === report.id);
+        if (indexToDelete !== -1) {
+          this.adminReports.splice(indexToDelete, 1);
+        }
+      }
+
+      this.selectedReports = [];
+    },
+
+    capitalizeFirstLetter(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+
     getRandomColor() {
       const colors = ['#00d315', '#ff0000'];
       const randomIndex = Math.floor(Math.random() * colors.length);
       return colors[randomIndex];
     },
+
     toggleSelected(index) {
-      if (this.selectedMessages.includes(index)) {
-        this.selectedMessages = this.selectedMessages.filter((item) => item !== index);
+      const selectedReportIndex = this.selectedReports.findIndex((report) => report.id === this.adminReports[index].id);
+
+      if (selectedReportIndex === -1) {
+        // If not already selected, add to the selectedReports array
+        this.selectedReports.push(this.adminReports[index]);
       } else {
-        this.selectedMessages.push(index);
+        // If already selected, remove from the selectedReports array
+        this.selectedReports.splice(selectedReportIndex, 1);
       }
     },
-        async loadOngoingProjectsCount() {
+
+    async loadOngoingProjectsCount() {
           const adaptor = new AdminOverviewAdaptor();
           const count = await adaptor.fetchOngoingProjectsCount();
           if (count !== null) {
             this.ongoingProjects = count;
           }
     },
-        async loadReports() {
-          const adaptor = new AdminOverviewAdaptor();
-          const reports = await adaptor.fetchReports();
-          this.sampleMessages = reports.map(report => ({
-            sender: report.sender,
-            content: report.body
-          }));
-        }
+
   },
 
   computed: {
+
     dayOfTheWeek() {
       const today = new Date();
       today.setDate(today.getDate());
@@ -71,15 +130,19 @@ export default {
 
       return today.toLocaleDateString(undefined, options);
     },
+
     numberOfTheDay() {
       const today = new Date();
       return today.getUTCDate()
     },
+
+    filteredUsers() {
+      // Filter out users with permissionLevel === 'admin', because you can't send report to yourself
+      return this.users.filter(user => user.permissionLevel !== 'ADMIN');
+    },
+
   },
-  mounted() {
-    this.loadOngoingProjectsCount(); // Fetch the overview information when the component is mounted
-    this.loadReports();
-  },
+
 }
 
 
@@ -181,31 +244,63 @@ export default {
     </div>
   </div>
 
-  <!--- messages ---------------------------------------------------------------------------------->
+  <!--- reports ---------------------------------------------------------------------------------->
   <div class="sectionContainer">
 
-    <div class="messageHeader">
-      <h1 class="sectionTitle">Messages</h1>
+    <div class="reportsHeader">
+      <h1 class="sectionTitle">Reports</h1>
       <div class="buttonContainer">
-        <button class="deleteMessage">
-          <span class="material-symbols-outlined button">delete</span>
-        </button>
-        <button class="filterMessage">
-          <span class="material-symbols-outlined button">filter_alt</span>
-        </button>
       </div>
     </div>
 
-    <div class="messageContainer">
-      <div
-          class="messageWrapper"
-          v-for="(message, index) in sampleMessages"
-          :key="index"
-          @click="toggleSelected(index)"
-          :class="{ 'selected': selectedMessages.includes(index) }">
-        <div class="messageSender"> {{ message.sender }} </div>
-        <div class="message"> {{ message.content }} </div>
+    <div class="reportsContainerWrapper">
+
+      <div class="reportsContainer">
+
+        <div class="inboxHeader">
+          <div class="containerTitle">Inbox</div>
+
+          <div class="buttonWrapper">
+            <button class="deleteMessage" @click="deleteReport">
+              <span class="material-symbols-outlined button">delete</span>
+            </button>
+            <button class="filterMessage">
+              <span class="material-symbols-outlined button">filter_alt</span>
+            </button>
+          </div>
+
+        </div>
+        <div
+            class="messageWrapper"
+            v-for="(report, index) in adminReports"
+            :key="index"
+            @click="toggleSelected(index)"
+            :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
+
+          <div class="messageHeader">
+            <div class="messageSender"> {{ capitalizeFirstLetter(report.senderName) }} </div>
+            <div class="messageDate"> {{ report.date }} </div>
+          </div>
+
+          <div class="message"> {{ report.body }} </div>
+
+        </div>
       </div>
+
+      <div class="sendReportsContainer">
+        <div class="wrapper">
+          <label>Send a report to:</label>
+          <select v-model="receiverId" class="reportReceiver">
+            <option v-for="user in filteredUsers" :value="user.id" :key="user.id">{{ user.name }}</option>
+          </select>
+        </div>
+
+        <textarea v-model="reportBody" placeholder="Type your report here..." class="reportInput"></textarea>
+
+        <button @click="postReport" class="sendReportButton" :class="{ 'disabledButton': !receiverId }" :disabled="!receiverId">Send</button>
+      </div>
+
+
     </div>
 
   </div>
@@ -376,18 +471,6 @@ p {
   color: #222;
 }
 
-.messageContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 2rem;
-  height: 500px;
-  width: 50%;
-  background: #f5f5f5;
-  border-radius: 10px;
-  overflow-y: scroll;
-}
-
 .messageHeader {
   display: flex;
   justify-content: space-between;
@@ -410,13 +493,6 @@ p {
   cursor: pointer;
 }
 
-.messageSender {
-  width: 100%;
-  font-weight: 600;
-  color: #222;
-  border-bottom: 1px solid #e5e5e5;
-}
-
 .selected {
   background-color: #e5e5e5;
 }
@@ -426,7 +502,8 @@ p {
   gap: 1rem;
 }
 
-button {
+.filterMessage,
+.deleteMessage {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -437,8 +514,9 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  outline: 2px solid #222;
+.filterMessage:hover,
+.deleteMessage:hover {
+  background: #e5e5e5;
 }
 
 #textBig, #textBigRed, #textBigGreen {
@@ -492,7 +570,138 @@ button:hover {
   border: 1px solid #ccc;
 }
 
+.reportsContainerWrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
 
+.reportsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  height: 500px;
+  width: 100%;
+  background: #f5f5f5;
+  border-radius: 10px;
+  overflow-y: scroll;
+}
+
+.reportsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 50%;
+  margin-bottom: 1rem;
+}
+
+.messageWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  min-height: 150px;
+  height: auto;
+  flex: 0 0 auto;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.selected {
+  outline: 2px solid #222;
+}
+
+.sendReportsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  height: 500px;
+  width: 100%;
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.containerTitle {
+  font-size: 1em;
+  font-weight: 600;
+  color: #222;
+}
+
+.reportInput {
+  height: 80%;
+  padding: 0.5rem;
+  border-radius: 5px;
+  resize: vertical;
+  min-height: 20%;
+  max-height: 70%;
+}
+
+.sendReportButton {
+  width: 100px;
+  height: 50px;
+  background: #c5ce2c;
+  color: #fff;
+  font-size: 1em;
+  font-weight: 600;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.inboxHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.messageHeader {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid #f5f5f5;
+  width: 100%;
+}
+
+.messageSender {
+  font-weight: 600;
+  color: #222;
+}
+
+.messageDate {
+  font-weight: 400;
+  color: #aaa;
+}
+
+.buttonWrapper {
+  display: flex;
+  gap: 1rem;
+}
+
+.disabledButton {
+  background-color: #c5c5c5;
+  cursor: not-allowed;
+  outline: none;
+}
+
+label {
+  font-weight: 500;
+  width: 25%;
+}
+
+.wrapper {
+  display: flex;
+}
+
+.reportReceiver {
+  border-radius: 5px;
+  padding: 0 0.5em;
+  width: 150px;
+}
 
 </style>
 

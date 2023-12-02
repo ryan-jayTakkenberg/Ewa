@@ -26,9 +26,10 @@ import {TeamsAdaptor} from "@/service/teams-adaptor";
 import CONFIG from "@/app-config";
 import {getAPI, responseOk} from "@/backend";
 import {getJWT} from "@/data";
-import {ViewerOverviewAdaptor} from "@/service/viewer-overview-adaptor";
+import {ReportAdaptor} from "@/service/report-adaptor";
 import Orders from "@/models/order";
 import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
+import {UserAdaptor} from "@/service/user-adaptor";
 
 export default {
   name: 'App',
@@ -44,7 +45,8 @@ export default {
     return {
       warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/api/warehouses"),
       teams: new TeamsAdaptor(CONFIG.BACKEND_URL+"api/teams"),
-      viewerOverviewService: new ViewerOverviewAdaptor(CONFIG.BACKEND_URL+"/api/overview"),
+      reportService: new ReportAdaptor(CONFIG.BACKEND_URL+"/api/viewer-overview"),
+      userService: new UserAdaptor(CONFIG.BACKEND_URL+"/api/users"),
       adminOverviewService: new AdminOverviewAdaptor(CONFIG.BACKEND_URL+"/api/adminview")
     }
   },
