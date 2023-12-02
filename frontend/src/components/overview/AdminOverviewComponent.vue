@@ -67,6 +67,7 @@ export default {
       await this.reportService.postReport(report);
 
       this.reportBody = '';
+      alert('Your report was successfully sent!');
     },
 
     async deleteReport() {
@@ -75,9 +76,9 @@ export default {
         await this.reportService.deleteReport(report.id);
 
         // Remove the deleted report from the viewerReports array
-        const indexToDelete = this.viewerReports.findIndex((r) => r.id === report.id);
+        const indexToDelete = this.adminReports.findIndex((r) => r.id === report.id);
         if (indexToDelete !== -1) {
-          this.viewerReports.splice(indexToDelete, 1);
+          this.adminReports.splice(indexToDelete, 1);
         }
       }
 
@@ -95,10 +96,14 @@ export default {
     },
 
     toggleSelected(index) {
-      if (this.selectedMessages.includes(index)) {
-        this.selectedMessages = this.selectedMessages.filter((item) => item !== index);
+      const selectedReportIndex = this.selectedReports.findIndex((report) => report.id === this.adminReports[index].id);
+
+      if (selectedReportIndex === -1) {
+        // If not already selected, add to the selectedReports array
+        this.selectedReports.push(this.adminReports[index]);
       } else {
-        this.selectedMessages.push(index);
+        // If already selected, remove from the selectedReports array
+        this.selectedReports.splice(selectedReportIndex, 1);
       }
     },
 

@@ -34,7 +34,7 @@ export class ReportAdaptor {
 
             // Filter out reports where the sender is equal to "admin"
             // TODO replace with backend query when we have a real database
-            return response.data.filter(report => report.sender === "admin");
+            return response.data.filter(report => report.receiver === "admin");
 
         } catch (error) {
             console.error('An unexpected error occurred:', error);
