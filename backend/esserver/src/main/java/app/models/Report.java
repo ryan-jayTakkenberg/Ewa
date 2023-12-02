@@ -17,7 +17,7 @@ public class Report {
 
     @Id
     @GeneratedValue
-    private long reportId;
+    private long id;
     private String body;
     private String date;
     private int senderId;
@@ -27,8 +27,8 @@ public class Report {
     @ManyToOne
     private User app_user;
 
-    public Report(long reportId, String body, String date, int senderId, String senderName, int receiverId) {
-        this.reportId = reportId;
+    public Report(long id, String body, String date, int senderId, String senderName, int receiverId) {
+        this.id = id;
         this.body = body;
         this.date = date;
         this.senderId = senderId;
@@ -40,12 +40,12 @@ public class Report {
 
     }
 
-    public long getReportId() {
-        return reportId;
+    public long getId() {
+        return id;
     }
 
-    public void setReportId(long reportId) {
-        this.reportId = reportId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getBody() {
