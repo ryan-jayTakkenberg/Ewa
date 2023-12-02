@@ -3,11 +3,11 @@
     <div class="modal-grid">
       <div class="col-span-6 sm:col-span-3">
         <label class="modal-label">Project name</label>
-        <input type="text" v-model="project.projectName" class="modal-input shadow-sm" placeholder="Name">
+        <input type="text" v-model="project.projectName" class="modal-input shadow-sm" placeholder="...">
       </div>
       <div class="col-span-6 sm:col-span-3">
         <label class="modal-label">Client name</label>
-        <input type="text" v-model="project.clientName" class="modal-input shadow-sm" placeholder="City">
+        <input type="text" v-model="project.clientName" class="modal-input shadow-sm" placeholder="...">
       </div>
       <div class="col-span-6 sm:col-span-3">
         <label class="modal-label">Install Date</label>
@@ -15,8 +15,16 @@
       </div>
       <div class="col-span-6 sm:col-span-3">
         <label class="modal-label">Notes</label>
-        <input v-model="project.notes" type="text" placeholder="Postal Code" class="modal-input shadow-sm">
+        <input v-model="project.notes" type="text" placeholder="...." class="modal-input shadow-sm">
       </div>
+    </div>
+    <div class="col-span-6 sm:col-span-3">
+      <label class="modal-label">Assigned Team</label>
+      <select v-model="project.team" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+        <option v-for="team in teamList" :key="team.id" :value="team">
+          {{ team.name }}
+        </option>
+      </select>
     </div>
     <template v-slot:footer>
       <button @click="closePopUp" class="cancel-button">Cancel</button>
@@ -31,6 +39,7 @@ import Project from "@/models/project";
 
 export default {
   name: "CreateProject",
+  inject: ['teams'],
   components: {
     SolarModal
   },
@@ -42,9 +51,12 @@ export default {
         clientName: '',
         installDate: '',
         notes: '',
-        team: ''
-      }
+      },
+      teamList: [],
     }
+  },
+  async created(){
+    this.teamList = await this.teams.asyncFindAll();
   },
   computed: {
     isAnyFieldEmpty() {
@@ -53,7 +65,7 @@ export default {
           this.project.clientName.trim() === '' ||
           this.project.installDate.trim() === '' ||
           this.project.notes.trim() === '' ||
-          this.project.team.trim() === ''
+          !this.project.team
       );
     },
   },
