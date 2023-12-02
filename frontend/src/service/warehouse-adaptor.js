@@ -43,11 +43,6 @@ export class WarehouseAdaptor {
             return {};
         }
 
-        // If the response contains an ID, update the warehouse object with it
-        if (response.data.id) {
-            warehouse.id = response.data.id;
-        }
-
         // Return the response data
         return response.data;
     }
@@ -66,7 +61,7 @@ export class WarehouseAdaptor {
 
         // Checking if the response contains the updated team information
         if (!data.id || !data.name || !data.address || !data.postalCode || !data.city) {
-            console.error("Failed to update team. Empty response: " + data);
+            console.error("Failed to update warehouse. Empty response: " + data);
             return {};
         }
 

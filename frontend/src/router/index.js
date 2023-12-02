@@ -6,7 +6,6 @@ import ProductOverview from "@/components/product/admin/ProductOverview";
 import ReportComponent from "@/components/manage/ReportComponent.vue";
 import TeamsOverview from "@/components/team/TeamsOverview.vue";
 import UsersOverview from "@/components/user/UsersOverview.vue";
-import UpdateWarehouse from "@/components/warehouse/warehousePopUps/UpdateWarehouse";
 import ProductOverviewViewer from "@/components/product/viewer/ProductOverviewViewer";
 import ViewerOverviewComponent from "@/components/overview/ViewerOverviewComponent";
 import AdminOverviewComponent from "@/components/overview/AdminOverviewComponent";
@@ -21,10 +20,7 @@ const routes = [
     {path: '/viewer-overview', component: ViewerOverviewComponent},
     {path: '/admin-overview', component: AdminOverviewComponent},
     {path: '/orders', component: OrdersOverview},
-    {path: '/warehouses', component: WarehouseOverview,
-        children:
-            {path: ":id", component: UpdateWarehouse}
-    },
+    {path: '/warehouses', component: WarehouseOverview},
     {path: '/projects', component: ProjectOverview},
     {path: '/teams', component: TeamsOverview},
     {path: '/products', component: ProductOverview},
