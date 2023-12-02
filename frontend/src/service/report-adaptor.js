@@ -83,44 +83,4 @@ export class ReportAdaptor {
         }
     }
 
-    // async fetchViewerProjects() {
-    //     try {
-    //         const response = await getAPI("/api/projects");
-    //         console.log('Projects Response Data:', response.data);
-    //
-    //         if (!responseOk(response)) {
-    //             console.warn('Response not OK:', response.data);
-    //             return [];
-    //         }
-    //
-    //         return response.data;
-    //
-    //     } catch (error) {
-    //         console.error('An unexpected error occurred:', error);
-    //         return [];
-    //     }
-    // }
-
-
-
-
-
-
-    // async fetchViewerTeam(id) {
-    //
-    //     try {
-    //         const response = await getAPI(`/api/teams/${id}`);
-    //         console.log(response.status);
-    //
-    //         if (response.ok) {
-    //             const data = await response.data();
-    //             return data.name;
-    //         } else {
-    //             console.error(`Failed to fetch user name: ${response.statusText}`);
-    //         }
-    //     } catch (error) {
-    //         console.error("Error fetching user name:", error);
-    //     }
-    // }
-
 }
