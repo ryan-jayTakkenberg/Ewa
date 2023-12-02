@@ -21,17 +21,17 @@ public class Report {
     private String body;
     private String date;
     private String sender;
-    private String receiver;
+    private String receiver_id;
 
     @ManyToOne
     private User app_user;
 
-    public Report(long report_id, String body, String date, String sender, String receiver) {
+    public Report(long report_id, String body, String date, String sender, String receiver_id) {
         this.report_id = report_id;
         this.body = body;
         this.date = date;
         this.sender = sender;
-        this.receiver = receiver;
+        this.receiver_id = receiver_id;
     }
 
     public Report() {
@@ -70,11 +70,11 @@ public class Report {
         this.sender = sender;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public String getReceiverId() {
+        return receiver_id;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setReceiverId(String receiver_id) {
+        this.receiver_id = receiver_id;
     }
 }
