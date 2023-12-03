@@ -213,7 +213,7 @@ export default {
         <SolarButton class="ml-auto" button-text="Create Order" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable
-          :columns="['order number', 'order date', 'estimated delivery date', 'ordered for warehouse', 'total price', 'status', 'products', 'action']">
+          :columns="['order number','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'product', 'quantity', 'status', 'action']">
         <OrderRowComponent
             v-for="(order) in paginatedOrders" :key="order.id" :order="order"
             @confirm="openConfirmModal"

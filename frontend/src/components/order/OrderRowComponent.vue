@@ -1,6 +1,7 @@
 <script>
 import Order from "@/models/order";
 import Warehouse from "../../models/warehouse";
+import {getJWT, isAdmin} from "@/data";
 
 export default {
   name: "OrderRowComponent",
@@ -25,6 +26,8 @@ export default {
     },
   },
   methods: {
+    isAdmin,
+    getJWT,
     emitToggle() {
       this.$emit("toggle", this.order);
     },
@@ -68,12 +71,11 @@ export default {
       </div>
     </td>
     <td class="px-6 py-4 font-semibold text-base">{{ order.orderNumber }}</td>
-    <td class="px-6 py-4">{{ order.orderedFrom}}</td>
-    <td class="px-6 py-4">{{ order.teamId }}</td>
+    <td class="px-6 py-4">{{ order.orderedFrom }}</td>
     <td class="px-6 py-4">{{ order.orderDate }}</td>
     <td class="px-6 py-4">{{ order.estimatedDeliveryDate }}</td>
     <td class="px-6 py-4">{{ order.teamId }}</td>
-    <td class="px-6 py-4">{{ order.productId}}</td>
+    <td class="px-6 py-4">{{ order.productId }}</td>
     <td class="px-6 py-4">{{ order.quantity }}</td>
     <td class="px-6 py-4">
       <div :class="['status', getStatusClass(),]">{{ order.status }}</div>
@@ -81,7 +83,7 @@ export default {
     <td class="px-4 py-4">
       <div v-if="order.status === Order.Status.PENDING" @click="emitConfirm" class="complete-btn">Confirm order</div>
       <div v-if="order.status === Order.Status.PENDING" @click="emitCancel" class="cancel-btn">Cancel order</div>
-      <div v-if="order.status === Order.Status.PENDING || order.status === Order.Status.DELIVERED" @click="emitReport" class="report-btn">Report order</div>
+      <div v-if="!isAdmin()" @click="emitReport" class="report-btn">Report order</div>
     </td>
   </tr>
 </template>

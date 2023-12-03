@@ -14,9 +14,9 @@ export default class Order {
     status;
 
     static Status = {
-        PENDING: "Pending",
-        DELIVERED: "Delivered",
-        CANCELED: "Canceled",
+        PENDING: "PENDING",
+        DELIVERED: "DELIVERED",
+        CANCELED: "CANCELED",
     }
 
     constructor(id, orderNumber, orderedFrom, orderDate, estimatedDeliveryDate, teamId, productId, quantity, status) {
@@ -105,7 +105,7 @@ export default class Order {
 
             // make a delete request to the backend
             await axios.delete(
-                `/api/order/${this.id}`,
+                `/api/orders/${this.id}`,
                 {headers: {"Authorization": getJWT()}}
             );
             Order.orders = Order.orders.filter(o => o.id !== this.id);
@@ -124,7 +124,7 @@ export default class Order {
             // make a get request to the backend
             // update "orders" with the response
             let response = await axios.get(
-                "/api/order",
+                "/api/orders",
                 {headers: {"Authorization": getJWT()}}
             );
 
