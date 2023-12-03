@@ -6,7 +6,7 @@ export class ReportAdaptor {
     async fetchViewerReports() {
         try {
             const response = await getAPI("/api/reports");
-            console.log('Reports Response Data:', response.data);
+            // console.log('Reports Response Data:', response.data);
 
             if (!responseOk(response)) {
                 console.warn('Response not OK:', response.data);
@@ -70,15 +70,15 @@ export class ReportAdaptor {
             const response = await deleteAPI(`/api/reports/${id}`);
 
             if (!responseOk(response)) {
-                console.warn('Delete Report Response not OK:', response.data);
+                // console.warn('Delete Report Response not OK:', response.data);
                 return null;
             }
 
-            console.log('Deleted Report:', response.data);
-            return response.data;
+            // console.log('Deleted Report:', response.data);
+            return response;
 
         } catch (error) {
-            console.error('An unexpected error occurred while posting report:', error);
+            console.error('An unexpected error occurred while deleting report:', error);
             return null;
         }
     }
