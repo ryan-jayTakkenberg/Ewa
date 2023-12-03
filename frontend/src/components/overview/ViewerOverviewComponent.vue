@@ -12,35 +12,36 @@
   <!--- Persona ---------------------------------------------------------------------------------->
   <div class="personaContainer">
 
-    <div class="welcomeContainer">
+    <div class="header">
       <h1>Hi, {{ capitalizeFirstLetter(viewerName) }}</h1>
-      <div class="description">{{ viewerTeam }}</div>
+
+      <div class="dateContainer">
+        <p class="dayOfTheWeek">{{ dayOfTheWeek }}</p>
+        <p class="dayOfTheWeekNum">{{ numberOfTheDay }}</p>
+      </div>
     </div>
 
-    <div class="dateContainer">
-      <p class="dayOfTheWeek">{{ dayOfTheWeek }}</p>
-      <p class="dayOfTheWeekNum">{{ numberOfTheDay }}</p>
+    <div class="welcomeContainer">
+
+      <div class="infoContainer">
+
+        <div class="infoTitle">
+          <p class="medium">Currently working in:</p>
+          <p class="medium">Ongoing projects:</p>
+          <p class="medium">Unread reports:</p>
+        </div>
+
+        <div class="infoValue">
+          <p class="bold">Team 2</p>
+          <p class="bold">1</p>
+          <p class="bold">3</p>
+        </div>
+
+      </div>
+
     </div>
 
   </div>
-
-  <!--- Agenda ---------------------------------------------------------------------------------->
-<!--  <div class="sectionContainer agenda">-->
-
-<!--      <div class="insightContainer">-->
-<!--        <p class="medium"> 1 meeting today:</p>-->
-<!--        <div class="meetingWrapper">-->
-<!--          <span class="material-symbols-outlined">schedule</span>-->
-<!--          <div> {{ meetingTime }} </div>-->
-<!--        </div>-->
-<!--        <div class="meetingWrapper">-->
-<!--          <span class="material-symbols-outlined">location_on</span>-->
-<!--          <div> {{ meetingLocation }} </div>-->
-<!--        </div>-->
-
-<!--      </div>-->
-
-<!--  </div>-->
 
   <!--- projects ---------------------------------------------------------------------------------->
   <div class="sectionContainer">
@@ -50,24 +51,22 @@
 
       <div class="projectWrapper" v-for="(project, index) in projects" :key="index">
         <div class="projectHeader">
-          <div class="projectTitle">{{ project.projectName }}</div>
+          <div class="projectTitle">Project: {{ project.projectName }}</div>
           <div class="statusWrapper">
             <div class="projectStatus"> Status: </div>
-            <div :style="{ backgroundColor: getRandomColor() }" class="statusColor"></div>
+            <div class="statusColor"></div>
           </div>
         </div>
 
         <div class="projectDescription">
           <div class="infoTitle">
             <div class="descriptionTitle">Client:</div>
-            <div class="descriptionTitle">Team:</div>
-            <div class="descriptionTitle">Warehouse:</div>
+            <div class="descriptionTitle">Install Team:</div>
             <div class="descriptionTitle">Install Date:</div>
           </div>
           <div class="infoValue">
             <div class="descriptionValue">{{ project.clientName }}</div>
-            <div class="descriptionValue">{{ project.installTeamId }}</div>
-            <div class="descriptionValue">{{ project.usedWarehouseId }}</div>
+            <div class="descriptionValue">{{ project.team.name }}</div>
             <div class="descriptionValue">{{ project.installDate }}</div>
           </div>
         </div>
@@ -104,18 +103,18 @@
 
         </div>
         <div
-            class="messageWrapper"
+            class="reportWrapper"
             v-for="(report, index) in reports"
             :key="index"
             @click="toggleSelected(index)"
             :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
 
-          <div class="messageHeader">
-            <div class="messageSender"> {{ capitalizeFirstLetter(report.senderName) }} </div>
-            <div class="messageDate"> {{ report.date }} </div>
+          <div class="reportHeader">
+            <div class="reportSender"> {{ capitalizeFirstLetter(report.senderName) }} </div>
+            <div class="reportDate"> {{ report.date }} </div>
           </div>
 
-          <div class="message"> {{ report.body }} </div>
+          <div class="reportBody"> {{ report.body }} </div>
 
         </div>
       </div>
@@ -270,12 +269,6 @@ export default {
       return str.charAt(0).toUpperCase() + str.slice(1);
     },
 
-    getRandomColor() {
-      const colors = ['#00d315', '#ff0000'];
-      const randomIndex = Math.floor(Math.random() * colors.length);
-      return colors[randomIndex];
-    },
-
     toggleSelected(index) {
       const selectedReportIndex = this.selectedReports.findIndex((report) => report.id === this.reports[index].id);
 
@@ -311,11 +304,15 @@ export default {
 
 .personaContainer {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   width: 100%;
-  padding: 2rem 3rem;
+  padding: 3rem 3rem 2rem 3rem;
   border-bottom: 2px solid #e5e5e5;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
 }
 
 .welcomeContainer {
@@ -328,12 +325,26 @@ h1 {
   font-size: 2rem;
   font-weight: 700;
   color: #222;
+  margin-bottom: 2rem;
 }
 
-.description {
+.infoContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.medium {
   font-size: 1rem;
   font-weight: 400;
   color: #aaa;
+  line-height: 1;
+}
+
+.bold {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  line-height: 1;
 }
 
 .sectionContainer {
@@ -347,21 +358,21 @@ h1 {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   background: #f5f5f5;
   border-radius: 10px;
 }
 
 .dayOfTheWeek {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  line-height: 0.5;
+  line-height: 0.25;
   color: #222;
 }
 
 .dayOfTheWeekNum {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 800;
   line-height: 1.2;
   color: #222;
@@ -455,10 +466,11 @@ h1 {
   width: 20px;
   border-radius: 50%;
   margin-left: 0.5rem;
+  background: #5DDB88;
 }
 
 p {
-  margin-top: 1rem;
+  margin-top: 2rem;
   font-weight: 300;
   color: #222;
 }
@@ -490,7 +502,7 @@ p {
   margin-bottom: 1rem;
 }
 
-.messageWrapper {
+.reportWrapper {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -552,21 +564,26 @@ p {
   justify-content: space-between;
 }
 
-.messageHeader {
+.reportHeader {
   display: flex;
   justify-content: space-between;
   border-bottom: 2px solid #f5f5f5;
   width: 100%;
 }
 
-.messageSender {
+.reportSender {
   font-weight: 600;
   color: #222;
 }
 
-.messageDate {
+.reportDate {
   font-weight: 400;
   color: #aaa;
+}
+
+.reportBody {
+  font-weight: 400;
+  color: #222;
 }
 
 .buttonWrapper {

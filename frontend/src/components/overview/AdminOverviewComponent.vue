@@ -3,20 +3,21 @@ import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
 import {getId, getUsername} from "@/data";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
+import Project from "@/models/project";
 
 export default {
 
   name: "AdminOverviewComponent",
   components: {NotificationComponent, OverviewModal},
-  inject: ['reportService', 'userService'],
+  inject: ['reportService', 'userService', 'projectService'],
 
   data() {
     return {
       productsSold: '75',
-      ongoingProjects: '0',
       unresolvedReports: '2',
       warehousesLowStock: '3',
       globalTotalStock: '350',
+      projects: Project.projects,
       reports: [],
       selectedReports: [],
       reportBody: "",
@@ -26,27 +27,16 @@ export default {
       users: [],
       modal: false,
 
-      projects: [
-        {title: 'Project Green', team: '1'},
-        {title: 'Project Blue', team: '2'},
-        {title: 'Project Red', team: '1'},
-        {title: 'Project Yellow', team: '3'},
-      ],
-      projectDescriptions: [
-        {title: 'Planned from: 17/10/2023 to 25/10/2023'},
-        {title: 'Planned from: 19/10/2023 to 23/10/2023'},
-        {title: 'Planned from: 20/10/2023 to 27/10/2023'},
-        {title: 'Planned from: 25/10/2023 to 31/10/2023'},
-      ],
     }
   },
 
   mounted() {
-    this.fetchReports();
     this.fetchAllUsers();
+    this.fetchReports();
   },
 
   methods: {
+
     async fetchAllUsers() {
       this.users = await this.userService.fetchAllUsers();
     },
@@ -134,12 +124,6 @@ export default {
       return str.charAt(0).toUpperCase() + str.slice(1);
     },
 
-    getRandomColor() {
-      const colors = ['#00d315', '#ff0000'];
-      const randomIndex = Math.floor(Math.random() * colors.length);
-      return colors[randomIndex];
-    },
-
     toggleSelected(index) {
       const selectedReportIndex = this.selectedReports.findIndex((report) => report.id === this.reports[index].id);
 
@@ -184,7 +168,6 @@ export default {
   },
 
 }
-
 
 </script>
 
@@ -233,7 +216,7 @@ export default {
     <div class="insightContainer">
       <p class="medium">Total Ongoing Projects:</p>
       <div class="meetingWrapper">
-        <div id="textBig"> {{ ongoingProjects }} </div>
+<!--        <div id="textBig"> {{ ongoingProjects }} </div>-->
       </div>
     </div>
 
@@ -266,30 +249,32 @@ export default {
   <div class="sectionContainer">
 
     <h1 class="sectionTitle">Ongoing Projects</h1>
-    <label for="warehouseSelect">Choose a warehouse:</label>
-    <select id="warehouseSelect" name="warehouse">
-      <option value="warehouse1">Warehouse 1</option>
-      <option value="warehouse2">Warehouse 2</option>
-      <option value="warehouse3">Warehouse 3</option>
-      <option value="warehouse4">Warehouse 4</option>
-      <option value="warehouse5">Warehouse 5</option>
-    </select>
-
     <div class="projectContainer">
 
       <div class="projectWrapper" v-for="(project, index) in projects" :key="index">
         <div class="projectHeader">
-          <div class="projectTitle"> {{ project.title }}</div>
+          <div class="projectTitle">{{ project.projectName }}</div>
           <div class="statusWrapper">
             <div class="projectStatus"> Status: </div>
-            <div :style="{ backgroundColor: getRandomColor() }" class="statusColor"></div>
+            <div class="statusColor"></div>
           </div>
         </div>
-        <div class="projectDescription">{{ projectDescriptions[index].title }}<br>
-          Team: {{ project.team }}</div>
-        <p>Click for more details</p>
-      </div>
 
+        <div class="projectDescription">
+          <div class="infoTitle">
+            <div class="descriptionTitle">Client:</div>
+            <div class="descriptionTitle">Install Team:</div>
+            <div class="descriptionTitle">Install Date:</div>
+          </div>
+          <div class="infoValue">
+            <div class="descriptionValue">{{ project.clientName }}</div>
+            <div class="descriptionValue">{{ project.team.name }}</div>
+            <div class="descriptionValue">{{ project.installDate }}</div>
+          </div>
+        </div>
+        <p>Click for more details</p>
+
+      </div>
     </div>
   </div>
 
@@ -465,22 +450,41 @@ h1 {
   width: 100%;
   height: auto;
   padding: 1rem 0.15rem;
-  overflow-x: scroll;
+  overflow-x: auto;
   margin-top: 1rem;
+}
+
+.projectContainer::-webkit-scrollbar {
+  width: 5px;
+}
+
+.projectContainer::-webkit-scrollbar-thumb {
+  background-color: #e5e5e5;
+  border-radius: 10px;
+}
+
+.projectContainer::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
+
+.descriptionTitle {
+  font-weight: 600;
 }
 
 .projectWrapper {
   min-width: 500px;
   width: auto;
   flex: 0 0 auto;
-  background: #f5f5f5;
+  background: #fff;
+  border: 2px solid #ccc;
   border-radius: 5px;
   padding: 1rem;
   cursor: pointer;
 }
 
 .projectWrapper:hover {
-  outline: 2px solid #222;
+  background: #f5f5f5;
 }
 
 .projectHeader {
@@ -494,6 +498,15 @@ h1 {
   font-size: 1.2rem;
   font-weight: 700;
   color: #222;
+}
+
+.projectDescription {
+  display: flex;
+  gap: 2rem;
+}
+
+.descriptionValue {
+  font-weight: 300;
 }
 
 .statusWrapper {
@@ -512,10 +525,11 @@ h1 {
   width: 20px;
   border-radius: 50%;
   margin-left: 0.5rem;
+  background: #5DDB88;
 }
 
 p {
-  margin-top: 1rem;
+  margin-top: 2rem;
   font-weight: 300;
   color: #222;
 }
