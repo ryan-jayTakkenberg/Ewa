@@ -160,7 +160,7 @@ export default {
       reportBody: "",
       senderId: getId(),
       senderName: getUsername(),
-      receiverId: 1,
+      receiverId: 1, // admin id
 
       modal: false,
     }
