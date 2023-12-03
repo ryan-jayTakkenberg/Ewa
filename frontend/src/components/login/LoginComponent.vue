@@ -5,7 +5,7 @@
     </div>
     <div class="loginContainer">
       <div class="logoContainer"></div>
-      <div class="welcomeContainer" v-show="!showLoginForm">
+      <div class="welcomeContainer" v-show="!showLoginForm && !showPasswordResetForm">
         <h1 class="title">Welcome</h1>
         <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam delectus deleniti dolorem eius fuga hic iste iure minus.</p>
         <button class="showLoginFormButton" v-on:click="showLogin()">Login</button>
@@ -36,8 +36,29 @@
           <button class="loginButton">Login</button>
         </form>
 
-      <div class="linkWrapper">
-        <a href="#">Can't sign in?</a>
+      <!-- Password Reset Form -->
+      <div class="passwordResetContainer" v-show="showPasswordResetForm">
+        <div class="headerWrapper">
+          <div class="crossWrapper" v-on:click="togglePasswordResetForm"><span class="material-symbols-outlined">close</span></div>
+        </div>
+
+        <form v-on:submit.prevent="submitPasswordReset">
+          <div class="inputWrapper">
+            <input type="email" name="email" v-model="emailInput" required>
+            <label for="email">Email</label>
+          </div>
+
+          <!-- Reset Password Button Container -->
+          <div class="resetPasswordButtonContainer">
+            <button class="loginButton">Reset Password</button>
+          </div>
+        </form>
+      </div>
+
+
+      <!-- Link to Toggle Password Reset Form -->
+      <div class="linkWrapper" v-show="!showPasswordResetForm">
+        <a href="#" v-on:click.prevent="togglePasswordResetForm">Can't sign in?</a>
       </div>
 
     </div>
@@ -66,6 +87,7 @@ export default {
       usernameInput: '',
       passwordInput: '',
       errorMessage: '',
+      showPasswordResetForm: false,
     }
   },
 
@@ -74,6 +96,7 @@ export default {
     showLogin() {
 
       this.showLoginForm = true;
+      this.showPasswordResetForm = false;
     },
 
     hideLogin() {
@@ -130,7 +153,11 @@ export default {
         console.error(error);
       }
     },
-
+    togglePasswordResetForm() {
+      this.showPasswordResetForm = !this.showPasswordResetForm;
+      this.showLoginForm = false;
+      this.errorMessage = '';
+    },
   },
 
 }
@@ -519,5 +546,13 @@ a:hover {
   }
 
 }
+.passwordResetContainer {
+  width: 100%;
+  padding: 0.5rem;
+  border: 2px solid #222;
+  border-radius: 5px;
+}
+
+
 
 </style>
