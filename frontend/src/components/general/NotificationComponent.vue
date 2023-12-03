@@ -79,7 +79,7 @@ export default {
   }
 
   100% {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     opacity: 0;
   }
 
