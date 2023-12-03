@@ -48,7 +48,7 @@
     <h1 class="sectionTitle">Ongoing Projects</h1>
     <div class="projectContainer">
 
-      <div class="projectWrapper" v-for="(project, index) in viewerProjects" :key="index">
+      <div class="projectWrapper" v-for="(project, index) in projects" :key="index">
         <div class="projectHeader">
           <div class="projectTitle">{{ project.projectName }}</div>
           <div class="statusWrapper">
@@ -105,7 +105,7 @@
         </div>
         <div
             class="messageWrapper"
-            v-for="(report, index) in viewerReports"
+            v-for="(report, index) in reports"
             :key="index"
             @click="toggleSelected(index)"
             :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
@@ -154,26 +154,27 @@ export default {
     return {
       viewerName: getUsername(),
       viewerTeam: getUserTeam(), // TODO
-      viewerProjects: Project.projects,
-      viewerReports: [],
+      projects: Project.projects,
+      reports: [],
       selectedReports: [],
       reportBody: "",
       senderId: getId(),
       senderName: getUsername(),
-      receiverId: 1,
+      receiverId: 1, // admin id
 
       modal: false,
     }
   },
 
   mounted() {
-    this.fetchViewerReports();
+    this.fetchReports();
   },
 
   methods: {
 
-    async fetchViewerReports() {
-      this.viewerReports = await this.reportService.fetchViewerReports();
+    async fetchReports() {
+      this.reports = await this.reportService.fetchReports();
+      console.log('Fetched reports: ', [...this.reports]);
     },
 
     async postReport() {
@@ -192,33 +193,64 @@ export default {
         body: this.reportBody,
       };
 
-      await this.reportService.postReport(report);
+      const postedReport = await this.reportService.postReport(report);
+
+      // Check if delete was successful (HTTP status code 201)
+      if (postedReport.status === 201) {
+
+        console.log('Successfully posted report:', postedReport.data);
+
+        // Notify the user about a successful delete
+        this.$refs.notificationComponent.createSuccessfulNotification(' Report successfully posted');
+      } else {
+
+        // Notify the user about an unsuccessful delete
+        console.log('An error occurred when trying to post the report:', report);
+        this.$refs.notificationComponent.createUnsuccessfulNotification('Unsuccessful post. Try again');
+
+      }
 
       this.reportBody = '';
-      alert('Your report was successfully sent!');
     },
 
     async deleteReport() {
 
-      const numReportsToDelete = this.selectedReports.length;
+      // Send delete request per selected report to the adaptor
+      for (let i = 0; i < this.selectedReports.length; i++) {
 
-      for (const report of this.selectedReports) {
-        await this.reportService.deleteReport(report.id);
+        const report = this.selectedReports[i];
+        const deletedReport = await this.reportService.deleteReport(report.id);
 
-        // Remove the deleted report from the viewerReports array
-        const indexToDelete = this.viewerReports.findIndex((r) => r.id === report.id);
-        if (indexToDelete !== -1) {
-          this.viewerReports.splice(indexToDelete, 1);
+        // Check if delete was successful (HTTP status code 200)
+        if (deletedReport.status === 200) {
+
+          console.log('Successfully deleted report:', deletedReport);
+
+          // Remove the deleted report from the reports array
+          const indexToDelete = this.reports.findIndex((r) => r.id === report.id);
+          if (indexToDelete !== -1) {
+            this.reports.splice(indexToDelete, 1);
+          }
+
+          // Notify the user about a successful delete
+          const message = this.selectedReports.length > 1 ? 'Reports' : 'Report';
+          this.$refs.notificationComponent.createSuccessfulNotification(`${message} successfully deleted`);
+        } else {
+
+          // Notify the user about an unsuccessful delete
+          console.log('An error occurred when trying to delete the report with id:', report.id);
+          this.$refs.notificationComponent.createUnsuccessfulNotification('Unsuccessful delete. Try again');
+
         }
       }
 
       this.selectedReports = [];
       this.modal = false;
 
-      const message = numReportsToDelete > 1 ? 'Reports' : 'Report';
-      this.$refs.notificationComponent.createNotification(`${message} successfully deleted`);
+      console.log('Your current reports after delete: ', [...this.reports]);
 
     },
+
 
     showModal() {
 
@@ -245,11 +277,11 @@ export default {
     },
 
     toggleSelected(index) {
-      const selectedReportIndex = this.selectedReports.findIndex((report) => report.id === this.viewerReports[index].id);
+      const selectedReportIndex = this.selectedReports.findIndex((report) => report.id === this.reports[index].id);
 
       if (selectedReportIndex === -1) {
         // If not already selected, add to the selectedReports array
-        this.selectedReports.push(this.viewerReports[index]);
+        this.selectedReports.push(this.reports[index]);
       } else {
         // If already selected, remove from the selectedReports array
         this.selectedReports.splice(selectedReportIndex, 1);

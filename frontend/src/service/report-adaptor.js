@@ -3,10 +3,10 @@ import {getId} from "@/data";
 
 export class ReportAdaptor {
 
-    async fetchViewerReports() {
+    async fetchReports() {
         try {
             const response = await getAPI("/api/reports");
-            console.log('Reports Response Data:', response.data);
+            // console.log('Reports Response Data:', response.data);
 
             if (!responseOk(response)) {
                 console.warn('Response not OK:', response.data);
@@ -27,37 +27,37 @@ export class ReportAdaptor {
         }
     }
 
-    async fetchAdminReports() {
-        try {
-            const response = await getAPI("/api/reports");
-            console.log('Reports Response Data:', response.data);
-
-            if (!responseOk(response)) {
-                console.warn('Response not OK:', response.data);
-                return [];
-            }
-
-            // Filter out all the reports where the receiver is equal to "admin"
-            // TODO replace with backend query when we have a real database
-            return response.data.filter(report => report.receiverId === 1); // 1 = admin ID
-
-        } catch (error) {
-            console.error('An unexpected error occurred:', error);
-            return [];
-        }
-    }
+    // async fetchAdminReports() {
+    //     try {
+    //         const response = await getAPI("/api/reports");
+    //         console.log('Reports Response Data:', response.data);
+    //
+    //         if (!responseOk(response)) {
+    //             console.warn('Response not OK:', response.data);
+    //             return [];
+    //         }
+    //
+    //         // Filter out all the reports where the receiver is equal to "admin"
+    //
+    //         return response.data.filter(report => report.receiverId === 1); // 1 = admin ID
+    //
+    //     } catch (error) {
+    //         console.error('An unexpected error occurred:', error);
+    //         return [];
+    //     }
+    // }
 
     async postReport(report) {
         try {
             const response = await postAPI("/api/reports", report);
-            console.log('Post Report Response Data:', response.data);
+            // console.log('Post Report Response Data:', response.data);
 
             if (!responseOk(response)) {
-                console.warn('Post Report Response not OK:', response.data);
+                // console.warn('Post Report Response not OK:', response.data);
                 return null;
             }
 
-            return response.data;
+            return response;
 
         } catch (error) {
             console.error('An unexpected error occurred while posting report:', error);
@@ -70,15 +70,15 @@ export class ReportAdaptor {
             const response = await deleteAPI(`/api/reports/${id}`);
 
             if (!responseOk(response)) {
-                console.warn('Delete Report Response not OK:', response.data);
+                // console.warn('Delete Report Response not OK:', response.data);
                 return null;
             }
 
-            console.log('Deleted Report:', response.data);
-            return response.data;
+            // console.log('Deleted Report:', response.data);
+            return response;
 
         } catch (error) {
-            console.error('An unexpected error occurred while posting report:', error);
+            console.error('An unexpected error occurred while deleting report:', error);
             return null;
         }
     }

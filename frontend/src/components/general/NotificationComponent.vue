@@ -5,14 +5,21 @@
 <script>
 export default {
 
-  /* Add as child to your component and call function using
-  this.$refs.notificationComponent.createNotification(message);
+  /* Successful
+  Add as child to your component and call function using
+  this.$refs.notificationComponent.createSuccessfulNotification(message);
+  Send a message as parameter */
+
+  /* Unsuccessful
+  Add as child to your component and call function using
+  this.$refs.notificationComponent.createUnsuccessfulNotification(message);
   Send a message as parameter */
 
   name: "NotificationComponent",
 
   methods: {
-    createNotification(message) {
+
+    createSuccessfulNotification(message) {
 
       const notificationContainer = document.createElement('div');
       notificationContainer.classList.add('successfulMessageContainer');
@@ -21,16 +28,16 @@ export default {
       notificationMessage.classList.add('successfulMessage');
       notificationMessage.textContent = message;
 
-      const checkmark = document.createElement('div');
-      checkmark.classList.add('checkmark');
+      const icon = document.createElement('div');
+      icon.classList.add('icon');
       const checkmarkIcon = document.createElement('span');
       checkmarkIcon.classList.add('material-symbols-outlined', 'checkmark');
       checkmarkIcon.textContent = 'check_circle';
 
-      checkmark.appendChild(checkmarkIcon);
+      icon.appendChild(checkmarkIcon);
 
       notificationContainer.appendChild(notificationMessage);
-      notificationContainer.appendChild(checkmark);
+      notificationContainer.appendChild(icon);
 
       document.body.appendChild(notificationContainer);
 
@@ -38,6 +45,34 @@ export default {
         notificationContainer.remove();
       }, 5000);
     },
+
+    createUnsuccessfulNotification(message) {
+
+      const notificationContainer = document.createElement('div');
+      notificationContainer.classList.add('successfulMessageContainer');
+
+      const notificationMessage = document.createElement('div');
+      notificationMessage.classList.add('successfulMessage');
+      notificationMessage.textContent = message;
+
+      const icon = document.createElement('div');
+      icon.classList.add('icon');
+      const warningIcon = document.createElement('span');
+      warningIcon.classList.add('material-symbols-outlined', 'warning');
+      warningIcon.textContent = 'report';
+
+      icon.appendChild(warningIcon);
+
+      notificationContainer.appendChild(notificationMessage);
+      notificationContainer.appendChild(icon);
+
+      document.body.appendChild(notificationContainer);
+
+      setTimeout(() => {
+        notificationContainer.remove();
+      }, 5000);
+    },
+
   },
 
 }
@@ -50,7 +85,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1rem;
   padding: 2rem 1rem;
   height: 50px;
   background: #fff;
@@ -91,15 +126,25 @@ export default {
   color: #222;
 }
 
-.checkmark {
+.icon {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .material-symbols-outlined.checkmark {
-  transform: scale(1.1);
+  transform: scale(1.2);
   color: #4fd97f;
+  font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24
+}
+
+.material-symbols-outlined.warning {
+  transform: scale(1.2);
+  color: #f14440;
   font-variation-settings:
       'FILL' 0,
       'wght' 400,
