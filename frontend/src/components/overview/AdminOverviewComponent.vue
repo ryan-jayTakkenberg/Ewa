@@ -2,11 +2,12 @@
 import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
 import {getId, getUsername} from "@/data";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
+import NotificationComponent from "@/components/general/NotificationComponent.vue";
 
 export default {
 
   name: "AdminOverviewComponent",
-  components: {OverviewModal},
+  components: {NotificationComponent, OverviewModal},
   inject: ['reportService', 'userService'],
 
   data() {
@@ -78,6 +79,8 @@ export default {
 
     async deleteReport() {
 
+      const numReportsToDelete = this.selectedReports.length;
+
       for (const report of this.selectedReports) {
         await this.reportService.deleteReport(report.id);
 
@@ -90,6 +93,9 @@ export default {
 
       this.selectedReports = [];
       this.modal = false;
+
+      const message = numReportsToDelete > 1 ? 'Reports' : 'Report';
+      this.$refs.notificationComponent.createNotification(`${message} successfully deleted`);
     },
 
     showModal() {
@@ -172,6 +178,8 @@ export default {
       @cancel-delete="closeModal"
       :selectedReports="selectedReports"
   />
+
+  <NotificationComponent ref="notificationComponent" />
 
   <!--- Persona ---------------------------------------------------------------------------------->
   <div class="personaContainer">
