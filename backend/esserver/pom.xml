@@ -63,6 +63,10 @@
             <scope>runtime</scope>
         </dependency>
         <!-- end JWT jackson -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
