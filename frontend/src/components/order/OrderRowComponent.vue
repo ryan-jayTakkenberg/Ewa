@@ -43,7 +43,7 @@ export default {
     emitReport() {
       this.$emit("report", this.order);
     },
-    displayProducts(){
+    displayProducts() {
       this.productsVisible = !this.productsVisible;
     },
     getStatusClass() {
@@ -73,19 +73,34 @@ export default {
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
       </div>
     </td>
+    <!-- Order number  -->
     <td class="px-6 py-4 font-semibold text-base">{{ order.id }}</td>
+    <!-- Order from  -->
     <td class="px-6 py-4">{{ order.orderedFrom }}</td>
+    <!-- Order date  -->
     <td class="px-6 py-4">{{ order.orderDate }}</td>
+    <!-- Order estimated delivery date  -->
     <td class="px-6 py-4">{{ order.estimatedDeliveryDate }}</td>
+    <!-- Order team and warehouse  -->
     <td class="px-6 py-4">
-      {{ order.team.name}}
-      <br>
-      {{ order.team.warehouse}}
-
+      <div class="font-semibold">{{ order.team.name }}</div>
+      {{ order.team.warehouse }}
     </td>
+
+    <!-- Order team all projects names and install dates -->
     <td class="px-6 py-4">
-      <div v-if="!productsVisible" class="view-products" @click="displayProducts">View Products({{ order.products.length }})</div>
-      <div v-if="productsVisible" class="view-products" @click="displayProducts">Hide Products({{ order.products.length }})</div>
+      <div v-if="order.team.projects && order.team.projects.length > 0">
+        <div v-for="project in order.team.projects" :key="project.id">
+          <div class="font-semibold">{{ project.projectName }}</div>
+          Installation Date:<br>{{ project.installDate }}
+        </div>
+      </div>
+      <div v-else>No projects available.</div>
+    </td>
+
+    <td class="px-6 py-4">
+      <div v-if="!productsVisible" class="view-products" @click="displayProducts">View Products</div>
+      <div v-if="productsVisible" class="view-products" @click="displayProducts">Hide Products</div>
     </td>
     <td class="px-6 py-4">
       <div :class="['status', getStatusClass(),]">{{ order.status }}</div>
@@ -102,9 +117,9 @@ export default {
   <tr v-if="productsVisible" class="product-row">
     <td class="px-4 py-4" colspan="9"> <!-- Use colspan to span across all columns -->
       <div v-for="product in order.products" :key="product.id">
-        <div class="font-semibold">{{product.name}}</div>
-        <div>{{"€ " + product.price}} </div>
-        <div>{{"qty: " + product.quantity}} </div>
+        <div class="font-semibold">{{ product.name }}</div>
+        <div>{{ "€ " + product.price }}</div>
+        <div>{{ "qty: " + product.quantity }}</div>
         <br>
       </div>
     </td>
