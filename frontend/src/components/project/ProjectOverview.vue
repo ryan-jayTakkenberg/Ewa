@@ -3,14 +3,12 @@
   <div class="body">
     <div class="body-container">
       <div class="action-row">
-        <SolarSearchbar class="ml-2" place-holder="Search For Projects" @input="handleInputValueChange"></SolarSearchbar>
+        <SolarSearchbar class="ml-2" place-holder="Search For Projects" @search="handleInputValueChange"></SolarSearchbar>
         <SolarButton class="ml-auto" button-text="Add Project" @click="showCreateProject = true"></SolarButton>
       </div>
-
       <SolarTable :columns="['Project', 'Installation date', 'notes', 'assigned Team']">
-        <tr class="tableRow" v-for="(project) in projects" :key="project.projectId">
-          <td class="w-4 p-4">
-          </td>
+        <tr class="tableRow" v-for="(project) in filteredProjects" :key="project.projectId">
+          <td class="w-4 p-4"></td>
           <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
             <div class="pl-3">
               <div class="text-base font-semibold">{{ project.projectName }}</div>
@@ -67,6 +65,7 @@ export default {
       selectedProject: null,
       showCreateProject: false,
       showUpdateProject: false,
+      inputValue: '',
     };
   },
   async created() {
@@ -103,7 +102,7 @@ export default {
 
       if (confirmed) {
         try {
-          await this.projectService.asyncDeleteById(project.id);
+          await this.projectService.asyncDeleteById(project.projectId);
           await this.getProjectList();
         } catch (error){
           console.error("Error occurred during deleting process", error)

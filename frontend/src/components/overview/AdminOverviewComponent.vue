@@ -1,10 +1,12 @@
 <script>
 import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
 import {getId, getUsername} from "@/data";
+import OverviewModal from "@/components/overview/OverviewModal.vue";
 
 export default {
 
   name: "AdminOverviewComponent",
+  components: {OverviewModal},
   inject: ['reportService', 'userService'],
 
   data() {
@@ -21,6 +23,7 @@ export default {
       senderId: getId(),
       senderUsername: getUsername(),
       users: [],
+      modal: false,
 
       projects: [
         {title: 'Project Green', team: '1'},
@@ -86,6 +89,21 @@ export default {
       }
 
       this.selectedReports = [];
+      this.modal = false;
+    },
+
+    showModal() {
+
+      if (this.selectedReports.length === 0) {
+        alert("Please select a report to delete");
+        return;
+      }
+      this.modal = true;
+    },
+
+    closeModal() {
+      this.modal = false;
+      this.selectedReports = [];
     },
 
     capitalizeFirstLetter(str) {
@@ -147,6 +165,13 @@ export default {
 </script>
 
 <template>
+
+  <OverviewModal
+      v-if="modal"
+      @confirm-delete="deleteReport"
+      @cancel-delete="closeModal"
+      :selectedReports="selectedReports"
+  />
 
   <!--- Persona ---------------------------------------------------------------------------------->
   <div class="personaContainer">
@@ -259,7 +284,7 @@ export default {
           <div class="containerTitle">Inbox</div>
 
           <div class="buttonWrapper">
-            <button class="deleteMessage" @click="deleteReport">
+            <button class="deleteMessage" @click="showModal">
               <span class="material-symbols-outlined button">delete</span>
             </button>
             <button class="filterMessage">

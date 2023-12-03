@@ -21,6 +21,14 @@
         <input type="text" v-model="this.projectClone.notes"
                class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
       </div>
+      <div class="col-span-6 sm:col-span-3">
+        <label class="modal-label">Assigned Team</label>
+        <select v-model="this.projectClone.team" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+          <option v-for="team in teamList" :key="team.id" :value="team">
+            {{ team.name }}
+          </option>
+        </select>
+      </div>
     </div>
     <!-- Modal footer -->
     <template v-slot:footer>
@@ -35,6 +43,7 @@ import SolarModal from "@/components/general/SolarModal";
 
 export default {
   name: "UpdateProject",
+  inject: ['teams'],
   components: {
     SolarModal
   },
@@ -44,10 +53,13 @@ export default {
   data (){
     return{
       projectClone: null,
+      teamList: [],
     }
   },
-  created() {
+  async created() {
     this.projectClone = this.project.clone();
+    this.teamList = await this.teams.asyncFindAll();
+
   },
   computed: {
     hasChanged() {

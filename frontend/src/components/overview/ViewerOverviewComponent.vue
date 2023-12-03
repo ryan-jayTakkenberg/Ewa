@@ -1,116 +1,13 @@
-<script>
-import {getId, getUsername, getUserTeam} from "@/data";
-import Project from "@/models/project";
-
-export default {
-
-  name: "UserOverviewComponent",
-  inject: ['reportService', 'projectService'],
-
-  data() {
-    return {
-      viewerName: getUsername(),
-      viewerTeam: getUserTeam(), // TODO
-      viewerProjects: Project.projects,
-      viewerReports: [],
-      selectedReports: [],
-      reportBody: "",
-      senderId: getId(),
-      senderName: getUsername(),
-      receiverId: 1,
-      }
-    },
-
-  mounted() {
-    this.fetchViewerReports();
-  },
-
-  methods: {
-
-    async fetchViewerReports() {
-      this.viewerReports = await this.reportService.fetchViewerReports();
-    },
-
-    async postReport() {
-
-      // Check if the report body is empty
-      if (!this.reportBody.trim()) {
-        alert('Error: Report cannot be empty');
-        return;
-      }
-
-      const report = {
-        date: new Date().toLocaleDateString(),
-        senderId: this.senderId,
-        senderName: this.senderName,
-        receiverId: this.receiverId,
-        body: this.reportBody,
-      };
-
-      await this.reportService.postReport(report);
-
-      this.reportBody = '';
-      alert('Your report was successfully sent!');
-    },
-
-    async deleteReport() {
-
-      for (const report of this.selectedReports) {
-        await this.reportService.deleteReport(report.id);
-
-        // Remove the deleted report from the viewerReports array
-        const indexToDelete = this.viewerReports.findIndex((r) => r.id === report.id);
-        if (indexToDelete !== -1) {
-          this.viewerReports.splice(indexToDelete, 1);
-        }
-      }
-
-      this.selectedReports = [];
-    },
-
-
-    capitalizeFirstLetter(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    },
-
-    getRandomColor() {
-      const colors = ['#00d315', '#ff0000'];
-      const randomIndex = Math.floor(Math.random() * colors.length);
-      return colors[randomIndex];
-    },
-
-    toggleSelected(index) {
-      const selectedReportIndex = this.selectedReports.findIndex((report) => report.id === this.viewerReports[index].id);
-
-      if (selectedReportIndex === -1) {
-        // If not already selected, add to the selectedReports array
-        this.selectedReports.push(this.viewerReports[index]);
-      } else {
-        // If already selected, remove from the selectedReports array
-        this.selectedReports.splice(selectedReportIndex, 1);
-      }
-    },
-  },
-
-  computed: {
-    dayOfTheWeek() {
-      const today = new Date();
-      today.setDate(today.getDate());
-      const options = { weekday: 'short' };
-
-      return today.toLocaleDateString(undefined, options);
-    },
-    numberOfTheDay() {
-      const today = new Date();
-      return today.getUTCDate()
-    },
-  },
-
-}
-
-</script>
-
 <template>
+
+  <OverviewModal
+      v-if="modal"
+      @confirm-delete="deleteReport"
+      @cancel-delete="closeModal"
+      :selectedReports="selectedReports"
+  />
+
+  <NotificationComponent ref="notificationComponent" />
 
   <!--- Persona ---------------------------------------------------------------------------------->
   <div class="personaContainer">
@@ -197,7 +94,7 @@ export default {
           <div class="containerTitle">Inbox</div>
 
           <div class="buttonWrapper">
-            <button class="deleteMessage" @click="deleteReport">
+            <button class="deleteMessage" @click="showModal">
               <span class="material-symbols-outlined button">delete</span>
             </button>
             <button class="filterMessage">
@@ -237,6 +134,147 @@ export default {
 
 </template>
 
+<script>
+
+import {getId, getUsername, getUserTeam} from "@/data";
+import Project from "@/models/project";
+import OverviewModal from "@/components/overview/OverviewModal.vue";
+import NotificationComponent from "@/components/general/NotificationComponent.vue";
+
+export default {
+
+  name: "UserOverviewComponent",
+  inject: ['reportService', 'projectService'],
+  components: {
+    OverviewModal,
+    NotificationComponent,
+  },
+
+  data() {
+    return {
+      viewerName: getUsername(),
+      viewerTeam: getUserTeam(), // TODO
+      viewerProjects: Project.projects,
+      viewerReports: [],
+      selectedReports: [],
+      reportBody: "",
+      senderId: getId(),
+      senderName: getUsername(),
+      receiverId: 1,
+
+      modal: false,
+    }
+  },
+
+  mounted() {
+    this.fetchViewerReports();
+  },
+
+  methods: {
+
+    async fetchViewerReports() {
+      this.viewerReports = await this.reportService.fetchViewerReports();
+    },
+
+    async postReport() {
+
+      // Check if the report body is empty
+      if (!this.reportBody.trim()) {
+        alert('Error: Report cannot be empty');
+        return;
+      }
+
+      const report = {
+        date: new Date().toLocaleDateString(),
+        senderId: this.senderId,
+        senderName: this.senderName,
+        receiverId: this.receiverId,
+        body: this.reportBody,
+      };
+
+      await this.reportService.postReport(report);
+
+      this.reportBody = '';
+      alert('Your report was successfully sent!');
+    },
+
+    async deleteReport() {
+
+      const numReportsToDelete = this.selectedReports.length;
+
+      for (const report of this.selectedReports) {
+        await this.reportService.deleteReport(report.id);
+
+        // Remove the deleted report from the viewerReports array
+        const indexToDelete = this.viewerReports.findIndex((r) => r.id === report.id);
+        if (indexToDelete !== -1) {
+          this.viewerReports.splice(indexToDelete, 1);
+        }
+      }
+
+      this.selectedReports = [];
+      this.modal = false;
+
+      const message = numReportsToDelete > 1 ? 'Reports' : 'Report';
+      this.$refs.notificationComponent.createNotification(`${message} successfully deleted`);
+
+    },
+
+    showModal() {
+
+      if (this.selectedReports.length === 0) {
+        alert("Please select a report to delete");
+        return;
+      }
+      this.modal = true;
+    },
+
+    closeModal() {
+      this.modal = false;
+      this.selectedReports = [];
+    },
+
+    capitalizeFirstLetter(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+
+    getRandomColor() {
+      const colors = ['#00d315', '#ff0000'];
+      const randomIndex = Math.floor(Math.random() * colors.length);
+      return colors[randomIndex];
+    },
+
+    toggleSelected(index) {
+      const selectedReportIndex = this.selectedReports.findIndex((report) => report.id === this.viewerReports[index].id);
+
+      if (selectedReportIndex === -1) {
+        // If not already selected, add to the selectedReports array
+        this.selectedReports.push(this.viewerReports[index]);
+      } else {
+        // If already selected, remove from the selectedReports array
+        this.selectedReports.splice(selectedReportIndex, 1);
+      }
+    },
+  },
+
+  computed: {
+    dayOfTheWeek() {
+      const today = new Date();
+      today.setDate(today.getDate());
+      const options = { weekday: 'short' };
+
+      return today.toLocaleDateString(undefined, options);
+    },
+    numberOfTheDay() {
+      const today = new Date();
+      return today.getUTCDate()
+    },
+  },
+
+}
+
+</script>
+
 <style scoped>
 
 .personaContainer {
@@ -244,7 +282,8 @@ export default {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 2rem 3rem 0 3rem;
+  padding: 2rem 3rem;
+  border-bottom: 2px solid #e5e5e5;
 }
 
 .welcomeContainer {
@@ -296,7 +335,6 @@ h1 {
   color: #222;
 }
 
-
 .sectionTitle {
   text-align: left;
   font-size: 1.5rem;
@@ -310,8 +348,22 @@ h1 {
   width: 100%;
   height: auto;
   padding: 1rem 0.15rem;
-  overflow-x: scroll;
+  overflow-x: auto;
   margin-top: 1rem;
+}
+
+.projectContainer::-webkit-scrollbar {
+  width: 5px;
+}
+
+.projectContainer::-webkit-scrollbar-thumb {
+  background-color: #e5e5e5;
+  border-radius: 10px;
+}
+
+.projectContainer::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+  border-radius: 10px;
 }
 
 .descriptionTitle {
