@@ -89,7 +89,7 @@ export default {
         // Check if delete was successful (HTTP status code 200)
         if (deletedReport.status === 200) {
 
-          console.log('Successfully deleted Report:', deletedReport);
+          console.log('Successfully deleted report:', deletedReport);
 
           // Remove the deleted report from the reports array
           const indexToDelete = this.reports.findIndex((r) => r.id === report.id);
@@ -141,11 +141,11 @@ export default {
     },
 
     toggleSelected(index) {
-      const selectedReportIndex = this.selectedReports.findIndex((report) => report.id === this.adminReports[index].id);
+      const selectedReportIndex = this.selectedReports.findIndex((report) => report.id === this.reports[index].id);
 
       if (selectedReportIndex === -1) {
         // If not already selected, add to the selectedReports array
-        this.selectedReports.push(this.adminReports[index]);
+        this.selectedReports.push(this.reports[index]);
       } else {
         // If already selected, remove from the selectedReports array
         this.selectedReports.splice(selectedReportIndex, 1);
@@ -321,7 +321,7 @@ export default {
         </div>
         <div
             class="messageWrapper"
-            v-for="(report, index) in adminReports"
+            v-for="(report, index) in reports"
             :key="index"
             @click="toggleSelected(index)"
             :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
