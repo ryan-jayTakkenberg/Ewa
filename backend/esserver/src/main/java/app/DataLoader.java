@@ -55,9 +55,9 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createSampleOrders() {
-        this.orderRepo.save(new Order(-1, "SE3001", "4Blue", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), 1, 1, 100, Order.OrderStatus.CANCELED));
-        this.orderRepo.save(new Order(-1, "SE3002", "Stralend groen", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), 2, 5, 20, Order.OrderStatus.DELIVERED));
-        this.orderRepo.save(new Order(-1, "PS3003", "ZiezoSolar", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), 3, 2, 41, Order.OrderStatus.PENDING));
+        this.orderRepo.save(new Order(-1, "4Blue", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), 1, 1, 100, Order.OrderStatus.CANCELED));
+        this.orderRepo.save(new Order(-1, "Stralend groen", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), 2, 5, 20, Order.OrderStatus.DELIVERED));
+        this.orderRepo.save(new Order(-1, "ZiezoSolar", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), 3, 2, 41, Order.OrderStatus.PENDING));
     }
 
     private void createSampleTeamsAndProjects(){

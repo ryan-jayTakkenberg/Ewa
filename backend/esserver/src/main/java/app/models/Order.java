@@ -1,6 +1,7 @@
 package app.models;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 
@@ -20,7 +21,6 @@ public class Order {
     @Id
     @GeneratedValue
     private long id;
-    private String orderNumber;
     private String orderedFrom;
     private LocalDate orderDate;
     private LocalDate estimatedDeliveryDate;
@@ -39,9 +39,8 @@ public class Order {
        inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> products;
     */
-    public Order(long id, String orderNumber, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, int teamId, int productId, int quantity, OrderStatus status) {
+    public Order(long id, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, int teamId, int productId, int quantity, OrderStatus status) {
         this.id = id;
-        this.orderNumber = orderNumber;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
@@ -68,14 +67,6 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
-    }
-
-    public String getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
     }
 
     public String getOrderedFrom() {

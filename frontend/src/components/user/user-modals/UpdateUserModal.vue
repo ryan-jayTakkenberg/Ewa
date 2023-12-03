@@ -125,7 +125,7 @@ export default {
 
 .submit-button {
   color: white;
-  background-color: rgb(29 78 216);
+  background-color: #C7D02C;
   font-weight: 500;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -135,7 +135,7 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: rgb(30 64 175);
+  background-color: #a3b825;
 }
 
 .modal-input {

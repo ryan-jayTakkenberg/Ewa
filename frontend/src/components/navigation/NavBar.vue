@@ -112,11 +112,10 @@ export default {
         </router-link>
 
         <router-link
-            v-if="(permissionLevel === 'admin')"
             to="/orders"
             class="nav-button relative"
-            :class="{ active: isPageActive('orders-admin') }"
-            @click="handleNavClick('orders-admin')">
+            :class="{ active: isPageActive('orders') }"
+            @click="handleNavClick('orders')">
           <span class="material-symbols-outlined nav-icon">orders</span>
           <p class="nav-text">Orders</p>
           <span class="notification-indicator bg-danger-subtle text-danger">3</span>
