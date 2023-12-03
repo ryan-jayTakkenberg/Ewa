@@ -3,11 +3,11 @@
   <div class="body">
     <div class="body-container">
       <div class="action-row">
-        <SolarSearchbar class="ml-2" place-holder="Search For Projects" @input="handleInputValueChange"></SolarSearchbar>
+        <SolarSearchbar class="ml-2" place-holder="Search For Projects" @search="handleInputValueChange"></SolarSearchbar>
         <SolarButton class="ml-auto" button-text="Add Project" @click="showCreateProject = true"></SolarButton>
       </div>
       <SolarTable :columns="['Project', 'Installation date', 'notes', 'assigned Team']">
-        <tr class="tableRow" v-for="(project) in projects" :key="project.projectId">
+        <tr class="tableRow" v-for="(project) in filteredProjects" :key="project.projectId">
           <td class="w-4 p-4"></td>
           <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
             <div class="pl-3">
@@ -65,6 +65,7 @@ export default {
       selectedProject: null,
       showCreateProject: false,
       showUpdateProject: false,
+      inputValue: '',
     };
   },
   async created() {
