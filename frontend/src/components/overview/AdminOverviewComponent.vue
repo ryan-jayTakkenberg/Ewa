@@ -17,6 +17,7 @@ export default {
       unresolvedReports: '2',
       warehousesLowStock: '3',
       globalTotalStock: '350',
+      username: getUsername(),
       projects: Project.projects,
       reports: [],
       selectedReports: [],
@@ -185,26 +186,19 @@ export default {
   <!--- Persona ---------------------------------------------------------------------------------->
   <div class="personaContainer">
 
-    <div class="welcomeContainer">
-      <p class="description">Welcome to the Solar Sedum AdminOverview.</p>
-    </div>
-    <div class="profilePicContainer">
-      <div class="profilePic"></div>
+    <div class="header">
+      <h1>Hi, {{ capitalizeFirstLetter(username) }}</h1>
+
+      <div class="dateContainer">
+        <div class="dayOfTheWeek">{{ dayOfTheWeek }}</div>
+        <div class="dayOfTheWeekNum">{{ numberOfTheDay }}</div>
+      </div>
     </div>
 
-  </div>
-  <div id="sectionTitles">
-    <h2 class="sectionHeading">Analytics</h2>
-    <h2 class="sectionHeading">Forecasting</h2>
   </div>
 
   <!--- Agenda ---------------------------------------------------------------------------------->
   <div class="sectionContainer agenda">
-
-    <div class="dateContainer">
-      <p class="dayOfTheWeek">{{ dayOfTheWeek }}</p>
-      <p class="dayOfTheWeekNum">{{ numberOfTheDay }}</p>
-    </div>
 
     <div class="insightContainer">
       <p class="medium"> Products sold this week:</p>
@@ -279,6 +273,7 @@ export default {
   </div>
 
   <!--- reports ---------------------------------------------------------------------------------->
+  <!--- reports ---------------------------------------------------------------------------------->
   <div class="sectionContainer">
 
     <div class="reportsHeader">
@@ -296,44 +291,40 @@ export default {
 
           <div class="buttonWrapper">
             <button class="deleteMessage" @click="showModal">
-              <span class="material-symbols-outlined button">delete</span>
+              <span class="material-symbols-outlined">delete</span>
             </button>
             <button class="filterMessage">
-              <span class="material-symbols-outlined button">filter_alt</span>
+              <span class="material-symbols-outlined">filter_alt</span>
             </button>
           </div>
-
         </div>
-        <div
-            class="messageWrapper"
-            v-for="(report, index) in reports"
-            :key="index"
-            @click="toggleSelected(index)"
-            :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
 
-          <div class="messageHeader">
-            <div class="messageSender"> {{ capitalizeFirstLetter(report.senderName) }} </div>
-            <div class="messageDate"> {{ report.date }} </div>
+        <div class="actualReports">
+          <div
+              class="reportWrapper"
+              v-for="(report, index) in reports"
+              :key="index"
+              @click="toggleSelected(index)"
+              :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
+
+            <div class="reportHeader">
+              <div class="reportSender"> {{ capitalizeFirstLetter(report.senderName) }} </div>
+              <div class="reportDate"> {{ report.date }} </div>
+            </div>
+
+            <div class="reportBody"> {{ report.body }} </div>
+
           </div>
-
-          <div class="message"> {{ report.body }} </div>
-
         </div>
+
       </div>
 
       <div class="sendReportsContainer">
-        <div class="wrapper">
-          <label>Send a report to:</label>
-          <select v-model="receiverId" class="reportReceiver">
-            <option v-for="user in filteredUsers" :value="user.id" :key="user.id">{{ user.name }}</option>
-          </select>
-        </div>
-
+        <div class="containerTitle">Send a report</div>
         <textarea v-model="reportBody" placeholder="Type your report here..." class="reportInput"></textarea>
+        <button @click="postReport" class="sendReportButton">Send</button>
 
-        <button @click="postReport" class="sendReportButton" :class="{ 'disabledButton': !receiverId }" :disabled="!receiverId">Send</button>
       </div>
-
 
     </div>
 
@@ -344,12 +335,74 @@ export default {
 
 <style scoped>
 
+.insightContainer:nth-child(4) {
+  border-right: 2px solid #e5e5e5;
+  padding-right: 1rem;
+  margin-right: 1rem;
+}
+
+#textBig, #textBigRed, #textBigGreen {
+  font-size: 4rem;
+  text-align: center;
+  width: 100%;
+  font-weight: 500;
+  line-height: 0.8;
+}
+
+#textBigGreen{
+  color: green;
+}
+#textBigRed{
+  color: red;
+}
+.sectionHeading {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #222;
+  text-align: center;
+  margin: 2rem 0 1rem;
+}
+
+#sectionTitles {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.agenda {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.insightContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  flex: 1 0 auto;
+  margin: 0.5rem;
+  min-width: 250px;
+}
+
+#warehouseSelect {
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
 .personaContainer {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   width: 100%;
-  padding: 2rem 3rem 0 3rem;
+  padding: 3rem 3rem 2rem 3rem;
+  border-bottom: 2px solid #e5e5e5;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
 }
 
 .welcomeContainer {
@@ -362,19 +415,26 @@ h1 {
   font-size: 2rem;
   font-weight: 700;
   color: #222;
+  margin-bottom: 2rem;
 }
 
-.description {
+.infoContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.medium {
   font-size: 1rem;
   font-weight: 400;
   color: #aaa;
+  height: 25px;
 }
 
-.profilePicContainer {
-  height: 100px;
-  width: 100px;
-  background: #f5f5f5;
-  border-radius: 50%;
+.bold {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  height: 25px;
 }
 
 .sectionContainer {
@@ -383,58 +443,27 @@ h1 {
   border-bottom: 2px solid #e5e5e5;
 }
 
-.agenda {
-  display: flex;
-}
-
 .dateContainer {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 150px;
-  height: 150px;
-  border: 2px solid #e5e5e5;
-  border-radius: 15px;
+  width: 100px;
+  height: 100px;
+  background: #f5f5f5;
+  border-radius: 10px;
 }
 
 .dayOfTheWeek {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  line-height: 0.8;
   color: #222;
 }
 
 .dayOfTheWeekNum {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 800;
-  line-height: 0.8;
   color: #222;
-}
-
-.insightContainer {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-
-}
-.insightContainer:nth-child(4) {
-  border-right: 2px solid #e5e5e5;
-  padding-right: 1rem;
-  margin-right: 1rem;
-}
-
-.meetingWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  gap: 0.5rem;
-  flex-direction: row;
-}
-
-.medium {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
 }
 
 .sectionTitle {
@@ -534,105 +563,6 @@ p {
   color: #222;
 }
 
-.messageHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 50%;
-  margin-bottom: 1rem;
-}
-
-.messageWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  min-height: 150px;
-  height: auto;
-  flex: 0 0 auto;
-  background: #fff;
-  padding: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.selected {
-  background-color: #e5e5e5;
-}
-
-.buttonContainer {
-  display: flex;
-  gap: 1rem;
-}
-
-.filterMessage,
-.deleteMessage {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  width: 50px;
-  background: #f5f5f5;
-  outline: none;
-  cursor: pointer;
-}
-
-.filterMessage:hover,
-.deleteMessage:hover {
-  background: #e5e5e5;
-}
-
-#textBig, #textBigRed, #textBigGreen {
-  font-size: 4rem;
-  text-align: center;
-  width: 100%;
-  font-weight: 500;
-  line-height: 0.8;
-}
-
-#textBigGreen{
-  color: green;
-}
-#textBigRed{
-  color: red;
-}
-.sectionHeading {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #222;
-  text-align: center;
-  margin: 2rem 0 1rem;
-}
-
-#sectionTitles {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
-}
-
-.agenda {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-  align-items: flex-start;
-}
-
-.insightContainer {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  flex: 1 0 auto;
-  margin: 0.5rem;
-  min-width: 250px;
-}
-
-#warehouseSelect {
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
 .reportsContainerWrapper {
   display: flex;
   justify-content: space-between;
@@ -649,7 +579,6 @@ p {
   width: 100%;
   background: #f5f5f5;
   border-radius: 10px;
-  overflow-y: scroll;
 }
 
 .reportsHeader {
@@ -660,7 +589,7 @@ p {
   margin-bottom: 1rem;
 }
 
-.messageWrapper {
+.reportWrapper {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -671,6 +600,7 @@ p {
   background: #fff;
   padding: 1rem;
   border-radius: 5px;
+  border: 1px solid #e5e5e5;
   cursor: pointer;
 }
 
@@ -713,7 +643,6 @@ p {
   font-weight: 600;
   border-radius: 5px;
   outline: none;
-  border: none;
   cursor: pointer;
 }
 
@@ -721,23 +650,56 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: 10px;
+  padding: 0 0 0 1rem;
+  background: #fff;
 }
 
-.messageHeader {
+.actualReports {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  height: 500px;
+  width: 100%;
+  border-radius: 10px;
+  overflow-y: scroll;
+}
+
+.actualReports::-webkit-scrollbar {
+  width: 10px;
+}
+
+.actualReports::-webkit-scrollbar-thumb {
+  background-color: #e5e5e5;
+  border-radius: 10px;
+}
+
+.actualReports::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
+
+.reportHeader {
   display: flex;
   justify-content: space-between;
-  border-bottom: 2px solid #f5f5f5;
+  border-bottom: 1px solid #e5e5e5;
   width: 100%;
 }
 
-.messageSender {
+.reportSender {
   font-weight: 600;
   color: #222;
 }
 
-.messageDate {
+.reportDate {
   font-weight: 400;
-  color: #aaa;
+  color: #c5c5c5;
+}
+
+.reportBody {
+  font-weight: 400;
+  color: #222;
 }
 
 .buttonWrapper {
@@ -745,25 +707,30 @@ p {
   gap: 1rem;
 }
 
-.disabledButton {
-  background-color: #c5c5c5;
-  cursor: not-allowed;
-  outline: none;
-}
-
-label {
-  font-weight: 500;
-  width: 25%;
-}
-
-.wrapper {
+.filterMessage,
+.deleteMessage {
   display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
+  background: none;
+  outline: none;
+  cursor: pointer;
 }
 
-.reportReceiver {
-  border-radius: 5px;
-  padding: 0 0.5em;
-  width: 150px;
+.filterMessage:hover,
+.deleteMessage:hover {
+  background: #c5ce2c;
+  color: #fff;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+      'FILL' 0,
+      'wght' 500,
+      'GRAD' 0,
+      'opsz' 40
 }
 
 </style>

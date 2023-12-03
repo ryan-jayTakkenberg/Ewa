@@ -13,11 +13,11 @@
   <div class="personaContainer">
 
     <div class="header">
-      <h1>Hi, {{ capitalizeFirstLetter(viewerName) }}</h1>
+      <h1>Hi, {{ capitalizeFirstLetter(username) }}</h1>
 
       <div class="dateContainer">
-        <p class="dayOfTheWeek">{{ dayOfTheWeek }}</p>
-        <p class="dayOfTheWeekNum">{{ numberOfTheDay }}</p>
+        <div class="dayOfTheWeek">{{ dayOfTheWeek }}</div>
+        <div class="dayOfTheWeekNum">{{ numberOfTheDay }}</div>
       </div>
     </div>
 
@@ -26,15 +26,15 @@
       <div class="infoContainer">
 
         <div class="infoTitle">
-          <p class="medium">Currently working in:</p>
-          <p class="medium">Ongoing projects:</p>
-          <p class="medium">Unread reports:</p>
+          <div class="medium">Currently working in:</div>
+          <div class="medium">Ongoing projects:</div>
+          <div class="medium">Unread reports:</div>
         </div>
 
         <div class="infoValue">
-          <p class="bold">Team 2</p>
-          <p class="bold">1</p>
-          <p class="bold">3</p>
+          <div class="bold">Team 2</div>
+          <div class="bold">1</div>
+          <div class="bold">3</div>
         </div>
 
       </div>
@@ -94,29 +94,32 @@
 
           <div class="buttonWrapper">
             <button class="deleteMessage" @click="showModal">
-              <span class="material-symbols-outlined button">delete</span>
+              <span class="material-symbols-outlined">delete</span>
             </button>
             <button class="filterMessage">
-              <span class="material-symbols-outlined button">filter_alt</span>
+              <span class="material-symbols-outlined">filter_alt</span>
             </button>
           </div>
-
         </div>
-        <div
-            class="reportWrapper"
-            v-for="(report, index) in reports"
-            :key="index"
-            @click="toggleSelected(index)"
-            :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
 
-          <div class="reportHeader">
-            <div class="reportSender"> {{ capitalizeFirstLetter(report.senderName) }} </div>
-            <div class="reportDate"> {{ report.date }} </div>
+        <div class="actualReports">
+          <div
+              class="reportWrapper"
+              v-for="(report, index) in reports"
+              :key="index"
+              @click="toggleSelected(index)"
+              :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
+
+            <div class="reportHeader">
+              <div class="reportSender"> {{ capitalizeFirstLetter(report.senderName) }} </div>
+              <div class="reportDate"> {{ report.date }} </div>
+            </div>
+
+            <div class="reportBody"> {{ report.body }} </div>
+
           </div>
-
-          <div class="reportBody"> {{ report.body }} </div>
-
         </div>
+
       </div>
 
       <div class="sendReportsContainer">
@@ -151,7 +154,7 @@ export default {
 
   data() {
     return {
-      viewerName: getUsername(),
+      username: getUsername(),
       viewerTeam: getUserTeam(), // TODO
       projects: Project.projects,
       reports: [],
@@ -337,14 +340,14 @@ h1 {
   font-size: 1rem;
   font-weight: 400;
   color: #aaa;
-  line-height: 1;
+  height: 25px;
 }
 
 .bold {
   font-size: 1rem;
   font-weight: 600;
   color: #222;
-  line-height: 1;
+  height: 25px;
 }
 
 .sectionContainer {
@@ -367,14 +370,12 @@ h1 {
 .dayOfTheWeek {
   font-size: 1.2rem;
   font-weight: 700;
-  line-height: 0.25;
   color: #222;
 }
 
 .dayOfTheWeekNum {
   font-size: 2rem;
   font-weight: 800;
-  line-height: 1.2;
   color: #222;
 }
 
@@ -491,7 +492,6 @@ p {
   width: 100%;
   background: #f5f5f5;
   border-radius: 10px;
-  overflow-y: scroll;
 }
 
 .reportsHeader {
@@ -513,6 +513,7 @@ p {
   background: #fff;
   padding: 1rem;
   border-radius: 5px;
+  border: 1px solid #e5e5e5;
   cursor: pointer;
 }
 
@@ -562,12 +563,40 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: 10px;
+  padding: 0 0 0 1rem;
+  background: #fff;
+}
+
+.actualReports {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  height: 500px;
+  width: 100%;
+  border-radius: 10px;
+  overflow-y: scroll;
+}
+
+.actualReports::-webkit-scrollbar {
+  width: 10px;
+}
+
+.actualReports::-webkit-scrollbar-thumb {
+  background-color: #e5e5e5;
+  border-radius: 10px;
+}
+
+.actualReports::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+  border-radius: 10px;
 }
 
 .reportHeader {
   display: flex;
   justify-content: space-between;
-  border-bottom: 2px solid #f5f5f5;
+  border-bottom: 1px solid #e5e5e5;
   width: 100%;
 }
 
@@ -578,7 +607,7 @@ p {
 
 .reportDate {
   font-weight: 400;
-  color: #aaa;
+  color: #c5c5c5;
 }
 
 .reportBody {
@@ -605,7 +634,16 @@ p {
 
 .filterMessage:hover,
 .deleteMessage:hover {
-  background: #e5e5e5;
+  background: #c5ce2c;
+  color: #fff;
+}
+
+.material-symbols-outlined {
+ font-variation-settings:
+     'FILL' 0,
+     'wght' 500,
+     'GRAD' 0,
+     'opsz' 40
 }
 
 </style>

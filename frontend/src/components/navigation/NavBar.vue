@@ -56,7 +56,6 @@ export default {
     <div class="navigation">
       <div class="nav-items">
 
-        <!-- Viewer Todo order viewer-->
         <router-link
             v-if="(permissionLevel === 'viewer')"
             to="/viewer-overview"
@@ -112,6 +111,7 @@ export default {
         </router-link>
 
         <router-link
+            v-if="(permissionLevel === 'admin')"
             to="/orders"
             class="nav-button relative"
             :class="{ active: isPageActive('orders') }"
