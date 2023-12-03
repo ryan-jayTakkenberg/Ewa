@@ -4,9 +4,8 @@ import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
-import app.models.Teams;
+import app.models.Team;
 import app.repositories.TeamJPARepository;
-import app.repository.TeamsRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,16 +16,16 @@ import java.util.List;
 //@CrossOrigin(origins = EsserverApplication.CROSS_ORIGIN)
 @RestController
 @RequestMapping("/teams")
-public class TeamsController {
+public class TeamController {
 
     private final TeamJPARepository teamRepository;
 
-    public TeamsController(TeamJPARepository teamRepository) {
+    public TeamController(TeamJPARepository teamRepository) {
         this.teamRepository = teamRepository;
     }
 
     @GetMapping
-    private List<Teams> getTeams(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
+    private List<Team> getTeams(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
         if (jwtInfo.isAdmin()) {
             return teamRepository.findAll();
         }
@@ -35,7 +34,7 @@ public class TeamsController {
     }
 
     @PostMapping
-    public ResponseEntity<Teams> addNewTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@RequestBody Teams team) {
+    public ResponseEntity<Team> addNewTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@RequestBody Team team) {
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to create an user");
         }
@@ -44,7 +43,7 @@ public class TeamsController {
             return ResponseEntity.badRequest().build();
         }
 
-        Teams addedTeam = teamRepository.save(team);
+        Team addedTeam = teamRepository.save(team);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -55,8 +54,8 @@ public class TeamsController {
         return ResponseEntity.created(location).body(addedTeam);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Teams> updateWarehouse(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id, @RequestBody Teams updatedTeams) {
-        Teams existingTeam = teamRepository.findById(id);
+    public ResponseEntity<Team> updateWarehouse(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id, @RequestBody Team updatedTeams) {
+        Team existingTeam = teamRepository.findById(id);
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to delete an user");
         }
@@ -66,7 +65,7 @@ public class TeamsController {
             }
 
             updatedTeams.setId((int) id);
-            Teams savedTeams = teamRepository.save(updatedTeams);
+            Team savedTeams = teamRepository.save(updatedTeams);
             return ResponseEntity.ok(savedTeams);
         } else {
             throw new NotFoundException("Warehouse not found with ID: " + id);
@@ -76,8 +75,8 @@ public class TeamsController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Teams> deleteTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id) {
-        Teams teamToDelete = teamRepository.findById(id);
+    public ResponseEntity<Team> deleteTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id) {
+        Team teamToDelete = teamRepository.findById(id);
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to delete an user");
         }

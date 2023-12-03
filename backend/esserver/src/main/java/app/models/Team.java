@@ -1,15 +1,13 @@
 package app.models;
 
 import app.enums.PermissionLevel;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
-public class Teams {
+public class Team {
 
     @Id
     @GeneratedValue
@@ -22,13 +20,13 @@ public class Teams {
     private List<Project>  projects;
     private PermissionLevel permissionLevel;
 
-    public Teams(PermissionLevel permissionLevel,int id, String name, String warehouse) {
+    public Team(PermissionLevel permissionLevel,int id, String name, String warehouse) {
         this.permissionLevel = permissionLevel;
         this.id = id;
         this.name = name;
         this.warehouse = warehouse;
     }
-    public Teams(){
+    public Team(){
 
     }
     public enum Name {
@@ -42,12 +40,12 @@ public class Teams {
         }
     }
 
-    public static Teams createSampleTeam(int pId) {
+    public static Team createSampleTeam(int pId) {
         int id = pId;
-        String name = String.valueOf(Teams.Name.values()[(int) (Math.random() * Teams.Name.values().length)]);
+        String name = String.valueOf(Team.Name.values()[(int) (Math.random() * Team.Name.values().length)]);
         String warehouse = ("warehouse " + id);
 
-        return new Teams(PermissionLevel.ADMIN,id, name, warehouse);
+        return new Team(PermissionLevel.ADMIN,id, name, warehouse);
 
 }
 

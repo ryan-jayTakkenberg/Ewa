@@ -1,27 +1,25 @@
 package app.repository;
 
-import app.models.Teams;
+import app.models.Team;
 
-import app.models.Warehouse;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
-public class TeamsRepositoryMock implements TeamsRepository {
+public class TeamRepositoryMock implements TeamRepository {
 
-    private final List<Teams> teams = new ArrayList<>();
+    private final List<Team> teams = new ArrayList<>();
 
     public static int teamsIdCount = 7;
 
     // Constructor to add sample data on initialization
-    public TeamsRepositoryMock() {
+    public TeamRepositoryMock() {
         // Adding some sample users for each team
 
         for (int i = 1; i < 7; i++){
-            teams.add(Teams.createSampleTeam(i));
+            teams.add(Team.createSampleTeam(i));
         }
     }
 
@@ -30,12 +28,12 @@ public class TeamsRepositoryMock implements TeamsRepository {
 
 
     @Override
-    public List<Teams> findAll() {
+    public List<Team> findAll() {
         return teams;
     }
 
     @Override
-    public Teams findById(Long id) {
+    public Team findById(Long id) {
         return teams.stream()
                 .filter(team -> team.getId() == (id))
                 .findFirst()
@@ -43,7 +41,7 @@ public class TeamsRepositoryMock implements TeamsRepository {
     }
 
     @Override
-    public Teams save(Teams team) {
+    public Team save(Team team) {
         if (team.getId() == 0) {
             // New team, assign an ID
             team.setId(teamsIdCount++);

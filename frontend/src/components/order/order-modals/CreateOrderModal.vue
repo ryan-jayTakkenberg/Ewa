@@ -1,3 +1,57 @@
+<script>
+import Order from "@/models/order";
+import SolarModal from "@/components/general/SolarModal.vue";
+import Team from "@/models/team";
+import Product from "@/models/product";
+export default {
+  name: "CreateOrderModal",
+  emits: ["create-order"],
+  components: {SolarModal},
+  data() {
+    return {
+      OrderStatusOptions: Order.Status,
+      teamOptions: Team.teams,
+      productOptions: Product.products,
+      selectedProducts: [],
+      order: {
+        orderNumber: '',
+        orderDate: '',
+        estimatedDeliveryDate: '',
+        team: '',
+        products: '',
+        status: '',
+      },
+    }
+  },
+  props: {
+    onClose: {
+      type: Function,
+      required: true,
+    },
+  },
+  computed: {
+    isAnyFieldEmpty() {
+      return (
+          !this.order.team ||
+          !this.order.product ||
+          !this.order.status
+      );
+    },
+  },
+  methods: {
+    createOrder() {
+      let orderClass = new Order();
+      orderClass.injectAttributes(this.order);
+      this.$emit('create-order', orderClass);
+    },
+    addProductsToOrder() {
+      // Add selected products to the order.products array
+      this.order.products = [...this.order.products, ...this.selectedProducts];
+    },
+  }
+}
+</script>
+
 <template>
   <form @submit.prevent="createOrder"  @keydown.enter.prevent="">
     <SolarModal title="Create Order" @close-modal="onClose" class="modal">
@@ -25,9 +79,14 @@
         <!-- Product select -->
         <div class="col-span-6 sm:col-span-3">
           <label for="team" class="modal-label">Product</label>
-          <select v-model="order.product" class="role-select" required>
-            <option v-for="product in productOptions" :key="product.id" :value="product.name">{{product.name}}</option>
+          <select v-model="selectedProducts" class="role-select" required multiple>
+            <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
           </select>
+        </div>
+
+        <!-- Button to add products -->
+        <div class="col-span-6 sm:col-span-3">
+          <button @click="addProductsToOrder" type="button" class="add-products-button">Add Products</button>
         </div>
 
         <!-- Order date-->
@@ -71,54 +130,7 @@
   </form>
 </template>
 
-<script>
-import Order from "@/models/order";
-import SolarModal from "@/components/general/SolarModal.vue";
-import Team from "@/models/team";
-import Product from "@/models/product";
-export default {
-  name: "CreateOrderModal",
-  emits: ["create-order"],
-  components: {SolarModal},
-  data() {
-    return {
-      OrderStatusOptions: Order.Status,
-      teamOptions: Team.teams,
-      productOptions: Product.products,
-      order: {
-        orderNumber: '',
-        orderDate: '',
-        estimatedDeliveryDate: '',
-        team: '',
-        product: '',
-        status: '',
-      },
-    }
-  },
-  props: {
-    onClose: {
-      type: Function,
-      required: true,
-    },
-  },
-  computed: {
-    isAnyFieldEmpty() {
-      return (
-          !this.order.team ||
-          !this.order.product ||
-          !this.order.status
-      );
-    },
-  },
-  methods: {
-    createOrder() {
-      let orderClass = new Order();
-      orderClass.injectAttributes(this.order);
-      this.$emit('create-order', orderClass);
-    },
-  }
-}
-</script>
+
 
 <style scoped>
 .modal-grid {

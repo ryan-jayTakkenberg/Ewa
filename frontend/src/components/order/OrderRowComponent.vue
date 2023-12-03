@@ -77,7 +77,12 @@ export default {
     <td class="px-6 py-4">{{ order.orderedFrom }}</td>
     <td class="px-6 py-4">{{ order.orderDate }}</td>
     <td class="px-6 py-4">{{ order.estimatedDeliveryDate }}</td>
-    <td class="px-6 py-4">{{ order.teamId }}</td>
+    <td class="px-6 py-4">
+      {{ order.team.name}}
+      <br>
+      {{ order.team.warehouse}}
+
+    </td>
     <td class="px-6 py-4">
       <div v-if="!productsVisible" class="view-products" @click="displayProducts">View Products({{ order.products.length }})</div>
       <div v-if="productsVisible" class="view-products" @click="displayProducts">Hide Products({{ order.products.length }})</div>
