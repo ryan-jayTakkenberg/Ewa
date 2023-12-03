@@ -1,29 +1,38 @@
 import {getJWT} from "@/data";
 import axios from "../axios-config";
 import {classToObject} from "@/models/helper";
-import Product from "@/models/product";
 
 export default class Order {
     id;
     orderNumber;
+    orderedFrom;
     orderDate;
     estimatedDeliveryDate;
-    products;
-    totalPrice;
+    teamId;
+    productId;
+    quantity;
     status;
 
-    constructor(id, orderNumber, orderDate, estimatedDeliveryDate, products, totalPrice, status) {
+    static Status = {
+        PENDING: "Pending",
+        DELIVERED: "Delivered",
+        CANCELED: "Canceled",
+    }
+
+    constructor(id, orderNumber, orderedFrom, orderDate, estimatedDeliveryDate, teamId, productId, quantity, status) {
         this.id = id;
         this.orderNumber = orderNumber;
+        this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
-        this.products = products;
-        this.totalPrice = totalPrice;
+        this.teamId = teamId;
+        this.productId = productId;
+        this.quantity = quantity;
         this.status = status;
     }
 
     clone() {
-        return new Order(this.id, this.orderNumber, this.orderDate, this.products, this.totalPrice, this.status);
+        return new Order(this.id, this.orderNumber, this.orderDate, this.teamId, this.productId, this.quantity, this.status);
     }
 
     injectAttributes(from) {
@@ -38,6 +47,7 @@ export default class Order {
         return true;
     }
 
+
     equals(other) {
         if (!other) {
             return false;
@@ -50,8 +60,8 @@ export default class Order {
         return true;
     }
 
-    static createNewOrder(orderNumber, orderDate, orders, totalPrice, status) {
-        return new Order(-1, orderNumber, orderDate, orders, totalPrice, status);
+    static createNewOrder(orderNumber, orderDate, estimatedDeliveryDate, teamId, productId, quantity, status) {
+        return new Order(-1, orderNumber, orderDate, estimatedDeliveryDate, teamId, productId, quantity, status);
     }
 
     /**
@@ -63,11 +73,10 @@ export default class Order {
         try {
             const isNewOrder = this.id < 0;
 
-            let response = await axios.post("/api/order", classToObject(this), {
-                headers: {
-                    "Authorization": getJWT()
-                }
-            });
+            let response = await axios.post(
+                "/api/orders", classToObject(this),
+                {headers: {"Authorization": getJWT()}}
+            );
 
             // make a post request to the backend
             // if the current order id is -1, receive the new order id
@@ -95,12 +104,10 @@ export default class Order {
             }
 
             // make a delete request to the backend
-            await axios.delete(`/api/order/${this.id}`, {
-                headers: {
-                    "Authorization": getJWT()
-                }
-            });
-
+            await axios.delete(
+                `/api/order/${this.id}`,
+                {headers: {"Authorization": getJWT()}}
+            );
             Order.orders = Order.orders.filter(o => o.id !== this.id);
             return true;
         } catch (e) {
@@ -116,11 +123,10 @@ export default class Order {
             this.fetching = true;
             // make a get request to the backend
             // update "orders" with the response
-            let response = await axios.get("/api/order", {
-                headers: {
-                    "Authorization": getJWT()
-                }
-            });
+            let response = await axios.get(
+                "/api/order",
+                {headers: {"Authorization": getJWT()}}
+            );
 
             let orders = [];
             for (let obj of response.data) {
@@ -138,7 +144,5 @@ export default class Order {
     }
 
     static fetching = true;
-    static orders = [
-        new Order(0, "SE3001", "19-10-23", "28-11-23", new Product(0, "Solarpanel", "100", "Fresh new solar panel"), 100, "In Progress"),
-    ];
+    static orders = [];
 }

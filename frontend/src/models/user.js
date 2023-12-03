@@ -56,24 +56,22 @@ export default class User {
     }
 
     /**
-     * put this product into the database
-     * will add a new product to the database if no product exists
-     * will override the existing product with the new product if the product already exists
+     * put this user into the database
+     * will add a new user to the database if no user exists
+     * will override the existing user with the new user if the user already exists
      */
     async putDatabase() {
         try {
-            const isNewUser= this.id < 0;
+            const isNewUser = this.id < 0;
 
             let response = await axios.post("/api/users", classToObject(this), {
-                headers: {
-                    "Authorization": getJWT(),
-                }
+                headers: {"Authorization": getJWT(),}
             });
 
             // make a post request to the backend
-            // if the current product id is -1, receive the new product id
+            // if the current product id is -1, receive the new user id
             if (isNewUser) {
-                this.id = response.data.id;// receive the new product id
+                this.id = response.data.id;// receive the new user id
                 User.users.push(this);
             } else {
                 User.users[User.users.findIndex(o => o.id === this.id)] = this;
@@ -86,19 +84,15 @@ export default class User {
     }
 
     /**
-     * delete this user from the databasenew User(4, "example4@company.com", "Full Name 4", "Viewer", "4 February 2023")
+     * delete this user from the database
      */
     async delDatabase() {
         try {
             const isNewUser = this.id < 0;
-            if (isNewUser) {
-                return false;
-            }
+            if (isNewUser) return false;
             // make a delete request to the backend
             await axios.delete(`/api/users/${this.id}`, {
-                headers: {
-                    "Authorization": getJWT()
-                }
+                headers: {"Authorization": getJWT()}
             });
             User.users = User.users.filter(o => o.id !== this.id);
             return true;
@@ -116,9 +110,7 @@ export default class User {
             // make a get request to the backend
             // update "products" with the response
             let response = await axios.get("/api/users", {
-                headers: {
-                    "Authorization": getJWT()
-                }
+                headers: {"Authorization": getJWT()}
             });
 
             let users = [];

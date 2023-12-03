@@ -5,6 +5,9 @@ import Warehouse from "../../models/warehouse";
 export default {
   name: "OrderRowComponent",
   computed: {
+    Order() {
+      return Order
+    },
     Warehouse() {
       return Warehouse
     }
@@ -25,17 +28,29 @@ export default {
     emitToggle() {
       this.$emit("toggle", this.order);
     },
-    emitViewProducts() {
-      this.$emit("view-products", this.order.products);
-    },
     emitEdit() {
       this.$emit("edit", this.order);
     },
     emitCancel() {
       this.$emit("cancel", this.order);
     },
-    emitComplete() {
-      this.$emit("complete", this.order);
+    emitConfirm() {
+      this.$emit("confirm", this.order);
+    },
+    emitReport() {
+      this.$emit("report", this.order);
+    },
+    getStatusClass() {
+      switch (this.order.status) {
+        case Order.Status.DELIVERED:
+          return "delivered";
+        case Order.Status.PENDING:
+          return "pending";
+        case Order.Status.CANCELED:
+          return "canceled";
+        default:
+          return "";
+      }
     },
   }
 }
@@ -53,30 +68,51 @@ export default {
       </div>
     </td>
     <td class="px-6 py-4 font-semibold text-base">{{ order.orderNumber }}</td>
+    <td class="px-6 py-4">{{ order.orderedFrom}}</td>
+    <td class="px-6 py-4">{{ order.teamId }}</td>
     <td class="px-6 py-4">{{ order.orderDate }}</td>
     <td class="px-6 py-4">{{ order.estimatedDeliveryDate }}</td>
-    <td class="px-6 py-4">Warehouse Solar 4</td>
-    <td class="px-6 py-4">{{ order.totalPrice }}</td>
-    <td class="px-6 py-4">{{ order.status }}</td>
-    <td class=" px-6 py-4 view-btn" @click="emitViewProducts">View products({{ order.products.length }})</td>
-    <td class="px-6 py-4 row">
-      <!-- Complete order-->
-      <div @click="emitComplete" class="complete-btn">Complete order</div>
-      <!-- Cancel order -->
-      <div @click="emitCancel" class="cancel-btn">Cancel order</div>
+    <td class="px-6 py-4">{{ order.teamId }}</td>
+    <td class="px-6 py-4">{{ order.productId}}</td>
+    <td class="px-6 py-4">{{ order.quantity }}</td>
+    <td class="px-6 py-4">
+      <div :class="['status', getStatusClass(),]">{{ order.status }}</div>
+    </td>
+    <td class="px-4 py-4">
+      <div v-if="order.status === Order.Status.PENDING" @click="emitConfirm" class="complete-btn">Confirm order</div>
+      <div v-if="order.status === Order.Status.PENDING" @click="emitCancel" class="cancel-btn">Cancel order</div>
+      <div v-if="order.status === Order.Status.PENDING || order.status === Order.Status.DELIVERED" @click="emitReport" class="report-btn">Report order</div>
     </td>
   </tr>
 </template>
 
 <style scoped>
-.view-btn {
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  background-color: orange;
+  color: white;
+  font-size: 0.75rem;
+  line-height: 1rem;
   font-weight: 500;
-  color: #C7D02C;
-  cursor: pointer;
+  padding: 0.125rem 0.625rem;;
+  border-radius: 9999px;
 }
 
-.view-btn:hover {
-  text-decoration-line: underline;
+.delivered {
+  background-color: greenyellow;
+  color: darkgreen;
+}
+
+.pending {
+  background-color: orange;
+  color: white;
+}
+
+.canceled {
+  background-color: darkgray;
+  color: white;
 }
 
 .complete-btn {
@@ -85,6 +121,8 @@ export default {
   cursor: pointer;
 }
 
+.cancel-btn:hover,
+.report-btn:hover,
 .complete-btn:hover {
   text-decoration-line: underline;
 }
@@ -95,8 +133,10 @@ export default {
   cursor: pointer;
 }
 
-.cancel-btn:hover {
-  text-decoration-line: underline;
+.report-btn {
+  font-weight: 500;
+  color: #333333;
+  cursor: pointer;
 }
 
 .table-row {

@@ -1,21 +1,24 @@
 <script>
+import Order from "@/models/order";
 import TitleComponent from "@/components/general/SolarTitle.vue";
-import SolarTable from "@/components/general/SolarTable.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
 import SolarSearchbar from "@/components/general/SolarSearchbar.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
-// import DeleteUserModal from "@/components/user/user-modals/DeleteUserModal.vue";
-// import UpdateUserModal from "@/components/user/user-modals/UpdateUserModal.vue";
-// import CreateUserModal from "@/components/user/user-modals/CreateUserModal.vue";
-// import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultipleUsersModal.vue";
-import SolarPagination from "@/components/general/SolarPagination.vue";
-import Order from "@/models/order";
+import SolarTable from "@/components/general/SolarTable.vue";
 import OrderRowComponent from "@/components/order/OrderRowComponent.vue";
+import SolarPagination from "@/components/general/SolarPagination.vue";
+
+import CreateOrderModal from "@/components/order/order-modals/CreateOrderModal.vue";
+import CancelOrderModal from "@/components/order/order-modals/CancelOrderModal.vue";
+import ConfirmOrderModal from "@/components/order/order-modals/ConfirmOrderModal.vue";
 
 export default {
   name: "OrdersOverview",
   components: {
+    ConfirmOrderModal,
+    CreateOrderModal,
+    CancelOrderModal,
     SolarDropdownMenuItem,
     TitleComponent,
     OrderRowComponent,
@@ -32,15 +35,16 @@ export default {
       selectedOrder: null,  // The selected order for editing / deleting
       checkedOrders: [], // A list of the selected orders for editing multiple orders at once
       showCreateModal: false,
-      showUpdateModal: false,
-      showDeleteModal: false,
-      showDeleteMultipleModal: false,
+      showEditModal: false,
+      showCancelModal: false,
+      showConfirmModal: false,
       currentPage: 1,
       itemsPerPage: 10,
     };
   },
   computed: {
     totalPages() {
+      console.log(this.orders)
       return Math.ceil(this.filterOrders.length / this.itemsPerPage);
     },
     paginatedOrders() {
@@ -69,14 +73,14 @@ export default {
         this.currentPage++;
       }
     },
-    // async createUser(createdUser) {
-    //   this.closeModal();
-    //   let newUser = await createdUser.putDatabase();
-    //   if (newUser) {
-    //     this.users.push(newUser);
-    //   }
-    // },
-    //
+    async createOrder(createdOrder) {
+      this.closeModal();
+      let newOrder = await createdOrder.putDatabase();
+      if (newOrder) {
+        this.orders.push(newOrder);
+      }
+    },
+
     // async editUser(updated) {
     //   // Assuming there is only one user in this.selectedProducts
     //   let edited = this.selectedUser;
@@ -144,27 +148,26 @@ export default {
       console.log(value);
       this.inputValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
     },
-    // openCreateModal() {
-    //   this.showCreateModal = true;
-    // },
-    // openEditModal(user) {
-    //   this.selectedUser = user;
-    //   this.showUpdateModal = true;
-    // },
-    // openDeleteModal(user) {
-    //   this.selectedUser = user;
-    //   this.showDeleteModal = true;
-    // },
-    // openDeleteMultipleUsersModal() {
-    //   console.log("test before");
-    //   this.showDeleteMultipleModal = true;
-    //   console.log("test after");
-    //   this.closeDropdown();
-    // },
+    openCreateModal() {
+      this.showCreateModal = true;
+    },
+    openEditModal(order) {
+      this.selectedOrder = order;
+      this.showEditModal = true;
+    },
+    openCancelModal(order) {
+      this.selectedOrder = order;
+      this.showCancelModal = true;
+    },
+    openConfirmModal(order) {
+      this.selectedOrder = order;
+      this.showConfirmModal = true;
+    },
     closeModal() {
       this.showCreateModal = false;
-      this.showUpdateModal = false;
-      this.showDeleteModal = false;
+      this.showEditModal = false;
+      this.showCancelModal = false;
+      this.showConfirmModal = false;
       this.showDeleteMultipleModal = false;
     },
     toggleCheckbox(order) {
@@ -207,14 +210,16 @@ export default {
           <SolarDropdownMenuItem text-menu-item="Confirm Orders" @click="openConfirmMultipleOrdersModal"/>
         </SolarDropdownMenuButton>
         <SolarSearchbar place-holder="Search For Orders" @search="handleInputValueChange"></SolarSearchbar>
-        <SolarButton class="ml-auto" button-text="Create Order" @click="openCreateOrderModal"></SolarButton>
+        <SolarButton class="ml-auto" button-text="Create Order" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable
           :columns="['order number', 'order date', 'estimated delivery date', 'ordered for warehouse', 'total price', 'status', 'products', 'action']">
         <OrderRowComponent
             v-for="(order) in paginatedOrders" :key="order.id" :order="order"
-            @edit="openEditOrderModal"
-            @delete="openDeleteOrderModal"
+            @confirm="openConfirmModal"
+            @report="openReportModal"
+            @edit="openEditModal"
+            @delete="openCancelModal"
             @toggle="toggleCheckbox(order, $event)"> <!-- Pass user and checkbox state -->
         </OrderRowComponent>
       </SolarTable>
@@ -222,30 +227,32 @@ export default {
     </div>
   </div>
 
-  <!--  &lt;!&ndash; Conditionally render modals based on boolean modal states &ndash;&gt;-->
-  <!--  <CreateUserModal-->
-  <!--      v-if="showCreateModal"-->
-  <!--      :on-close="closeModal"-->
-  <!--      @create-user="createUser"-->
-  <!--  />-->
-  <!--  <UpdateUserModal-->
-  <!--      v-if="showUpdateModal"-->
-  <!--      :on-close="closeModal"-->
-  <!--      :user="selectedUser"-->
-  <!--      @update-user="editUser"-->
-  <!--  />-->
-  <!--  <DeleteUserModal-->
-  <!--      v-if="showDeleteModal"-->
-  <!--      :on-close="closeModal"-->
-  <!--      :user="selectedUser"-->
-  <!--      @delete-user="deleteUser"-->
-  <!--  />-->
-  <!--  <DeleteMultipleUsersModal-->
-  <!--      v-if="showDeleteMultipleModal"-->
-  <!--      :on-close="closeModal"-->
-  <!--      :users-to-delete="checkedUsers"-->
-  <!--      @delete-users="deleteCheckedUsers"-->
-  <!--  />-->
+  <!-- Conditionally render modals based on boolean modal states -->
+  <CreateOrderModal
+      v-if="showCreateModal"
+      :on-close="closeModal"
+      @create-order="createOrder"
+  />
+<!--  <EditOrderModal-->
+<!--      v-if="showEditModal"-->
+<!--      :on-close="closeModal"-->
+<!--      :user="selectedUser"-->
+<!--      @edit-order="editOrder"-->
+<!--  />-->
+  <CancelOrderModal
+      v-if="showCancelModal"
+      :on-close="closeModal"
+      :order="selectedOrder"
+      @cancel="cancelOrder"
+
+  />
+
+  <ConfirmOrderModal
+      v-if="showDeleteMultipleModal"
+      :on-close="closeModal"
+      :users-to-delete="checkedUsers"
+      @delete-users="deleteCheckedUsers"
+      order=""/>
 </template>
 
 <style scoped>

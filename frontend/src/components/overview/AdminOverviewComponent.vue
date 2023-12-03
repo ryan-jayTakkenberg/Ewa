@@ -43,7 +43,6 @@ export default {
   },
 
   methods: {
-
     async fetchAllUsers() {
       this.users = await this.userService.fetchAllUsers();
     },
@@ -122,7 +121,6 @@ export default {
   },
 
   computed: {
-
     dayOfTheWeek() {
       const today = new Date();
       today.setDate(today.getDate());

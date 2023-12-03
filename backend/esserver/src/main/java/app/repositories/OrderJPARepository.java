@@ -1,8 +1,10 @@
 package app.repositories;
 
 import app.models.Order;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -15,25 +17,23 @@ public class OrderJPARepository implements EntityRepositoryJPA<Order> {
 
     @Override
     public List<Order> findAll() {
-        // TODO
-        return null;
+        TypedQuery<Order> query = this.em.createQuery("select a from Order a", Order.class);
+        return query.getResultList();
     }
 
     @Override
     public Order findById(long id) {
-        // TODO
-        return null;
+        return em.find(Order.class, id);
     }
 
     @Override
     public Order save(Order entity) {
-        // TODO
-        return null;
+        return this.em.merge(entity);
     }
 
     @Override
     public Order delete(Order entity) {
-        // TODO
-        return null;
+        em.remove(entity);
+        return entity;
     }
 }
