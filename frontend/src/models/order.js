@@ -7,8 +7,8 @@ export default class Order {
     orderedFrom;
     orderDate;
     estimatedDeliveryDate;
-    teamId;
-    productId;
+    team;
+    products;
     quantity;
     status;
 
@@ -18,19 +18,19 @@ export default class Order {
         CANCELED: "CANCELED",
     }
 
-    constructor(id, orderedFrom, orderDate, estimatedDeliveryDate, teamId, productId, quantity, status) {
+    constructor(id, orderedFrom, orderDate, estimatedDeliveryDate, team, products, quantity, status) {
         this.id = id;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
-        this.teamId = teamId;
-        this.productId = productId;
+        this.team= team;
+        this.products = products;
         this.quantity = quantity;
         this.status = status;
     }
 
     clone() {
-        return new Order(this.id, this.orderNumber, this.orderDate, this.teamId, this.productId, this.quantity, this.status);
+        return new Order(this.id, this.orderDate, this.team, this.products, this.quantity, this.status);
     }
 
     injectAttributes(from) {
@@ -45,7 +45,6 @@ export default class Order {
         return true;
     }
 
-
     equals(other) {
         if (!other) {
             return false;
@@ -58,8 +57,8 @@ export default class Order {
         return true;
     }
 
-    static createNewOrder(orderNumber, orderDate, estimatedDeliveryDate, teamId, productId, quantity, status) {
-        return new Order(-1, orderNumber, orderDate, estimatedDeliveryDate, teamId, productId, quantity, status);
+    static createNewOrder(orderDate, estimatedDeliveryDate, team, products, quantity, status) {
+        return new Order(-1,  orderDate, estimatedDeliveryDate, team, products, quantity, status);
     }
 
     /**

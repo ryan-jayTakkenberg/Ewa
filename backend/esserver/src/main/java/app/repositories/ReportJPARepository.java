@@ -1,7 +1,6 @@
 package app.repositories;
 
 import app.models.Report;
-import app.models.Teams;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;

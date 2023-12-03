@@ -27,9 +27,9 @@ public class Project {
 
     @ManyToOne
     @JsonIncludeProperties({"id", "name"})
-    private Teams team;
+    private Team team;
 
-    public Project(int projectId, String projectName, String clientName, LocalDate installDate, String notes, Teams team) {
+    public Project(int projectId, String projectName, String clientName, LocalDate installDate, String notes, Team team) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.clientName = clientName;
@@ -62,7 +62,7 @@ public class Project {
         return notes;
     }
 
-    public Teams getTeam() {
+    public Team getTeam() {
         return team;
     }
 }

@@ -1,6 +1,5 @@
 package app.repository;
 
-import app.models.Teams;
 import app.models.Warehouse;
 import org.springframework.stereotype.Repository;
 

@@ -3,6 +3,7 @@ package app.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -24,96 +25,50 @@ public class Order {
     private String orderedFrom;
     private LocalDate orderDate;
     private LocalDate estimatedDeliveryDate;
-    private int teamId;
-    private int productId;
-    private int quantity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id", nullable = false)
+    protected Team team;
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    // TODO add relation and mapping
-    /*
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-       name = "order_product",
-       joinColumns = @JoinColumn(name = "order_id"),
-       inverseJoinColumns = @JoinColumn(name = "product_id"))
+            name = "order_product",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private List<Product> products;
-    */
-    public Order(long id, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, int teamId, int productId, int quantity, OrderStatus status) {
+
+    public Order(long id, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, List<Product> products, OrderStatus status) {
         this.id = id;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
-        this.teamId = teamId;
-        this.productId = productId;
-        this.quantity = quantity;
+        this.team = team;
+        this.products = products;
         this.status = status;
     }
-
-    public Order() {
-    }
-
+    public Order() {}
     public long getId() {
         return id;
     }
-
     public void setId(long id) {
         this.id = id;
     }
-
     public OrderStatus getStatus() {
         return status;
     }
-
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
-    public String getOrderedFrom() {
-        return orderedFrom;
-    }
-
-    public void setOrderedFrom(String orderedFrom) {
-        this.orderedFrom = orderedFrom;
-    }
-
-    public LocalDate getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(LocalDate orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public LocalDate getEstimatedDeliveryDate() {
-        return estimatedDeliveryDate;
-    }
-
-    public void setEstimatedDeliveryDate(LocalDate estimatedDeliveryDate) {
-        this.estimatedDeliveryDate = estimatedDeliveryDate;
-    }
-
-    public int getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(int teamId) {
-        this.teamId = teamId;
-    }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 }

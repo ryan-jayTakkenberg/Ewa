@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       checked: false,
+      productsVisible: false,
     };
   },
   props: {
@@ -41,6 +42,9 @@ export default {
     },
     emitReport() {
       this.$emit("report", this.order);
+    },
+    displayProducts(){
+      this.productsVisible = !this.productsVisible;
     },
     getStatusClass() {
       switch (this.order.status) {
@@ -73,9 +77,16 @@ export default {
     <td class="px-6 py-4">{{ order.orderedFrom }}</td>
     <td class="px-6 py-4">{{ order.orderDate }}</td>
     <td class="px-6 py-4">{{ order.estimatedDeliveryDate }}</td>
-    <td class="px-6 py-4">{{ order.teamId }}</td>
-    <td class="px-6 py-4">{{ order.productId }}</td>
-    <td class="px-6 py-4">{{ order.quantity }}</td>
+    <td class="px-6 py-4">
+      {{ order.team.name}}
+      <br>
+      {{ order.team.warehouse}}
+
+    </td>
+    <td class="px-6 py-4">
+      <div v-if="!productsVisible" class="view-products" @click="displayProducts">View Products({{ order.products.length }})</div>
+      <div v-if="productsVisible" class="view-products" @click="displayProducts">Hide Products({{ order.products.length }})</div>
+    </td>
     <td class="px-6 py-4">
       <div :class="['status', getStatusClass(),]">{{ order.status }}</div>
     </td>
@@ -86,9 +97,24 @@ export default {
       <div v-if="isAdmin()" @click="emitReport" class="edit-btn">Edit order</div>
     </td>
   </tr>
+
+  <!-- Products for this order -->
+  <tr v-if="productsVisible" class="product-row">
+    <td class="px-4 py-4" colspan="9"> <!-- Use colspan to span across all columns -->
+      <div v-for="product in order.products" :key="product.id">
+        <div class="font-semibold">{{product.name}}</div>
+        <div>{{"€ " + product.price}} </div>
+        <div>{{"qty: " + product.quantity}} </div>
+        <br>
+      </div>
+    </td>
+  </tr>
 </template>
 
 <style scoped>
+.product-row {
+  width: 100vw;
+}
 
 .status {
   display: inline-flex;
@@ -126,32 +152,31 @@ export default {
 .cancel-btn:hover,
 .report-btn:hover,
 .complete-btn:hover,
-.edit-btn:hover{
+.edit-btn:hover,
+.view-products:hover {
   text-decoration-line: underline;
+  cursor: pointer;
 }
 
-.edit-btn{
+.edit-btn {
   font-weight: 500;
   color: blue;
-  cursor: pointer;
+
 }
 
 .report-btn {
   font-weight: 500;
   color: #333333;
-  cursor: pointer;
 }
 
 .cancel-btn {
   font-weight: 500;
   color: red;
-  cursor: pointer;
 }
 
 .report-btn {
   font-weight: 500;
   color: #333333;
-  cursor: pointer;
 }
 
 .table-row {

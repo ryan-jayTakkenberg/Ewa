@@ -1,7 +1,7 @@
 package app.repositories;
 
 
-import app.models.Teams;
+import app.models.Team;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -12,28 +12,28 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class TeamJPARepository implements EntityRepositoryJPA<Teams> {
+public class TeamJPARepository implements EntityRepositoryJPA<Team> {
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    public List<Teams> findAll() {
-        TypedQuery<Teams> query = this.em.createQuery("select t from Teams t", Teams.class);
+    public List<Team> findAll() {
+        TypedQuery<Team> query = this.em.createQuery("select t from Team t", Team.class);
         return query.getResultList();
     }
 
     @Override
-    public Teams findById(long id) {
-        return em.find(Teams.class, id);
+    public Team findById(long id) {
+        return em.find(Team.class, id);
     }
 
     @Override
-    public Teams save(Teams entity) {
+    public Team save(Team entity) {
         return this.em.merge(entity);
     }
 
     @Override
-    public Teams delete(Teams entity) {
+    public Team delete(Team entity) {
         em.remove(entity);
         return entity;
     }

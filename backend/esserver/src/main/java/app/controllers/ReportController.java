@@ -4,7 +4,7 @@ import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
 import app.models.Report;
-import app.models.Teams;
+import app.models.Team;
 import app.repositories.ReportJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
