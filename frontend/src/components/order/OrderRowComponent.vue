@@ -1,7 +1,7 @@
 <script>
 import Order from "@/models/order";
 import Warehouse from "../../models/warehouse";
-import {getJWT, isAdmin} from "@/data";
+import {isAdmin} from "@/data";
 
 export default {
   name: "OrderRowComponent",
@@ -27,7 +27,6 @@ export default {
   },
   methods: {
     isAdmin,
-    getJWT,
     emitToggle() {
       this.$emit("toggle", this.order);
     },
@@ -70,7 +69,7 @@ export default {
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
       </div>
     </td>
-    <td class="px-6 py-4 font-semibold text-base">{{ order.orderNumber }}</td>
+    <td class="px-6 py-4 font-semibold text-base">{{ order.id }}</td>
     <td class="px-6 py-4">{{ order.orderedFrom }}</td>
     <td class="px-6 py-4">{{ order.orderDate }}</td>
     <td class="px-6 py-4">{{ order.estimatedDeliveryDate }}</td>
@@ -84,6 +83,7 @@ export default {
       <div v-if="order.status === Order.Status.PENDING" @click="emitConfirm" class="complete-btn">Confirm order</div>
       <div v-if="order.status === Order.Status.PENDING" @click="emitCancel" class="cancel-btn">Cancel order</div>
       <div v-if="!isAdmin()" @click="emitReport" class="report-btn">Report order</div>
+      <div v-if="isAdmin()" @click="emitReport" class="edit-btn">Edit order</div>
     </td>
   </tr>
 </template>
@@ -103,30 +103,43 @@ export default {
 }
 
 .delivered {
-  background-color: greenyellow;
-  color: darkgreen;
+  background-color: #C7D02C;
+  color: white;
 }
 
 .pending {
-  background-color: orange;
+  background-color: darkgray;
   color: white;
 }
 
 .canceled {
-  background-color: darkgray;
+  background-color: red;
   color: white;
 }
 
 .complete-btn {
   font-weight: 500;
-  color: rgb(37 99 235);
+  color: #C7D02C;
   cursor: pointer;
 }
 
 .cancel-btn:hover,
 .report-btn:hover,
-.complete-btn:hover {
+.complete-btn:hover,
+.edit-btn:hover{
   text-decoration-line: underline;
+}
+
+.edit-btn{
+  font-weight: 500;
+  color: blue;
+  cursor: pointer;
+}
+
+.report-btn {
+  font-weight: 500;
+  color: #333333;
+  cursor: pointer;
 }
 
 .cancel-btn {

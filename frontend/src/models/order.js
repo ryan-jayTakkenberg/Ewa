@@ -4,7 +4,6 @@ import {classToObject} from "@/models/helper";
 
 export default class Order {
     id;
-    orderNumber;
     orderedFrom;
     orderDate;
     estimatedDeliveryDate;
@@ -19,9 +18,8 @@ export default class Order {
         CANCELED: "CANCELED",
     }
 
-    constructor(id, orderNumber, orderedFrom, orderDate, estimatedDeliveryDate, teamId, productId, quantity, status) {
+    constructor(id, orderedFrom, orderDate, estimatedDeliveryDate, teamId, productId, quantity, status) {
         this.id = id;
-        this.orderNumber = orderNumber;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
