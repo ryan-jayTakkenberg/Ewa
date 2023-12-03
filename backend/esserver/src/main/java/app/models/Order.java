@@ -3,6 +3,7 @@ package app.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -25,27 +26,26 @@ public class Order {
     private LocalDate orderDate;
     private LocalDate estimatedDeliveryDate;
     private int teamId;
-    private int productId;
     private int quantity;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    // TODO add relation and mapping
-    /*
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-       name = "order_product",
-       joinColumns = @JoinColumn(name = "order_id"),
-       inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Product> products;
-    */
-    public Order(long id, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, int teamId, int productId, int quantity, OrderStatus status) {
+            name = "order_product",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    protected List<Product> products;
+
+
+    public Order(long id, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, int teamId, List<Product> products, int quantity, OrderStatus status) {
         this.id = id;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
         this.teamId = teamId;
-        this.productId = productId;
+        this.products = products;
         this.quantity = quantity;
         this.status = status;
     }
@@ -59,6 +59,14 @@ public class Order {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public OrderStatus getStatus() {
@@ -99,14 +107,6 @@ public class Order {
 
     public void setTeamId(int teamId) {
         this.teamId = teamId;
-    }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
     }
 
     public int getQuantity() {
