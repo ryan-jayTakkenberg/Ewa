@@ -42,7 +42,7 @@ export default {
   },
 
   mounted() {
-    this.fetchAdminReports();
+    this.fetchReports();
     this.fetchAllUsers();
   },
 
@@ -51,8 +51,8 @@ export default {
       this.users = await this.userService.fetchAllUsers();
     },
 
-    async fetchAdminReports() {
-      this.reports = await this.reportService.fetchAdminReports();
+    async fetchReports() {
+      this.reports = await this.reportService.fetchReports();
       console.log('Fetched reports: ', [...this.reports]);
     },
 

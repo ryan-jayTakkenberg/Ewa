@@ -48,7 +48,7 @@
     <h1 class="sectionTitle">Ongoing Projects</h1>
     <div class="projectContainer">
 
-      <div class="projectWrapper" v-for="(project, index) in viewerProjects" :key="index">
+      <div class="projectWrapper" v-for="(project, index) in projects" :key="index">
         <div class="projectHeader">
           <div class="projectTitle">{{ project.projectName }}</div>
           <div class="statusWrapper">
@@ -154,7 +154,7 @@ export default {
     return {
       viewerName: getUsername(),
       viewerTeam: getUserTeam(), // TODO
-      viewerProjects: Project.projects,
+      projects: Project.projects,
       reports: [],
       selectedReports: [],
       reportBody: "",
@@ -167,13 +167,13 @@ export default {
   },
 
   mounted() {
-    this.fetchViewerReports();
+    this.fetchReports();
   },
 
   methods: {
 
-    async fetchViewerReports() {
-      this.reports = await this.reportService.fetchViewerReports();
+    async fetchReports() {
+      this.reports = await this.reportService.fetchReports();
       console.log('Fetched reports: ', [...this.reports]);
     },
 
@@ -193,10 +193,24 @@ export default {
         body: this.reportBody,
       };
 
-      await this.reportService.postReport(report);
+      const postedReport = await this.reportService.postReport(report);
+
+      // Check if delete was successful (HTTP status code 201)
+      if (postedReport.status === 201) {
+
+        console.log('Successfully posted report:', postedReport.data);
+
+        // Notify the user about a successful delete
+        this.$refs.notificationComponent.createSuccessfulNotification(' Report successfully posted');
+      } else {
+
+        // Notify the user about an unsuccessful delete
+        console.log('An error occurred when trying to post the report:', report);
+        this.$refs.notificationComponent.createUnsuccessfulNotification('Unsuccessful post. Try again');
+
+      }
 
       this.reportBody = '';
-      alert('Your report was successfully sent!');
     },
 
     async deleteReport() {
