@@ -190,7 +190,7 @@ export default {
   <div class="body">
     <div class="body-container">
       <div class="action-row">
-        <SolarSearchbar place-holder="Search For Teams" @search="handleInputValueChange"/>
+        <SolarSearchbar class="ml-2" place-holder="Search For Teams" @search="handleInputValueChange"/>
         <SolarButton class="ml-auto" button-text="Create Team" @click="openAddTeam"></SolarButton>
       </div>
       <SolarTable :columns="['Team', 'warehouse', 'project', 'Action']">

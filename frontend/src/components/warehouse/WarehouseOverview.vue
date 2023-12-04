@@ -4,13 +4,11 @@
     <div class="body-container">
       <div class="action-row">
         <SolarSearchbar class="ml-2" place-holder="Search For Warehouses" @input="handleInputValueChange"></SolarSearchbar>
-        <SolarButton class="ml-auto" button-text="Add Warehouse" @click="showCreateWarehouse = true"></SolarButton>
+        <SolarButton class="ml-auto mr-2" button-text="Add Warehouse" @click="showCreateWarehouse = true"></SolarButton>
       </div>
 
       <SolarTable :columns="['Name', 'Address', 'Postal code', 'Action']">
         <tr class="tableRow" v-for="(warehouse) in warehouses" :key="warehouse.id">
-          <td class="w-4 p-4">
-          </td>
           <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
             <div class="pl-3">
               <div class="text-base font-semibold">{{ warehouse.name }}</div>

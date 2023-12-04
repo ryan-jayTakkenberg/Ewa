@@ -12,7 +12,7 @@
         <SolarButton class="ml-auto" button-text="Create New Product" @click="openCreateModal"/>
       </div>
 
-      <SolarTable :columns="['Product', 'Price', 'Action']">
+      <SolarTable :columns="['', 'Product', 'Price', 'Action']">
         <ProductRowComponent
             ref="rowComponent"
             v-for="(product, index) in filteredProducts"

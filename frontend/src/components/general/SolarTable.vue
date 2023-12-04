@@ -14,7 +14,6 @@ export default {
   <table class="solar-table-container">
     <thead class="solar-table-header">
     <tr>
-      <th scope="col" class="px-6 py-3"></th>
       <th v-for="(column, index) in columns" :key="index" class="px-6 py-3">{{ column }}</th>
     </tr>
     </thead>

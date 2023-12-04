@@ -4,11 +4,12 @@ import SolarModal from "@/components/general/SolarModal.vue";
 import Team from "@/models/team";
 import Product from "@/models/product";
 import SolarButton from "@/components/general/SolarButton.vue";
+import SolarTable from "@/components/general/SolarTable.vue";
 
 export default {
   name: "CreateOrderModal",
   emits: ["create-order"],
-  components: {SolarButton, SolarModal},
+  components: {SolarTable, SolarButton, SolarModal},
   data() {
     return {
       OrderStatusOptions: Order.Status,
@@ -119,32 +120,28 @@ export default {
 
         <!-- Select products -->
         <div class="col-span-6 sm:col-span-6">
-          <label for="team" class="modal-label">Product</label>
+          <label for="team" class="modal-label">Add Product</label>
           <div class="w-full flex">
-          <select v-model="selectedProduct" class="product-select" required>
-            <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
-          </select>
+            <select v-model="selectedProduct" class="product-select" required>
+              <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
+            </select>
 
-          <SolarButton class=" ml-2 add-product-btn" button-text="Add" @click="addProductsToOrder"></SolarButton>
+            <SolarButton class=" ml-2 add-product-btn" button-text="Add" @click="addProductsToOrder"></SolarButton>
           </div>
         </div>
       </div>
 
-
       <!-- Display selected products -->
       <div class="order-list" v-if="selectedProducts.length > 0">
-        <h2>Ordered Products: </h2>
-        <ul>
-          <li v-for="product in selectedProducts" :key="product.id">
-            <div>
-              {{ product.name }} €{{ product.price }}
-              <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 ">Quantity:</label>
-              <input type="number" id="number-input" aria-describedby="helper-text-explanation"
-                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                     placeholder="quantity" required>
-            </div>
-          </li>
-        </ul>
+        <h2>Ordered Products:</h2>
+        <SolarTable :columns="['Name', 'Price', 'Quantity']">
+          <tr class="table-row" v-for="product in selectedProducts" :key="product.id">
+              <td class="px-6 py-4 font-semibold text-base">{{ product.name }}</td>
+            <td class="px-6 py-4 font-semibold text-base">{{ product.name }}</td>
+            <td class="px-6 py-4 font-semibold text-base">{{ product.price }}</td>
+            <td class="px-6 py-4 font-semibold text-base">{{ product.quantity }}</td>
+          </tr>
+        </SolarTable>
       </div>
 
       <!-- Modal footer -->

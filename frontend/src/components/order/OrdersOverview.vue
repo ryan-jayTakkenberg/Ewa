@@ -210,7 +210,7 @@ export default {
           <SolarDropdownMenuItem text-menu-item="Confirm Orders" @click="openConfirmMultipleOrdersModal"/>
         </SolarDropdownMenuButton>
         <SolarSearchbar place-holder="Search For Orders" @search="handleInputValueChange"></SolarSearchbar>
-        <SolarButton class="ml-auto mr-2" button-text="Create Order" @click="openCreateModal"></SolarButton>
+        <SolarButton class="create-btn" button-text="Create Order" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable
           :columns="['order number','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'project', 'product', 'status', 'action']">
@@ -256,6 +256,10 @@ export default {
 </template>
 
 <style scoped>
+.create-btn{
+  margin-left: auto;
+  margin-right: 0.5rem;
+}
 .header {
   flex-direction: row;
   display: flex;
@@ -280,5 +284,12 @@ export default {
   display: flex;
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
+}
+
+@media only screen and (max-width: 750px) {
+  .create-btn {
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+  }
 }
 </style>

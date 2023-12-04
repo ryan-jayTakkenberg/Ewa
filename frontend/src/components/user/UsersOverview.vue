@@ -188,9 +188,9 @@ export default {
           <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteMultipleUsersModal"/>
         </SolarDropdownMenuButton>
         <SolarSearchbar place-holder="Search For Users" @search="handleInputValueChange"></SolarSearchbar>
-        <SolarButton class="ml-auto" button-text="Create User" @click="openCreateModal"></SolarButton>
+        <SolarButton class="create-btn" button-text="Create User" @click="openCreateModal"></SolarButton>
       </div>
-      <SolarTable :columns="['User', 'Function', 'Last Logged In', 'Action']">
+      <SolarTable :columns="[' ', 'User', 'Function', 'Last Logged In', 'Action']">
         <UsersRowComponent
             v-for="(user) in paginatedUsers" :key="user.id" :user="user"
             @edit="openEditModal"
@@ -229,6 +229,10 @@ export default {
 </template>
 
 <style scoped>
+.create-btn{
+  margin-left: auto;
+  margin-right: 0.5rem;
+}
 .header {
   flex-direction: row;
   display: flex;
@@ -253,5 +257,12 @@ export default {
   display: flex;
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
+}
+
+@media only screen and (max-width: 750px) {
+  .create-btn {
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+  }
 }
 </style>
