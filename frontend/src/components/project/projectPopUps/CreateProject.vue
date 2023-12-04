@@ -28,7 +28,7 @@
     </div>
     <template v-slot:footer>
       <button @click="closePopUp" class="cancel-button">Cancel</button>
-      <button @click="createWarehouse" type="submit" :disabled="isAnyFieldEmpty" class="ml-auto submit-button">Create Project</button>
+      <button @click="createProject" type="submit" :disabled="isAnyFieldEmpty" class="ml-auto submit-button">Create Project</button>
     </template>
   </SolarModal>
 </template>
@@ -70,7 +70,7 @@ export default {
     },
   },
   methods: {
-    createWarehouse(){
+    createProject(){
       const newProject = new Project(
           this.project.projectId,
           this.project.projectName,
