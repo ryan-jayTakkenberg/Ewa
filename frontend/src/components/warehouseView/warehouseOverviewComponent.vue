@@ -65,7 +65,7 @@ export default {
 
 <template>
   <div class="users-header">
-    <TitleComponent page-title="Team"></TitleComponent>
+    <TitleComponent page-title="Warehouse"></TitleComponent>
   </div>
 
   <div class="users-body">
@@ -73,7 +73,7 @@ export default {
       <div class="users-action-row">
 
         <!-- Searchbar -->
-        <SearchBarComponent place-holder="Search For Teams" class="ml-auto" @input="handleInputValueChange"
+        <SearchBarComponent class="mx-4" place-holder="Search For Teams" @input="handleInputValueChange"
         ></SearchBarComponent>
       </div>
 
