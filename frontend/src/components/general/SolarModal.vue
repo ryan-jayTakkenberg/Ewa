@@ -2,8 +2,16 @@
   <div class="modal">
     <div class="modal-container">
       <div class="modal-content shadow">
-        <div class="modal-header">
-          <h3 class="text-xl font-bold text-gray-900">{{ title }}</h3>
+        <div class="border-gray-200 border-b p-6">
+          <div class="flex justify-between">
+            <h3 class="text-xl font-bold text-gray-900 ">{{ title }}</h3>
+            <button type="button" @click="closeModal" class="text-gray-500 hover:bg-gray-100 hover:text-black">
+              <svg class="w-7 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="modal-body p-4">
           <slot></slot>
@@ -61,14 +69,6 @@ export default {
 .modal-content {
   background-color: white;
   border-radius: 0.5rem;
-}
-
-.modal-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 1rem;
-  border-bottom-width: 1px;
 }
 
 .modal-body {
