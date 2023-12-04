@@ -77,7 +77,6 @@ export default {
         ></SearchBarComponent>
       </div>
 
-
       <SolarTable :columns="['Warehouse', 'locatie', 'address', 'Action']">
         <WarehouseRowComponent
             v-for="(warehouse) in warehouses"
