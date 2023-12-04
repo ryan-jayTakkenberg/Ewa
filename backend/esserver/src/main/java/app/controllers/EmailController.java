@@ -70,4 +70,6 @@ public class EmailController {
         message.setText("To reset your password, click the link below:\n" + resetLink);
         mailSender.send(message);
     }
+
+    // todo sendEmail for reports/forecasting alerts
 }
