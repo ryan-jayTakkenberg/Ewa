@@ -138,6 +138,7 @@ export default {
         await this.teamsAdaptor.asyncDeleteById(teamId);
         this.teams = this.teams.filter((team) => team.id !== teamId);
         this.isDeleteTeamModalOpen = false;
+        await this.teamsAdaptor.asyncFindAllWithProjectCount();
       } catch (error) {
         console.error("Error deleting team:", error);
       }
@@ -168,7 +169,7 @@ export default {
     },
     async getTeams() {
       try {
-        this.teams = await this.teamsAdaptor.asyncFindAll()
+        this.teams = await  this.teamsAdaptor.asyncFindAllWithProjectCount();
       } catch (error) {
         console.error("Error occurred while getting the data from the backend", error)
       }
