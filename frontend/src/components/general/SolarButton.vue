@@ -16,7 +16,7 @@ export default {
 </script>
 
 <template>
-  <div class="relative ml-2 mr-2">
+  <div class="relative">
     <button type="button" class="solar-button" :disabled="disabled">{{ buttonText }}</button>
   </div>
 </template>

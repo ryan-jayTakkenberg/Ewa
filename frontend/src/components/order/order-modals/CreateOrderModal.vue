@@ -96,7 +96,7 @@ export default {
 
 
         <!-- Order date-->
-        <div class="col-span-6 sm:col-span-3">
+        <div class="col-span-6 sm:col-span-6">
           <label for="date" class="modal-label">Order date</label>
           <input
               type="date"
@@ -107,7 +107,7 @@ export default {
         </div>
 
         <!-- Estimated delivery date -->
-        <div class="col-span-6 sm:col-span-3">
+        <div class="col-span-6 sm:col-span-6">
           <label for="date" class="modal-label">Estimated delivery date</label>
           <input
               type="date"
@@ -118,20 +118,18 @@ export default {
         </div>
 
         <!-- Select products -->
-        <div class="col-span-9 sm:col-span-3">
+        <div class="col-span-6 sm:col-span-6">
           <label for="team" class="modal-label">Product</label>
           <div class="w-full flex">
-            <select v-model="selectedProduct" class="product-select" required>
-              <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
-            </select>
-            <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 ">Quantity:</label>
-            <input type="number" id="number-input" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="90210" required>
+          <select v-model="selectedProduct" class="product-select" required>
+            <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
+          </select>
 
-            <SolarButton class="add-product-btn" button-text="Add" @click="addProductsToOrder"></SolarButton>
+          <SolarButton class=" ml-2 add-product-btn" button-text="Add" @click="addProductsToOrder"></SolarButton>
           </div>
         </div>
-
       </div>
+
 
       <!-- Display selected products -->
       <div class="order-list" v-if="selectedProducts.length > 0">
@@ -140,6 +138,10 @@ export default {
           <li v-for="product in selectedProducts" :key="product.id">
             <div>
               {{ product.name }} €{{ product.price }}
+              <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 ">Quantity:</label>
+              <input type="number" id="number-input" aria-describedby="helper-text-explanation"
+                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                     placeholder="quantity" required>
             </div>
           </li>
         </ul>
@@ -167,7 +169,6 @@ export default {
 }
 
 .modal-label {
-  display: flex;
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -190,7 +191,7 @@ export default {
 }
 
 .product-select {
-  width: 90%;
+  display: flex;
   padding: 0.75rem 1rem;
   font-size: 1rem;
   line-height: 1.5rem;
