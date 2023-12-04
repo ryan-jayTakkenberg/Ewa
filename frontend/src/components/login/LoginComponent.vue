@@ -118,7 +118,7 @@ export default {
     hideLogin() {
 
       this.errorMessage = '';
-      this.usernameInput = '';
+      this.emailInput = '';
       this.passwordInput = '';
       this.showLoginForm = false;
     },

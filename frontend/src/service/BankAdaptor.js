@@ -3,7 +3,7 @@ import { Bank } from "@/models/Bank";
 export class BankAdaptor {
     url;   // the URL of the endpoint
     constructor() {
-        this.url = process.env.VUE_APP_API_URL + '/rest';
+        this.url = process.env.VUE_APP_API_URL + '/api';
     }
     async fetchJson(url, options = null) {
         let response = await fetch(url + '/banks', options)
