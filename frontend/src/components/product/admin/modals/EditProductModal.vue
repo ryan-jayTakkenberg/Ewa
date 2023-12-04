@@ -38,11 +38,12 @@
           </div>
           <div class="mt-6">
             <label for="email">Description</label>
-            <input
+            <textarea
                 type="text"
                 v-model="this.cloned.description"
-                class="p-2 border-gray-300 text-sm text-gray-800 bg-gray-50 shadow focus:border-blue-600"
+                class="resize-none overflow-y-scroll p-2 border-gray-300 text-sm text-gray-800 bg-gray-50 shadow focus:border-blue-600"
                 placeholder="Description">
+            </textarea>
           </div>
           <!-- Modal footer -->
         </div>
