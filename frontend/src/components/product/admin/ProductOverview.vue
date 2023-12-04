@@ -9,7 +9,7 @@
           <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteModal(getSelected())"/>
         </SolarDropdownMenuButton>
         <SearchBarComponent place-holder="Search For Products" @search="handleSearchChange"/>
-        <SolarButton class="ml-auto" button-text="Create New Product" @click="openCreateModal"/>
+        <SolarButton class="ml-auto mr-2" button-text="Create New Product" @click="openCreateModal"/>
       </div>
 
       <SolarTable :columns="['', 'Product', 'Price', 'Action']">
