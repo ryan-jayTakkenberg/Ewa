@@ -210,7 +210,7 @@ export default {
           <SolarDropdownMenuItem text-menu-item="Confirm Orders" @click="openConfirmMultipleOrdersModal"/>
         </SolarDropdownMenuButton>
         <SolarSearchbar place-holder="Search For Orders" @search="handleInputValueChange"></SolarSearchbar>
-        <SolarButton class="ml-auto" button-text="Create Order" @click="openCreateModal"></SolarButton>
+        <SolarButton class="ml-auto mr-2" button-text="Create Order" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable
           :columns="['order number','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'project', 'product', 'status', 'action']">
@@ -233,18 +233,18 @@ export default {
       :on-close="closeModal"
       @create-order="createOrder"
   />
-<!--  <EditOrderModal-->
-<!--      v-if="showEditModal"-->
-<!--      :on-close="closeModal"-->
-<!--      :user="selectedUser"-->
-<!--      @edit-order="editOrder"-->
-<!--  />-->
+  <!--  <EditOrderModal-->
+  <!--      v-if="showEditModal"-->
+  <!--      :on-close="closeModal"-->
+  <!--      :user="selectedUser"-->
+  <!--      @edit-order="editOrder"-->
+  <!--  />-->
+
   <CancelOrderModal
       v-if="showCancelModal"
       :on-close="closeModal"
       :order="selectedOrder"
       @cancel="cancelOrder"
-
   />
 
   <ConfirmOrderModal
