@@ -213,7 +213,7 @@ export default {
         <SolarButton class="create-btn" button-text="Create Order" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable
-          :columns="['order number','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'project', 'product', 'status', 'action']">
+          :columns="['', 'order number','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'project', 'product', 'status', 'action']">
         <OrderRowComponent
             v-for="(order) in paginatedOrders" :key="order.id" :order="order"
             @confirm="openConfirmModal"
