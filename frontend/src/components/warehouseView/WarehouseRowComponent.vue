@@ -1,12 +1,5 @@
 <template>
   <tr class="table-row">
-    <!-- Check box -->
-    <td class="w-4 p-4">
-      <div class="flex items-center">
-      
-      </div>
-    </td>
-
     <!-- Warehouse Item -->
     <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
       <div class="pl-3">

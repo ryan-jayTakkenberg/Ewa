@@ -1,11 +1,5 @@
 <template>
   <tr class="border-gray-100 border-b hover:bg-gray-100">
-    <!-- Check box  -->
-    <td class="w-4 pl-4">
-      <div class="flex">
-
-      </div>
-    </td>
 
     <!--Product Items -->
     <td class="pl-6 text-gray-900 whitespace-nowrap ">
