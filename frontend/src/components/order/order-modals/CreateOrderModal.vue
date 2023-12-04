@@ -134,15 +134,25 @@ export default {
       <!-- Display selected products -->
       <div class="order-list" v-if="selectedProducts.length > 0">
         <h2>Ordered Products:</h2>
-        <SolarTable :columns="['Name', 'Price', 'Quantity']">
+        <SolarTable :columns="['Name', 'Price', 'Quantity', 'Action']">
           <tr class="table-row" v-for="product in selectedProducts" :key="product.id">
-              <td class="px-6 py-4 font-semibold text-base">{{ product.name }}</td>
             <td class="px-6 py-4 font-semibold text-base">{{ product.name }}</td>
-            <td class="px-6 py-4 font-semibold text-base">{{ product.price }}</td>
-            <td class="px-6 py-4 font-semibold text-base">{{ product.quantity }}</td>
+            <td class="px-6 py-4">€ {{ product.price }}</td>
+            <td class="px-6 py-4">
+              <input
+                  type="number"
+                  id="number-input"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                  placeholder="0"
+                  required>
+            </td>
+            <td class="px-6 py-4">
+              <div @click="removeProduct" class="remove-order-btn">Remove product</div>
+            </td>
           </tr>
         </SolarTable>
       </div>
+
 
       <!-- Modal footer -->
       <template v-slot:footer>
@@ -155,6 +165,14 @@ export default {
 
 
 <style scoped>
+
+
+.remove-order-btn {
+  font-weight: 500;
+  color: red;
+  cursor: pointer;
+}
+
 .order-list {
   padding-top: 2rem;
 }
@@ -224,7 +242,7 @@ export default {
 
 .submit-button {
   color: white;
-  background-color: rgb(29 78 216);
+  background-color: #C7D02C;
   font-weight: 500;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -234,7 +252,7 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: rgb(30 64 175);
+  background-color: #a3b825;
 }
 
 .cancel-button {
