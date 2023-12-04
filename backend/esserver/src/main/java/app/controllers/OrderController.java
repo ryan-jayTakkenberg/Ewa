@@ -49,70 +49,56 @@ public class OrderController {
 
     @GetMapping
     private List<Order> getOrders(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
-        if (jwtInfo == null) {
-            throw new ForbiddenException("No token provided");
-        }
-
+        if (jwtInfo == null) throw new ForbiddenException("No token provided"); // Check if the jwt is provided
         return orderRepo.findAll();
     }
 
+    @GetMapping("/{id}")
+    private Order getOrderById(@PathVariable long id) {
+        return orderRepo.findById(id);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     private Order postOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Order order) {
-        if (jwtInfo == null) {
-            throw new ForbiddenException("No token provided");
-        }
-        if (!jwtInfo.isAdmin()) {
-            throw new ForbiddenException("Admin role is required to create a product");
-        }
-
+        if (jwtInfo == null) throw new ForbiddenException("No token provided"); // Check if the jwt is provided
+        if (!jwtInfo.isAdmin())
+            throw new ForbiddenException("Admin role is required to create a product"); // Check if the user is admin
         return orderRepo.save(order);
     }
 
     @DeleteMapping("/{id}")
     private Order deleteOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
-        if (jwtInfo == null) {
-            throw new ForbiddenException("No token provided");
-        }
-        if (!jwtInfo.isAdmin()) {
-            throw new ForbiddenException("Admin role is required to remove a order");
-        }
+        // Check if the jwt is provided
+        if (jwtInfo == null) throw new ForbiddenException("No token provided");
+        // Check if the user is admin
+        if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to remove an order");
+        // Check if id is not null
+        if (id == null) throw new BadRequestException("No valid ID provided for order");
 
-        if (id == null) {
-            throw new BadRequestException("No valid ID provided for order");
-        }
-
+        // Find order by id
         Order order = orderRepo.findById(id);
-        if (order == null) {
-            throw new BadRequestException("No order found with id: " + id);
-        }
-
+        if (order == null) throw new BadRequestException("No order found with id: " + id); // Check if order is found
         return orderRepo.delete(order);
     }
 
-    @PutMapping("/{orderId}/confirm")
-    private Order confirmOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long orderId) {
-        if (jwtInfo == null) {
-            throw new ForbiddenException("No token provided");
-        }
+    @PutMapping("/{id}/confirm")
+    private Order confirmOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
+        // Check if the jwt is provided
+        if (jwtInfo == null) throw new ForbiddenException("No token provided");
+        // Check if the user is viewer
+        if (!jwtInfo.isViewer()) throw new ForbiddenException("Viewer role is required to confirm an order");
 
-        // Check if the user is a viewer
-        if (!jwtInfo.isViewer()) {
-            throw new ForbiddenException("Viewer role is required to confirm an order");
-        }
-
-        Order order = orderRepo.findById(orderId);
-
+        // Find order by id
+        Order order = orderRepo.findById(id);
+        // Check if order is found
+        if (order == null) throw new BadRequestException("No order found with id: " + id);
         // Check if the order status is suitable for confirmation
         if (!order.getStatus().equals(Order.OrderStatus.PENDING)) {
             throw new ForbiddenException("Order cannot be confirmed. Invalid status.");
         }
-
         // Update the order status to "DELIVERED"
         order.setStatus(Order.OrderStatus.DELIVERED);
-
-        // Save the updated order to the database
         return orderRepo.save(order);
     }
 

@@ -24,6 +24,7 @@ export default {
 <style scoped>
 
 .solar-button {
+  height: 42px;
   color: white;
   background-color: #c7d02c;
   font-weight: 500;

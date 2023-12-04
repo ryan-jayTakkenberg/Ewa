@@ -21,10 +21,7 @@ public class UserController {
 
     @GetMapping
     private List<User> getUsers(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
-        if (jwtInfo.isAdmin()) {
-            return userRepo.findAll();
-        }
-
+        if (jwtInfo.isAdmin()) return userRepo.findAll();
         return List.of(userRepo.findById(jwtInfo.getId()));
     }
 
@@ -36,9 +33,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     private User postUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody User user) {
-        if (!jwtInfo.isAdmin()) {
-            throw new ForbiddenException("Admin role is required to create an user");
-        }
+        if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create an user");
 
         if (user.getPassword() != null) {
             // Hash given password
@@ -46,30 +41,28 @@ public class UserController {
             user.setPassword(hashedPassword);
         }
 
-        boolean isEditing = user.getId() > 0;
-        if (isEditing) {
-            User currentUser = this.userRepo.findById(user.getId());
-            // TODO
+        boolean isNewUser = user.getId() == -1;
+        if (isNewUser) return userRepo.save(user);
+        else {
+            User editedUser = this.userRepo.findById(user.getId());
+            if (editedUser != null) {
+                // Save edited user
+                return this.userRepo.save(editedUser);
+            }
         }
-
-        return userRepo.save(user);
+        return this.userRepo.save(user);
     }
 
     @DeleteMapping("/{id}")
     private User deleteProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
-        if (!jwtInfo.isAdmin()) {
-            throw new ForbiddenException("Admin role is required to delete an user");
-        }
 
-        if (id == null) {
-            throw new BadRequestException("No valid ID provided for product");
-        }
+        if (jwtInfo == null) throw new ForbiddenException("No token provided"); // Check if the jwt is provided
+        if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to delete an user"); // Check if the user is admin
 
-        User user = userRepo.findById(id);
+        if (id == null) throw new BadRequestException("No valid ID provided for product"); // Check if id is not null
 
-        if (user == null) {
-            throw new BadRequestException("No product found for such id");
-        }
+        User user = userRepo.findById(id); // Find user by id
+        if (user == null) throw new BadRequestException("No product found for such id"); // Check if user is found
 
         return userRepo.delete(user);
     }

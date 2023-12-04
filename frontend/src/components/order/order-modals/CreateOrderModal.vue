@@ -3,22 +3,25 @@ import Order from "@/models/order";
 import SolarModal from "@/components/general/SolarModal.vue";
 import Team from "@/models/team";
 import Product from "@/models/product";
+import SolarButton from "@/components/general/SolarButton.vue";
+
 export default {
   name: "CreateOrderModal",
   emits: ["create-order"],
-  components: {SolarModal},
+  components: {SolarButton, SolarModal},
   data() {
     return {
       OrderStatusOptions: Order.Status,
       teamOptions: Team.teams,
       productOptions: Product.products,
       selectedProducts: [],
+      selectedProduct: null,
       order: {
         orderNumber: '',
         orderDate: '',
         estimatedDeliveryDate: '',
         team: '',
-        products: '',
+        products: [],
         status: '',
       },
     }
@@ -46,18 +49,17 @@ export default {
     },
     addProductsToOrder() {
       // Add selected products to the order.products array
-      this.order.products = [...this.order.products, ...this.selectedProducts];
+      this.selectedProducts.push(this.selectedProduct)
     },
   }
 }
 </script>
 
 <template>
-  <form @submit.prevent="createOrder"  @keydown.enter.prevent="">
+  <form @submit.prevent="createOrder" @keydown.enter.prevent="">
     <SolarModal title="Create Order" @close-modal="onClose" class="modal">
       <div class="modal-grid">
-
-        <!-- Project select -->
+        <!-- Ordered from -->
         <div class="col-span-6 sm:col-span-3">
           <label for="name" class="modal-label">Ordered From</label>
           <input
@@ -68,26 +70,22 @@ export default {
               required>
         </div>
 
-        <!-- Team select -->
+        <!-- Order Status-->
+        <div class="col-span-6 sm:col-span-3">
+          <label for="order-status" class="modal-label">Order status</label>
+          <select v-model="order.status" class="status-select" required>
+            <option v-for="status in OrderStatusOptions" :key="status" :value="status">{{ status }}</option>
+          </select>
+        </div>
+
+        <!-- Select team -->
         <div class="col-span-6 sm:col-span-3">
           <label for="team" class="modal-label">For Team</label>
-          <select v-model="order.team" class="role-select" required>
-            <option v-for="team in teamOptions" :key="team.id" :value="team.name">{{team.name}}</option>
+          <select v-model="order.team" class="team-select" required>
+            <option v-for="team in teamOptions" :key="team.id" :value="team.name">{{ team.name }}</option>
           </select>
         </div>
 
-        <!-- Product select -->
-        <div class="col-span-6 sm:col-span-3">
-          <label for="team" class="modal-label">Product</label>
-          <select v-model="selectedProducts" class="role-select" required multiple>
-            <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
-          </select>
-        </div>
-
-        <!-- Button to add products -->
-        <div class="col-span-6 sm:col-span-3">
-          <button @click="addProductsToOrder" type="button" class="add-products-button">Add Products</button>
-        </div>
 
         <!-- Order date-->
         <div class="col-span-6 sm:col-span-3">
@@ -111,15 +109,25 @@ export default {
               required>
         </div>
 
-        <!-- Order Status-->
+        <!-- Select products -->
         <div class="col-span-6 sm:col-span-3">
-          <label for="order-status" class="modal-label">Order status</label>
-          <select v-model="order.status" class="role-select" required>
-            <option v-for="status in OrderStatusOptions" :key="status" :value="status">{{status}}</option>
-          </select>
+          <label for="team" class="modal-label">Product</label>
+          <div class="w-full flex">
+            <select v-model="selectedProduct" class="product-select" required>
+              <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
+            </select>
+            <SolarButton class="add-product-btn" button-text="Add" @click="addProductsToOrder"></SolarButton>
+          </div>
         </div>
 
       </div>
+
+      <div v-for="product in selectedProducts">
+        <div>{{ product.id }}</div>
+        <div>{{ product.name }}</div>
+        <div>{{ product.price }}</div>
+      </div>
+
 
       <!-- Modal footer -->
       <template v-slot:footer>
@@ -131,7 +139,6 @@ export default {
 </template>
 
 
-
 <style scoped>
 .modal-grid {
   display: grid;
@@ -140,7 +147,7 @@ export default {
 }
 
 .modal-label {
-  display: block;
+  display: flex;
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -158,10 +165,26 @@ export default {
   border-radius: 0.5rem;
   display: block;
   width: 100%;
+  height: 42px;
   padding: 0.625rem;
 }
 
-.role-select {
+.product-select {
+  width: 90%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: rgb(17 24 39);
+  border-width: 1px;
+  border-color: rgb(209 213 219);
+  border-radius: 0.5rem;
+  background-color: rgb(249 250 251);
+  height: 42px;
+  cursor: pointer;
+}
+
+.team-select,
+.status-select {
   display: block;
   width: 100%;
   padding: 0.75rem 1rem;

@@ -58,26 +58,27 @@ export default {
   color: white;
   background-color: #c7d02c;
   font-weight: 500;
-  border-radius: 0.5rem /* 8px */;
+  border-radius: 0.5rem;
   padding: 0.5rem 1.0rem;;
   text-align: center;
   display: inline-flex;
   align-items: center;
-  font-size: 0.875rem/* 14px */;
-  line-height: 1.25rem/* 20px */
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  height: 42px;
 }
 
 .dropdown-btn-open {
   color: white;
-  background-color: #a3b825; /* Change to your desired open color */
+  background-color: #a3b825;
   font-weight: 500;
   border-radius: 0.5rem;
   padding: 0.5rem 1.0rem;
   text-align: center;
   display: inline-flex;
   align-items: center;
-  font-size: 0.875rem/* 14px */;
-  line-height: 1.25rem/* 20px */
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 .dropdown-btn:hover {
