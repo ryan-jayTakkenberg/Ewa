@@ -6,6 +6,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -37,4 +39,15 @@ public class TeamJPARepository implements EntityRepositoryJPA<Team> {
         em.remove(entity);
         return entity;
     }
+
+    public List<Team> findByQuery(String jpqlName, Object... params) {
+        TypedQuery<Team> query = em.createNamedQuery(jpqlName, Team.class);
+
+        if (jpqlName.equals("TEAM_ID_COUNT") && params.length > 0) {
+            query.setParameter("teamId",Long.valueOf((Long) params[0]));
+        }
+
+        return query.getResultList();
+    }
+
 }

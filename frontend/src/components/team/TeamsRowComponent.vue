@@ -30,7 +30,8 @@ export default {
     },
     deleteTeam(){
       this.$emit('click-delete-team', this.teams);
-    }
+    },
+
   }
 }
 </script>
@@ -53,7 +54,7 @@ export default {
     </th>
     <td class="px-6 py-4">{{ teams.warehouse }}</td>
     <td class="px-6 py-4">
-      <div class="flex items-center">{{ teams.project }}</div>
+      <div class="flex items-center">{{ teams.projectCount }}</div>
     </td>
 
     <!-- Edit User -->

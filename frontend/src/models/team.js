@@ -1,11 +1,10 @@
 export default class Team {
     static idAutoIncrement = 12;
-    constructor(id, name,warehouse,project, users = null) {
+    constructor(id, name,warehouse) {
         this.id = id;
         this.name = name;
-        this.users = users;
         this.warehouse = warehouse
-        this.project = project;
+        this.projectCount = 0;
     }
 
 
@@ -13,7 +12,7 @@ export default class Team {
         return Team.idAutoIncrement++;
     }
     clone() {
-        return new Team(this.id, this.name,this.warehouse,this.project,[...this.users]);
+        return new Team(this.id, this.name,this.warehouse);
     }
 
     equals(other) {

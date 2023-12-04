@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.List;
-
+@NamedQueries({
+        @NamedQuery(name = "TEAM_ID_COUNT", query = "SELECT COUNT(p) FROM Team t LEFT JOIN t.projects p WHERE t.id = :teamId"),
+})
 @Entity
 public class Team {
 

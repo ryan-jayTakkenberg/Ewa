@@ -12,7 +12,6 @@ export default {
         id: '',
         name: '',
         warehouse: '',
-        project: '',
         users: [],
       },
       idAutoIncrement: 12,
@@ -33,7 +32,6 @@ export default {
       const newTeam = {
         name: this.team.name,
         warehouse: this.team.warehouse,
-        project: this.team.project,
         users: null, // or provide an array of users if needed
       };
 
@@ -87,15 +85,6 @@ export default {
                   required>
             </div>
 
-            <div class="col-span-6 sm:col-span-3">
-              <label for="project" class="modal-label">Project</label>
-              <input
-                  type="text"
-                  v-model="team.project"
-                  class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
-                  placeholder="project"
-                  required>
-            </div>
 
         </div>
 
