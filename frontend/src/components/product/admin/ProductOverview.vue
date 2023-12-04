@@ -5,8 +5,8 @@
     <div class="body-container">
       <div class="action-row">
         <SolarDropdownMenuButton text-button="Action" :disabled="!checkedProducts.length">
-          <SolarDropdownMenuItem text-menu-item="Edit Users" @click="openEditModal(getSelected())"/>
-          <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteModal(getSelected())"/>
+          <SolarDropdownMenuItem text-menu-item="Edit Products" @click="openEditModal(getSelected())"/>
+          <SolarDropdownMenuItem text-menu-item="Delete Products" @click="openDeleteModal(getSelected())"/>
         </SolarDropdownMenuButton>
         <SearchBarComponent place-holder="Search For Products" @search="handleSearchChange"/>
         <SolarButton class="ml-auto mr-2" button-text="Create New Product" @click="openCreateModal"/>
