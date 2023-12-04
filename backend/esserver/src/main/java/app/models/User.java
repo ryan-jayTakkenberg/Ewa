@@ -4,6 +4,7 @@ import app.Util;
 import app.enums.PermissionLevel;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -20,6 +21,8 @@ public class User {
     private String email;
     private LocalDate lastLogin;
     private String password;
+    private String resetToken;
+    private LocalDateTime resetTokenExpiry;
 
     @OneToMany(mappedBy = "app_user")
     private Set<Report> reports;
@@ -36,7 +39,21 @@ public class User {
 
     }
 
+    public String getResetToken() {
+        return resetToken;
+    }
 
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public LocalDateTime getResetTokenExpiry() {
+        return resetTokenExpiry;
+    }
+
+    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry;
+    }
 
     public PermissionLevel getPermissionLevel() {
         return permissionLevel;

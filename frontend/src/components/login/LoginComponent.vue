@@ -88,11 +88,27 @@ export default {
       passwordInput: '',
       errorMessage: '',
       showPasswordResetForm: false,
+      resetErrorMessage: ''
+
     }
   },
 
   methods: {
 
+    async submitPasswordReset() {
+      try {
+        let response = await postAPI("/api/request-password-reset?email=" + encodeURIComponent(this.emailInput));
+
+        // Handle the response
+        console.log("Reset email sent", response);
+        this.emailInput = '';
+        this.togglePasswordResetForm();
+        // Add any user feedback message here
+      } catch (error) {
+        console.error("Error sending reset email", error);
+        this.resetErrorMessage = 'Error sending reset email. Please try again.';
+      }
+    },
     showLogin() {
 
       this.showLoginForm = true;

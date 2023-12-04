@@ -20,6 +20,18 @@ public class UserJPARepository implements EntityRepositoryJPA<User> {
         TypedQuery<User> query = this.em.createQuery("select a from User a", User.class);
         return query.getResultList();
     }
+    public User findByEmail(String email) {
+        TypedQuery<User> query = this.em.createQuery("select u from User u where u.email = :email", User.class);
+        query.setParameter("email", email);
+        List<User> resultList = query.getResultList();
+        return resultList.isEmpty() ? null : resultList.get(0);
+    }
+    public User findByResetToken(String resetToken) {
+        TypedQuery<User> query = this.em.createQuery("select u from User u where u.resetToken = :resetToken", User.class);
+        query.setParameter("resetToken", resetToken);
+        List<User> resultList = query.getResultList();
+        return resultList.isEmpty() ? null : resultList.get(0);
+    }
 
     @Override
     public User findById(long id) {
