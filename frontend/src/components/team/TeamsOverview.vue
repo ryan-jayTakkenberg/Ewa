@@ -42,10 +42,10 @@ export default {
   },
   async created() {
     try {
-      this.teams = await this.teamsAdaptor.asyncFindAll()
-      console.log(this.teams)
+      this.teams = await this.teamsAdaptor.asyncFindAllWithProjectCount();
+      console.log(this.teams);
     } catch (error) {
-      console.error("Error occurred while getting the data from the backend", error)
+      console.error("Error occurred while getting the data from the backend", error);
     }
   },
   computed: {
@@ -171,6 +171,13 @@ export default {
         this.teams = await this.teamsAdaptor.asyncFindAll()
       } catch (error) {
         console.error("Error occurred while getting the data from the backend", error)
+      }
+    }, async getProjectTeams(teamId) {
+      try {
+       this.teams = await this.teamsAdaptor.asyncFindAllWithProjectCount(teamId);
+
+      } catch (error) {
+        console.error("Error occurred while getting the data from the backend", error);
       }
     },
   }

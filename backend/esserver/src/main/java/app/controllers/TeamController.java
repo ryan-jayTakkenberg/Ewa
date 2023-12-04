@@ -85,7 +85,12 @@ public class TeamController {
             return ResponseEntity.ok(teamToDelete);
         }
 
-
         return null;
+    }
+
+    @GetMapping("/projects/{teamId}")
+    public ResponseEntity<List<Team>> getProjectCountByTeam(@PathVariable long teamId) {
+        List<Team> projectCount = teamRepository.findByQuery("TEAM_ID_COUNT", teamId);
+        return ResponseEntity.ok(projectCount);
     }
 }

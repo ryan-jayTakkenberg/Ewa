@@ -92,4 +92,20 @@ export class TeamsAdaptor {
         // Return the response data
         return response.data;
     }
+
+    // Fetches all teams with project count from the API
+    async asyncFindAllWithProjectCount() {
+        const teams = await this.asyncFindAll();
+
+        // Fetch project count for each team
+        await Promise.all(
+            teams.map(async (team) => {
+                const projectCountResponse = await getAPI(`/api/teams/projects/${team.id}`);
+                team.projectCount = projectCountResponse.data;
+            })
+        );
+
+        return teams;
+    }
+
 }

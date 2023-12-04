@@ -33,8 +33,7 @@ export default {
       return {
         id: team.id,
         name: team.name,
-        warehouse: team.warehouse,
-        project: team.project
+        warehouse: team.warehouse
       };
     }
   },
@@ -80,15 +79,7 @@ export default {
                   class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
                   required>
             </div>
-            <div class="col-span-6 sm:col-span-3">
-              <label for="project" class="modal-label">project</label>
-              <input
-                  type="text"
-                  v-model="this.editedTeam.project"
-                  class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
-                  required
-              >
-            </div>
+
 
           </div>
         </div>
