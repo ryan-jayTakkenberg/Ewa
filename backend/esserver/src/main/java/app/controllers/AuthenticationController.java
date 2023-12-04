@@ -27,27 +27,28 @@ public class AuthenticationController {
 
     @PostMapping(path = "/login")
     public ResponseEntity<User> authenticateAccount(@RequestBody ObjectNode signInInfo, HttpServletRequest request) {
-        if (!signInInfo.has("username")) {
-            throw new BadRequestException("Username is required");
+
+        if (!signInInfo.has("email")) {
+            throw new BadRequestException("Email is required");
         }
         if (!signInInfo.has("password")) {
             throw new BadRequestException("Password is required");
         }
 
-        String username = signInInfo.get("username").asText();
+        String email = signInInfo.get("email").asText();
         String password = signInInfo.get("password").asText();
         String hashedPassword = Util.hash(password);
 
         User account = null;
         for (User user : userRepo.findAll()) {
-            if (user.getName().equals(username) && user.getPassword().equals(hashedPassword)) {
+            if (user.getEmail().equals(email) && user.getPassword().equals(hashedPassword)) {
                 user.setLastLogin(LocalDate.now());
                 account = user;
                 break;
             }
         }
         if (account == null) {
-            throw new BadRequestException("Username and password are incorrect");
+            throw new BadRequestException("Email and password are incorrect");
         }
 
         String ip = request.getHeader("X-Forwarded-For");

@@ -18,8 +18,8 @@
 
           <div class="inputContainer">
             <div class="inputWrapper">
-              <input type="text" name="username" v-model="usernameInput" required>
-              <label for="username">Username</label>
+              <input type="text" name="email" v-model="emailInput" required>
+              <label for="email">Email</label>
             </div>
 
             <div class="inputWrapper">
@@ -84,7 +84,7 @@ export default {
       showLoginForm: false,
       usernameDummy: 'test',
       passwordDummy: 'test',
-      usernameInput: '',
+      emailInput: '',
       passwordInput: '',
       errorMessage: '',
       showPasswordResetForm: false,
@@ -125,13 +125,13 @@ export default {
 
     async submitForm() {
       let response = await postAPI("/api/authentication/login", {
-        username: this.usernameInput,
+        email: this.emailInput,
         password: this.passwordInput,
       });
 
       let jwt = response?.headers?.authorization;
       if (!jwt) {
-        this.errorMessage = 'Invalid Username & Password';
+        this.errorMessage = 'Invalid Email or Password';
         return;
       }
 
