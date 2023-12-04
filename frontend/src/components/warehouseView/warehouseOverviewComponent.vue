@@ -73,7 +73,7 @@ export default {
       <div class="users-action-row">
 
         <!-- Searchbar -->
-        <SearchBarComponent class="mx-4" place-holder="Search For Teams" @input="handleInputValueChange"
+        <SearchBarComponent class="mx-4" place-holder="Search For Warehouses" @input="handleInputValueChange"
         ></SearchBarComponent>
       </div>
 
