@@ -46,7 +46,7 @@ export default {
     return {
       warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/api/warehouses"),
       projectService: new ProjectAdaptor(CONFIG.BACKEND_URL+"/api/projects"),
-      teams: new TeamsAdaptor(CONFIG.BACKEND_URL+"api/teams"),
+      teamsService: new TeamsAdaptor(CONFIG.BACKEND_URL+"api/teams"),
       reportService: new ReportAdaptor(CONFIG.BACKEND_URL+"/api/viewer-overview"),
       userService: new UserAdaptor(CONFIG.BACKEND_URL+"/api/users"),
       adminOverviewService: new AdminOverviewAdaptor(CONFIG.BACKEND_URL+"/api/adminview")

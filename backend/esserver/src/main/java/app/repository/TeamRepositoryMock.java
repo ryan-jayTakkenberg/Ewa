@@ -15,14 +15,6 @@ public class TeamRepositoryMock implements TeamRepository {
     public static int teamsIdCount = 7;
 
     // Constructor to add sample data on initialization
-    public TeamRepositoryMock() {
-        // Adding some sample users for each team
-
-        for (int i = 1; i < 7; i++){
-            teams.add(Team.createSampleTeam(i));
-        }
-    }
-
 
 
 

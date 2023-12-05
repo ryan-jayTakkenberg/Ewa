@@ -3,7 +3,6 @@
 
 export default {
   name: "AddTeamModal",
-  inject: ["teamsAdaptor"],
   emits: ['addUser'],
 
   data() {
@@ -22,6 +21,7 @@ export default {
       type: Function,
       required: true,
     },
+    warehouses: Array,
   },
   methods: {
     saveProject() {
@@ -32,7 +32,6 @@ export default {
       const newTeam = {
         name: this.team.name,
         warehouse: this.team.warehouse,
-        users: null, // or provide an array of users if needed
       };
 
       this.$emit('addUser', newTeam); // emit the custom 'addUser' event
@@ -77,12 +76,11 @@ export default {
 
             <div class="col-span-6 sm:col-span-3">
               <label for="warehouse" class="modal-label">Warehouse</label>
-              <input
-                  type="text"
-                  v-model="team.warehouse"
-                  class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
-                  placeholder="Warehouse"
-                  required>
+              <select v-model="team.warehouse" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+                <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse">
+                  {{ warehouse.name }}
+                </option>
+              </select>
             </div>
 
 

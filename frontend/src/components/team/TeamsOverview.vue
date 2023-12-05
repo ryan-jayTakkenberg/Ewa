@@ -10,14 +10,13 @@ import TeamsEditComponent from "@/components/team/TeamsEditComponent.vue";
 import TeamsAddComponent from "@/components/team/TeamsAddComponent.vue";
 import TeamsDeleteComponent from "@/components/team/TeamsDeleteComponent.vue";
 
-
 import {TeamsAdaptor} from "@/service/teams-adaptor";
-import NotificationComponent from "@/components/general/NotificationComponent.vue";
+import {WarehouseAdaptor} from "@/service/warehouse-adaptor";
+
 export default {
   name: "TeamsOverview",
-  inject: ["teamsAdaptor"],
+  inject: ["teamsService",  "warehouseService"],
   components: {
-    NotificationComponent,
     SolarButton,
     TeamsDeleteComponent,
     TeamsRowComponent,
@@ -27,9 +26,7 @@ export default {
     TeamsEditComponent,
     TeamsAddComponent,
   },
-  provide: {
-    teamsAdaptor: new TeamsAdaptor("http://localhost:8085/api/teams"),
-  },
+
   data() {
     return {
       inputValue: '', // Store the input value for searching teams
@@ -39,12 +36,14 @@ export default {
       isAddTeamsOpen: false,
       checkedTeams: [],
       isDeleteTeamModalOpen: false,
-      teamsAdaptor: new TeamsAdaptor("http://localhost:8085/api/teams"),
-    };
+
+      warehouseList: [],
+    }
   },
   async created() {
     try {
-      this.teams = await this.teamsAdaptor.asyncFindAllWithProjectCount();
+      this.teams = await this.teamsService.asyncFindAllWithProjectCount();
+      this.warehouseList = await this.warehouseService.asyncFindAll();
       console.log(this.teams);
     } catch (error) {
       console.error("Error occurred while getting the data from the backend", error);
@@ -119,84 +118,75 @@ export default {
 
       this.closeModal();
     },
-    methods: {},
-
-    closeAddTeamsModal() {
-      this.isAddTeamsOpen = false;
-    },
-    toggleCheckbox(team, isChecked) {
-      if (isChecked) {
-        this.checkedTeams.push(team.id);
-      } else {
-        this.checkedTeams = this.checkedTeams.filter(id => id !== team.id);
-      }
-      console.log(this.checkedTeams);
-    },
-    getSelectedTeams() {
-      return this.projects.filter(team => this.checkedTeams.includes(team.id));
-    },
-    async asyncDeleteTeamById(teamId) {
-      try {
-        await this.teamsAdaptor.asyncDeleteById(teamId);
-        this.teams = this.teams.filter((team) => team.id !== teamId);
-        this.isDeleteTeamModalOpen = false;
-        await this.teamsAdaptor.asyncFindAllWithProjectCount();
-      } catch (error) {
-        console.error("Error deleting team:", error);
-      }
-
-      this.$refs.notificationComponent.createSuccessfulNotification('Team successfully deleted'); // TODO implement properly, added for sprint review 3
-    },
-    async asyncUpdateTeamById(teamId) {
-      console.log("asyncUpdateTeamById - Team ID:", teamId);
-      try {
-        if (teamId) {
-          await this.teamsAdaptor.asyncUpdateTeam(teamId);
-          await this.getTeams();
+      closeAddTeamsModal() {
+        this.isAddTeamsOpen = false;
+      },
+      toggleCheckbox(team, isChecked) {
+        if (isChecked) {
+          this.checkedTeams.push(team.id);
         } else {
-          console.error("Team ID is undefined or not valid");
+          this.checkedTeams = this.checkedTeams.filter(id => id !== team.id);
         }
-      } catch (error) {
-        console.error("Error updating team:", error);
-      }
+        console.log(this.checkedTeams);
+      },
+      getSelectedTeams() {
+        return this.projects.filter(team => this.checkedTeams.includes(team.id));
+      },
+      async asyncDeleteTeamById(teamId) {
+        try {
+          await this.teamsService.asyncDeleteById(teamId);
+          this.teams = this.teams.filter((team) => team.id !== teamId);
+          this.isDeleteTeamModalOpen = false;
+          await this.teamsService.asyncFindAllWithProjectCount();
 
-      this.$refs.notificationComponent.createSuccessfulNotification('Team successfully updated'); // TODO implement properly, added for sprint review 3
-    },
-    async asyncAddTeam(newTeam) {
-      try {
-        await this.teamsAdaptor.asyncSaveTeam(newTeam);
-        await this.getTeams();
-        console.log(this.teams);
-        this.isAddTeamsOpen = false; // Close the modal
+        } catch (error) {
+          console.error("Error deleting team:", error);
+        }
+      },
+      async asyncUpdateTeamById(teamId) {
+        console.log("asyncUpdateTeamById - Team ID:", teamId);
+        try {
+          if (teamId) {
+            await this.teamsService.asyncUpdateTeam(teamId);
+            await this.getTeams();
+          } else {
+            console.error("Team ID is undefined or not valid");
+          }
+        } catch (error) {
+          console.error("Error updating team:", error);
+        }
+      },
+      async asyncAddTeam(newTeam) {
+        try {
+          await this.teamsService.asyncSaveTeam(newTeam);
+          await this.getTeams();
+          console.log(this.teams);
+          console.log(this.warehouseList)
+          this.isAddTeamsOpen = false; // Close the modal
 
-      } catch (error) {
-        console.error("Error adding team:", error);
-      }
+        } catch (error) {
+          console.error("Error adding team:", error);
+        }
+      },
+      async getTeams() {
+        try {
+          this.teams = await this.teamsService.asyncFindAllWithProjectCount();
+        } catch (error) {
+          console.error("Error occurred while getting the data from the backend", error)
+        }
+      }, async getProjectTeams(teamId) {
+        try {
+          this.teams = await this.teamsService.asyncFindAllWithProjectCount(teamId);
 
-      this.$refs.notificationComponent.createSuccessfulNotification('Team successfully created'); // TODO implement properly, added for sprint review 3
-    },
-    async getTeams() {
-      try {
-        this.teams = await  this.teamsAdaptor.asyncFindAllWithProjectCount();
-      } catch (error) {
-        console.error("Error occurred while getting the data from the backend", error)
-      }
-    }, async getProjectTeams(teamId) {
-      try {
-       this.teams = await this.teamsAdaptor.asyncFindAllWithProjectCount(teamId);
-
-      } catch (error) {
-        console.error("Error occurred while getting the data from the backend", error);
-      }
-    },
-  }
+        } catch (error) {
+          console.error("Error occurred while getting the data from the backend", error);
+        }
+      },
+    }
 }
 </script>
 
 <template>
-
-  <NotificationComponent ref="notificationComponent" />
-
   <SolarTitle class="header" page-title="Teams"/>
   <div class="body">
     <div class="body-container">
@@ -216,12 +206,13 @@ export default {
     </div>
   </div>
 
-  <TeamsAddComponent v-if="isAddTeamsOpen" :on-close="closeAddTeamsModal" @addUser="asyncAddTeam"></TeamsAddComponent>
+  <TeamsAddComponent v-if="isAddTeamsOpen" :on-close="closeAddTeamsModal" @addUser="asyncAddTeam" :warehouses="warehouseList"></TeamsAddComponent>
   <TeamsEditComponent
       v-if="isEditTeamModalOpen"
       :on-close="closeEditUserModal"
       :team="selectedTeam"
-      @editTeam="asyncUpdateTeamById">
+      @editTeam="asyncUpdateTeamById"
+       :warehouses="warehouseList">
   </TeamsEditComponent>
   <TeamsDeleteComponent
       v-if="isDeleteTeamModalOpen "

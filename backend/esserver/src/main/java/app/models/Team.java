@@ -2,6 +2,7 @@ package app.models;
 
 import app.enums.PermissionLevel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,14 +16,16 @@ public class Team {
     @GeneratedValue
     private int id;
     private String name;
-    private String warehouse;
+    @OneToOne
+    @JsonIncludeProperties({"id", "name"})
+    private Warehouse warehouse;
 
     @OneToMany(mappedBy = "team")
     @JsonIgnoreProperties({"team"})
     private List<Project>  projects;
     private PermissionLevel permissionLevel;
 
-    public Team(PermissionLevel permissionLevel,int id, String name, String warehouse) {
+    public Team(PermissionLevel permissionLevel,int id, String name, Warehouse warehouse) {
         this.permissionLevel = permissionLevel;
         this.id = id;
         this.name = name;
@@ -41,15 +44,6 @@ public class Team {
             this.name = name;
         }
     }
-
-    public static Team createSampleTeam(int pId) {
-        int id = pId;
-        String name = String.valueOf(Team.Name.values()[(int) (Math.random() * Team.Name.values().length)]);
-        String warehouse = ("warehouse " + id);
-
-        return new Team(PermissionLevel.ADMIN,id, name, warehouse);
-
-}
 
     public PermissionLevel getPermissionLevel() {
         return permissionLevel;
@@ -75,11 +69,11 @@ public class Team {
         this.name = name;
     }
 
-    public String getWarehouse() {
+    public Warehouse getWarehouse() {
         return warehouse;
     }
 
-    public void setWarehouse(String warehouse) {
+    public void setWarehouse(Warehouse warehouse) {
         this.warehouse = warehouse;
     }
 

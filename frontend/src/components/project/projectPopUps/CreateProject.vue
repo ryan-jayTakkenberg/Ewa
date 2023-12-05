@@ -39,7 +39,7 @@ import Project from "@/models/project";
 
 export default {
   name: "CreateProject",
-  inject: ['teams'],
+  inject: ['teamsService'],
   components: {
     SolarModal
   },
@@ -56,7 +56,7 @@ export default {
     }
   },
   async created(){
-    this.teamList = await this.teams.asyncFindAll();
+    this.teamList = await this.teamsService.asyncFindAll();
   },
   computed: {
     isAnyFieldEmpty() {

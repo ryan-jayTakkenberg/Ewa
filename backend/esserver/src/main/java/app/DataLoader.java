@@ -28,6 +28,11 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private WarehouseJPARepository warehouseRepo;
 
+   private Warehouse warehouse1;
+    private Warehouse warehouse2;
+    private Warehouse warehouse3;
+
+
     @Override
     public void run(String... args) {
         System.out.println("Running CommandLine Startup...");
@@ -35,8 +40,8 @@ public class DataLoader implements CommandLineRunner {
         this.createInitialProducts();
         this.createInitialUsers();
         this.createSampleReports();
-        this.createSampleTeamAndProjects();
         this.createSampleWarehouses();
+        this.createSampleTeamAndProjects();
         this.createSampleOrders();
 
         System.out.println("Done!");
@@ -57,20 +62,7 @@ public class DataLoader implements CommandLineRunner {
 
 
 
-    private void createSampleTeamAndProjects(){
 
-        Team team1 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Bijlmer", "Warehouse OOST"));
-        Team team2 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Aalsmeer", "Warehouse AALSMEER"));
-        Team team3 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Purmerend", "Warehouse PURMEREND"));
-        this.teamsRepo.save(new Team(PermissionLevel.VIEWER,0,"Team Zaandam", "Warehouse ZAANDAM"));
-        this.teamsRepo.save(new Team(PermissionLevel.VIEWER,0,"Team West", "Warehouse WEST"));
-
-        LocalDate installDate = LocalDate.of(2023, 11, 21);
-        this.projectsRepo.save(new Project(1, "Blue", "HVA", installDate, "Project to install solar panels to Company A", team1));
-        this.projectsRepo.save(new Project(2, "Red", "Company B", installDate, "Project to install solar panels to Company B", team1));
-        this.projectsRepo.save(new Project(3, "Green", "HVA", installDate, "Project to install solar panels to Company C", team2));
-        this.projectsRepo.save(new Project(4, "Yellow", "Company A", installDate, "Project to install solar panels to Company D", team3));
-    }
 
     private void createSampleOrders() {
         // Retrieve products from the database
@@ -110,10 +102,26 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createSampleWarehouses(){
-        this.warehouseRepo.save(new Warehouse(1, "Solar Sedum", "Amsterdam", "Straat 111", "1234 AB"));
-        this.warehouseRepo.save(new Warehouse(2, "HvA Warehose", "Amsterdam", "Straat 222", "1234 CD"));
-        this.warehouseRepo.save(new Warehouse(3, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF"));
+        warehouse1 = this.warehouseRepo.save(new Warehouse(1, "Solar Sedum", "Amsterdam", "Straat 111", "1234 AB"));
+        warehouse2 = this.warehouseRepo.save(new Warehouse(2, "HvA Warehose", "Amsterdam", "Straat 222", "1234 CD"));
+        warehouse3 = this.warehouseRepo.save(new Warehouse(3, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF"));
         this.warehouseRepo.save(new Warehouse(4, "Green Left", "Amsterdam", "Straat 444", "1234 GH"));
+    }
+
+
+    private void createSampleTeamAndProjects(){
+
+        Team team1 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Bijlmer", warehouse1));
+        Team team2 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Aalsmeer", warehouse2));
+        Team team3 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Purmerend", warehouse3));
+        this.teamsRepo.save(new Team(PermissionLevel.VIEWER,0,"Team Zaandam", null));
+        this.teamsRepo.save(new Team(PermissionLevel.VIEWER,0,"Team West", null));
+
+        LocalDate installDate = LocalDate.of(2023, 11, 21);
+        this.projectsRepo.save(new Project(1, "Blue", "HVA", installDate, "Project to install solar panels to Company A", team1));
+        this.projectsRepo.save(new Project(2, "Red", "Company B", installDate, "Project to install solar panels to Company B", team1));
+        this.projectsRepo.save(new Project(3, "Green", "HVA", installDate, "Project to install solar panels to Company C", team2));
+        this.projectsRepo.save(new Project(4, "Yellow", "Company A", installDate, "Project to install solar panels to Company D", team3));
     }
 
 }

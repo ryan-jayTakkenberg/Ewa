@@ -2,6 +2,8 @@ package app.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 
 import java.util.Set;
 
@@ -15,6 +17,9 @@ public class Warehouse {
     private String city;
     private String address;
     private String postalCode;
+    @OneToOne
+    @JsonIgnoreProperties({"warehouse"})
+    private Team team;
 
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties({"warehouse"})

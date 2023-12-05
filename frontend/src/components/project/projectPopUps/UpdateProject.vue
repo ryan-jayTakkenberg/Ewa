@@ -43,7 +43,7 @@ import SolarModal from "@/components/general/SolarModal";
 
 export default {
   name: "UpdateProject",
-  inject: ['teams'],
+  inject: ['teamsService'],
   components: {
     SolarModal
   },
@@ -58,7 +58,7 @@ export default {
   },
   async created() {
     this.projectClone = this.project.clone();
-    this.teamList = await this.teams.asyncFindAll();
+    this.teamList = await this.teamsService.asyncFindAll();
 
   },
   computed: {

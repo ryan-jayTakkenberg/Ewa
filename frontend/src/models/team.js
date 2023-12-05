@@ -1,3 +1,5 @@
+import {getAPI} from "@/backend";
+
 export default class Team {
     static idAutoIncrement = 12;
     constructor(id, name,warehouse) {
@@ -72,9 +74,8 @@ export default class Team {
     static async getDatabase() {
         try {
             this.fetching = true;
-            // TODO make a get request to the backend
-            //  update "teams" with the response
-            return [new Team(232, 'TeamWest','Amsterdam West ','Hva '), new Team(235, 'SolarPaneel','Amsterdam West ','Hva '), new Team(237, 'Solar2','Amsterdam West ','Hva ')];
+            const response = await getAPI("/api/projects");
+            return response.data;
         } catch (e) {
             return [];
         } finally {

@@ -6,7 +6,8 @@ export default {
   inject: ["teamsAdaptor"],
   data() {
     return {
-      editedTeam: null
+      editedTeam: null,
+
     };
   },
   props: {
@@ -21,7 +22,8 @@ export default {
     onEditTeam: {
       type: Function,
       required: true
-    }
+    },
+    warehouses: Array,
   },
   methods: {
     saveTeam() {
@@ -71,13 +73,14 @@ export default {
                      class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
                      :placeholder="team.name" required>
             </div>
+
             <div class="col-span-6 sm:col-span-3">
-              <label for="warehouse" class="modal-label">warehouse</label>
-              <input
-                  type="text"
-                  v-model="this.editedTeam.warehouse"
-                  class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
-                  required>
+              <label for="warehouse" class="modal-label">Warehouse</label>
+              <select v-model="this.editedTeam.warehouse" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+                <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse" >
+                  {{ warehouse.name }}
+                </option>
+              </select>
             </div>
 
 

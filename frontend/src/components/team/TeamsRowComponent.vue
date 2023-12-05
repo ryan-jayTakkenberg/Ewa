@@ -45,7 +45,7 @@ export default {
         <div class="font-normal text-gray-500">{{ teams.users }}</div>
       </div>
     </th>
-    <td class="px-6 py-4">{{ teams.warehouse }}</td>
+    <td class="px-6 py-4">{{ teams.warehouse ? teams.warehouse.name : 'Nog geen warehouse' }}</td>
     <td class="px-6 py-4">
       <div class="flex items-center">{{ teams.projectCount }}</div>
     </td>
