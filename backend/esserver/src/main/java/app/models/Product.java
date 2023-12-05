@@ -22,8 +22,11 @@ public class Product {
     @JsonIgnoreProperties({"products"})
     private Warehouse warehouse;
 
-    public Product(long amount) {
+    public Product(long amount, ProductInfo product, Warehouse warehouse) {
+        this.id = 0;
         this.amount = amount;
+        this.product = product;
+        this.warehouse = warehouse;
     }
 
     public Product() {

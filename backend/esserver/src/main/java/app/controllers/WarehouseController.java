@@ -4,8 +4,12 @@ import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
+import app.models.Product;
+import app.models.ProductInfo;
 import app.models.Warehouse;
+import app.repositories.ProductJPARepository;
 import app.repositories.WarehouseJPARepository;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -18,9 +22,11 @@ import java.util.List;
 public class WarehouseController {
 
     private final WarehouseJPARepository warehouseRepository;
+    private final ProductJPARepository productRepository;
 
-    public WarehouseController(WarehouseJPARepository warehouseRepository){
+    public WarehouseController(WarehouseJPARepository warehouseRepository, ProductJPARepository productRepository){
         this.warehouseRepository = warehouseRepository;
+        this.productRepository = productRepository;
     }
 
     @GetMapping
@@ -85,5 +91,60 @@ public class WarehouseController {
         }
 
         return null;
+    }
+
+    /*
+    From here on: Products in warehouse
+     */
+
+    @PostMapping("/product")
+    public Warehouse addProductToWarehouse(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody JsonNode json) {
+        if (!jwtInfo.isAdmin()) {
+            throw new ForbiddenException("Admin role is required to add a product to a warehouse");
+        }
+
+        if (json == null) {
+            throw new BadRequestException("Missing fields: 'amount', 'productId', 'warehouseId'");
+        }
+
+        if (!json.has("amount")) {
+            throw new BadRequestException("Missing field: 'amount'");
+        }
+        if (!json.get("amount").isNumber()) {
+            throw new BadRequestException("Field 'amount' must be a number");
+        }
+
+        if (!json.has("productId")) {
+            throw new BadRequestException("Missing field: 'productId'");
+        }
+        if (!json.get("productId").isNumber()) {
+            throw new BadRequestException("Field 'productId' must be a number");
+        }
+
+        if (!json.has("warehouseId")) {
+            throw new BadRequestException("Missing field: 'warehouseId'");
+        }
+        if (!json.get("warehouseId").isNumber()) {
+            throw new BadRequestException("Field 'warehouseId' must be a number");
+        }
+
+        long amount = json.get("amount").asLong();
+        long productId = json.get("productId").asLong();
+        long warehouseId = json.get("warehouseId").asLong();
+
+        Warehouse warehouse = warehouseRepository.findById(warehouseId);
+        if (warehouse == null) {
+            throw new BadRequestException("No valid warehouse found for such warehouseId");
+        }
+
+        ProductInfo productInfo = productRepository.findById(productId);
+        if (productInfo == null) {
+            throw new BadRequestException("No valid product found for such productInfo");
+        }
+
+        Product product = new Product(amount, productInfo, warehouse);
+        warehouse.addProduct(product);
+
+        return warehouse;
     }
 }

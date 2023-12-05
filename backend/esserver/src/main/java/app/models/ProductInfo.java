@@ -28,7 +28,6 @@ public class ProductInfo {
     private String description;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
-    @JsonIgnore
     private Set<Product> products;
 
     public ProductInfo(String name, double price, String description) {
@@ -73,6 +72,7 @@ public class ProductInfo {
         this.description = description;
     }
 
+    @JsonIgnore
     public Set<Product> getAllInWarehouses() {
         return products;
     }
