@@ -2,9 +2,11 @@
 import Order from "@/models/order";
 import Warehouse from "../../models/warehouse";
 import {isAdmin} from "@/data";
+import SolarTable from "@/components/general/SolarTable.vue";
 
 export default {
   name: "OrderRowComponent",
+  components: {SolarTable},
   computed: {
     Order() {
       return Order
@@ -66,7 +68,7 @@ export default {
   <tr class="table-row">
     <!-- Check box  -->
     <td class="w-4 p-4">
-      <div class="flex items-center">
+      <div class="items-center">
         <input
             type="checkbox"
             v-model="checked" @change="emitToggle"
@@ -102,9 +104,11 @@ export default {
       <div v-if="!productsVisible" class="view-products" @click="displayProducts">View Products</div>
       <div v-if="productsVisible" class="view-products" @click="displayProducts">Hide Products</div>
     </td>
+
     <td class="px-6 py-4">
       <div :class="['status', getStatusClass(),]">{{ order.status }}</div>
     </td>
+
     <td class="px-4 py-4">
       <div v-if="order.status === Order.Status.PENDING" @click="emitConfirm" class="complete-btn">Confirm order</div>
       <div v-if="order.status === Order.Status.PENDING" @click="emitCancel" class="cancel-btn">Cancel order</div>
@@ -113,18 +117,16 @@ export default {
     </td>
   </tr>
 
-  <!-- Products for this order -->
-  <tr v-if="productsVisible" class="product-row">
-    <td class="px-4 py-4" colspan="9"> <!-- Use colspan to span across all columns -->
-      <div v-for="product in order.products" :key="product.id">
-        <div class="font-semibold">{{ product.name }}</div>
-        <div>{{ "€ " + product.price }}</div>
-        <div>{{ "qty: " + product.quantity }}</div>
-        <br>
-      </div>
-    </td>
-  </tr>
+  <SolarTable v-if="productsVisible" :columns="['Name', 'Price', 'Quantity']">
+    <tr class="table-row" v-for="product in order.products" :key="product.id">
+      <td class="px-6 py-4 font-semibold text-base">{{ product.name }}</td>
+      <td class="px-6 py-4">€ {{ product.price }}</td>
+      <td class="px-6 py-4">{{ product.quantity }}</td>
+    </tr>
+  </SolarTable>
+
 </template>
+
 
 <style scoped>
 .product-row {

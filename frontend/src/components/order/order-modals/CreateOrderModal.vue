@@ -52,6 +52,8 @@ export default {
       // Add selected products to the order.products array
       this.selectedProducts.push(this.selectedProduct)
     },
+    removeProduct() {
+    }
   }
 }
 </script>
