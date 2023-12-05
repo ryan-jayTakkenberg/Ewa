@@ -17,9 +17,10 @@ public class Warehouse {
     private String city;
     private String address;
     private String postalCode;
-    @OneToOne
-    @JsonIgnoreProperties({"warehouse"})
-    private Team team;
+
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("warehouse")
+    private Set<Team> teams;
 
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties({"warehouse"})
@@ -109,5 +110,18 @@ public class Warehouse {
 
     public void addProduct(Product product) {
         this.products.add(product);
+    }
+    public Set<Team> getTeams() {
+        return teams;
+    }
+
+    public void addTeam(Team team) {
+        this.teams.add(team);
+        team.setWarehouse(this);
+    }
+
+    public void removeTeam(Team team) {
+        this.teams.remove(team);
+        team.setWarehouse(null);
     }
 }

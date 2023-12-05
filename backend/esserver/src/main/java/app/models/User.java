@@ -2,9 +2,12 @@ package app.models;
 
 import app.Util;
 import app.enums.PermissionLevel;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,15 +27,20 @@ public class User {
     private String resetToken;
     private LocalDateTime resetTokenExpiry;
 
+    @OneToOne
+    @JsonIncludeProperties({"id", "name"})  // To prevent infinite recursion in JSON serialization
+    private Team team;
+
     @OneToMany(mappedBy = "app_user")
     private Set<Report> reports;
 
-    public User(PermissionLevel permissionLevel, String name, String email, LocalDate lastLogin, String password) {
+    public User(PermissionLevel permissionLevel, String name, String email, LocalDate lastLogin, String password, Team team) {
         this.permissionLevel = permissionLevel;
         this.name = name;
         this.email = email;
         this.lastLogin = lastLogin;
         this.password = Util.hash(password);
+        this.team = team;
     }
 
     public User() {

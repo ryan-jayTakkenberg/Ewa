@@ -16,9 +16,15 @@ public class Team {
     @GeneratedValue
     private int id;
     private String name;
-    @OneToOne
+
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id")
     @JsonIncludeProperties({"id", "name"})
     private Warehouse warehouse;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("team")
+    private User user;
 
     @OneToMany(mappedBy = "team")
     @JsonIgnoreProperties({"team"})
@@ -30,6 +36,7 @@ public class Team {
         this.id = id;
         this.name = name;
         this.warehouse = warehouse;
+        this.user = user;
     }
     public Team(){
 
@@ -74,10 +81,28 @@ public class Team {
     }
 
     public void setWarehouse(Warehouse warehouse) {
+        if (this.warehouse != null) {
+            this.warehouse.removeTeam(this);
+        }
         this.warehouse = warehouse;
+        if (this.warehouse != null) {
+            this.warehouse.addTeam(this);
+        }
     }
 
     public List<Project> getProjects() {
         return projects;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 }

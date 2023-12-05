@@ -33,15 +33,17 @@ public class DataLoader implements CommandLineRunner {
     private Warehouse warehouse3;
 
 
+
+
     @Override
     public void run(String... args) {
         System.out.println("Running CommandLine Startup...");
 
         this.createInitialProducts();
-        this.createInitialUsers();
         this.createSampleReports();
         this.createSampleWarehouses();
         this.createSampleTeamAndProjects();
+        this.createInitialUsers();
         this.createSampleOrders();
 
         System.out.println("Done!");
@@ -80,26 +82,6 @@ public class DataLoader implements CommandLineRunner {
         orderRepo.save(order3);
     }
 
-    private void createInitialUsers() {
-        this.userRepo.save(new User(PermissionLevel.ADMIN, "admin", "admin@solar.nl", LocalDate.now(), "admin"));
-        this.userRepo.save(new User(PermissionLevel.VIEWER, "viewer", "viewer@solar.nl", LocalDate.now(), "viewer"));
-
-        User viewer1 = new User(PermissionLevel.VIEWER, "H1", "test1@solar.com", LocalDate.now(), "viewer");
-        this.userRepo.save(viewer1);
-
-        User viewer2 = new User(PermissionLevel.VIEWER, "H2", "test2@solar.com", LocalDate.now(), "viewer");
-        this.userRepo.save(viewer2);
-
-        User viewer3 = new User(PermissionLevel.VIEWER, "H3", "test3@solar.com", LocalDate.now(), "viewer");
-        this.userRepo.save(viewer3);
-
-        User viewer4 = new User(PermissionLevel.VIEWER, "H4", "test4@solar.com", LocalDate.now(), "viewer");
-        this.userRepo.save(viewer4);
-
-        User viewer5 = new User(PermissionLevel.VIEWER, "H5", "test5@solar.com", LocalDate.now(), "viewer");
-        this.userRepo.save(viewer5);
-
-    }
 
     private void createSampleWarehouses(){
         warehouse1 = this.warehouseRepo.save(new Warehouse(1, "Solar Sedum", "Amsterdam", "Straat 111", "1234 AB"));
@@ -110,12 +92,9 @@ public class DataLoader implements CommandLineRunner {
 
 
     private void createSampleTeamAndProjects(){
-
         Team team1 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Bijlmer", warehouse1));
-        Team team2 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Aalsmeer", warehouse2));
-        Team team3 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Purmerend", warehouse3));
-        this.teamsRepo.save(new Team(PermissionLevel.VIEWER,0,"Team Zaandam", null));
-        this.teamsRepo.save(new Team(PermissionLevel.VIEWER,0,"Team West", null));
+         Team team2 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Aalsmeer", warehouse2));
+         Team team3 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Purmerend", warehouse3));
 
         LocalDate installDate = LocalDate.of(2023, 11, 21);
         this.projectsRepo.save(new Project(1, "Blue", "HVA", installDate, "Project to install solar panels to Company A", team1));
@@ -123,5 +102,35 @@ public class DataLoader implements CommandLineRunner {
         this.projectsRepo.save(new Project(3, "Green", "HVA", installDate, "Project to install solar panels to Company C", team2));
         this.projectsRepo.save(new Project(4, "Yellow", "Company A", installDate, "Project to install solar panels to Company D", team3));
     }
+    private void createInitialUsers() {
+        Team team4 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Noord-Holland", warehouse1));
+        Team team2 = this.teamsRepo.save(new Team(PermissionLevel.VIEWER, 0, "Team Hallo", warehouse2));
+        Team team3 = this.teamsRepo.save(new Team(PermissionLevel.VIEWER, 0, "Team Test", warehouse3));
+
+        this.userRepo.save(new User(PermissionLevel.ADMIN, "admin", "admin@solar.nl", LocalDate.now(), "admin", null));
+
+        User userTeam1 = new User(PermissionLevel.VIEWER, "viewer", "viewer@solar.nl", LocalDate.now(), "viewer", team4);
+        this.userRepo.save(userTeam1);
+        team4.setUser(userTeam1);
+
+        User viewer1 = new User(PermissionLevel.VIEWER, "H1", "test1@solar.com", LocalDate.now(), "viewer", team2);
+        this.userRepo.save(viewer1);
+        team2.setUser(viewer1);
+
+        User viewer2 = new User(PermissionLevel.VIEWER, "H2", "test2@solar.com", LocalDate.now(), "viewer", null);
+        this.userRepo.save(viewer2);
+
+        User viewer3 = new User(PermissionLevel.VIEWER, "H3", "test3@solar.com", LocalDate.now(), "viewer", team3);
+        this.userRepo.save(viewer3);
+        team3.setUser(viewer3);
+
+        User viewer4 = new User(PermissionLevel.VIEWER, "H4", "test4@solar.com", LocalDate.now(), "viewer", null);
+        this.userRepo.save(viewer4);
+
+        User viewer5 = new User(PermissionLevel.VIEWER, "H5", "test5@solar.com", LocalDate.now(), "viewer", null);
+        this.userRepo.save(viewer5);
+    }
+
+
 
 }
