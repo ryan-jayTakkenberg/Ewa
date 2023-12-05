@@ -1,8 +1,7 @@
 import axios from "axios";
 
-// Changing the port to 8081
 const instance = axios.create({
-    baseURL: "http://localhost:8085",
+    baseURL: 'https://ewa-back-end-jcat.onrender.com/'  /*"http://localhost:8085"*/
 });
 
 export default instance;

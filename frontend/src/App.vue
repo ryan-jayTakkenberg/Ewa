@@ -59,26 +59,35 @@ export default {
   },
   watch: {
     async '$route'(to, from) {
+      // Stop processing if the route hasn't changed
       if (from === to) {
         return;
       }
 
+      // If the current route is '/reset-password', do nothing further
+      if (to.path === '/reset-password') {
+        return;
+      }
+
+      // Check user's login status
       this.isLoggedIn = responseOk(await getAPI("/api/authentication/status"));
+
+      // Redirect to login if not logged in and not on the login page
+      if (!this.isLoggedIn && to.path !== '/login') {
+        this.$router.push('/login');
+      }
+
+      // Logic for fetching data if logged in
       if (this.isLoggedIn) {
-        if (to.path === '/login') {
-          this.$router.push('/overview');
-          return;
-        }
         if (!this.fetchedData) {
-          // This only fetches the data accessible to the logged-in user
           try {
             const [teams, users, products, projects, warehouses, orders] = await Promise.all([
-                Team.getDatabase(),
-                User.getDatabase(),
-                Product.getDatabase(),
-                Project.getDatabase(),
-                Warehouse.getDatabase(),
-                Orders.getDatabase(),
+              Team.getDatabase(),
+              User.getDatabase(),
+              Product.getDatabase(),
+              Project.getDatabase(),
+              Warehouse.getDatabase(),
+              Orders.getDatabase(),
             ]);
 
             Team.teams = teams;
@@ -97,10 +106,15 @@ export default {
     }
   },
   created() {
-    if (!getJWT()) {
+    const path = this.$router.currentRoute.value.path;
+    const isResetPasswordRoute = path.startsWith('/');
+
+    if (!getJWT() && !isResetPasswordRoute) {
       this.$router.push('/login');
     }
   }
+
+
 }
 </script>
 

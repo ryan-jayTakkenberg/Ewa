@@ -4,6 +4,7 @@ import {getId, getUsername} from "@/data";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
 import Project from "@/models/project";
+import {getAPI, responseOk} from "@/backend";
 
 export default {
 
@@ -14,11 +15,11 @@ export default {
   data() {
     return {
       productsSold: '75',
-      unresolvedReports: '2',
+      unresolvedReports: '0',
       warehousesLowStock: '3',
       globalTotalStock: '350',
       username: getUsername(),
-      projects: Project.projects,
+      projects: [],
       reports: [],
       selectedReports: [],
       reportBody: "",
@@ -27,13 +28,16 @@ export default {
       senderUsername: getUsername(),
       users: [],
       modal: false,
+      ongoingProjects: ""
 
     }
   },
 
   mounted() {
     this.fetchAllUsers();
-    this.fetchReports();
+    this.loadOngoingProjectsCount()
+    this.fetchReports()
+    this.fetchAllProjects()
   },
 
   methods: {
@@ -42,9 +46,48 @@ export default {
       this.users = await this.userService.fetchAllUsers();
     },
 
+    async fetchAllProjects() {
+      try {
+        const response = await getAPI("api/projects");
+
+        if (!responseOk(response)) {
+          console.error('Error fetching projects:', response.data);
+          return;
+        }
+
+        if (!Array.isArray(response.data)) {
+          console.error('Invalid JSON array received:', response.data);
+          return;
+        }
+
+        this.projects = response.data.map(data => new Project(
+            data.projectId,
+            data.projectName,
+            data.clientName,
+            data.installDate,
+            data.notes,
+            data.team
+        ));
+      } catch (error) {
+        console.error('An error occurred while fetching projects:', error);
+      }
+    },
+
     async fetchReports() {
-      this.reports = await this.reportService.fetchReports();
-      console.log('Fetched reports: ', [...this.reports]);
+      try {
+
+        const response = await getAPI('/api/reports');
+        if (response.status === 200 && response.data) {
+          this.reports = response.data;
+        } else {
+          console.error('Error fetching reports:', response.status, response.statusText);
+          this.reports = [];
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching reports:', error);
+        this.reports = [];
+      }
+      this.unresolvedReports = this.reports.length
     },
 
     async postReport() {
@@ -67,6 +110,12 @@ export default {
 
       this.reportBody = '';
       alert('Your report was successfully sent!');
+      this.unresolvedReports = this.reports.length
+      const response = await getAPI('/api/reports');
+      if (response.status === 200 && response.data) {
+        this.reports = response.data;}
+      this.unresolvedReports = this.reports.length
+
     },
 
     async deleteReport() {
@@ -104,6 +153,7 @@ export default {
       this.modal = false;
 
       console.log('Your current reports after delete: ', [...this.reports]);
+      this.unresolvedReports = this.loadOngoingProjectsCount()
 
     },
 
@@ -145,6 +195,12 @@ export default {
           }
     },
 
+    getStatusColor(project) {
+      const today = new Date();
+      const installDate = new Date(project.installDate);
+      return installDate < today ? '#FF0000' : '#5DDB88'; // Red if install date has passed, Green otherwise
+    },
+
   },
 
   computed: {
@@ -166,6 +222,18 @@ export default {
       return this.users.filter(user => user.permissionLevel !== 'ADMIN');
     },
 
+  },
+
+  watch: {
+    '$route': {
+      immediate: true,
+      handler(to, from) {
+        // Call your data fetching methods here
+        this.loadOngoingProjectsCount();
+        this.fetchReports();
+
+      }
+    }
   },
 
 }
@@ -210,7 +278,7 @@ export default {
     <div class="insightContainer">
       <p class="medium">Total Ongoing Projects:</p>
       <div class="meetingWrapper">
-<!--        <div id="textBig"> {{ ongoingProjects }} </div>-->
+        <div id="textBig"> {{ ongoingProjects }} </div>
       </div>
     </div>
 
@@ -250,7 +318,7 @@ export default {
           <div class="projectTitle">{{ project.projectName }}</div>
           <div class="statusWrapper">
             <div class="projectStatus"> Status: </div>
-            <div class="statusColor"></div>
+            <div class="statusColor" :style="{ background: getStatusColor(project) }"></div>
           </div>
         </div>
 

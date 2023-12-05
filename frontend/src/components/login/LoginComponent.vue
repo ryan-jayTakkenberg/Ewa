@@ -53,18 +53,14 @@
             <button class="loginButton">Reset Password</button>
           </div>
         </form>
-      </div>
-
-
-      <!-- Link to Toggle Password Reset Form -->
-      <div class="linkWrapper" v-show="!showPasswordResetForm">
-        <a href="#" v-on:click.prevent="togglePasswordResetForm">Can't sign in?</a>
-      </div>
-
+       </div><div class="linkWrapper" v-show="!showPasswordResetForm">
+      <a href="#" v-on:click.prevent="togglePasswordResetForm">Can't sign in?</a>
     </div>
-  </div>
+      </div>
+      <!-- Link to Toggle Password Reset Form -->
 
-</template>
+  </div>
+    </template>
 
 <script>
 
@@ -88,12 +84,33 @@ export default {
       passwordInput: '',
       errorMessage: '',
       showPasswordResetForm: false,
-      resetErrorMessage: ''
+      resetErrorMessage: '',
+      newPasswordInput: '',
+      resetToken:'',
 
     }
   },
 
   methods: {
+
+
+    async submitNewPassword() {
+      try {
+        let response = await postAPI("/api/reset-password", {
+          token: this.resetToken,
+          newPassword: this.newPasswordInput
+        });
+
+        // Handle the response
+        console.log("Password reset successful", response);
+        this.newPasswordInput = '';
+        this.showNewPasswordForm = false;
+        // todo validation
+      } catch (error) {
+        console.error("Error in setting new password", error);
+        // todo validation
+      }
+    },
 
     async submitPasswordReset() {
       try {
@@ -103,7 +120,6 @@ export default {
         console.log("Reset email sent", response);
         this.emailInput = '';
         this.togglePasswordResetForm();
-        // Add any user feedback message here
       } catch (error) {
         console.error("Error sending reset email", error);
         this.resetErrorMessage = 'Error sending reset email. Please try again.';
@@ -118,12 +134,13 @@ export default {
     hideLogin() {
 
       this.errorMessage = '';
-      this.usernameInput = '';
+      this.emailInput = '';
       this.passwordInput = '';
       this.showLoginForm = false;
     },
 
     async submitForm() {
+      console.log(process.env.VUE_APP_API_URL);
       let response = await postAPI("/api/authentication/login", {
         email: this.emailInput,
         password: this.passwordInput,
@@ -175,7 +192,6 @@ export default {
       this.errorMessage = '';
     },
   },
-
 }
 </script>
 

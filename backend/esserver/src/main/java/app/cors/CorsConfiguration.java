@@ -15,7 +15,7 @@ public class CorsConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("http://localhost:*", "http://*.hva.nl:*")
+                        .allowedOriginPatterns("http://localhost:8080", "https://ewa-front-end-hje0.onrender.com", "http://*.hva.nl:*")
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
                         .exposedHeaders("*")

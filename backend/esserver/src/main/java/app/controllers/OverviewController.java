@@ -8,6 +8,7 @@ import app.repositories.ProjectJPARepository;
 // Import other repositories as needed
 
 import app.repositories.ReportJPARepository;
+import app.repositories.WarehouseJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +22,8 @@ public class OverviewController {
 
 //    @Autowired
 //    private ProductJPARepository productJPARepository;
-//    @Autowired
-//    private WarehouseJPARepository warehouseJPARepository;
+    @Autowired
+    private WarehouseJPARepository warehouseJPARepository;
 //    @Autowired
 //    private TeamJPARepository teamJPARepository;
     @Autowired
@@ -40,7 +41,6 @@ public class OverviewController {
         return reportJPARepository.findAll();
     }
 
-    // Autowire other repositories as needed
 
 //    @GetMapping("/products/count")
 //    public Long getProductsCount() {

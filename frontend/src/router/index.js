@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router';
 
+import PasswordResetComponent from "@/components/login/PasswordResetComponent.vue";
 import LoginComponent from "@/components/login/LoginComponent.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";
 import ProductOverview from "@/components/product/admin/ProductOverview";
@@ -27,6 +28,7 @@ const routes = [
     {path: '/productViewer', component: ProductOverviewViewer},
     {path: '/users', component: UsersOverview,},
     {path: '/reports', component: ReportComponent},
+    {path: '/reset-password', component: PasswordResetComponent },
     {path: '/warehouseViewer', component: warehouseOverviewComponent},
     {path: '/:pathMatch(.*)*', component: NotFoundComponent}
 ];
