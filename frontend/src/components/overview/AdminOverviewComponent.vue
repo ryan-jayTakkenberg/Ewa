@@ -341,7 +341,6 @@ export default {
   </div>
 
   <!--- reports ---------------------------------------------------------------------------------->
-  <!--- reports ---------------------------------------------------------------------------------->
   <div class="sectionContainer">
 
     <div class="reportsHeader">
@@ -388,7 +387,14 @@ export default {
       </div>
 
       <div class="sendReportsContainer">
-        <div class="containerTitle">Send a report</div>
+
+        <div class="wrapper">
+          <label>Send a report to:</label>
+          <select v-model="receiverId" class="reportReceiver">
+            <option v-for="user in filteredUsers" :value="user.id" :key="user.id">{{ user.name }}</option>
+          </select>
+        </div>
+
         <textarea v-model="reportBody" placeholder="Type your report here..." class="reportInput"></textarea>
         <button @click="postReport" class="sendReportButton">Send</button>
 
@@ -799,6 +805,21 @@ p {
       'wght' 500,
       'GRAD' 0,
       'opsz' 40
+}
+
+label {
+  font-weight: 500;
+  width: 35%;
+}
+
+.wrapper {
+  display: flex;
+}
+
+.reportReceiver {
+  border-radius: 5px;
+  padding: 0 0.5em;
+  width: 150px;
 }
 
 </style>

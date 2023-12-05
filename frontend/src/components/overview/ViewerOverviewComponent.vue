@@ -46,7 +46,7 @@
   <!--- projects ---------------------------------------------------------------------------------->
   <div class="sectionContainer">
 
-    <h1 class="sectionTitle">Ongoing Projects</h1>
+    <h1 class="sectionTitle">Ongoing Projects for: {{capitalizeFirstLetter(username)}}</h1>
     <div class="projectContainer">
 
       <div class="projectWrapper" v-for="(project, index) in projects" :key="index">
@@ -123,7 +123,7 @@
       </div>
 
       <div class="sendReportsContainer">
-        <div class="containerTitle">Send a report</div>
+        <div class="containerTitle">Send a report to the admin</div>
         <textarea v-model="reportBody" placeholder="Type your report here..." class="reportInput"></textarea>
         <button @click="postReport" class="sendReportButton">Send</button>
 
