@@ -74,20 +74,7 @@ export default {
     },
 
     async fetchReports() {
-      try {
-
-        const response = await getAPI('/api/reports');
-        if (response.status === 200 && response.data) {
-          this.reports = response.data;
-        } else {
-          console.error('Error fetching reports:', response.status, response.statusText);
-          this.reports = [];
-        }
-      } catch (error) {
-        console.error('An error occurred while fetching reports:', error);
-        this.reports = [];
-      }
-      this.unresolvedReports = this.reports.length
+      this.reports = await this.reportService.fetchReports();
     },
 
     async postReport() {
@@ -155,6 +142,23 @@ export default {
       console.log('Your current reports after delete: ', [...this.reports]);
       this.unresolvedReports = this.loadOngoingProjectsCount()
 
+    },
+
+    replyReport() {
+      if (this.selectedReports.length !== 1) {
+        alert("Please select exactly one report to reply to.");
+        return;
+      }
+
+      // Set the receiverId to the id of the selected report's sender
+      this.receiverId = this.selectedReports[0].senderId;
+
+      // Optionally, you can update the UI to reflect the selected user in the dropdown
+      // For example, you can find the index of the selected user and set it as the selected index
+      const selectedIndex = this.filteredUsers.findIndex(user => user.id === this.receiverId);
+      if (selectedIndex !== -1) {
+        this.$refs.selectUser.selectedIndex = selectedIndex;
+      }
     },
 
     showModal() {
@@ -357,10 +361,13 @@ export default {
           <div class="containerTitle">Inbox</div>
 
           <div class="buttonWrapper">
-            <button class="deleteMessage" @click="showModal">
+            <button class="replyReport" @click="replyReport">
+              <span class="material-symbols-outlined">reply</span>
+            </button>
+            <button class="deleteReport" @click="showModal">
               <span class="material-symbols-outlined">delete</span>
             </button>
-            <button class="filterMessage">
+            <button class="filterReport">
               <span class="material-symbols-outlined">filter_alt</span>
             </button>
           </div>
@@ -390,7 +397,7 @@ export default {
 
         <div class="wrapper">
           <label>Send a report to:</label>
-          <select v-model="receiverId" class="reportReceiver">
+          <select v-model="receiverId" class="reportReceiver" ref="selectUser">
             <option v-for="user in filteredUsers" :value="user.id" :key="user.id">{{ user.name }}</option>
           </select>
         </div>
@@ -781,8 +788,9 @@ p {
   gap: 1rem;
 }
 
-.filterMessage,
-.deleteMessage {
+.filterReport,
+.deleteReport,
+.replyReport {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -793,8 +801,9 @@ p {
   cursor: pointer;
 }
 
-.filterMessage:hover,
-.deleteMessage:hover {
+.filterReport:hover,
+.deleteReport:hover,
+.replyReport:hover {
   background: #c5ce2c;
   color: #fff;
 }
