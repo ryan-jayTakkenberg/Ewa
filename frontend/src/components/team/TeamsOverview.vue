@@ -191,7 +191,7 @@ export default {
     <div class="body-container">
       <div class="action-row">
         <SolarSearchbar class="ml-2" place-holder="Search For Teams" @search="handleInputValueChange"/>
-        <SolarButton class="ml-auto" button-text="Create Team" @click="openAddTeam"></SolarButton>
+        <SolarButton class="ml-auto mr-2" button-text="Create Team" @click="openAddTeam"></SolarButton>
       </div>
       <SolarTable :columns="['Team', 'warehouse', 'project', 'Action']">
         <TeamsRowComponent

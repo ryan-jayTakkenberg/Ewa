@@ -168,7 +168,6 @@ export default {
 
 <style scoped>
 
-
 .remove-order-btn {
   font-weight: 500;
   color: red;
