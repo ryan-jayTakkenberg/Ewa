@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,9 +23,9 @@ public class Warehouse {
     @JsonIgnoreProperties("warehouse")
     private Set<Team> teams;
 
-    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"warehouse"})
-    private Set<Product> products;
+    private final Set<Product> products = new HashSet<>();
 
     public Warehouse(int id, String name, String city, String address, String postalCode) {
         this.id = id;

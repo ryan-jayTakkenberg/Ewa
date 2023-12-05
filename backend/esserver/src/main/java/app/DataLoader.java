@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -24,16 +25,8 @@ public class DataLoader implements CommandLineRunner {
     private ProjectJPARepository projectsRepo;
     @Autowired
     private TeamJPARepository teamsRepo;
-
     @Autowired
     private WarehouseJPARepository warehouseRepo;
-
-   private Warehouse warehouse1;
-    private Warehouse warehouse2;
-    private Warehouse warehouse3;
-
-
-
 
     @Override
     public void run(String... args) {
@@ -84,17 +77,30 @@ public class DataLoader implements CommandLineRunner {
 
 
     private void createSampleWarehouses(){
-        warehouse1 = this.warehouseRepo.save(new Warehouse(1, "Solar Sedum", "Amsterdam", "Straat 111", "1234 AB"));
-        warehouse2 = this.warehouseRepo.save(new Warehouse(2, "HvA Warehose", "Amsterdam", "Straat 222", "1234 CD"));
-        warehouse3 = this.warehouseRepo.save(new Warehouse(3, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF"));
-        this.warehouseRepo.save(new Warehouse(4, "Green Left", "Amsterdam", "Straat 444", "1234 GH"));
+        Warehouse[] warehouses = {
+                new Warehouse(0, "Solar Sedum", "Amsterdam", "Straat 111", "1234 AB"),
+                new Warehouse(0, "HvA Warehose", "Amsterdam", "Straat 222", "1234 CD"),
+                new Warehouse(0, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF"),
+                new Warehouse(0, "Green Left", "Amsterdam", "Straat 444", "1234 GH")
+        };
+
+        Random random = new Random();
+        List<ProductInfo> productInfoList = productRepo.findAll();
+
+        for (Warehouse warehouse : warehouses) {
+            int amount = random.nextInt(1, 10);
+            ProductInfo productInfo = productInfoList.stream().skip(random.nextInt(productInfoList.size())).findFirst().orElse(null);
+            Product product = new Product(amount, productInfo, warehouse);
+            warehouse.addProduct(product);
+            warehouseRepo.save(warehouse);
+        }
     }
 
 
     private void createSampleTeamAndProjects(){
-        Team team1 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Bijlmer", warehouse1));
-         Team team2 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Aalsmeer", warehouse2));
-         Team team3 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Purmerend", warehouse3));
+        Team team1 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Bijlmer", warehouseRepo.findById(1)));
+         Team team2 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Aalsmeer", warehouseRepo.findById(2)));
+         Team team3 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Purmerend", warehouseRepo.findById(3)));
 
         LocalDate installDate = LocalDate.of(2023, 11, 21);
         this.projectsRepo.save(new Project(1, "Blue", "HVA", installDate, "Project to install solar panels to Company A", team1));
@@ -103,9 +109,9 @@ public class DataLoader implements CommandLineRunner {
         this.projectsRepo.save(new Project(4, "Yellow", "Company A", installDate, "Project to install solar panels to Company D", team3));
     }
     private void createInitialUsers() {
-        Team team4 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Noord-Holland", warehouse1));
-        Team team2 = this.teamsRepo.save(new Team(PermissionLevel.VIEWER, 0, "Team Hallo", warehouse2));
-        Team team3 = this.teamsRepo.save(new Team(PermissionLevel.VIEWER, 0, "Team Test", warehouse3));
+        Team team4 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Noord-Holland", warehouseRepo.findById(1)));
+        Team team2 = this.teamsRepo.save(new Team(PermissionLevel.VIEWER, 0, "Team Hallo", warehouseRepo.findById(2)));
+        Team team3 = this.teamsRepo.save(new Team(PermissionLevel.VIEWER, 0, "Team Test", warehouseRepo.findById(3)));
 
         this.userRepo.save(new User(PermissionLevel.ADMIN, "admin", "admin@solar.nl", LocalDate.now(), "admin", null));
 
