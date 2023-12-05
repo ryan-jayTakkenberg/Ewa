@@ -10,15 +10,15 @@
           <SearchBarComponent place-holder="Search For Products" @search="handleSearchChange" />
         </div>
       </div>
-      <SolarTable :columns="['product', 'price', '']">
+      <SolarTable :columns="['productInfo', 'price', '']">
         <ProductRowComponentViewer
             ref="rowComponent"
-            v-for="(product, index) in filteredProducts"
+            v-for="(productInfo, index) in filteredProducts"
             :key="index"
-            :product="product"
+            :productInfo="productInfo"
             @edit="openEditModal"
             @delete="openDeleteModal"
-            @toggle="toggleCheckbox(product, $event)"> <!-- Pass user and checkbox state -->
+            @toggle="toggleCheckbox(productInfo, $event)"> <!-- Pass user and checkbox state -->
         </ProductRowComponentViewer>
       </SolarTable>
     </div>
@@ -29,8 +29,8 @@
 import TitleComponent from "@/components/general/SolarTitle.vue";
 import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
-import ProductRowComponentViewer from "@/components/product/viewer/ProductRowComponentViewer";
-import Product from "@/models/product";
+import ProductRowComponentViewer from "@/components/productInfo/viewer/ProductRowComponentViewer";
+import Product from "@/models/productInfo";
 
 export default {
   name: "UsersOverview",
@@ -42,16 +42,16 @@ export default {
   },
   data() {
     return {
-      products: [...Product.products],
+      productInfos: [...Product.productInfos],
       modal: '',
-      selectedProducts: [],  // Track the selected product
+      selectedProducts: [],  // Track the selected productInfo
       filterValue: '', // Store the input value for searching
       checkedProducts: [], // A list of the selected ID's
     };
   },
   computed: {
     filteredProducts() {
-      return this.products.filter(p => {
+      return this.productInfos.filter(p => {
         for (let key of Object.keys(p)) {
           if (`${p[key]}`.toLowerCase().includes(this.filterValue)) {
             return true;
@@ -62,11 +62,11 @@ export default {
     },
   },
   created() {
-    if (!this.products?.length) {
+    if (!this.productInfos?.length) {
       // Keep updating the list if the database has not returned all the data yet
       const fetchingInterval = setInterval(() => {
         if (!Product.fetching) {
-          this.products = [...Product.products];
+          this.productInfos = [...Product.productInfos];
           clearInterval(fetchingInterval);
         }
       }, 100);
@@ -82,27 +82,27 @@ export default {
     },
     async edit(updated) {
       for (let edited of this.selectedProducts) {
-        let index = this.products.findIndex(p => p.id === edited.id);
+        let index = this.productInfos.findIndex(p => p.id === edited.id);
         edited.injectAttributes(updated);
-        let product = await edited.putDatabase();
-        if (product) {
-          this.products[index] = product;
+        let productInfo = await edited.putDatabase();
+        if (productInfo) {
+          this.productInfos[index] = productInfo;
         }
       }
       this.closeModal();
     },
     async remove() {
       this.closeModal();
-      this.products = this.products.filter(product => !this.selectedProducts.find(deleted => product.id === deleted.id));
+      this.productInfos = this.productInfos.filter(productInfo => !this.selectedProducts.find(deleted => productInfo.id === deleted.id));
       for (let deleted of this.selectedProducts) {
         await deleted.delDatabase();
       }
     },
     async create(creation) {
       this.closeModal();
-      let product = await creation.putDatabase();
-      if (product) {
-        this.products.push(product);
+      let productInfo = await creation.putDatabase();
+      if (productInfo) {
+        this.productInfos.push(productInfo);
       }
     },
     handleSearchChange(value) {
@@ -127,15 +127,15 @@ export default {
     openCreateModal() {
       this.modal = "create";
     },
-    toggleCheckbox(product, isChecked) {
+    toggleCheckbox(productInfo, isChecked) {
       if (isChecked) {
-        this.checkedProducts.push(product.id);
+        this.checkedProducts.push(productInfo.id);
       } else {
-        this.checkedProducts = this.checkedProducts.filter(id => id !== product.id);
+        this.checkedProducts = this.checkedProducts.filter(id => id !== productInfo.id);
       }
     },
     getSelected() {
-      return this.products.filter(p => this.checkedProducts.includes(p.id));
+      return this.productInfos.filter(p => this.checkedProducts.includes(p.id));
     }
   },
 }

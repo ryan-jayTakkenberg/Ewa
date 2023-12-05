@@ -2,7 +2,7 @@
 import Order from "@/models/order";
 import SolarModal from "@/components/general/SolarModal.vue";
 import Team from "@/models/team";
-import Product from "@/models/product";
+import Product from "@/models/productInfo";
 import SolarButton from "@/components/general/SolarButton.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 
@@ -14,7 +14,7 @@ export default {
     return {
       OrderStatusOptions: Order.Status,
       teamOptions: Team.teams,
-      productOptions: Product.products,
+      productOptions: Product.productInfos,
       selectedProducts: [],
       selectedProduct: null,
       order: {
@@ -22,7 +22,7 @@ export default {
         orderDate: '',
         estimatedDeliveryDate: '',
         team: '',
-        products: [],
+        productInfos: [],
         status: '',
       },
     }
@@ -37,7 +37,7 @@ export default {
     isAnyFieldEmpty() {
       return (
           !this.order.team ||
-          !this.order.product ||
+          !this.order.productInfo ||
           !this.order.status
       );
     },
@@ -49,7 +49,7 @@ export default {
       this.$emit('create-order', orderClass);
     },
     addProductsToOrder() {
-      // Add selected products to the order.products array
+      // Add selected productInfos to the order.productInfos array
       this.selectedProducts.push(this.selectedProduct)
     },
     removeProduct() {
@@ -120,26 +120,26 @@ export default {
               required>
         </div>
 
-        <!-- Select products -->
+        <!-- Select productInfos -->
         <div class="col-span-6 sm:col-span-6">
           <label for="team" class="modal-label">Add Product</label>
           <div class="w-full flex">
-            <select v-model="selectedProduct" class="product-select" required>
-              <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
+            <select v-model="selectedProduct" class="productInfo-select" required>
+              <option v-for="productInfo in productOptions" :key="productInfo.id" :value="productInfo">{{ productInfo.name }}</option>
             </select>
 
-            <SolarButton class=" ml-2 add-product-btn" button-text="Add" @click="addProductsToOrder"></SolarButton>
+            <SolarButton class=" ml-2 add-productInfo-btn" button-text="Add" @click="addProductsToOrder"></SolarButton>
           </div>
         </div>
       </div>
 
-      <!-- Display selected products -->
+      <!-- Display selected productInfos -->
       <div class="order-list" v-if="selectedProducts.length > 0">
         <h2>Ordered Products:</h2>
         <SolarTable :columns="['Name', 'Price', 'Quantity', 'Action']">
-          <tr class="table-row" v-for="product in selectedProducts" :key="product.id">
-            <td class="px-6 py-4 font-semibold text-base">{{ product.name }}</td>
-            <td class="px-6 py-4">€ {{ product.price }}</td>
+          <tr class="table-row" v-for="productInfo in selectedProducts" :key="productInfo.id">
+            <td class="px-6 py-4 font-semibold text-base">{{ productInfo.name }}</td>
+            <td class="px-6 py-4">€ {{ productInfo.price }}</td>
             <td class="px-6 py-4">
               <input
                   type="number"
@@ -149,7 +149,7 @@ export default {
                   required>
             </td>
             <td class="px-6 py-4">
-              <div @click="removeProduct" class="remove-order-btn">Remove product</div>
+              <div @click="removeProduct" class="remove-order-btn">Remove productInfo</div>
             </td>
           </tr>
         </SolarTable>
@@ -206,7 +206,7 @@ export default {
   padding: 0.625rem;
 }
 
-.product-select {
+.productInfo-select {
   display: flex;
   padding: 0.75rem 1rem;
   font-size: 1rem;

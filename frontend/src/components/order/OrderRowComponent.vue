@@ -101,8 +101,8 @@ export default {
     </td>
 
     <td class="px-6 py-4">
-      <div v-if="!productsVisible" class="view-products" @click="displayProducts">View Products</div>
-      <div v-if="productsVisible" class="view-products" @click="displayProducts">Hide Products</div>
+      <div v-if="!productsVisible" class="view-productInfos" @click="displayProducts">View Products</div>
+      <div v-if="productsVisible" class="view-productInfos" @click="displayProducts">Hide Products</div>
     </td>
 
     <td class="px-6 py-4">
@@ -118,10 +118,10 @@ export default {
   </tr>
 
   <SolarTable v-if="productsVisible" :columns="['Name', 'Price', 'Quantity']">
-    <tr class="table-row" v-for="product in order.products" :key="product.id">
-      <td class="px-6 py-4 font-semibold text-base">{{ product.name }}</td>
-      <td class="px-6 py-4">€ {{ product.price }}</td>
-      <td class="px-6 py-4">{{ product.quantity }}</td>
+    <tr class="table-row" v-for="productInfo in order.productInfos" :key="productInfo.id">
+      <td class="px-6 py-4 font-semibold text-base">{{ productInfo.name }}</td>
+      <td class="px-6 py-4">€ {{ productInfo.price }}</td>
+      <td class="px-6 py-4">{{ productInfo.quantity }}</td>
     </tr>
   </SolarTable>
 
@@ -129,7 +129,7 @@ export default {
 
 
 <style scoped>
-.product-row {
+.productInfo-row {
   width: 100vw;
 }
 
@@ -170,7 +170,7 @@ export default {
 .report-btn:hover,
 .complete-btn:hover,
 .edit-btn:hover,
-.view-products:hover {
+.view-productInfos:hover {
   text-decoration-line: underline;
   cursor: pointer;
 }

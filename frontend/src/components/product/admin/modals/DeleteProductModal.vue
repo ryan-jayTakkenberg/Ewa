@@ -33,7 +33,7 @@ export default {
     }
   },
   props: {
-    products: {
+    productInfos: {
       type: Array,
       required: true,
     }
@@ -47,12 +47,12 @@ export default {
     },
   },
   created() {
-    if (this.products.length === 1) {
-      this.typeMsg = `○<span class="text-red-700 font-bold ml-1">${this.products[0].name}</span><br />`;
+    if (this.productInfos.length === 1) {
+      this.typeMsg = `○<span class="text-red-700 font-bold ml-1">${this.productInfos[0].name}</span><br />`;
       return;
     }
 
-    for (let p of this.products) {
+    for (let p of this.productInfos) {
       this.typeMsg += `○<span class="text-red-700 font-bold ml-1">${p.name}</span><br />`;
     }
     this.title += this.title.endsWith('s') ? "'" : "s";

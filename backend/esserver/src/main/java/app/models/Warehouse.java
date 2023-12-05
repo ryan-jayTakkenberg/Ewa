@@ -1,8 +1,9 @@
 package app.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
 public class Warehouse {
@@ -14,6 +15,10 @@ public class Warehouse {
     private String city;
     private String address;
     private String postalCode;
+
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.REMOVE)
+    @JsonIgnoreProperties({"warehouse"})
+    private Set<Product> products;
 
     public Warehouse(int id, String name, String city, String address, String postalCode) {
         this.id = id;
@@ -91,5 +96,13 @@ public class Warehouse {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void addProduct(Product product) {
+        this.products.add(product);
     }
 }

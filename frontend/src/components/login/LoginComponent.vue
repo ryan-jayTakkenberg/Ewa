@@ -67,7 +67,7 @@
 import {setAdmin, setId, setJWT, setUsername} from "@/data";
 import Team from "@/models/team";
 import User from "@/models/user";
-import Product from "@/models/product";
+import Product from "@/models/productInfo";
 import Project from "@/models/project";
 import Warehouse from "@/models/warehouse";
 import {postAPI} from "@/backend";
@@ -161,7 +161,7 @@ export default {
       console.log(response.data);
 
       try {
-        const [teams, users, products, projects, warehouses] = await Promise.all([
+        const [teams, users, productInfos, projects, warehouses] = await Promise.all([
           Team.getDatabase(),
           User.getDatabase(),
           Product.getDatabase(),
@@ -171,7 +171,7 @@ export default {
 
         Team.teams = teams;
         User.users = users;
-        Product.products = products;
+        Product.productInfos = productInfos;
         Project.projects = projects;
         Warehouse.warehouses = warehouses;
 

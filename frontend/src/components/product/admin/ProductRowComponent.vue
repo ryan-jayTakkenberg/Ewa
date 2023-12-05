@@ -12,16 +12,16 @@
 
     <!--Product Items -->
     <td class="pl-6 text-gray-900 whitespace-nowrap ">
-      <div class="text-base font-medium">{{ maxTextLength(product['name'], 10 * screenSizeFactor) }}</div>
-      <div class="font-light text-gray-500">{{ maxTextLength(product['description'], 10 * screenSizeFactor) }}</div>
+      <div class="text-base font-medium">{{ maxTextLength(productInfo['name'], 10 * screenSizeFactor) }}</div>
+      <div class="font-light text-gray-500">{{ maxTextLength(productInfo['description'], 10 * screenSizeFactor) }}</div>
     </td>
 
-    <td class="px-6 py-4">€{{ Number(product['price']).toFixed(2) }}</td>
+    <td class="px-6 py-4">€{{ Number(productInfo['price']).toFixed(2) }}</td>
 
     <!-- Edit/Delete Product -->
     <td class="px-6 py-4 row">
-      <div @click="emitEdit" class="font-medium text-blue-700 cursor-pointer hover:underline">Edit product</div>
-      <div @click="emitDelete" class="font-medium text-red-600 cursor-pointer hover:underline">Delete product</div>
+      <div @click="emitEdit" class="font-medium text-blue-700 cursor-pointer hover:underline">Edit productInfo</div>
+      <div @click="emitDelete" class="font-medium text-red-600 cursor-pointer hover:underline">Delete productInfo</div>
     </td>
 
   </tr>
@@ -31,7 +31,7 @@
 export default {
   name: "ProductRowComponent",
   props: {
-    product: {
+    productInfo: {
       type: Object,
       required: true,
     },
@@ -49,10 +49,10 @@ export default {
   },
   methods: {
     emitEdit() {
-      this.$emit("edit", this.product);
+      this.$emit("edit", this.productInfo);
     },
     emitDelete() {
-      this.$emit("delete", this.product);
+      this.$emit("delete", this.productInfo);
     },
     emitToggle() {
       this.$emit("toggle", this.checked);

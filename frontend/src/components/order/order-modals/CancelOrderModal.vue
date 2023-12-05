@@ -9,7 +9,7 @@
       <p>Are you sure you want to cancel the order:</p>
     </div>
     <p><br/><br/><strong>{{ order.orderNumber }}</strong><br/>{{ order.project }}
-    <br> {{ order.products }}</p>
+    <br> {{ order.productInfos }}</p>
     <!-- Modal footer -->
     <template v-slot:footer>
       <button @click="onClose" class="cancel-button">Cancel</button>

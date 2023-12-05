@@ -39,15 +39,15 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private List<Product> products;
+    private List<ProductInfo> productInfos;
 
-    public Order(long id, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, List<Product> products, OrderStatus status) {
+    public Order(long id, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, List<ProductInfo> productInfos, OrderStatus status) {
         this.id = id;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
         this.team = team;
-        this.products = products;
+        this.productInfos = productInfos;
         this.status = status;
     }
 
@@ -101,11 +101,11 @@ public class Order {
         this.team = team;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<ProductInfo> getProducts() {
+        return productInfos;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setProducts(List<ProductInfo> productInfos) {
+        this.productInfos = productInfos;
     }
 }

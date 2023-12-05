@@ -18,12 +18,12 @@
       <SolarTable :columns="['', 'Product', 'Price', 'Action']">
         <ProductRowComponent
             ref="rowComponent"
-            v-for="(product, index) in filteredProducts"
+            v-for="(productInfo, index) in filteredProducts"
             :key="index"
-            :product="product"
+            :productInfo="productInfo"
             @edit="openEditModal"
             @delete="openDeleteModal"
-            @toggle="toggleCheckbox(product, $event)"> <!-- Pass user and checkbox state -->
+            @toggle="toggleCheckbox(productInfo, $event)"> <!-- Pass user and checkbox state -->
         </ProductRowComponent>
       </SolarTable>
     </div>
@@ -31,8 +31,8 @@
 
   <!-- Modals -->
   <CreateProductModal v-if="modal === 'create'" @close="closeModal" @create="create"/>
-  <EditProductModal v-if="modal === 'edit'" :products="selectedProducts" @close="closeModal" @save="edit"/>
-  <DeleteProductModal v-if="modal === 'delete'" :products="selectedProducts" @close="closeModal" @delete="remove"/>
+  <EditProductModal v-if="modal === 'edit'" :productInfos="selectedProducts" @close="closeModal" @save="edit"/>
+  <DeleteProductModal v-if="modal === 'delete'" :productInfos="selectedProducts" @close="closeModal" @delete="remove"/>
 </template>
 
 <script>
@@ -41,11 +41,11 @@ import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
-import ProductRowComponent from "@/components/product/admin/ProductRowComponent";
-import DeleteProductModal from "@/components/product/admin/modals/DeleteProductModal";
-import EditProductModal from "@/components/product/admin/modals/EditProductModal";
-import CreateProductModal from "@/components/product/admin/modals/CreateProductModal";
-import Product from "@/models/product";
+import ProductRowComponent from "@/components/productInfo/admin/ProductRowComponent";
+import DeleteProductModal from "@/components/productInfo/admin/modals/DeleteProductModal";
+import EditProductModal from "@/components/productInfo/admin/modals/EditProductModal";
+import CreateProductModal from "@/components/productInfo/admin/modals/CreateProductModal";
+import Product from "@/models/productInfo";
 import SolarButton from "@/components/general/SolarButton.vue";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
 
@@ -66,16 +66,16 @@ export default {
   },
   data() {
     return {
-      products: [...Product.products],
+      productInfos: [...Product.productInfos],
       modal: '',
-      selectedProducts: [],  // Track the selected product
+      selectedProducts: [],  // Track the selected productInfo
       filterValue: '', // Store the input value for searching
       checkedProducts: [], // A list of the selected ID's
     };
   },
   computed: {
     filteredProducts() {
-      return this.products.filter(p => {
+      return this.productInfos.filter(p => {
         for (let key of Object.keys(p)) {
           if (`${p[key]}`.toLowerCase().includes(this.filterValue)) {
             return true;
@@ -95,11 +95,11 @@ export default {
     },
     async edit(updated) {
       for (let edited of this.selectedProducts) {
-        let index = this.products.findIndex(p => p.id === edited.id);
+        let index = this.productInfos.findIndex(p => p.id === edited.id);
         edited.injectAttributes(updated);
-        let product = await edited.putDatabase();
-        if (product) {
-          this.products[index] = product;
+        let productInfo = await edited.putDatabase();
+        if (productInfo) {
+          this.productInfos[index] = productInfo;
         }
       }
       this.closeModal();
@@ -107,7 +107,7 @@ export default {
     },
     async remove() {
       this.closeModal();
-      this.products = this.products.filter(product => !this.selectedProducts.find(deleted => product.id === deleted.id));
+      this.productInfos = this.productInfos.filter(productInfo => !this.selectedProducts.find(deleted => productInfo.id === deleted.id));
       for (let deleted of this.selectedProducts) {
         await deleted.delDatabase();
       }
@@ -115,9 +115,9 @@ export default {
     },
     async create(creation) {
       this.closeModal();
-      let product = await creation.putDatabase();
-      if (product) {
-        this.products.push(product);
+      let productInfo = await creation.putDatabase();
+      if (productInfo) {
+        this.productInfos.push(productInfo);
       }
       this.$refs.notificationComponent.createSuccessfulNotification('Product successfully created'); // TODO implement properly, added for sprint review 3
     },
@@ -143,15 +143,15 @@ export default {
     openCreateModal() {
       this.modal = "create";
     },
-    toggleCheckbox(product, isChecked) {
+    toggleCheckbox(productInfo, isChecked) {
       if (isChecked) {
-        this.checkedProducts.push(product.id);
+        this.checkedProducts.push(productInfo.id);
       } else {
-        this.checkedProducts = this.checkedProducts.filter(id => id !== product.id);
+        this.checkedProducts = this.checkedProducts.filter(id => id !== productInfo.id);
       }
     },
     getSelected() {
-      return this.products.filter(p => this.checkedProducts.includes(p.id));
+      return this.productInfos.filter(p => this.checkedProducts.includes(p.id));
     }
   },
 }

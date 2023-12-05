@@ -7,9 +7,9 @@
           <p>Add, remove or edit a specific category:</p>
         </div>
         <div class="nav-box">
-          <div @click="goToPage('product')" class="content-box">
+          <div @click="goToPage('productInfo')" class="content-box">
             <div class="content-box-top"><span class="material-symbols-outlined">inventory_2</span></div>
-            <div class="content-box-bottom product"><h3 class="subtitle">Product</h3></div>
+            <div class="content-box-bottom productInfo"><h3 class="subtitle">Product</h3></div>
           </div>
           <div @click="goToPage('warehouse')" class="content-box">
             <div class="content-box-top"><span class="material-symbols-outlined">warehouse</span></div>
@@ -140,7 +140,7 @@ export default {
   color: black;
 }
 
-.product{
+.productInfo{
   background: #F8FB81;
 }
 

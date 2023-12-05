@@ -65,7 +65,7 @@ export default {
     }
   },
   props: {
-    products: {
+    productInfos: {
       type: Array,
       required: true,
     }
@@ -79,8 +79,8 @@ export default {
     },
   },
   created() {
-    if (this.products.length === 1) {
-      this.cloned = this.products[0].clone();
+    if (this.productInfos.length === 1) {
+      this.cloned = this.productInfos[0].clone();
     } else {
       this.title += "s";
     }

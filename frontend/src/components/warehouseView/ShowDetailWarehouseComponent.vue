@@ -1,11 +1,11 @@
 <template>
   <div v-if="isOpen" class="detail-warehouse">
-    <div v-for="(product, index) in products" :key="index">
+    <div v-for="(productInfo, index) in productInfos" :key="index">
       <!-- Hier kun je de inhoud van je detailcomponent plaatsen -->
-      <h2>Details voor {{ product.name }}</h2>
-      <p>product ID: {{ product.id }}</p>
-      <p>Price: {{ product.price }}</p>
-      <p>Description: {{ product.description }} </p>
+      <h2>Details voor {{ productInfo.name }}</h2>
+      <p>productInfo ID: {{ productInfo.id }}</p>
+      <p>Price: {{ productInfo.price }}</p>
+      <p>Description: {{ productInfo.description }} </p>
       <p> </p>
     </div>
   </div>
@@ -13,17 +13,17 @@
 <script>
 
 
-import Product from "@/models/product";
+import Product from "@/models/productInfo";
 
 
 export default {
   data(){
     return{
-      products: [...Product.products]
+      productInfos: [...Product.productInfos]
     }
   },
   props: {
-    product: Product,
+    productInfo: Product,
     isOpen: Boolean,
   },
   methods: {

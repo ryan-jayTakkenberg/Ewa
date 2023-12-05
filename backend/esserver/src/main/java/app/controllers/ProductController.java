@@ -3,7 +3,7 @@ package app.controllers;
 import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
-import app.models.Product;
+import app.models.ProductInfo;
 import app.repositories.ProductJPARepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -51,25 +51,25 @@ public class ProductController {
      * @return list of products
      */
     @GetMapping
-    private List<Product> getProducts() {
+    private List<ProductInfo> getProducts() {
         return productRepo.findAll();
     }
 
     /**
      * Add (or edit) a product to the database
      * @param jwtInfo the json web token
-     * @param product the product to add or edit
+     * @param productInfo the product to add or edit
      * @return the product if it was added or edited successfully
      * @apiNote requires admin permission
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private Product postProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Product product) {
+    private ProductInfo postProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody ProductInfo productInfo) {
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to create a product");
         }
 
-        return productRepo.save(product);
+        return productRepo.save(productInfo);
     }
 
     /**
@@ -80,7 +80,7 @@ public class ProductController {
      * @apiNote requires admin permission
      */
     @DeleteMapping("/{id}")
-    private Product deleteProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
+    private ProductInfo deleteProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to remove a product");
         }
@@ -89,12 +89,12 @@ public class ProductController {
             throw new BadRequestException("No valid ID provided for product");
         }
 
-        Product product = productRepo.findById(id);
-        if (product == null) {
+        ProductInfo productInfo = productRepo.findById(id);
+        if (productInfo == null) {
             throw new BadRequestException("No product found for such ID");
         }
 
-        return productRepo.delete(product);
+        return productRepo.delete(productInfo);
     }
 
 }

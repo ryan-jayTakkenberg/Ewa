@@ -43,9 +43,9 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createInitialProducts() {
-        this.productRepo.save(new Product("Solar panel", 150.123, "Heeft een vermogen van 430 Wattpiek en beschikt over 108 cellen."));
-        this.productRepo.save(new Product("Motor", 32.54, "Heeft een vermogen van 1000 Watt, 72V"));
-        this.productRepo.save(new Product("Frame", 5423.23, "Sterk frame van goede metalen"));
+        this.productRepo.save(new ProductInfo("Solar panel", 150.123, "Heeft een vermogen van 430 Wattpiek en beschikt over 108 cellen."));
+        this.productRepo.save(new ProductInfo("Motor", 32.54, "Heeft een vermogen van 1000 Watt, 72V"));
+        this.productRepo.save(new ProductInfo("Frame", 5423.23, "Sterk frame van goede metalen"));
     }
 
     private void createSampleReports() {
@@ -74,13 +74,13 @@ public class DataLoader implements CommandLineRunner {
 
     private void createSampleOrders() {
         // Retrieve products from the database
-        List<Product> products = productRepo.findAll();
+        List<ProductInfo> productInfos = productRepo.findAll();
         List<Team> teams = teamsRepo.findAll();
 
         // Create sample orders with associated products
-        Order order1 = new Order(-1, "4Blue", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(1), products.subList(0, 2), Order.OrderStatus.CANCELED);
-        Order order2 = new Order(-1, "Stralend groen", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(1), products.subList(1, 3), Order.OrderStatus.DELIVERED);
-        Order order3 = new Order(-1, "ZiezoSolar", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(3), products.subList(2, 3), Order.OrderStatus.PENDING);
+        Order order1 = new Order(-1, "4Blue", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(1), productInfos.subList(0, 2), Order.OrderStatus.CANCELED);
+        Order order2 = new Order(-1, "Stralend groen", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(1), productInfos.subList(1, 3), Order.OrderStatus.DELIVERED);
+        Order order3 = new Order(-1, "ZiezoSolar", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(3), productInfos.subList(2, 3), Order.OrderStatus.PENDING);
 
         // Save orders to the database
         orderRepo.save(order1);

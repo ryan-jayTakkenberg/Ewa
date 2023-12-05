@@ -6,7 +6,7 @@
         <label for="name">Name</label>
         <input
             type="text"
-            v-model="this.product.name"
+            v-model="this.productInfo.name"
             class="p-2 border-gray-300 text-sm text-gray-800 bg-gray-50 shadow focus:border-blue-600"
             placeholder="Name">
       </div>
@@ -14,7 +14,7 @@
         <label for="email">Price (€)</label>
         <input
             type="number"
-            v-model="this.product.price"
+            v-model="this.productInfo.price"
             class="p-2 border-gray-300 text-sm text-gray-800 bg-gray-50 shadow focus:border-blue-600"
             placeholder="Price">
       </div>
@@ -23,7 +23,7 @@
       <label for="email">Description</label>
       <textarea
           type="text"
-          v-model="this.product.description"
+          v-model="this.productInfo.description"
           class="resize-none overflow-y-scroll p-2 border-gray-300 text-sm text-gray-800 bg-gray-50 shadow focus:border-blue-600"
           placeholder="Description">
                 </textarea>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import Product from "@/models/product";
+import Product from "@/models/productInfo";
 
 import ButtonComponent from "@/components/general/SolarButton";
 import SolarModal from "@/components/general/SolarModal";
@@ -52,17 +52,17 @@ export default {
   data() {
     return {
       keys: Object.keys(new Product()),
-      product: { id: -1 },
+      productInfo: { id: -1 },
     }
   },
   computed: {
     canCreate() {
       for (let key of this.keys) {
-        if (!this.product[key] || !this.product[key].toString().trim()) {
+        if (!this.productInfo[key] || !this.productInfo[key].toString().trim()) {
           return false;
         }
       }
-      return this.product.price > 0;
+      return this.productInfo.price > 0;
     }
   },
   methods: {
@@ -71,7 +71,7 @@ export default {
     },
     create() {
       let productClass = new Product();
-      productClass.injectAttributes(this.product);
+      productClass.injectAttributes(this.productInfo);
       this.$emit('create', productClass);
     },
   },
