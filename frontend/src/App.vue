@@ -17,7 +17,7 @@
 
 import Team from "@/models/team";
 import User from "@/models/user";
-import Product from "@/models/productInfo";
+import Product from "@/models/product";
 import Project from "@/models/project";
 import Warehouse from "@/models/warehouse";
 import NavBar from "@/components/navigation/NavBar.vue";

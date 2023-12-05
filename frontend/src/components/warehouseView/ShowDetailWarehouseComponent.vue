@@ -13,7 +13,7 @@
 <script>
 
 
-import Product from "@/models/productInfo";
+import Product from "@/models/product";
 
 
 export default {

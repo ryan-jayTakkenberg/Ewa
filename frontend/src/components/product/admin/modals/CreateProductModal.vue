@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import Product from "@/models/productInfo";
+import Product from "@/models/product";
 
 import ButtonComponent from "@/components/general/SolarButton";
 import SolarModal from "@/components/general/SolarModal";

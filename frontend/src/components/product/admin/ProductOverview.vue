@@ -41,11 +41,11 @@ import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
-import ProductRowComponent from "@/components/productInfo/admin/ProductRowComponent";
-import DeleteProductModal from "@/components/productInfo/admin/modals/DeleteProductModal";
-import EditProductModal from "@/components/productInfo/admin/modals/EditProductModal";
-import CreateProductModal from "@/components/productInfo/admin/modals/CreateProductModal";
-import Product from "@/models/productInfo";
+import ProductRowComponent from "@/components/product/admin/ProductRowComponent";
+import DeleteProductModal from "@/components/product/admin/modals/DeleteProductModal";
+import EditProductModal from "@/components/product/admin/modals/EditProductModal";
+import CreateProductModal from "@/components/product/admin/modals/CreateProductModal";
+import Product from "@/models/product";
 import SolarButton from "@/components/general/SolarButton.vue";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
 

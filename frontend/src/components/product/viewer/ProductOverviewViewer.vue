@@ -29,8 +29,8 @@
 import TitleComponent from "@/components/general/SolarTitle.vue";
 import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
-import ProductRowComponentViewer from "@/components/productInfo/viewer/ProductRowComponentViewer";
-import Product from "@/models/productInfo";
+import ProductRowComponentViewer from "@/components/product/viewer/ProductRowComponentViewer";
+import Product from "@/models/product";
 
 export default {
   name: "UsersOverview",

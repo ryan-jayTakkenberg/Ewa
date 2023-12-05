@@ -2,7 +2,7 @@
 import Order from "@/models/order";
 import SolarModal from "@/components/general/SolarModal.vue";
 import Team from "@/models/team";
-import Product from "@/models/productInfo";
+import Product from "@/models/product";
 import SolarButton from "@/components/general/SolarButton.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 
