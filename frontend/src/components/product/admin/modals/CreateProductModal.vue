@@ -44,7 +44,7 @@ import SolarModal from "@/components/general/SolarModal";
 
 
 export default {
-  name: "EditProductModal",
+  name: "CreateProductModal",
   components: {
     ButtonComponent,
     SolarModal,

@@ -40,7 +40,19 @@ export default {
     closeModal() {
       this.$emit("close-modal");
     },
+    escapeListener(event) {
+      // Close modal with 'esc' key
+      if (event?.key === "Escape") {
+        this.closeModal();
+      }
+    },
   },
+  beforeMount() {
+    document.addEventListener("keydown", (e) => this.escapeListener(e));
+  },
+  beforeUnmount() {
+    document.removeEventListener("keydown", (e) => this.escapeListener(e));
+  }
 };
 </script>
 

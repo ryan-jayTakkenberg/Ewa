@@ -20,8 +20,8 @@
 
     <!-- Edit/Delete Product -->
     <td class="px-6 py-4 row">
-      <div @click="emitEdit" class="font-medium text-blue-700 cursor-pointer hover:underline">Edit productInfo</div>
-      <div @click="emitDelete" class="font-medium text-red-600 cursor-pointer hover:underline">Delete productInfo</div>
+      <div @click="emitEdit" class="font-medium text-blue-700 cursor-pointer hover:underline">Edit product</div>
+      <div @click="emitDelete" class="font-medium text-red-600 cursor-pointer hover:underline">Delete product</div>
     </td>
 
   </tr>

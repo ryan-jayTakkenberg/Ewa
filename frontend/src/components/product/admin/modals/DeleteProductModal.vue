@@ -22,7 +22,7 @@
 import SolarModal from "@/components/general/SolarModal";
 
 export default {
-  name: "EditProductModal",
+  name: "DeleteProductModal",
   components: {
     SolarModal
   },

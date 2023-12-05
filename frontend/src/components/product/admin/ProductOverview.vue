@@ -66,7 +66,7 @@ export default {
   },
   data() {
     return {
-      productInfos: [...Product.productInfos],
+      productInfos: [...Product.products],
       modal: '',
       selectedProducts: [],  // Track the selected productInfo
       filterValue: '', // Store the input value for searching

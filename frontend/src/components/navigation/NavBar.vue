@@ -146,9 +146,9 @@ export default {
         </router-link>
 
         <router-link
-            v-if="(permissionLevel === 'admin')" to="/productInfos" class="nav-button"
-            :class="{ active: isPageActive('productInfos') }"
-            @click="handleNavClick('productInfos')">
+            v-if="(permissionLevel === 'admin')" to="/products" class="nav-button"
+            :class="{ active: isPageActive('products') }"
+            @click="handleNavClick('products')">
           <span class="material-symbols-outlined nav-icon">inventory_2</span>
           <p class="nav-text">Products</p>
         </router-link>

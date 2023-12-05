@@ -92,7 +92,7 @@ export default {
 
             Team.teams = teams;
             User.users = users;
-            Product.productInfos = productInfos;
+            Product.products = productInfos;
             Project.projects = projects;
             Warehouse.warehouses = warehouses;
             Orders.orders = orders;
