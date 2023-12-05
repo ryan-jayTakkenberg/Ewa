@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// Changing the port to 8081
+// Base url and port for backend
 const instance = axios.create({
     baseURL: "http://localhost:8085",
 });
