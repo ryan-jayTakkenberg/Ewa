@@ -16,7 +16,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
     private final JWTConfig jwtConfig = JWTConfig.getInstance();
 
-    private final Set<String> NO_TOKEN_ENDPOINTS = Set.of("/api/authentication/login", "/api/h2-console","/api/request-password-reset","/api/reset-password");
+    private final Set<String> NO_TOKEN_ENDPOINTS = Set.of("/api/authentication/login", "/api/h2-console","/api/request-password-reset","/api/reset-password","/api/validate-reset-token");
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {

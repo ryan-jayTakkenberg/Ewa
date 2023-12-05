@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -46,13 +43,27 @@ public class EmailController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam String token) {
+    // Endpoint to validate the token
+    @CrossOrigin(origins = "http://localhost:8080")
+    @GetMapping("/validate-reset-token")
+    public ResponseEntity<?> validateResetToken(@RequestParam String token) {
         User user = userJPARepository.findByResetToken(token);
 
         if (user != null && user.getResetTokenExpiry().isAfter(LocalDateTime.now())) {
-            user.setPassword(Util.hash("itWorksoMg")); // Update password
-            user.setResetToken(null); // Invalidate the reset token
+            return ResponseEntity.ok("Token is valid.");
+        } else {
+            return ResponseEntity.badRequest().body("Invalid or expired token.");
+        }
+    }
+
+    // Endpoint to actually reset the password
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        User user = userJPARepository.findByResetToken(token);
+
+        if (user != null && user.getResetTokenExpiry().isAfter(LocalDateTime.now())) {
+            user.setPassword(Util.hash(newPassword));
+            user.setResetToken(null);
             user.setResetTokenExpiry(null);
             userJPARepository.save(user);
 
@@ -62,7 +73,7 @@ public class EmailController {
         }
     }
     private void sendResetEmail(String email, String token) {
-        String resetLink = "http://yourfrontenddomain.com/reset-password?token=" + token;
+        String resetLink = "http://localhost:8080/reset-password?token=" + token;
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("solarsedumtest@gmail.com");
         message.setTo(email);
