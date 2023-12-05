@@ -1,6 +1,6 @@
 package app.controllers;
 
-import app.Util;
+import app.util.HashUtil;
 import app.models.User;
 import app.repositories.UserJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class EmailController {
         User user = userJPARepository.findByResetToken(token);
 
         if (user != null && user.getResetTokenExpiry().isAfter(LocalDateTime.now())) {
-            user.setPassword(Util.hash(newPassword));
+            user.setPassword(HashUtil.hash(newPassword));
             user.setResetToken(null);
             user.setResetTokenExpiry(null);
             userJPARepository.save(user);

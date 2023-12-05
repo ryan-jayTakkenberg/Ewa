@@ -2,7 +2,7 @@ package app.controllers;
 
 import app.jwt.JWTConfig;
 import app.jwt.JWToken;
-import app.Util;
+import app.util.HashUtil;
 import app.exceptions.BadRequestException;
 import app.models.User;
 import app.repositories.UserJPARepository;
@@ -37,7 +37,7 @@ public class AuthenticationController {
 
         String email = signInInfo.get("email").asText();
         String password = signInInfo.get("password").asText();
-        String hashedPassword = Util.hash(password);
+        String hashedPassword = HashUtil.hash(password);
 
         User account = null;
         for (User user : userRepo.findAll()) {

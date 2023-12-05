@@ -1,9 +1,9 @@
-package app;
+package app.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Util {
+public class HashUtil {
 
     public static String hash(String input) {
         if (input == null) {

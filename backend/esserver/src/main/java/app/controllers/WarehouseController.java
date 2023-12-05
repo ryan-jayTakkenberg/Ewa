@@ -9,6 +9,7 @@ import app.models.ProductInfo;
 import app.models.Warehouse;
 import app.repositories.ProductJPARepository;
 import app.repositories.WarehouseJPARepository;
+import app.util.JsonBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -103,34 +104,11 @@ public class WarehouseController {
             throw new ForbiddenException("Admin role is required to add a product to a warehouse");
         }
 
-        if (json == null) {
-            throw new BadRequestException("Missing fields: 'amount', 'productId', 'warehouseId'");
-        }
+        JsonBuilder jsonBuilder = JsonBuilder.parse(json);
 
-        if (!json.has("amount")) {
-            throw new BadRequestException("Missing field: 'amount'");
-        }
-        if (!json.get("amount").isNumber()) {
-            throw new BadRequestException("Field 'amount' must be a number");
-        }
-
-        if (!json.has("productId")) {
-            throw new BadRequestException("Missing field: 'productId'");
-        }
-        if (!json.get("productId").isNumber()) {
-            throw new BadRequestException("Field 'productId' must be a number");
-        }
-
-        if (!json.has("warehouseId")) {
-            throw new BadRequestException("Missing field: 'warehouseId'");
-        }
-        if (!json.get("warehouseId").isNumber()) {
-            throw new BadRequestException("Field 'warehouseId' must be a number");
-        }
-
-        long amount = json.get("amount").asLong();
-        long productId = json.get("productId").asLong();
-        long warehouseId = json.get("warehouseId").asLong();
+        long amount = jsonBuilder.getLongFromField("amount");
+        long productId = jsonBuilder.getLongFromField("productId");
+        long warehouseId = jsonBuilder.getLongFromField("warehouseId");
 
         Warehouse warehouse = warehouseRepository.findById(warehouseId);
         if (warehouse == null) {

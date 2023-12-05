@@ -1,13 +1,11 @@
 package app.models;
 
-import app.Util;
+import app.util.HashUtil;
 import app.enums.PermissionLevel;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -39,7 +37,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.lastLogin = lastLogin;
-        this.password = Util.hash(password);
+        this.password = HashUtil.hash(password);
         this.team = team;
     }
 

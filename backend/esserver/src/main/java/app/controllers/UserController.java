@@ -1,6 +1,6 @@
 package app.controllers;
 
-import app.Util;
+import app.util.HashUtil;
 import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
@@ -37,7 +37,7 @@ public class UserController {
 
         if (user.getPassword() != null) {
             // Hash given password
-            String hashedPassword = Util.hash(user.getPassword());
+            String hashedPassword = HashUtil.hash(user.getPassword());
             user.setPassword(hashedPassword);
         }
 
