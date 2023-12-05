@@ -4,6 +4,7 @@ import {getId, getUsername} from "@/data";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
 import Project from "@/models/project";
+import {getAPI, responseOk} from "@/backend";
 
 export default {
 
@@ -14,7 +15,7 @@ export default {
   data() {
     return {
       productsSold: '75',
-      unresolvedReports: '2',
+      unresolvedReports: '0',
       warehousesLowStock: '3',
       globalTotalStock: '350',
       username: getUsername(),
@@ -27,13 +28,15 @@ export default {
       senderUsername: getUsername(),
       users: [],
       modal: false,
+      ongoingProjects: ""
 
     }
   },
 
   mounted() {
     this.fetchAllUsers();
-    this.fetchReports();
+    this.loadOngoingProjectsCount()
+    this.fetchReports()
   },
 
   methods: {
@@ -43,8 +46,19 @@ export default {
     },
 
     async fetchReports() {
-      this.reports = await this.reportService.fetchReports();
-      console.log('Fetched reports: ', [...this.reports]);
+      try {
+        const response = await getAPI('/api/reports');
+        if (response.status === 200 && response.data) {
+          this.reports = response.data;
+        } else {
+          console.error('Error fetching reports:', response.status, response.statusText);
+          this.reports = [];
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching reports:', error);
+        this.reports = [];
+      }
+      this.unresolvedReports = this.reports.length
     },
 
     async postReport() {
@@ -210,7 +224,7 @@ export default {
     <div class="insightContainer">
       <p class="medium">Total Ongoing Projects:</p>
       <div class="meetingWrapper">
-<!--        <div id="textBig"> {{ ongoingProjects }} </div>-->
+        <div id="textBig"> {{ ongoingProjects }} </div>
       </div>
     </div>
 
