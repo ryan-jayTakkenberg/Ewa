@@ -13,10 +13,12 @@ import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultip
 import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
 import SolarPagination from "@/components/general/SolarPagination.vue";
 import {getId} from "@/data";
+import NotificationComponent from "@/components/general/NotificationComponent.vue";
 
 export default {
   name: "UsersOverview",
   components: {
+    NotificationComponent,
     SolarPagination,
     TitleComponent,
     SolarDropdownMenuItem,
@@ -70,6 +72,8 @@ export default {
       if (newUser) {
         this.users.push(newUser);
       }
+
+      this.$refs.notificationComponent.createSuccessfulNotification('User successfully created'); // TODO implement properly, added for sprint review 3
     },
     async editUser(updated) {
       this.closeModal();
@@ -82,6 +86,8 @@ export default {
         if (user) {
           this.users[index] = user;
         }
+
+        this.$refs.notificationComponent.createSuccessfulNotification('User successfully updated'); // TODO implement properly, added for sprint review 3
       }
     },
     async deleteUser() {
@@ -89,6 +95,8 @@ export default {
       const deletedUser = this.selectedUser;
       this.users = this.users.filter(user => user.id !== deletedUser.id);
       await deletedUser.delDatabase();
+
+      this.$refs.notificationComponent.createSuccessfulNotification('User successfully deleted'); // TODO implement properly, added for sprint review 3
     },
     async deleteCheckedUsers() {
       this.closeModal();
@@ -180,6 +188,9 @@ export default {
 </script>
 
 <template>
+
+  <NotificationComponent ref="notificationComponent" />
+
   <TitleComponent class="header" page-title="Users"></TitleComponent>
   <div class="body">
     <div class="body-container">

@@ -140,6 +140,7 @@ export default {
     },
 
     async submitForm() {
+      console.log(process.env.VUE_APP_API_URL);
       let response = await postAPI("/api/authentication/login", {
         email: this.emailInput,
         password: this.passwordInput,

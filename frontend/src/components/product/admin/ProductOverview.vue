@@ -1,4 +1,7 @@
 <template>
+
+  <NotificationComponent ref="notificationComponent" />
+
   <TitleComponent class="header" page-title="Products"></TitleComponent>
 
   <div class="body">
@@ -44,10 +47,12 @@ import EditProductModal from "@/components/product/admin/modals/EditProductModal
 import CreateProductModal from "@/components/product/admin/modals/CreateProductModal";
 import Product from "@/models/product";
 import SolarButton from "@/components/general/SolarButton.vue";
+import NotificationComponent from "@/components/general/NotificationComponent.vue";
 
 export default {
   name: "UsersOverview",
   components: {
+    NotificationComponent,
     SolarButton,
     ProductRowComponent,
     SolarDropdownMenuItem,
@@ -98,6 +103,7 @@ export default {
         }
       }
       this.closeModal();
+      this.$refs.notificationComponent.createSuccessfulNotification('Product successfully updated'); // TODO implement properly, added for sprint review 3
     },
     async remove() {
       this.closeModal();
@@ -105,6 +111,7 @@ export default {
       for (let deleted of this.selectedProducts) {
         await deleted.delDatabase();
       }
+      this.$refs.notificationComponent.createSuccessfulNotification('Product successfully deleted'); // TODO implement properly, added for sprint review 3
     },
     async create(creation) {
       this.closeModal();
@@ -112,6 +119,7 @@ export default {
       if (product) {
         this.products.push(product);
       }
+      this.$refs.notificationComponent.createSuccessfulNotification('Product successfully created'); // TODO implement properly, added for sprint review 3
     },
     handleSearchChange(value) {
       this.filterValue = value.trim().toLowerCase();

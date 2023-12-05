@@ -12,10 +12,12 @@ import TeamsDeleteComponent from "@/components/team/TeamsDeleteComponent.vue";
 
 
 import {TeamsAdaptor} from "@/service/teams-adaptor";
+import NotificationComponent from "@/components/general/NotificationComponent.vue";
 export default {
   name: "TeamsOverview",
   inject: ["teamsAdaptor"],
   components: {
+    NotificationComponent,
     SolarButton,
     TeamsDeleteComponent,
     TeamsRowComponent,
@@ -142,6 +144,8 @@ export default {
       } catch (error) {
         console.error("Error deleting team:", error);
       }
+
+      this.$refs.notificationComponent.createSuccessfulNotification('Team successfully deleted'); // TODO implement properly, added for sprint review 3
     },
     async asyncUpdateTeamById(teamId) {
       console.log("asyncUpdateTeamById - Team ID:", teamId);
@@ -155,6 +159,8 @@ export default {
       } catch (error) {
         console.error("Error updating team:", error);
       }
+
+      this.$refs.notificationComponent.createSuccessfulNotification('Team successfully updated'); // TODO implement properly, added for sprint review 3
     },
     async asyncAddTeam(newTeam) {
       try {
@@ -166,6 +172,8 @@ export default {
       } catch (error) {
         console.error("Error adding team:", error);
       }
+
+      this.$refs.notificationComponent.createSuccessfulNotification('Team successfully created'); // TODO implement properly, added for sprint review 3
     },
     async getTeams() {
       try {
@@ -186,6 +194,9 @@ export default {
 </script>
 
 <template>
+
+  <NotificationComponent ref="notificationComponent" />
+
   <SolarTitle class="header" page-title="Teams"/>
   <div class="body">
     <div class="body-container">
