@@ -75,7 +75,9 @@ export default {
 
     async fetchReports() {
       this.reports = await this.reportService.fetchReports();
+      console.log('Fetched reports: ', [...this.reports]);
     },
+
 
     async postReport() {
 
@@ -88,21 +90,29 @@ export default {
       const report = {
         date: new Date().toLocaleDateString(),
         senderId: this.senderId,
-        senderName: this.senderUsername,
+        senderName: this.senderName,
         receiverId: this.receiverId,
         body: this.reportBody,
       };
 
-      await this.reportService.postReport(report);
+      const postedReport = await this.reportService.postReport(report);
+
+      // Check if delete was successful (HTTP status code 201)
+      if (postedReport.status === 201) {
+
+        console.log('Successfully posted report:', postedReport.data);
+
+        // Notify the user about a successful delete
+        this.$refs.notificationComponent.createSuccessfulNotification(' Report successfully posted');
+      } else {
+
+        // Notify the user about an unsuccessful delete
+        console.log('An error occurred when trying to post the report:', report);
+        this.$refs.notificationComponent.createUnsuccessfulNotification('Unsuccessful post. Try again');
+
+      }
 
       this.reportBody = '';
-      alert('Your report was successfully sent!');
-      this.unresolvedReports = this.reports.length
-      const response = await getAPI('/api/reports');
-      if (response.status === 200 && response.data) {
-        this.reports = response.data;}
-      this.unresolvedReports = this.reports.length
-
     },
 
     async deleteReport() {
