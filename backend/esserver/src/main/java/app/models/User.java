@@ -104,4 +104,12 @@ public class User {
     public long getId() {
         return id;
     }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 }

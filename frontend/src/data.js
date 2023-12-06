@@ -46,14 +46,6 @@ export function removeUsername() {
     return localStorage.removeItem("username");
 }
 
-export function setUserTeam(id) {
-    return localStorage.setItem("team", id);
-}
-
-export function getUserTeam() {
-    return localStorage.getItem("team") ?? "";
-}
-
 export function removeUserTeam() {
     return localStorage.removeItem("team");
 }
