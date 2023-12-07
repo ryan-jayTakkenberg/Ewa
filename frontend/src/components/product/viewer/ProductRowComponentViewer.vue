@@ -38,15 +38,6 @@ export default {
     }
   },
   methods: {
-    emitEdit() {
-      this.$emit("edit", this.productInfo);
-    },
-    emitDelete() {
-      this.$emit("delete", this.productInfo);
-    },
-    emitToggle() {
-      this.$emit("toggle", this.checked);
-    },
     maxTextLength(text, maxLength) {
       const suffix = "...";
       if (maxLength <= suffix.length) {
@@ -89,7 +80,6 @@ export default {
   beforeUnmount() {
     removeEventListener('resize', this.onResize);
   },
-
 }
 </script>
 

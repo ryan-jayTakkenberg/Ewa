@@ -15,7 +15,7 @@ public class Product_Order {
     private long amount;
 
     @ManyToOne(optional = false, cascade = CascadeType.DETACH)
-    @JsonIgnoreProperties({"products"})
+    @JsonIgnoreProperties({"product_orders"})
     private Product product;
 
     @ManyToOne(optional = false, cascade = CascadeType.DETACH)
@@ -54,14 +54,6 @@ public class Product_Order {
 
     public void setProduct(Product product) {
         this.product = product;
-    }
-
-    public Product getProductInfo() {
-        return product;
-    }
-
-    public void setProductInfo(Product productInfo) {
-        this.product = productInfo;
     }
 
     public Order getOrder() {

@@ -5,11 +5,17 @@ import OverviewModal from "@/components/overview/OverviewModal.vue";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
 import Project from "@/models/project";
 import {getAPI, responseOk} from "@/backend";
+import Warehouse from "@/models/warehouse";
+import SolarTable from "@/components/general/SolarTable";
 
 export default {
 
   name: "AdminOverviewComponent",
-  components: {NotificationComponent, OverviewModal},
+  components: {
+    NotificationComponent,
+    OverviewModal,
+    SolarTable,
+  },
   inject: ['reportService', 'userService', 'projectService'],
 
   data() {
@@ -28,8 +34,8 @@ export default {
       senderUsername: getUsername(),
       users: [],
       modal: false,
-      ongoingProjects: ""
-
+      ongoingProjects: "",
+      warehouses: Warehouse.warehouses,
     }
   },
 
@@ -236,6 +242,27 @@ export default {
       return this.users.filter(user => user.permissionLevel !== 'ADMIN');
     },
 
+    productTotals() {
+      const totals = {};
+
+      this.warehouses.forEach((warehouse) => {
+        warehouse.products.forEach((product) => {
+          const productName = product['product']['id'];
+
+          if (!totals[productName]) {
+            totals[productName] = {
+              name: product['product']['name'],
+              amount: 0,
+            };
+          }
+
+          totals[productName].amount += product.amount;
+        });
+      });
+
+      return totals;
+    },
+
   },
 
   watch: {
@@ -318,6 +345,22 @@ export default {
       </div>
 
     </div>
+
+  </div>
+
+  <!--- inventory ---------------------------------------------------------------------------------->
+  <div class="sectionContainer">
+
+    <h1 class="sectionTitle">Inventory</h1>
+
+    <SolarTable :columns="['product', 'amount', '']">
+      <tr class="border-gray-100 border-b text-base font-medium" v-for="(product, index) in this.productTotals" v-bind:key="index">
+        <!--Product Name -->
+        <td class="pl-6 text-gray-900 whitespace-nowrap">{{ product.name }}</td>
+        <!--Product Amount -->
+        <td class="px-6 py-4" :class="{'text-red-600': product.amount < 10}">{{ product.amount }}</td>
+      </tr>
+    </SolarTable>
 
   </div>
 

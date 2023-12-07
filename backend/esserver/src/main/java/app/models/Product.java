@@ -29,11 +29,11 @@ public class Product {
     private String description;
 
     @OneToMany(mappedBy = "product", cascade = { CascadeType.ALL })
-    @JsonIgnoreProperties({"product"})
+    @JsonIgnoreProperties("product")
     private Set<Product_Warehouse> products_warehouse;
 
     @OneToMany(mappedBy = "product", cascade = { CascadeType.ALL })
-    @JsonIgnoreProperties({"product"})
+    @JsonIgnoreProperties("product")
     private Set<Product_Order> product_orders;
 
     public Product(String name, double price, String description) {
@@ -79,12 +79,12 @@ public class Product {
     }
 
     @JsonIgnore
-    public Set<Product_Warehouse> getProductsInWarehouses() {
+    public Set<Product_Warehouse> getProducts_warehouse() {
         return products_warehouse;
     }
 
     @JsonIgnore
-    public Set<Product_Order> getProductsInOrders() {
+    public Set<Product_Order> getProduct_orders() {
         return product_orders;
     }
 }
