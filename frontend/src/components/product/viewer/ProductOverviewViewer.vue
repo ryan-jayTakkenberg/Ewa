@@ -10,15 +10,12 @@
           <SearchBarComponent place-holder="Search For Products" @search="handleSearchChange" />
         </div>
       </div>
-      <SolarTable :columns="['productInfo', 'price', '']">
+      <SolarTable :columns="['product', 'price', '']">
         <ProductRowComponentViewer
             ref="rowComponent"
-            v-for="(productInfo, index) in filteredProducts"
+            v-for="(product, index) in filteredProducts"
             :key="index"
-            :productInfo="productInfo"
-            @edit="openEditModal"
-            @delete="openDeleteModal"
-            @toggle="toggleCheckbox(productInfo, $event)"> <!-- Pass user and checkbox state -->
+            :productInfo="product">
         </ProductRowComponentViewer>
       </SolarTable>
     </div>
@@ -42,7 +39,6 @@ export default {
   },
   data() {
     return {
-      productInfos: [...Product.productInfos],
       modal: '',
       selectedProducts: [],  // Track the selected productInfo
       filterValue: '', // Store the input value for searching
@@ -51,7 +47,7 @@ export default {
   },
   computed: {
     filteredProducts() {
-      return this.productInfos.filter(p => {
+      return Product.products.filter(p => {
         for (let key of Object.keys(p)) {
           if (`${p[key]}`.toLowerCase().includes(this.filterValue)) {
             return true;
@@ -61,17 +57,6 @@ export default {
       });
     },
   },
-  created() {
-    if (!this.productInfos?.length) {
-      // Keep updating the list if the database has not returned all the data yet
-      const fetchingInterval = setInterval(() => {
-        if (!Product.fetching) {
-          this.productInfos = [...Product.productInfos];
-          clearInterval(fetchingInterval);
-        }
-      }, 100);
-    }
-  },
   methods: {
     closeModal() {
       this.modal = '';
@@ -80,63 +65,9 @@ export default {
         this.$refs.rowComponent.forEach(row => row.checked = false);
       }
     },
-    async edit(updated) {
-      for (let edited of this.selectedProducts) {
-        let index = this.productInfos.findIndex(p => p.id === edited.id);
-        edited.injectAttributes(updated);
-        let productInfo = await edited.putDatabase();
-        if (productInfo) {
-          this.productInfos[index] = productInfo;
-        }
-      }
-      this.closeModal();
-    },
-    async remove() {
-      this.closeModal();
-      this.productInfos = this.productInfos.filter(productInfo => !this.selectedProducts.find(deleted => productInfo.id === deleted.id));
-      for (let deleted of this.selectedProducts) {
-        await deleted.delDatabase();
-      }
-    },
-    async create(creation) {
-      this.closeModal();
-      let productInfo = await creation.putDatabase();
-      if (productInfo) {
-        this.productInfos.push(productInfo);
-      }
-    },
     handleSearchChange(value) {
       this.filterValue = value.trim().toLowerCase();
     },
-    openDeleteModal(thing) {
-      this.modal = "delete";
-      if (thing instanceof Array) {
-        this.selectedProducts = thing;
-      } else {
-        this.selectedProducts = [thing];
-      }
-    },
-    openEditModal(thing) {
-      this.modal = "edit";
-      if (thing instanceof Array) {
-        this.selectedProducts = thing;
-      } else {
-        this.selectedProducts = [thing];
-      }
-    },
-    openCreateModal() {
-      this.modal = "create";
-    },
-    toggleCheckbox(productInfo, isChecked) {
-      if (isChecked) {
-        this.checkedProducts.push(productInfo.id);
-      } else {
-        this.checkedProducts = this.checkedProducts.filter(id => id !== productInfo.id);
-      }
-    },
-    getSelected() {
-      return this.productInfos.filter(p => this.checkedProducts.includes(p.id));
-    }
   },
 }
 </script>

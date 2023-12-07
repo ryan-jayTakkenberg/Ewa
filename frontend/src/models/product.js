@@ -101,14 +101,14 @@ export default class Product {
     static async getDatabase() {
         try {
             this.fetching = true;
+            let products = [];
             // make a get request to the backend
             // update "products" with the response
             let response = await getAPI("/api/product");
             if (!responseOk(response)) {
-                return;
+                return products;
             }
 
-            let products = [];
             for (let obj of response.data) {
                 let product = new Product();
                 if (product.injectAttributes(obj)) {

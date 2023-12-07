@@ -73,6 +73,7 @@ export default {
   },
   async created() {
       await this.getWarehouseList();
+      console.log(await this.getWarehouseList());
   },
 
   computed: {

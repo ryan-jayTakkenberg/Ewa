@@ -1,57 +1,50 @@
+import {getAPI, responseOk} from "@/backend";
+
 export default class Warehouse {
     id;
     name;
     address;
     postalCode;
     city;
+    teams;
+    products;
 
-    static City = [
-        "Amsterdam",
-        "Haarlem",
-        "Zaandam",
-        "Den Helder"
-    ];
-
-    static PostalCode = [
-        "1234 AB",
-        "5678 CD",
-        "3456 JF",
-        "1284 AJ"
-    ];
-
-    constructor(id, name, address, postalCode, city) {
+    constructor(id, name, address, postalCode, city, teams, products) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.postalCode = postalCode;
         this.city = city;
+        this.teams = teams;
+        this.products = products;
     }
 
-    static copyConstructor(warehouse){
+    static copyConstructor(warehouse) {
        try {
-            if (warehouse == null)return null;
-            let copy = Object.assign(new Warehouse(), warehouse)
-           return copy
+           if (warehouse == null) return null;
+           return Object.assign(new Warehouse(), warehouse)
        } catch (error){
             console.error("Error with copying of warehouse", error)
            return null;
        }
     }
 
-    static createSampleOffer(pId = 0) {
-        const id = pId;
-        const name = "A Warehouse";
-        const address = "Straat 1";
-        const postalCodeValues = Object.values(Warehouse.PostalCode);
-        const postalCode =postalCodeValues[Math.floor(Math.random() * postalCodeValues.length)]
-        const cityValues = Object.values(Warehouse.City)
-        const city = cityValues[Math.floor(Math.random() * cityValues.length)]
-
-        return new Warehouse(id, name, address, postalCode, city  );
+    injectAttributes(from) {
+        if (!(from instanceof Object)) {
+            return false;
+        }
+        for (let attr of Object.keys(this)) {
+            if (from[attr] !== null && from[attr] !== undefined) {
+                this[attr] = from[attr];
+            }
+        }
+        return true;
     }
 
     clone() {
-        return new Warehouse(this.id, this.name, this.address, this.postalCode, this.city);
+        let warehouse = new Warehouse();
+        warehouse.injectAttributes(this);
+        return warehouse;
     }
 
     equals(other) {
@@ -111,11 +104,21 @@ export default class Warehouse {
     static async getDatabase() {
         try {
             this.fetching = true;
-            // TODO make a get request to the backend
-            //  update "Warehouses" with the response
-            return [new Warehouse(0, "Warehouse 0", "Address 10", Warehouse.PostalCode[Math.floor(Math.random() * Warehouse.PostalCode.length)], Warehouse.City[Math.floor(Math.random() * Warehouse.City.length)]),
-                new Warehouse(1, "Warehouse 1", "Address 124", Warehouse.PostalCode[Math.floor(Math.random() * Warehouse.PostalCode.length)], Warehouse.City[Math.floor(Math.random() * Warehouse.City.length)]),
-                new Warehouse(2, "Warehouse 2", "Address 23", Warehouse.PostalCode[Math.floor(Math.random() * Warehouse.PostalCode.length)], Warehouse.City[Math.floor(Math.random() * Warehouse.City.length)])];
+            let warehouses = [];
+            // make a get request to the backend
+            // update "warehouses" with the response
+            let response = await getAPI("/api/warehouses");
+            if (!responseOk(response)) {
+                return warehouses;
+            }
+
+            for (let obj of response.data) {
+                let warehouse = new Warehouse();
+                if (warehouse.injectAttributes(obj)) {
+                    warehouses.push(warehouse);
+                }
+            }
+            return warehouses;
         } catch (e) {
             return [];
         } finally {
@@ -125,8 +128,4 @@ export default class Warehouse {
 
     static fetching = true;
     static warehouses = [];
-
-    static createNewWarehouse(name, address, postalCode, city) {
-        return new Warehouse(-1, name, address, postalCode, city);
-    }
 }

@@ -1,8 +1,8 @@
 package app.models;
 
+import app.models.relations.Product_Warehouse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -21,11 +21,11 @@ public class Warehouse {
 
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("warehouse")
-    private Set<Team> teams;
+    private final Set<Team> teams = new HashSet<>();
 
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"warehouse"})
-    private final Set<Product> products = new HashSet<>();
+    private final Set<Product_Warehouse> products = new HashSet<>();
 
     public Warehouse(int id, String name, String city, String address, String postalCode) {
         this.id = id;
@@ -105,13 +105,18 @@ public class Warehouse {
         this.postalCode = postalCode;
     }
 
-    public Set<Product> getProducts() {
+    public Set<Product_Warehouse> getProducts() {
         return products;
     }
 
-    public void addProduct(Product product) {
+    public void addProduct(Product_Warehouse product) {
         this.products.add(product);
     }
+
+    public void removeProduct(Product_Warehouse product) {
+        this.products.remove(product);
+    }
+
     public Set<Team> getTeams() {
         return teams;
     }

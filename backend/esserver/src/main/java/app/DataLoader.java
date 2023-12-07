@@ -2,11 +2,14 @@ package app;
 
 import app.enums.PermissionLevel;
 import app.models.*;
+import app.models.relations.Product_Order;
+import app.models.relations.Product_Warehouse;
 import app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -14,7 +17,7 @@ import java.util.Random;
 public class DataLoader implements CommandLineRunner {
 
     @Autowired
-    private ProductJPARepository productRepo;
+    private ProductJPARepository productsRepo;
     @Autowired
     private UserJPARepository userRepo;
     @Autowired
@@ -33,19 +36,20 @@ public class DataLoader implements CommandLineRunner {
         System.out.println("Running CommandLine Startup...");
 
         this.createInitialProducts();
-        this.createSampleReports();
         this.createSampleWarehouses();
+        this.createSampleReports();
         this.createSampleTeamAndProjects();
         this.createInitialUsers();
         this.createSampleOrders();
+
 
         System.out.println("Done!");
     }
 
     private void createInitialProducts() {
-        this.productRepo.save(new ProductInfo("Solar panel", 150.123, "Heeft een vermogen van 430 Wattpiek en beschikt over 108 cellen."));
-        this.productRepo.save(new ProductInfo("Motor", 32.54, "Heeft een vermogen van 1000 Watt, 72V"));
-        this.productRepo.save(new ProductInfo("Frame", 5423.23, "Sterk frame van goede metalen"));
+        this.productsRepo.save(new Product("Solar panel", 150.123, "Heeft een vermogen van 430 Wattpiek en beschikt over 108 cellen."));
+        this.productsRepo.save(new Product("Motor", 32.54, "Heeft een vermogen van 1000 Watt, 72V"));
+        this.productsRepo.save(new Product("Frame", 5423.23, "Sterk frame van goede metalen"));
     }
 
     private void createSampleReports() {
@@ -61,37 +65,38 @@ public class DataLoader implements CommandLineRunner {
 
     private void createSampleOrders() {
         // Retrieve products from the database
-        List<ProductInfo> productInfos = productRepo.findAll();
         List<Team> teams = teamsRepo.findAll();
+        Order[] orders = {
+                new Order(-1, "4Blue", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(1), Collections.emptyList(), Order.OrderStatus.CANCELED),
+                new Order(-1, "Stralend groen", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(1), Collections.emptyList(), Order.OrderStatus.DELIVERED),
+                new Order(-1, "ZiezoSolar", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(3), Collections.emptyList(), Order.OrderStatus.PENDING)
+        };
 
-        // Create sample orders with associated products
-        Order order1 = new Order(-1, "4Blue", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(1), productInfos.subList(0, 2), Order.OrderStatus.CANCELED);
-        Order order2 = new Order(-1, "Stralend groen", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(1), productInfos.subList(1, 3), Order.OrderStatus.DELIVERED);
-        Order order3 = new Order(-1, "ZiezoSolar", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(3), productInfos.subList(2, 3), Order.OrderStatus.PENDING);
+        List<Product> products = productsRepo.findAll();
+        Random random = new Random();
 
-        // Save orders to the database
-        orderRepo.save(order1);
-        orderRepo.save(order2);
-        orderRepo.save(order3);
+        for (Order order : orders) {
+            Product_Order product_order = new Product_Order(random.nextInt(10) + 1, products.stream().skip(random.nextInt(products.size())).findFirst().orElse(null), order);
+            order.setProducts(List.of(product_order));
+            orderRepo.save(order);
+        }
     }
 
 
     private void createSampleWarehouses(){
         Warehouse[] warehouses = {
                 new Warehouse(0, "Solar Sedum", "Amsterdam", "Straat 111", "1234 AB"),
-                new Warehouse(0, "HvA Warehose", "Amsterdam", "Straat 222", "1234 CD"),
+                new Warehouse(0, "HvA Warehouse", "Amsterdam", "Straat 222", "1234 CD"),
                 new Warehouse(0, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF"),
                 new Warehouse(0, "Green Left", "Amsterdam", "Straat 444", "1234 GH")
         };
 
+        List<Product> products = productsRepo.findAll();
         Random random = new Random();
-        List<ProductInfo> productInfoList = productRepo.findAll();
 
         for (Warehouse warehouse : warehouses) {
-            int amount = random.nextInt(1, 10);
-            ProductInfo productInfo = productInfoList.stream().skip(random.nextInt(productInfoList.size())).findFirst().orElse(null);
-            Product product = new Product(amount, productInfo, warehouse);
-            warehouse.addProduct(product);
+            Product_Warehouse product_warehouse = new Product_Warehouse(random.nextInt(10) + 1, products.stream().skip(random.nextInt(products.size())).findFirst().orElse(null), warehouse);
+            warehouse.addProduct(product_warehouse);
             warehouseRepo.save(warehouse);
         }
     }

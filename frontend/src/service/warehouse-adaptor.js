@@ -18,7 +18,7 @@ export class WarehouseAdaptor {
             return [];
         }
 
-        return response.data.map(data => new Warehouse(data.id, data.name, data.address, data.postalCode, data.city));
+        return response.data.map(data => new Warehouse(data.id, data.name, data.address, data.postalCode, data.city, data.teams, data.products));
     }
 
     async asyncFindById(id) {

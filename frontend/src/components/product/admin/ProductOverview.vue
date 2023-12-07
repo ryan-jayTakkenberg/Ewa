@@ -18,12 +18,12 @@
       <SolarTable :columns="['', 'Product', 'Price', 'Action']">
         <ProductRowComponent
             ref="rowComponent"
-            v-for="(productInfo, index) in filteredProducts"
+            v-for="(product, index) in filteredProducts"
             :key="index"
-            :productInfo="productInfo"
+            :productInfo="product"
             @edit="openEditModal"
             @delete="openDeleteModal"
-            @toggle="toggleCheckbox(productInfo, $event)"> <!-- Pass user and checkbox state -->
+            @toggle="toggleCheckbox(product, $event)">
         </ProductRowComponent>
       </SolarTable>
     </div>
@@ -66,7 +66,6 @@ export default {
   },
   data() {
     return {
-      productInfos: [...Product.products],
       modal: '',
       selectedProducts: [],  // Track the selected productInfo
       filterValue: '', // Store the input value for searching
@@ -75,7 +74,7 @@ export default {
   },
   computed: {
     filteredProducts() {
-      return this.productInfos.filter(p => {
+      return Product.products.filter(p => {
         for (let key of Object.keys(p)) {
           if (`${p[key]}`.toLowerCase().includes(this.filterValue)) {
             return true;
@@ -86,6 +85,10 @@ export default {
     },
   },
   methods: {
+    updateTable() {
+      this.filterValue += ' ';
+      this.filterValue = this.filterValue.trim();
+    },
     closeModal() {
       this.modal = '';
       this.checkedProducts = [];
@@ -94,32 +97,36 @@ export default {
       }
     },
     async edit(updated) {
+      this.closeModal();
       for (let edited of this.selectedProducts) {
-        let index = this.productInfos.findIndex(p => p.id === edited.id);
         edited.injectAttributes(updated);
-        let productInfo = await edited.putDatabase();
-        if (productInfo) {
-          this.productInfos[index] = productInfo;
+        if (!await edited.putDatabase()) {
+          this.$refs.notificationComponent.createUnsuccessfulNotification('Failed to update ' + (this.selectedProducts.length === 1 ? 'product' : 'products'));
+          return;
         }
       }
-      this.closeModal();
-      this.$refs.notificationComponent.createSuccessfulNotification('Product successfully updated'); // TODO implement properly, added for sprint review 3
+      this.updateTable();
+      this.$refs.notificationComponent.createSuccessfulNotification('Successfully updated ' + (this.selectedProducts.length === 1 ? 'product' : 'products'));
     },
     async remove() {
       this.closeModal();
-      this.productInfos = this.productInfos.filter(productInfo => !this.selectedProducts.find(deleted => productInfo.id === deleted.id));
       for (let deleted of this.selectedProducts) {
-        await deleted.delDatabase();
+        if (!await deleted.delDatabase()) {
+          this.$refs.notificationComponent.createUnsuccessfulNotification('Failed to delete ' + (this.selectedProducts.length === 1 ? 'product' : 'products'));
+          return;
+        }
       }
-      this.$refs.notificationComponent.createSuccessfulNotification('Product successfully deleted'); // TODO implement properly, added for sprint review 3
+      this.updateTable();
+      this.$refs.notificationComponent.createSuccessfulNotification('Successfully deleted ' + (this.selectedProducts.length === 1 ? 'product' : 'products'));
     },
     async create(creation) {
       this.closeModal();
-      let productInfo = await creation.putDatabase();
-      if (productInfo) {
-        this.productInfos.push(productInfo);
+      if (!await creation.putDatabase()) {
+        this.$refs.notificationComponent.createUnsuccessfulNotification('Failed to delete product');
+        return;
       }
-      this.$refs.notificationComponent.createSuccessfulNotification('Product successfully created'); // TODO implement properly, added for sprint review 3
+      this.updateTable();
+      this.$refs.notificationComponent.createSuccessfulNotification('Successfully created product');
     },
     handleSearchChange(value) {
       this.filterValue = value.trim().toLowerCase();
@@ -151,7 +158,7 @@ export default {
       }
     },
     getSelected() {
-      return this.productInfos.filter(p => this.checkedProducts.includes(p.id));
+      return Product.products.filter(p => this.checkedProducts.includes(p.id));
     }
   },
 }

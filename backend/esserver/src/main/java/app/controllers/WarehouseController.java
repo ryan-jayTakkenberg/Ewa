@@ -4,8 +4,8 @@ import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
+import app.models.relations.Product_Warehouse;
 import app.models.Product;
-import app.models.ProductInfo;
 import app.models.Warehouse;
 import app.repositories.ProductJPARepository;
 import app.repositories.WarehouseJPARepository;
@@ -25,7 +25,7 @@ public class WarehouseController {
     private final WarehouseJPARepository warehouseRepository;
     private final ProductJPARepository productRepository;
 
-    public WarehouseController(WarehouseJPARepository warehouseRepository, ProductJPARepository productRepository){
+    public WarehouseController(WarehouseJPARepository warehouseRepository, ProductJPARepository productRepository) {
         this.warehouseRepository = warehouseRepository;
         this.productRepository = productRepository;
     }
@@ -61,23 +61,21 @@ public class WarehouseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Warehouse> updateWarehouse(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id, @RequestBody Warehouse updatedWarehouse){
+    public Warehouse updateWarehouse(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id, @RequestBody Warehouse updatedWarehouse) {
         Warehouse existingWarehouse = warehouseRepository.findById(id);
         if (!jwtInfo.isAdmin()){
             throw new ForbiddenException("Admin role is required to alter a warehouse");
         }
 
-        if (existingWarehouse != null){
-            if (id != updatedWarehouse.getId()){
-                throw new BadRequestException("ID in path does not match ID in request.");
-            }
-
-            updatedWarehouse.setId((int) id);
-            Warehouse savedWarehouse = warehouseRepository.save(updatedWarehouse);
-            return ResponseEntity.ok(savedWarehouse);
-        } else {
-            throw new NotFoundException("Warehouse not found witd ID: " + id);
+        if (existingWarehouse == null) {
+            throw new NotFoundException("Warehouse not found with ID: " + id);
         }
+
+        if (id != updatedWarehouse.getId()) {
+            throw new BadRequestException("ID in path does not match ID in request.");
+        }
+
+        return warehouseRepository.save(updatedWarehouse);
     }
 
     @DeleteMapping("/{id}")
@@ -112,17 +110,17 @@ public class WarehouseController {
 
         Warehouse warehouse = warehouseRepository.findById(warehouseId);
         if (warehouse == null) {
-            throw new BadRequestException("No valid warehouse found for such warehouseId");
+            throw new NotFoundException("No valid warehouse found for such warehouseId");
         }
 
-        ProductInfo productInfo = productRepository.findById(productId);
+        Product productInfo = productRepository.findById(productId);
         if (productInfo == null) {
-            throw new BadRequestException("No valid product found for such productInfo");
+            throw new NotFoundException("No valid product found for such productInfo");
         }
 
-        Product product = new Product(amount, productInfo, warehouse);
+        Product_Warehouse product = new Product_Warehouse(amount, productInfo, warehouse);
         warehouse.addProduct(product);
 
-        return warehouse;
+        return warehouseRepository.save(warehouse);
     }
 }

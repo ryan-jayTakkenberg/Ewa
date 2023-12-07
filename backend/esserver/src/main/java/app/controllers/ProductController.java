@@ -3,7 +3,7 @@ package app.controllers;
 import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
-import app.models.ProductInfo;
+import app.models.Product;
 import app.repositories.ProductJPARepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -40,9 +40,11 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
+    private final ProductJPARepository productInfoRepo;
     private final ProductJPARepository productRepo;
 
-    public ProductController(ProductJPARepository productRepo) {
+    public ProductController(ProductJPARepository productInfoRepo, ProductJPARepository productRepo) {
+        this.productInfoRepo = productInfoRepo;
         this.productRepo = productRepo;
     }
 
@@ -51,8 +53,8 @@ public class ProductController {
      * @return list of products
      */
     @GetMapping
-    private List<ProductInfo> getProducts() {
-        return productRepo.findAll();
+    private List<Product> getProducts() {
+        return productInfoRepo.findAll();
     }
 
     /**
@@ -64,12 +66,12 @@ public class ProductController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private ProductInfo postProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody ProductInfo productInfo) {
+    private Product postProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Product productInfo) {
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to create a product");
         }
 
-        return productRepo.save(productInfo);
+        return productInfoRepo.save(productInfo);
     }
 
     /**
@@ -80,7 +82,7 @@ public class ProductController {
      * @apiNote requires admin permission
      */
     @DeleteMapping("/{id}")
-    private ProductInfo deleteProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
+    private Product deleteProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to remove a product");
         }
@@ -89,12 +91,12 @@ public class ProductController {
             throw new BadRequestException("No valid ID provided for product");
         }
 
-        ProductInfo productInfo = productRepo.findById(id);
+        Product productInfo = productInfoRepo.findById(id);
         if (productInfo == null) {
             throw new BadRequestException("No product found for such ID");
         }
 
-        return productRepo.delete(productInfo);
+        return productInfoRepo.delete(productInfo);
     }
 
 }

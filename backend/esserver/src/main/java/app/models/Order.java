@@ -1,5 +1,9 @@
 package app.models;
 
+import app.models.relations.Product_Order;
+import app.models.relations.Product_Warehouse;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -33,21 +37,17 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "order_product",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<ProductInfo> productInfos;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"order"})
+    private List<Product_Order> products;
 
-    public Order(long id, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, List<ProductInfo> productInfos, OrderStatus status) {
+    public Order(long id, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, List<Product_Order> products, OrderStatus status) {
         this.id = id;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
         this.team = team;
-        this.productInfos = productInfos;
+        this.products = products;
         this.status = status;
     }
 
@@ -101,11 +101,11 @@ public class Order {
         this.team = team;
     }
 
-    public List<ProductInfo> getProducts() {
-        return productInfos;
+    public List<Product_Order> getProducts() {
+        return products;
     }
 
-    public void setProducts(List<ProductInfo> productInfos) {
-        this.productInfos = productInfos;
+    public void setProducts(List<Product_Order> products) {
+        this.products = products;
     }
 }
