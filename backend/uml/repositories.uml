@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>app.repositories</OriginalElement>
+  <nodes>
+    <node x="-135.0" y="98.0">app.repositories.ReportJPARepository</node>
+    <node x="720.0" y="98.0">app.repositories.WarehouseJPARepository</node>
+    <node x="1249.0" y="98.0">app.repositories.ProductJPARepository</node>
+    <node x="960.0" y="87.0">app.repositories.TeamJPARepository</node>
+    <node x="304.0" y="98.0">app.repositories.OrderJPARepository</node>
+    <node x="508.0" y="87.0">app.repositories.ProjectJPARepository</node>
+    <node x="76.0" y="76.0">app.repositories.UserJPARepository</node>
+    <node x="497.5" y="-94.0">app.repositories.EntityRepositoryJPA</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="app.repositories.OrderJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="0.0" y="-71.5" />
+      <point x="396.0" y="51.0" />
+      <point x="604.0" y="51.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="app.repositories.TeamJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="0.0" y="-82.5" />
+      <point x="1094.5" y="51.0" />
+      <point x="604.0" y="51.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="app.repositories.ReportJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="0.0" y="-71.5" />
+      <point x="-39.5" y="51.0" />
+      <point x="604.0" y="51.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="app.repositories.ProductJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="0.0" y="-71.5" />
+      <point x="1347.5" y="51.0" />
+      <point x="604.0" y="51.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="app.repositories.ProjectJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="0.0" y="-82.5" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="app.repositories.UserJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="0.0" y="-93.5" />
+      <point x="180.0" y="51.0" />
+      <point x="604.0" y="51.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="app.repositories.WarehouseJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="0.0" y="-71.5" />
+      <point x="830.0" y="51.0" />
+      <point x="604.0" y="51.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.9269206745783886" showDependencies="false" x="665.5000000000001" y="94.50000000000006" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>app.controllers</OriginalElement>
+  <nodes>
+    <node x="372.0" y="-83.0">app.controllers.ProductController</node>
+    <node x="-41.0" y="597.5">app.controllers.ReportController</node>
+    <node x="371.5" y="355.5">app.controllers.TeamController</node>
+    <node x="-224.5" y="348.5">app.controllers.OverviewController</node>
+    <node x="-142.5" y="188.5">app.controllers.AuthenticationController</node>
+    <node x="67.0" y="-44.5">app.controllers.OrderController</node>
+    <node x="353.0" y="595.5">app.controllers.WarehouseController</node>
+    <node x="13.5" y="355.5">app.controllers.EmailController</node>
+    <node x="-230.5" y="-13.5">app.controllers.UserController</node>
+    <node x="374.5" y="115.5">app.controllers.ProjectController</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Compact" zoom="0.7581018518518519" showDependencies="true" x="365.14503816793774" y="346.3618320610688" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

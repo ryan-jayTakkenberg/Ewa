@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>C:/Users/Léon/IdeaProjects/solar-1/backend/esserver/src/main/java/app</OriginalElement>
+  <nodes>
+    <node x="1890.0" y="1298.0">app.models.Warehouse.City</node>
+    <node x="5121.25" y="1647.0">app.controllers.OverviewController</node>
+    <node x="2532.0" y="1866.0">app.controllers.AuthenticationController</node>
+    <node x="738.25" y="1581.0">app.controllers.OrderController</node>
+    <node x="5187.0" y="1444.0">app.repositories.WarehouseJPARepository</node>
+    <node x="3562.5" y="1232.0">app.repositories.TeamJPARepository</node>
+    <node x="3871.5" y="1356.0">app.controllers.WarehouseController</node>
+    <node x="2521.5" y="737.0">app.models.relations.Product_Order</node>
+    <node x="2910.75" y="962.0">app.models.Order</node>
+    <node x="362.75" y="1466.0">app.jwt.JWTConfig</node>
+    <node x="3084.0" y="-50.0">app.models.Report</node>
+    <node x="4788.5" y="1466.0">app.controllers.ReportController</node>
+    <node x="1666.5" y="671.0">app.models.relations.Product_Warehouse</node>
+    <node x="3077.75" y="803.0">app.models.Team.Name</node>
+    <node x="2684.0" y="265.0">app.models.Project</node>
+    <node x="799.75" y="1196.0">app.repositories.ProductJPARepository</node>
+    <node x="516.0" y="1038.0">app.exceptions.BadRequestException</node>
+    <node x="821.0" y="2010.0">app.util.HashUtil</node>
+    <node x="3439.0" y="375.0">app.enums.PermissionLevel</node>
+    <node x="791.75" y="1036.0">app.repositories.EntityRepositoryJPA</node>
+    <node x="1036.75" y="1285.0">app.exceptions.ForbiddenException</node>
+    <node x="-114.0" y="2010.0">app.ServletInitializer</node>
+    <node x="594.0" y="2010.0">app.EsserverApplication</node>
+    <node x="664.75" y="1419.0">app.controllers.ProductController</node>
+    <node x="245.0" y="1669.0">app.jwt.JWTRequestFilter</node>
+    <node x="-114.0" y="1426.0">app.jwt.JWToken</node>
+    <node x="306.0" y="2010.0">app.cors.CorsConfiguration</node>
+    <node x="3900.25" y="1581.0">app.controllers.TeamController</node>
+    <node x="2429.125" y="1537.0">app.DataLoader</node>
+    <node x="1273.75" y="1254.0">app.repositories.OrderJPARepository</node>
+    <node x="4211.5" y="1242.0">app.exceptions.NotFoundException</node>
+    <node x="5447.0" y="1422.0">app.repositories.ProjectJPARepository</node>
+    <node x="3039.0" y="199.0">app.models.User</node>
+    <node x="3022.5" y="534.0">app.models.Team</node>
+    <node x="2527.25" y="1254.0">app.controllers.UserController</node>
+    <node x="2377.5" y="985.0">app.repositories.UserJPARepository</node>
+    <node x="4361.5" y="1581.0">app.controllers.ProjectController</node>
+    <node x="4872.25" y="1263.0">app.repositories.ReportJPARepository</node>
+    <node x="1836.75" y="896.0">app.models.Warehouse</node>
+    <node x="2981.5" y="1298.0">app.models.Order.OrderStatus</node>
+    <node x="2178.25" y="1232.0">app.controllers.EmailController</node>
+    <node x="1497.75" y="1188.0">app.models.Product</node>
+    <node x="484.75" y="1152.0">app.util.JsonBuilder</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="app.models.User" target="app.enums.PermissionLevel" relationship="TO_ONE">
+      <point x="180.0" y="88.0" />
+      <point x="-109.0" y="-0.0" />
+    </edge>
+    <edge source="app.models.Warehouse.City" target="app.models.Warehouse" relationship="INNER_CLASS">
+      <point x="0.0" y="-49.5" />
+      <point x="1967.0" y="1278.0" />
+      <point x="1907.0" y="1278.0" />
+      <point x="-70.25" y="171.0" />
+    </edge>
+    <edge source="app.controllers.WarehouseController" target="app.exceptions.ForbiddenException" relationship="CREATE">
+      <point x="-215.0" y="25.16666666666663" />
+      <point x="1212.75" y="1463.6666666666665" />
+      <point x="77.5" y="27.0" />
+    </edge>
+    <edge source="app.controllers.UserController" target="app.repositories.UserJPARepository" relationship="TO_ONE">
+      <point x="0.0" y="-71.5" />
+      <point x="2645.75" y="1212.0" />
+      <point x="2429.5" y="1212.0" />
+      <point x="-52.0" y="93.5" />
+    </edge>
+    <edge source="app.controllers.OverviewController" target="app.repositories.WarehouseJPARepository" relationship="TO_ONE">
+      <point x="61.666666666666686" y="-49.5" />
+      <point x="5275.416666666667" y="1607.0" />
+      <point x="5297.0" y="1607.0" />
+      <point x="0.0" y="71.5" />
+    </edge>
+    <edge source="app.controllers.ProjectController" target="app.exceptions.ForbiddenException" relationship="CREATE">
+      <point x="-127.0" y="-82.5" />
+      <point x="4428.0" y="1540.0" />
+      <point x="3256.0" y="1540.0" />
+      <point x="3256.0" y="1470.3333333333333" />
+      <point x="1197.25" y="1470.3333333333333" />
+      <point x="62.0" y="27.0" />
+    </edge>
+    <edge source="app.DataLoader" target="app.models.Team" relationship="CREATE">
+      <point x="123.5" y="-95.5" />
+      <point x="3315.5" y="1546.0" />
+      <point x="145.0" y="104.5" />
+    </edge>
+    <edge source="app.repositories.OrderJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="0.0" y="-71.5" />
+      <point x="1365.75" y="1141.6" />
+      <point x="106.5" y="45.60000000000002" />
+    </edge>
+    <edge source="app.controllers.ProductController" target="app.repositories.ProductJPARepository" relationship="TO_ONE">
+      <point x="48.625" y="-61.0" />
+      <point x="907.875" y="1359.0" />
+      <point x="898.25" y="1359.0" />
+      <point x="0.0" y="71.5" />
+    </edge>
+    <edge source="app.controllers.TeamController" target="app.repositories.TeamJPARepository" relationship="TO_ONE">
+      <point x="-196.5" y="-79.5" />
+      <point x="3784.666666666667" y="1584.0" />
+      <point x="87.66666666666697" y="82.5" />
+    </edge>
+    <edge source="app.models.Team.Name" target="app.models.Team" relationship="INNER_CLASS">
+      <point x="0.0" y="-49.5" />
+      <point x="3160.25" y="783.0" />
+      <point x="3096.5" y="783.0" />
+      <point x="-74.0" y="104.5" />
+    </edge>
+    <edge source="app.DataLoader" target="app.models.Order" relationship="CREATE">
+      <point x="111.15" y="-104.5" />
+      <point x="2663.775" y="1477.0" />
+      <point x="3196.5" y="1477.0" />
+      <point x="3196.5" y="1258.0" />
+      <point x="3178.5" y="1258.0" />
+      <point x="89.25" y="138.0" />
+    </edge>
+    <edge source="app.models.relations.Product_Warehouse" target="app.models.Warehouse" relationship="TO_ONE">
+      <point x="-80.75" y="-0.0" />
+      <point x="1737.25" y="881.0" />
+      <point x="1972.25" y="881.0" />
+      <point x="-5.0" y="-171.0" />
+    </edge>
+    <edge source="app.DataLoader" target="app.repositories.ProjectJPARepository" relationship="TO_ONE">
+      <point x="123.5" y="-86.5" />
+      <point x="4338.642857142857" y="1555.0" />
+      <point x="4338.642857142857" y="1431.3333333333333" />
+      <point x="-96.0" y="-73.16666666666669" />
+    </edge>
+    <edge source="app.models.Team" target="app.models.Project" relationship="TO_MANY">
+      <point x="5.0" y="-104.5" />
+      <point x="3175.5" y="509.0" />
+      <point x="2846.5" y="509.0" />
+      <point x="5.0" y="104.5" />
+    </edge>
+    <edge source="app.DataLoader" target="app.models.User" relationship="CREATE">
+      <point x="123.5" y="-92.5" />
+      <point x="3396.0" y="1549.0" />
+      <point x="177.0" y="137.5" />
+    </edge>
+    <edge source="app.controllers.AuthenticationController" target="app.jwt.JWToken" relationship="CREATE">
+      <point x="-201.6875" y="-49.5" />
+      <point x="2560.8125" y="1846.0" />
+      <point x="45.5" y="1846.0" />
+      <point x="0.0" y="160.0" />
+    </edge>
+    <edge source="app.DataLoader" target="app.models.Report" relationship="CREATE">
+      <point x="123.5" y="-98.5" />
+      <point x="2812.875" y="1543.0" />
+      <point x="2812.875" y="507.33333333333326" />
+      <point x="3020.75" y="507.33333333333326" />
+      <point x="3020.75" y="54.5" />
+      <point x="-135.0" y="-0.0" />
+    </edge>
+    <edge source="app.controllers.AuthenticationController" target="app.repositories.UserJPARepository" relationship="TO_ONE">
+      <point x="64.6875" y="-49.5" />
+      <point x="2827.1875" y="1078.5" />
+      <point x="104.0" y="-0.0" />
+    </edge>
+    <edge source="app.controllers.OverviewController" target="app.repositories.ProjectJPARepository" relationship="TO_ONE">
+      <point x="61.666666666666686" y="-49.5" />
+      <point x="5275.416666666667" y="1627.0" />
+      <point x="5543.0" y="1627.0" />
+      <point x="0.0" y="82.5" />
+    </edge>
+    <edge source="app.models.Product" target="app.models.relations.Product_Order" relationship="TO_MANY">
+      <point x="134.33333333333348" y="-104.5" />
+      <point x="1781.5833333333335" y="870.9999999999999" />
+      <point x="-122.5" y="51.5" />
+    </edge>
+    <edge source="app.models.Warehouse" target="app.models.Team" relationship="TO_MANY">
+      <point x="96.66666666666652" y="-171.0" />
+      <point x="2073.916666666666" y="714.3333333333333" />
+      <point x="-148.0" y="75.83333333333326" />
+    </edge>
+    <edge source="app.models.User" target="app.models.Report" relationship="TO_MANY">
+      <point x="5.0" y="-137.5" />
+      <point x="5.0" y="104.5" />
+    </edge>
+    <edge source="app.models.Team" target="app.models.Warehouse" relationship="TO_ONE">
+      <point x="0.0" y="65.83333333333326" />
+      <point x="2063.916666666666" y="704.3333333333333" />
+      <point x="86.66666666666697" y="-171.0000000000001" />
+    </edge>
+    <edge source="app.controllers.OrderController" target="app.repositories.OrderJPARepository" relationship="TO_ONE">
+      <point x="121.0" y="53.0" />
+      <point x="1306.4166666666665" y="1716.5" />
+      <point x="-59.333333333333485" y="71.5" />
+    </edge>
+    <edge source="app.models.Team" target="app.enums.PermissionLevel" relationship="TO_ONE">
+      <point x="0.0" y="-104.5" />
+      <point x="3170.5" y="514.0" />
+      <point x="3548.0" y="514.0" />
+      <point x="0.0" y="49.5" />
+    </edge>
+    <edge source="app.controllers.ProjectController" target="app.repositories.ProjectJPARepository" relationship="TO_ONE">
+      <point x="193.5" y="-46.5" />
+      <point x="5481.0" y="1617.0" />
+      <point x="-62.0" y="82.5" />
+    </edge>
+    <edge source="app.util.JsonBuilder" target="app.exceptions.BadRequestException" relationship="CREATE">
+      <point x="0.0" y="-93.5" />
+      <point x="608.25" y="1132.0" />
+      <point x="567.25" y="1132.0" />
+      <point x="-51.25" y="27.0" />
+    </edge>
+    <edge source="app.models.Report" target="app.models.User" relationship="TO_ONE">
+      <point x="-5.0" y="-0.0" />
+      <point x="-5.0" y="-137.5" />
+    </edge>
+    <edge source="app.DataLoader" target="app.repositories.OrderJPARepository" relationship="TO_ONE">
+      <point x="-111.15" y="-104.5" />
+      <point x="2441.475" y="1517.0" />
+      <point x="1365.75" y="1517.0" />
+      <point x="0.0" y="71.5" />
+    </edge>
+    <edge source="app.DataLoader" target="app.models.relations.Product_Order" relationship="CREATE">
+      <point x="-49.26666666666688" y="-104.5" />
+      <point x="2503.358333333333" y="1233.0" />
+      <point x="2611.6666666666665" y="1233.0" />
+      <point x="-32.333333333333485" y="82.5" />
+    </edge>
+    <edge source="app.controllers.TeamController" target="app.exceptions.NotFoundException" relationship="CREATE">
+      <point x="98.25" y="-82.5" />
+      <point x="4195.0" y="1561.0" />
+      <point x="4321.5" y="1561.0" />
+      <point x="4321.5" y="1336.0" />
+      <point x="4359.25" y="1336.0" />
+      <point x="49.25" y="27.0" />
+    </edge>
+    <edge source="app.models.relations.Product_Order" target="app.models.Product" relationship="TO_ONE">
+      <point x="0.0" y="41.5" />
+      <point x="1771.583333333333" y="861.0" />
+      <point x="124.33333333333348" y="-104.5" />
+    </edge>
+    <edge source="app.models.User" target="app.models.Team" relationship="TO_ONE">
+      <point x="-5.0" y="-0.0" />
+      <point x="3214.0" y="489.0" />
+      <point x="3165.5" y="489.0" />
+      <point x="-5.0" y="-104.5" />
+    </edge>
+    <edge source="app.models.Team" target="app.models.User" relationship="TO_ONE">
+      <point x="5.0" y="-104.5" />
+      <point x="3175.5" y="499.0" />
+      <point x="3224.0" y="499.0" />
+      <point x="5.0" y="137.5" />
+    </edge>
+    <edge source="app.repositories.UserJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="-35.5" y="-93.5" />
+      <point x="2446.0" y="661.0" />
+      <point x="898.25" y="661.0" />
+      <point x="0.0" y="-60.0" />
+    </edge>
+    <edge source="app.controllers.ProjectController" target="app.exceptions.BadRequestException" relationship="CREATE">
+      <point x="127.0" y="-82.5" />
+      <point x="4682.0" y="-63.0" />
+      <point x="1135.25" y="-63.0" />
+      <point x="1135.25" y="1166.0" />
+      <point x="779.4423076923076" y="1166.0" />
+      <point x="779.4423076923076" y="1045.0" />
+      <point x="102.5" y="-20.0" />
+    </edge>
+    <edge source="app.controllers.ProjectController" target="app.exceptions.NotFoundException" relationship="CREATE">
+      <point x="0.0" y="-82.5" />
+      <point x="4555.0" y="1336.0" />
+      <point x="4260.75" y="1336.0" />
+      <point x="-49.25" y="27.0" />
+    </edge>
+    <edge source="app.controllers.AuthenticationController" target="app.jwt.JWTConfig" relationship="TO_ONE">
+      <point x="-86.4375" y="-49.5" />
+      <point x="2676.0625" y="1806.0" />
+      <point x="644.0" y="1806.0" />
+      <point x="644.0" y="1629.0" />
+      <point x="485.75" y="1629.0" />
+      <point x="41.0" y="71.5" />
+    </edge>
+    <edge source="app.controllers.EmailController" target="app.repositories.UserJPARepository" relationship="TO_ONE">
+      <point x="0.0" y="-82.5" />
+      <point x="2332.75" y="1192.0" />
+      <point x="2429.5" y="1192.0" />
+      <point x="-52.0" y="93.5" />
+    </edge>
+    <edge source="app.controllers.ProductController" target="app.exceptions.BadRequestException" relationship="CREATE">
+      <point x="-48.625" y="-61.0" />
+      <point x="810.625" y="1379.0" />
+      <point x="751.75" y="1379.0" />
+      <point x="751.75" y="1112.0" />
+      <point x="669.75" y="1112.0" />
+      <point x="51.25" y="27.0" />
+    </edge>
+    <edge source="app.controllers.WarehouseController" target="app.repositories.ProductJPARepository" relationship="TO_ONE">
+      <point x="-215.0" y="14.5" />
+      <point x="1249.75" y="1453.0" />
+      <point x="1249.75" y="1267.25" />
+      <point x="98.5" y="-0.25" />
+    </edge>
+    <edge source="app.DataLoader" target="app.models.Project" relationship="CREATE">
+      <point x="123.5" y="-101.5" />
+      <point x="2798.5625" y="1540.0" />
+      <point x="-42.9375" y="104.5" />
+    </edge>
+    <edge source="app.controllers.UserController" target="app.exceptions.BadRequestException" relationship="CREATE">
+      <point x="-80.77500000000009" y="71.5" />
+      <point x="2564.975" y="1440.0" />
+      <point x="1482.75" y="1440.0" />
+      <point x="1482.75" y="1178.0" />
+      <point x="765.5961538461534" y="1178.0" />
+      <point x="765.5961538461534" y="1077.0" />
+      <point x="102.5" y="12.0" />
+    </edge>
+    <edge source="app.repositories.ProductJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="0.0" y="-71.5" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="app.controllers.OverviewController" target="app.repositories.ReportJPARepository" relationship="TO_ONE">
+      <point x="0.0" y="-49.5" />
+      <point x="5213.75" y="1607.0" />
+      <point x="5146.5" y="1607.0" />
+      <point x="5146.5" y="1426.0" />
+      <point x="5015.5" y="1426.0" />
+      <point x="47.75" y="71.5" />
+    </edge>
+    <edge source="app.controllers.OrderController" target="app.exceptions.ForbiddenException" relationship="CREATE">
+      <point x="121.0" y="-53.0" />
+      <point x="1150.75" y="1610.5" />
+      <point x="15.5" y="27.0" />
+    </edge>
+    <edge source="app.models.Order.OrderStatus" target="app.models.Order" relationship="INNER_CLASS">
+      <point x="5.0" y="-49.5" />
+      <point x="3084.0" y="1273.0" />
+      <point x="3005.0" y="1273.0" />
+      <point x="-84.25" y="138.0" />
+    </edge>
+    <edge source="app.models.Order" target="app.models.Order.OrderStatus" relationship="TO_ONE">
+      <point x="-94.25" y="-0.0" />
+      <point x="2995.0" y="1283.0" />
+      <point x="3074.0" y="1283.0" />
+      <point x="-5.0" y="-49.5" />
+    </edge>
+    <edge source="app.models.relations.Product_Warehouse" target="app.models.Product" relationship="TO_ONE">
+      <point x="-80.75" y="-0.0" />
+      <point x="1737.25" y="851.0" />
+      <point x="1642.25" y="851.0" />
+      <point x="-5.0" y="-104.5" />
+    </edge>
+    <edge source="app.DataLoader" target="app.repositories.TeamJPARepository" relationship="TO_ONE">
+      <point x="-111.15" y="-104.5" />
+      <point x="2441.475" y="1497.0" />
+      <point x="3697.0" y="1497.0" />
+      <point x="0.0" y="82.5" />
+    </edge>
+    <edge source="app.controllers.WarehouseController" target="app.exceptions.NotFoundException" relationship="CREATE">
+      <point x="0.0" y="-82.5" />
+      <point x="4086.5" y="1316.0" />
+      <point x="4260.75" y="1316.0" />
+      <point x="-49.25" y="27.0" />
+    </edge>
+    <edge source="app.controllers.OrderController" target="app.exceptions.BadRequestException" relationship="CREATE">
+      <point x="121.0" y="-0.0" />
+      <point x="1243.75" y="1663.5" />
+      <point x="1243.75" y="1173.2" />
+      <point x="770.2115384615381" y="1173.2" />
+      <point x="770.2115384615381" y="1061.0" />
+      <point x="102.5" y="-4.0" />
+    </edge>
+    <edge source="app.controllers.TeamController" target="app.exceptions.ForbiddenException" relationship="CREATE">
+      <point x="-196.5" y="26.5" />
+      <point x="2724.0125" y="1690.0" />
+      <point x="2724.0125" y="1487.0" />
+      <point x="1181.75" y="1487.0" />
+      <point x="46.5" y="27.0" />
+    </edge>
+    <edge source="app.models.Project" target="app.models.Team" relationship="TO_ONE">
+      <point x="-5.0" y="-0.0" />
+      <point x="2836.5" y="519.0" />
+      <point x="3165.5" y="519.0" />
+      <point x="-5.0" y="-104.5" />
+    </edge>
+    <edge source="app.DataLoader" target="app.repositories.ProductJPARepository" relationship="TO_ONE">
+      <point x="-123.5" y="-86.0" />
+      <point x="1246.75" y="1555.5" />
+      <point x="1246.75" y="1251.75" />
+      <point x="98.5" y="-15.75" />
+    </edge>
+    <edge source="app.DataLoader" target="app.models.relations.Product_Warehouse" relationship="CREATE">
+      <point x="-12.349999999999994" y="-104.5" />
+      <point x="2540.275" y="1437.0" />
+      <point x="2137.75" y="1437.0" />
+      <point x="2137.75" y="856.0" />
+      <point x="1893.75" y="856.0" />
+      <point x="75.75" y="82.5" />
+    </edge>
+    <edge source="app.models.Warehouse" target="app.models.relations.Product_Warehouse" relationship="TO_MANY">
+      <point x="5.0" y="-171.0" />
+      <point x="1982.25" y="871.0" />
+      <point x="1747.25" y="871.0" />
+      <point x="-70.75" y="82.5" />
+    </edge>
+    <edge source="app.DataLoader" target="app.repositories.UserJPARepository" relationship="TO_ONE">
+      <point x="61.75000000000003" y="-104.5" />
+      <point x="2614.375" y="1437.0" />
+      <point x="2784.25" y="1437.0" />
+      <point x="2784.25" y="1192.0" />
+      <point x="2533.5" y="1192.0" />
+      <point x="52.0" y="93.5" />
+    </edge>
+    <edge source="app.controllers.UserController" target="app.exceptions.ForbiddenException" relationship="CREATE">
+      <point x="-56.07499999999982" y="71.5" />
+      <point x="2589.675" y="1443.0" />
+      <point x="1228.25" y="1443.0" />
+      <point x="93.0" y="27.0" />
+    </edge>
+    <edge source="app.controllers.ProductController" target="app.exceptions.ForbiddenException" relationship="CREATE">
+      <point x="145.875" y="-61.0" />
+      <point x="1005.125" y="1359.0" />
+      <point x="1135.25" y="1359.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="app.controllers.TeamController" target="app.exceptions.BadRequestException" relationship="CREATE">
+      <point x="0.0" y="82.5" />
+      <point x="4096.75" y="1756.0" />
+      <point x="1166.25" y="1756.0" />
+      <point x="1166.25" y="1369.0" />
+      <point x="756.3653846153848" y="1369.0" />
+      <point x="756.3653846153848" y="1069.0" />
+      <point x="102.5" y="4.0" />
+    </edge>
+    <edge source="app.DataLoader" target="app.models.Product" relationship="CREATE">
+      <point x="-86.44999999999999" y="-104.5" />
+      <point x="2466.175" y="1497.0" />
+      <point x="1647.25" y="1497.0" />
+      <point x="0.0" y="104.5" />
+    </edge>
+    <edge source="app.DataLoader" target="app.repositories.WarehouseJPARepository" relationship="TO_ONE">
+      <point x="123.5" y="-83.5" />
+      <point x="4347.214285714285" y="1558.0" />
+      <point x="4347.214285714285" y="1454.0" />
+      <point x="-110.0" y="-61.5" />
+    </edge>
+    <edge source="app.models.Order" target="app.models.Team" relationship="TO_ONE">
+      <point x="119.0" y="-138.0" />
+      <point x="3208.25" y="942.0" />
+      <point x="3262.75" y="942.0" />
+      <point x="3262.75" y="763.0" />
+      <point x="3244.5" y="763.0" />
+      <point x="74.0" y="104.5" />
+    </edge>
+    <edge source="app.controllers.WarehouseController" target="app.repositories.WarehouseJPARepository" relationship="TO_ONE">
+      <point x="215.0" y="11.5" />
+      <point x="-110.0" y="-65.5" />
+    </edge>
+    <edge source="app.repositories.ReportJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="0.0" y="-71.5" />
+      <point x="4967.75" y="-66.0" />
+      <point x="1087.0277777777778" y="-66.0" />
+      <point x="1087.0277777777778" y="1096.0" />
+      <point x="106.5" y="-0.0" />
+    </edge>
+    <edge source="app.jwt.JWTRequestFilter" target="app.jwt.JWTConfig" relationship="TO_ONE">
+      <point x="0.0" y="-38.5" />
+      <point x="434.5" y="1649.0" />
+      <point x="403.75" y="1649.0" />
+      <point x="-41.0" y="71.5" />
+    </edge>
+    <edge source="app.controllers.AuthenticationController" target="app.exceptions.BadRequestException" relationship="CREATE">
+      <point x="-230.5" y="-0.0" />
+      <point x="1257.6309523809523" y="1915.5" />
+      <point x="1257.6309523809523" y="1184.0" />
+      <point x="774.8269230769229" y="1184.0" />
+      <point x="774.8269230769229" y="1053.0" />
+      <point x="102.5" y="-12.0" />
+    </edge>
+    <edge source="app.models.Product" target="app.models.relations.Product_Warehouse" relationship="TO_MANY">
+      <point x="5.0" y="-104.5" />
+      <point x="1652.25" y="861.0" />
+      <point x="1747.25" y="861.0" />
+      <point x="-70.75" y="82.5" />
+    </edge>
+    <edge source="app.DataLoader" target="app.models.Warehouse" relationship="CREATE">
+      <point x="-37.05" y="-104.5" />
+      <point x="2515.575" y="1457.0" />
+      <point x="2064.0" y="1457.0" />
+      <point x="2064.0" y="1258.0" />
+      <point x="2047.5" y="1258.0" />
+      <point x="70.25" y="171.0" />
+    </edge>
+    <edge source="app.DataLoader" target="app.repositories.ReportJPARepository" relationship="TO_ONE">
+      <point x="123.5" y="-89.5" />
+      <point x="4330.071428571428" y="1552.0" />
+      <point x="4330.071428571428" y="1380.6666666666667" />
+      <point x="-95.5" y="46.166666666666686" />
+    </edge>
+    <edge source="app.controllers.WarehouseController" target="app.models.relations.Product_Warehouse" relationship="CREATE">
+      <point x="-215.0" y="-30.5" />
+      <point x="2841.5" y="1408.0" />
+      <point x="2841.5" y="674.0" />
+      <point x="151.5" y="-79.5" />
+    </edge>
+    <edge source="app.repositories.WarehouseJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="0.0" y="-71.5" />
+      <point x="5297.0" y="-69.0" />
+      <point x="1062.9166666666665" y="-69.0" />
+      <point x="1062.9166666666665" y="1073.2" />
+      <point x="106.5" y="-22.799999999999955" />
+    </edge>
+    <edge source="app.repositories.TeamJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="50.75" y="-82.5" />
+      <point x="3747.75" y="-60.0" />
+      <point x="1111.1388888888887" y="-60.0" />
+      <point x="1111.1388888888887" y="1118.8" />
+      <point x="106.5" y="22.799999999999955" />
+    </edge>
+    <edge source="app.jwt.JWToken" target="app.enums.PermissionLevel" relationship="TO_ONE">
+      <point x="0.0" y="-160.0" />
+      <point x="45.5" y="500.6666666666665" />
+      <point x="3477.333333333333" y="500.6666666666665" />
+      <point x="-70.66666666666697" y="49.5" />
+    </edge>
+    <edge source="app.models.Order" target="app.models.relations.Product_Order" relationship="TO_MANY">
+      <point x="-114.0" y="-138.0" />
+      <point x="2975.25" y="937.0" />
+      <point x="2649.0" y="937.0" />
+      <point x="5.0" y="82.5" />
+    </edge>
+    <edge source="app.controllers.WarehouseController" target="app.exceptions.BadRequestException" relationship="CREATE">
+      <point x="-215.0" y="10.5" />
+      <point x="1472.75" y="1449.0" />
+      <point x="1472.75" y="1181.0" />
+      <point x="760.980769230769" y="1181.0" />
+      <point x="760.980769230769" y="1085.0" />
+      <point x="102.5" y="20.0" />
+    </edge>
+    <edge source="app.controllers.ReportController" target="app.repositories.ReportJPARepository" relationship="TO_ONE">
+      <point x="0.0" y="-60.5" />
+      <point x="4957.5" y="1446.0" />
+      <point x="4920.0" y="1446.0" />
+      <point x="-47.75" y="71.5" />
+    </edge>
+    <edge source="app.repositories.ProjectJPARepository" target="app.repositories.EntityRepositoryJPA" relationship="REALIZATION">
+      <point x="0.0" y="-82.5" />
+      <point x="5543.0" y="-72.0" />
+      <point x="1038.8055555555557" y="-72.0" />
+      <point x="1038.8055555555557" y="1050.4" />
+      <point x="106.5" y="-45.60000000000002" />
+    </edge>
+    <edge source="app.models.relations.Product_Order" target="app.models.Order" relationship="TO_ONE">
+      <point x="-5.0" y="-0.0" />
+      <point x="2639.0" y="947.0" />
+      <point x="2965.25" y="947.0" />
+      <point x="-124.0" y="-138.0" />
+    </edge>
+  </edges>
+  <settings layout="Series Parallel" zoom="0.9872090273417203" showDependencies="true" x="1222.7773586506023" y="1350.717406329317" />
+  <SelectedNodes>
+    <node>app.controllers.ProductController</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

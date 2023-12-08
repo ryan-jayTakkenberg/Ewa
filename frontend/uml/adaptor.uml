@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JavaScriptClasses</ID>
+  <OriginalElement>C:/Users/Léon/IdeaProjects/solar-1/frontend/src/service</OriginalElement>
+  <nodes>
+    <node x="-198.0" y="427.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/service/admin-overview-adaptor.js#AdminOverviewAdaptor</node>
+    <node x="211.0" y="404.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/service/BankAdaptor.js#BankAdaptor</node>
+    <node x="-198.0" y="208.5">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/service/report-adaptor.js#ReportAdaptor</node>
+    <node x="164.0" y="-9.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/service/teams-adaptor.js#TeamsAdaptor</node>
+    <node x="-198.0" y="2.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/service/project-adaptor.js#ProjectAdaptor</node>
+    <node x="552.0" y="360.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/service/old-teams-adaptor.js#TeamsAdaptor</node>
+    <node x="-198.0" y="-105.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/service/user-adaptor.js#UserAdaptor</node>
+    <node x="213.0" y="175.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/service/warehouse-adaptor.js#WarehouseAdaptor</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Compact" zoom="0.9424460431654677" showDependencies="false" x="357.0" y="242.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

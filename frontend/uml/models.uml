@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JavaScriptClasses</ID>
+  <OriginalElement>C:/Users/Léon/IdeaProjects/solar-1/frontend/src/models</OriginalElement>
+  <nodes>
+    <node x="-201.0" y="92.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/models/project.js#Project</node>
+    <node x="221.0" y="476.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/models/order.js#Order</node>
+    <node x="216.0" y="92.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/models/product.js#Product</node>
+    <node x="230.0" y="-204.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/models/team.js#Team</node>
+    <node x="-201.0" y="-226.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/models/user.js#User</node>
+    <node x="-201.0" y="498.0">C:/Users/Léon/IdeaProjects/solar-1/frontend/src/models/warehouse.js#Warehouse</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Compact" zoom="0.5579216354344123" showDependencies="false" x="212.5" y="361.0000000000001" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
