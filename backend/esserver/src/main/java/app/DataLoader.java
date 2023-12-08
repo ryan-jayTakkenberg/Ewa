@@ -146,10 +146,8 @@ public class DataLoader implements CommandLineRunner {
         order.setStatus(Order.OrderStatus.PENDING);
 
         // Associate order with products and add the Product quantity
-        List<Product_Order> productOrders = new ArrayList<>();
-        productOrders.add(new Product_Order(2, product1, order));
-        productOrders.add(new Product_Order(1, product2, order));
-        order.setProductOrders(productOrders);
+        order.addProduct(new Product_Order(2, product1, order));
+        order.addProduct(new Product_Order(1, product2, order));
 
         orderRepo.save(order);
     }

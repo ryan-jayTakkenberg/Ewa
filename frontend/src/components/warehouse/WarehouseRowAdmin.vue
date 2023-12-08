@@ -14,10 +14,12 @@
       <div class="deleteWarehouseButton" @click="deleteWarehouse()">Delete Warehouse</div>
     </td>
   </tr>
-  <SolarTable :columns="['Product', 'Amount']" v-if="this.showDetails" class="detail-warehouse">
+  <SolarTable :columns="['Product', 'Quantity', 'Price', 'Total Value']" v-if="this.showDetails" class="detail-warehouse">
     <tr class="tableRow" v-for="(product, index) in warehouse.products" :key="index">
       <td class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap pl-8">{{ product['product']['name'] }}</td>
       <td class="px-6 py-4">{{ product.amount }}</td>
+      <td class="px-6 py-4">€ {{ Number(product['product']['price'])?.toFixed(2) }}</td>
+      <td class="px-6 py-4">€ {{ Number(product['product']['price'] * product.amount)?.toFixed(2) }}</td>
     </tr>
   </SolarTable>
 </template>

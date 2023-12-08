@@ -117,11 +117,12 @@ export default {
     </td>
   </tr>
 
-  <SolarTable v-if="productsVisible" :columns="['Name', 'Price', 'Quantity']">
-    <tr class="table-row" v-for="productInfo in order.productInfos" :key="productInfo.id">
-      <td class="px-6 py-4 font-semibold text-base">{{ productInfo.name }}</td>
-      <td class="px-6 py-4">€ {{ productInfo.price }}</td>
-      <td class="px-6 py-4">{{ productInfo.quantity }}</td>
+  <SolarTable :columns="['Product', 'Quantity', 'Price', 'Total Cost']" v-if="productsVisible" class="detail-warehouse w-64">
+    <tr class="tableRow" v-for="(product, index) in order.products" :key="index">
+      <td class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap pl-8">{{ product['product']['name'] }}</td>
+      <td class="px-6 py-4">{{ product.amount }}</td>
+      <td class="px-6 py-4">€ {{ Number(product['product']['price'])?.toFixed(2) }}</td>
+      <td class="px-6 py-4">€ {{ Number(product['product']['price'] * product.amount)?.toFixed(2) }}</td>
     </tr>
   </SolarTable>
 
@@ -203,5 +204,11 @@ export default {
 
 .table-row:hover {
   background-color: rgb(249 250 251);
+}
+
+.detail-warehouse {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #fff;
 }
 </style>

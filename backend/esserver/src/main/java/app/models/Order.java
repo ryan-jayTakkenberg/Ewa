@@ -1,10 +1,13 @@
 package app.models;
 
 import app.models.relations.Product_Order;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -32,17 +35,18 @@ public class Order {
     private Team team;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
-    @OneToMany(mappedBy = "order")
-    private List<Product_Order> productOrders;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"order"})
+    private Set<Product_Order> products = new HashSet<>();
 
-    public Order(long id, String orderName, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, List<Product_Order> productOrders, OrderStatus status) {
+    public Order(long id, String orderName, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, Set<Product_Order> products, OrderStatus status) {
         this.id = id;
         this.orderName = orderName;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
         this.team = team;
-        this.productOrders = productOrders;
+        this.products = products;
         this.status = status;
     }
 
@@ -104,11 +108,11 @@ public class Order {
         this.team = team;
     }
 
-    public List<Product_Order> getProductOrders() {
-        return productOrders;
+    public Set<Product_Order> getProducts() {
+        return products;
     }
 
-    public void setProductOrders(List<Product_Order> products) {
-        this.productOrders = products;
+    public void addProduct(Product_Order product) {
+        this.products.add(product);
     }
 }
