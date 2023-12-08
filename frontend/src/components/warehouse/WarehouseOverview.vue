@@ -11,20 +11,13 @@
       </div>
 
       <SolarTable :columns="['Name', 'Address', 'Postal code', 'Action']">
-        <tr class="tableRow" v-for="(warehouse) in warehouses" :key="warehouse.id">
-          <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
-            <div class="pl-3">
-              <div class="text-base font-semibold">{{ warehouse.name }}</div>
-              <div class="font-normal text-gray-500">{{ warehouse.city }}</div>
-            </div>
-          </th>
-          <td class="px-6 py-4">{{warehouse.address}}</td>
-          <td class="px-6 py-4">{{warehouse.postalCode}}</td>
-          <td>
-            <div class="editWarehouseButton" @click="openUpdateWarehouse(warehouse)" >Edit Warehouse</div>
-            <div class="deleteWarehouseButton" @click="deleteWarehouse(warehouse)">Delete Warehouse</div>
-          </td>
-        </tr>
+        <WarehouseRowAdmin
+            v-for="(warehouse, index) in warehouses"
+            :key="index"
+            :warehouse="warehouse"
+            @openUpdateWarehouse="openUpdateWarehouse"
+            @deleteWarehouse="deleteWarehouse"
+        />
       </SolarTable>
     </div>
   </div>
@@ -50,6 +43,7 @@ import SolarTable from "@/components/general/SolarTable";
 import CreateWarehouse from "@/components/warehouse/warehousePopUps/CreateWarehouse";
 import UpdateWarehouse from "@/components/warehouse/warehousePopUps/UpdateWarehouse";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
+import WarehouseRowAdmin from "@/components/warehouse/WarehouseRowAdmin";
 
 export default {
   name: "WarehouseOverview",
@@ -62,6 +56,7 @@ export default {
     SolarButton,
     SolarTable,
     CreateWarehouse,
+    WarehouseRowAdmin,
   },
   data() {
     return {
@@ -171,34 +166,5 @@ export default {
   display: flex;
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
-}
-
-.tableRow{
-  background-color: white;
-  border-bottom-width: 1px;
-}
-
-.tableRow:hover{
-  background-color: rgb(249 250 251);
-}
-
-.editWarehouseButton{
-  font-weight: 500;
-  color: rgb(37 99 235);
-  cursor: pointer;
-}
-
-.editWarehouseButton:hover{
-  text-decoration-line: underline;
-}
-
-.deleteWarehouseButton{
-  font-weight: 500;
-  color: red;
-  cursor: pointer;
-}
-
-.deleteWarehouseButton:hover{
-  text-decoration-line: underline;
 }
 </style>
