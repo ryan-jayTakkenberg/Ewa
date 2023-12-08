@@ -40,11 +40,9 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
-    private final ProductJPARepository productInfoRepo;
     private final ProductJPARepository productRepo;
 
-    public ProductController(ProductJPARepository productInfoRepo, ProductJPARepository productRepo) {
-        this.productInfoRepo = productInfoRepo;
+    public ProductController(ProductJPARepository productRepo) {
         this.productRepo = productRepo;
     }
 
@@ -54,7 +52,7 @@ public class ProductController {
      */
     @GetMapping
     private List<Product> getProducts() {
-        return productInfoRepo.findAll();
+        return productRepo.findAll();
     }
 
     /**
@@ -71,7 +69,7 @@ public class ProductController {
             throw new ForbiddenException("Admin role is required to create a product");
         }
 
-        return productInfoRepo.save(productInfo);
+        return productRepo.save(productInfo);
     }
 
     /**
@@ -91,12 +89,12 @@ public class ProductController {
             throw new BadRequestException("No valid ID provided for product");
         }
 
-        Product productInfo = productInfoRepo.findById(id);
+        Product productInfo = productRepo.findById(id);
         if (productInfo == null) {
             throw new BadRequestException("No product found for such ID");
         }
 
-        return productInfoRepo.delete(productInfo);
+        return productRepo.delete(productInfo);
     }
 
 }
