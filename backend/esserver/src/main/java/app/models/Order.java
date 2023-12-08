@@ -1,9 +1,6 @@
 package app.models;
 
 import app.models.relations.Product_Order;
-import app.models.relations.Product_Warehouse;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -26,28 +23,26 @@ public class Order {
     @Id
     @GeneratedValue
     private long id;
+    private String orderName;
     private String orderedFrom;
     private LocalDate orderDate;
     private LocalDate estimatedDeliveryDate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
-
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+    @OneToMany(mappedBy = "order")
+    private List<Product_Order> productOrders;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({"order"})
-    private List<Product_Order> products;
-
-    public Order(long id, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, List<Product_Order> products, OrderStatus status) {
+    public Order(long id, String orderName, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, List<Product_Order> productOrders, OrderStatus status) {
         this.id = id;
+        this.orderName = orderName;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
         this.team = team;
-        this.products = products;
+        this.productOrders = productOrders;
         this.status = status;
     }
 
@@ -60,6 +55,14 @@ public class Order {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getOrderName() {
+        return orderName;
+    }
+
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
     }
 
     public OrderStatus getStatus() {
@@ -101,11 +104,11 @@ public class Order {
         this.team = team;
     }
 
-    public List<Product_Order> getProducts() {
-        return products;
+    public List<Product_Order> getProductOrders() {
+        return productOrders;
     }
 
-    public void setProducts(List<Product_Order> products) {
-        this.products = products;
+    public void setProductOrders(List<Product_Order> products) {
+        this.productOrders = products;
     }
 }

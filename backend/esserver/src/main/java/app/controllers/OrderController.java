@@ -49,8 +49,25 @@ public class OrderController {
 
     @GetMapping
     private List<Order> getOrders(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
-        if (jwtInfo == null) throw new ForbiddenException("No token provided"); // Check if the jwt is provided
-        return orderRepo.findAll();
+        if (jwtInfo == null) throw new ForbiddenException("No token provided");
+
+        if(jwtInfo.isAdmin()){
+            return orderRepo.findAll();
+        } else
+
+
+
+        //Todo if user is viewer
+//            Long teamId = jwtInfo.getTeamId();
+//
+//            if (teamId != null){
+//                return orderRepo.findByTeamId(teamId);
+//            } else {
+//                throw new ForbiddenException("Team information not found in token")
+//;              }
+//        }
+            throw new ForbiddenException("Team information not found in token");
+
     }
 
     @GetMapping("/{id}")
@@ -61,7 +78,9 @@ public class OrderController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     private Order postOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Order order) {
-        if (jwtInfo == null) throw new ForbiddenException("No token provided"); // Check if the jwt is provided
+        // Check if the jwt is provided
+        if (jwtInfo == null) throw new ForbiddenException("No token provided");
+        // Check if the user is admin
         if (!jwtInfo.isAdmin())
             throw new ForbiddenException("Admin role is required to create a product"); // Check if the user is admin
         return orderRepo.save(order);
@@ -75,9 +94,9 @@ public class OrderController {
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to remove an order");
         // Check if id is not null
         if (id == null) throw new BadRequestException("No valid ID provided for order");
-
         // Find order by id
         Order order = orderRepo.findById(id);
+        // Check if order exists
         if (order == null) throw new BadRequestException("No order found with id: " + id); // Check if order is found
         return orderRepo.delete(order);
     }
@@ -88,9 +107,7 @@ public class OrderController {
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is viewer
         if (!jwtInfo.isViewer()) throw new ForbiddenException("Viewer role is required to confirm an order");
-
-        // Find order by id
-        Order order = orderRepo.findById(id);
+        Order order = orderRepo.findById(id);     // Find order by id
         // Check if order is found
         if (order == null) throw new BadRequestException("No order found with id: " + id);
         // Check if the order status is suitable for confirmation

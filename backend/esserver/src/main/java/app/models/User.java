@@ -17,7 +17,6 @@ public class User {
     private long id;
 
     private PermissionLevel permissionLevel;
-
     private String name;
     private String email;
     private LocalDate lastLogin;

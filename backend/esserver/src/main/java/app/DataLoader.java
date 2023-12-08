@@ -8,8 +8,9 @@ import app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -55,35 +56,12 @@ public class DataLoader implements CommandLineRunner {
     private void createSampleReports() {
         this.reportRepo.save(new Report(1, "Hello Jason, please notice that at the end of this week project 5 is due.", "19/11/2023", 1, "admin", 2));
         this.reportRepo.save(new Report(2, "Be me shall purse my ought times. Joy years doors all would again rooms these. Solicitude announcing as to sufficient my. No my reached suppose proceed pressed perhaps he. Eagerness it delighted pronounce repulsive furniture no.", "20/11/2023", 2, "Viewer", 1));
-        this.reportRepo.save(new Report(3,"Travelling alteration impression six all uncommonly. Chamber hearing inhabit joy highest private ask him our believe. Up nature valley do warmly. Entered of cordial do on no hearted.", "21/11/2023", 1, "admin", 2));
+        this.reportRepo.save(new Report(3, "Travelling alteration impression six all uncommonly. Chamber hearing inhabit joy highest private ask him our believe. Up nature valley do warmly. Entered of cordial do on no hearted.", "21/11/2023", 1, "admin", 2));
         this.reportRepo.save(new Report(4, "Be me shall purse my ought times. Joy years doors all would again rooms these. Solicitude announcing as to sufficient my. No my reached suppose proceed pressed perhaps he. Eagerness it delighted pronounce repulsive furniture no.", "21/11/2023", 1, "admin", 2));
     }
 
 
-
-
-
-    private void createSampleOrders() {
-        // Retrieve products from the database
-        List<Team> teams = teamsRepo.findAll();
-        Order[] orders = {
-                new Order(-1, "4Blue", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(1), Collections.emptyList(), Order.OrderStatus.CANCELED),
-                new Order(-1, "Stralend groen", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(1), Collections.emptyList(), Order.OrderStatus.DELIVERED),
-                new Order(-1, "ZiezoSolar", LocalDate.parse("2023-09-11"), LocalDate.parse("2023-11-19"), teams.get(3), Collections.emptyList(), Order.OrderStatus.PENDING)
-        };
-
-        List<Product> products = productsRepo.findAll();
-        Random random = new Random();
-
-        for (Order order : orders) {
-            Product_Order product_order = new Product_Order(random.nextInt(10) + 1, products.stream().skip(random.nextInt(products.size())).findFirst().orElse(null), order);
-            order.setProducts(List.of(product_order));
-            orderRepo.save(order);
-        }
-    }
-
-
-    private void createSampleWarehouses(){
+    private void createSampleWarehouses() {
         Warehouse[] warehouses = {
                 new Warehouse(0, "Solar Sedum", "Amsterdam", "Straat 111", "1234 AB"),
                 new Warehouse(0, "HvA Warehouse", "Amsterdam", "Straat 222", "1234 CD"),
@@ -102,10 +80,10 @@ public class DataLoader implements CommandLineRunner {
     }
 
 
-    private void createSampleTeamAndProjects(){
+    private void createSampleTeamAndProjects() {
         Team team1 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Bijlmer", warehouseRepo.findById(1)));
-         Team team2 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Aalsmeer", warehouseRepo.findById(2)));
-         Team team3 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN,0,"Team Purmerend", warehouseRepo.findById(3)));
+        Team team2 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Aalsmeer", warehouseRepo.findById(2)));
+        Team team3 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Purmerend", warehouseRepo.findById(3)));
 
         LocalDate installDate = LocalDate.of(2023, 11, 21);
         this.projectsRepo.save(new Project(1, "Blue", "HVA", installDate, "Project to install solar panels to Company A", team1));
@@ -113,6 +91,7 @@ public class DataLoader implements CommandLineRunner {
         this.projectsRepo.save(new Project(3, "Green", "HVA", installDate, "Project to install solar panels to Company C", team2));
         this.projectsRepo.save(new Project(4, "Yellow", "Company A", installDate, "Project to install solar panels to Company D", team3));
     }
+
     private void createInitialUsers() {
         Team team4 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Noord-Holland", warehouseRepo.findById(1)));
         Team team2 = this.teamsRepo.save(new Team(PermissionLevel.VIEWER, 0, "Team Hallo", warehouseRepo.findById(2)));
@@ -142,6 +121,36 @@ public class DataLoader implements CommandLineRunner {
         this.userRepo.save(viewer5);
     }
 
+    private void createSampleOrders() {
+        // Create Warehouse
+        Warehouse warehouse1 = new Warehouse(1, "Warehouse solar", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
+        warehouseRepo.save(warehouse1);
 
+        // Create Teams
+        Team team1 = new Team(PermissionLevel.ADMIN, 1, "Team 1", warehouse1 );
+        teamsRepo.save(team1);
 
+        // Create Products
+        Product product1 = new Product("Solar Panel", 219.99, "New panel GTX technology");
+        Product product2 = new Product("Solar Battery", 29.99, "80.000 Mah battery");
+        productsRepo.save(product1);
+        productsRepo.save(product2);
+
+        // Create Order and associate with Team and Product
+        Order order = new Order();
+        order.setOrderName("Restock Solar Panels");
+        order.setOrderedFrom("Solar City");
+        order.setOrderDate(LocalDate.now());
+        order.setEstimatedDeliveryDate(LocalDate.now().plusDays(7));
+        order.setTeam(team1);
+        order.setStatus(Order.OrderStatus.PENDING);
+
+        // Associate order with products and add the Product quantity
+        List<Product_Order> productOrders = new ArrayList<>();
+        productOrders.add(new Product_Order(2, product1, order));
+        productOrders.add(new Product_Order(1, product2, order));
+        order.setProductOrders(productOrders);
+
+        orderRepo.save(order);
+    }
 }
