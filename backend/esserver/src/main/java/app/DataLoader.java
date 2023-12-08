@@ -51,6 +51,8 @@ public class DataLoader implements CommandLineRunner {
         this.productsRepo.save(new Product("Solar panel", 150.123, "Heeft een vermogen van 430 Wattpiek en beschikt over 108 cellen."));
         this.productsRepo.save(new Product("Motor", 32.54, "Heeft een vermogen van 1000 Watt, 72V"));
         this.productsRepo.save(new Product("Frame", 5423.23, "Sterk frame van goede metalen"));
+        this.productsRepo.save(new Product("Solar Panel GTX", 219.99, "New panel GTX technology"));
+        this.productsRepo.save(new Product("Solar Battery", 29.99, "80.000 Mah battery"));
     }
 
     private void createSampleReports() {
@@ -130,12 +132,6 @@ public class DataLoader implements CommandLineRunner {
         Team team1 = new Team(PermissionLevel.ADMIN, 1, "Team 1", warehouse1 );
         teamsRepo.save(team1);
 
-        // Create Products
-        Product product1 = new Product("Solar Panel", 219.99, "New panel GTX technology");
-        Product product2 = new Product("Solar Battery", 29.99, "80.000 Mah battery");
-        productsRepo.save(product1);
-        productsRepo.save(product2);
-
         // Create Order and associate with Team and Product
         Order order = new Order();
         order.setOrderName("Restock Solar Panels");
@@ -146,8 +142,8 @@ public class DataLoader implements CommandLineRunner {
         order.setStatus(Order.OrderStatus.PENDING);
 
         // Associate order with products and add the Product quantity
-        order.addProduct(new Product_Order(2, product1, order));
-        order.addProduct(new Product_Order(1, product2, order));
+        order.addProduct(new Product_Order(2, productsRepo.findById(4), order));
+        order.addProduct(new Product_Order(1, productsRepo.findById(5), order));
 
         orderRepo.save(order);
     }

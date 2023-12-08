@@ -1,5 +1,8 @@
 import {classToObject} from "@/models/helper";
 import {deleteAPI, getAPI, postAPI, responseOk} from "@/backend";
+import Warehouse from "@/models/warehouse";
+import Order from "@/models/order";
+import Orders from "@/models/order";
 
 export default class Product {
     id;
@@ -60,6 +63,9 @@ export default class Product {
                 return;
             }
 
+            // Reload warehouses and orders as they use products, but don't wait for them
+            this.updateRelations().catch(r => console.error(r));
+
             // make a post request to the backend
             // if the current product id is -1, receive the new product id
             if (isNewProduct) {
@@ -86,13 +92,26 @@ export default class Product {
             }
 
             // make a delete request to the backend
-            await deleteAPI(`/api/product/${this.id}`);
+            if (!await deleteAPI(`/api/product/${this.id}`)) {
+                return false;
+            }
+            // Reload warehouses and orders as they use products, but don't wait for them
+            this.updateRelations().catch(r => console.error(r));
 
             Product.products = Product.products.filter(o => o.id !== this.id);
             return true;
         } catch (e) {
             return false;
         }
+    }
+
+    async updateRelations() {
+        const [warehouses, orders] = await Promise.all([
+            Warehouse.getDatabase(),
+            Orders.getDatabase(),
+        ]);
+        Warehouse.warehouses = warehouses;
+        Order.orders = orders;
     }
 
     /**

@@ -30,7 +30,7 @@ export default class Order {
     }
 
     clone() {
-        return new Order(this.id, this.orderDate, this.team, this.products, this.quantity, this.status);
+        return new Order(this.id, this.orderedFrom, this.orderDate, this.estimatedDeliveryDate, this.team, this.products, this.quantity, this.status);
     }
 
     injectAttributes(from) {

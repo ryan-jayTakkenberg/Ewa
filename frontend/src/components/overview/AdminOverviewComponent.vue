@@ -7,6 +7,7 @@ import Project from "@/models/project";
 import {getAPI, responseOk} from "@/backend";
 import Warehouse from "@/models/warehouse";
 import SolarTable from "@/components/general/SolarTable";
+import Order from "@/models/order";
 
 export default {
 
@@ -36,6 +37,7 @@ export default {
       modal: false,
       ongoingProjects: "",
       warehouses: Warehouse.warehouses,
+      orders: Order.orders,
     }
   },
 
@@ -245,18 +247,37 @@ export default {
     productTotals() {
       const totals = {};
 
-      this.warehouses.forEach((warehouse) => {
-        warehouse.products.forEach((product) => {
-          const productName = product['product']['id'];
+      this.warehouses.forEach(warehouse => {
+        warehouse.products.forEach(product => {
+          const id = product['product']['id'];
+          console.log(product['product']);
 
-          if (!totals[productName]) {
-            totals[productName] = {
+          if (!totals[id]) {
+            totals[id] = {
               name: product['product']['name'],
-              amount: 0,
+              inWarehouse: 0,
+              inOrders: 0,
             };
           }
 
-          totals[productName].amount += product.amount;
+          totals[id].inWarehouse += product.amount;
+        });
+      });
+
+      this.orders.forEach(order => {
+        order.products.forEach(product => {
+          const id = product['product']['id'];
+          console.log(product['product']);
+
+          if (!totals[id]) {
+            totals[id] = {
+              name: product['product']['name'],
+              inWarehouse: 0,
+              inOrders: 0,
+            };
+          }
+
+          totals[id].inOrders += product.amount;
         });
       });
 
@@ -353,12 +374,14 @@ export default {
 
     <h1 class="sectionTitle">Inventory</h1>
 
-    <SolarTable :columns="['product', 'amount', '']">
+    <SolarTable :columns="['product', 'quantity', 'ordered']">
       <tr class="border-gray-100 border-b text-base font-medium" v-for="(product, index) in this.productTotals" v-bind:key="index">
         <!--Product Name -->
         <td class="pl-6 text-gray-900 whitespace-nowrap">{{ product.name }}</td>
-        <!--Product Amount -->
-        <td class="px-6 py-4" :class="{'text-red-600': product.amount < 10}">{{ product.amount }}</td>
+        <!--Products In Warehouse -->
+        <td class="px-6 py-4" :class="{'text-red-600': product.inWarehouse + product.inOrders < 10}">{{ product.inWarehouse }}</td>
+        <!--Products In Warehouse -->
+        <td class="px-6 py-4" :class="{'text-red-600': product.inWarehouse < 10 && !product.inOrders}">{{ product.inOrders }}</td>
       </tr>
     </SolarTable>
 
