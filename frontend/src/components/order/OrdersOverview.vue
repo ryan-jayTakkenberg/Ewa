@@ -12,10 +12,12 @@ import SolarPagination from "@/components/general/SolarPagination.vue";
 import CreateOrderModal from "@/components/order/order-modals/CreateOrderModal.vue";
 import CancelOrderModal from "@/components/order/order-modals/CancelOrderModal.vue";
 import ConfirmOrderModal from "@/components/order/order-modals/ConfirmOrderModal.vue";
+import ReportComponent from "@/components/manage/ReportComponent.vue";
 
 export default {
   name: "OrdersOverview",
   components: {
+    ReportComponent,
     ConfirmOrderModal,
     CreateOrderModal,
     CancelOrderModal,
@@ -38,6 +40,7 @@ export default {
       showEditModal: false,
       showCancelModal: false,
       showConfirmModal: false,
+      showReportModal: false,
       currentPage: 1,
       itemsPerPage: 10,
     };
@@ -98,11 +101,18 @@ export default {
     //   this.closeModal();
     // },
     //
-    // async deleteUser() {
+
+    async confirmOrder() {
+      this.closeModal();
+      const canceledOrder = this.selectedOrder;
+      await canceledOrder.confirmDatabase();
+    },
+
+    //todo cancel
+    // async cancelOrder() {
     //   this.closeModal();
-    //   const deletedUser = this.selectedUser;
-    //   this.users = this.users.filter(user => user.id !== deletedUser.id);
-    //   await deletedUser.delDatabase();
+    //   const canceledOrder = this.selectedOrder;
+    //   await canceledOrder.cancelDatabase();
     // },
     //
     // async deleteCheckedUsers() {
@@ -163,6 +173,9 @@ export default {
       this.selectedOrder = order;
       this.showConfirmModal = true;
     },
+    openReportModal() {
+      this.showReportModal = true;
+    },
     closeModal() {
       this.showCreateModal = false;
       this.showEditModal = false;
@@ -213,7 +226,7 @@ export default {
         <SolarButton class="create-btn" button-text="Create Order" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable
-          :columns="['', 'order number','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'project', 'product', 'status', 'action']">
+          :columns="['', 'order','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'project', 'product', 'status', 'action']">
         <OrderRowComponent
             v-for="(order) in paginatedOrders" :key="order.id" :order="order"
             @confirm="openConfirmModal"
@@ -223,7 +236,7 @@ export default {
             @toggle="toggleCheckbox(order, $event)"> <!-- Pass user and checkbox state -->
         </OrderRowComponent>
       </SolarTable>
-      <SolarPagination @previous="prevPage" :current-page="currentPage" :total-pages="totalPages" @next="nextPage"/>
+      <SolarPagination :current-page="currentPage" :total-pages="totalPages" @previous="prevPage" @next="nextPage"/>
     </div>
   </div>
 
@@ -231,7 +244,7 @@ export default {
   <CreateOrderModal
       v-if="showCreateModal"
       :on-close="closeModal"
-      @create-order="createOrder"
+      @create="createOrder"
   />
   <!--  <EditOrderModal-->
   <!--      v-if="showEditModal"-->
@@ -241,25 +254,28 @@ export default {
   <!--  />-->
 
   <CancelOrderModal
-      v-if="showCancelModal"
+      v-if="showCancelModal" :order="selectedOrder"
       :on-close="closeModal"
-      :order="selectedOrder"
       @cancel="cancelOrder"
   />
 
   <ConfirmOrderModal
-      v-if="showDeleteMultipleModal"
+      v-if="showConfirmModal" :order="selectedOrder"
       :on-close="closeModal"
-      :users-to-delete="checkedUsers"
-      @delete-users="deleteCheckedUsers"
-      order=""/>
+      @confirm="confirmOrder"
+  />
+
+  <ReportComponent
+      v-if="showReportModal"
+  />
 </template>
 
 <style scoped>
-.create-btn{
+.create-btn {
   margin-left: auto;
   margin-right: 0.5rem;
 }
+
 .header {
   flex-direction: row;
   display: flex;

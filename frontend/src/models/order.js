@@ -4,6 +4,7 @@ import {classToObject} from "@/models/helper";
 
 export default class Order {
     id;
+    name;
     orderedFrom;
     orderDate;
     estimatedDeliveryDate;
@@ -18,8 +19,9 @@ export default class Order {
         CANCELED: "CANCELED",
     }
 
-    constructor(id, orderedFrom, orderDate, estimatedDeliveryDate, team, products, quantity, status) {
+    constructor(id, name, orderedFrom, orderDate, estimatedDeliveryDate, team, products, quantity, status) {
         this.id = id;
+        this.name = name;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
@@ -30,7 +32,7 @@ export default class Order {
     }
 
     clone() {
-        return new Order(this.id, this.orderedFrom, this.orderDate, this.estimatedDeliveryDate, this.team, this.products, this.quantity, this.status);
+        return new Order(this.id, this.name, this.orderedFrom, this.orderDate, this.estimatedDeliveryDate, this.team, this.products, this.quantity, this.status);
     }
 
     injectAttributes(from) {
@@ -57,8 +59,8 @@ export default class Order {
         return true;
     }
 
-    static createNewOrder(orderDate, estimatedDeliveryDate, team, products, quantity, status) {
-        return new Order(-1,  orderDate, estimatedDeliveryDate, team, products, quantity, status);
+    static createNewOrder(name, orderDate, estimatedDeliveryDate, team, products, quantity, status) {
+        return new Order(-1, name, orderDate, estimatedDeliveryDate, team, products, quantity, status);
     }
 
     /**
@@ -90,27 +92,41 @@ export default class Order {
         }
     }
 
-    /**
-     * delete this order from the database
+    /** confirm this order in the database
      */
-    async delDatabase() {
+    async confirmDatabase() {
         try {
-            const isNewProduct = this.id < 0;
-            if (isNewProduct) {
-                return false;
-            }
+            const isNewOrder = this.id < 0;
+            if (isNewOrder) return false;
 
-            // make a delete request to the backend
-            await axios.delete(
-                `/api/orders/${this.id}`,
-                {headers: {"Authorization": getJWT()}}
-            );
-            Order.orders = Order.orders.filter(o => o.id !== this.id);
+            // make a post request to the backend to confirm order
+            await axios.post(`/api/orders/${this.id}/confirm`, {headers: {"Authorization": getJWT()}});
             return true;
         } catch (e) {
             return false;
         }
     }
+
+
+
+    // /** todo cancel this order in the database
+    //  */
+    // async cancelDatabase() {
+    //     try {
+    //         const isNewOrder = this.id < 0;
+    //         if (isNewOrder) return false;
+    //
+    //         // make a delete request to the backend
+    //         await axios.post(
+    //             `/api/orders/${this.id}`,
+    //             {headers: {"Authorization": getJWT()}}
+    //         );
+    //         Order.orders = Order.orders.filter(o => o.id !== this.id);
+    //         return true;
+    //     } catch (e) {
+    //         return false;
+    //     }
+    // }
 
     /**
      * get all the orders from the database

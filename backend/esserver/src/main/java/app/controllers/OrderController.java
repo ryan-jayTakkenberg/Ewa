@@ -106,7 +106,7 @@ public class OrderController {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is viewer
-        if (!jwtInfo.isViewer()) throw new ForbiddenException("Viewer role is required to confirm an order");
+        if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to confirm an order");
         Order order = orderRepo.findById(id);     // Find order by id
         // Check if order is found
         if (order == null) throw new BadRequestException("No order found with id: " + id);

@@ -46,7 +46,7 @@ export default {
     createOrder() {
       let orderClass = new Order();
       orderClass.injectAttributes(this.order);
-      this.$emit('create-order', orderClass);
+      this.$emit('create', orderClass);
     },
     addProductsToOrder() {
       // Add selected productInfos to the order.productInfos array

@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -26,7 +25,7 @@ public class Order {
     @Id
     @GeneratedValue
     private long id;
-    private String orderName;
+    private String name;
     private String orderedFrom;
     private LocalDate orderDate;
     private LocalDate estimatedDeliveryDate;
@@ -39,9 +38,9 @@ public class Order {
     @JsonIgnoreProperties({"order"})
     private Set<Product_Order> products = new HashSet<>();
 
-    public Order(long id, String orderName, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, Set<Product_Order> products, OrderStatus status) {
+    public Order(long id, String name, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, Set<Product_Order> products, OrderStatus status) {
         this.id = id;
-        this.orderName = orderName;
+        this.name = name;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
@@ -53,6 +52,8 @@ public class Order {
     public Order() {
     }
 
+
+
     public long getId() {
         return id;
     }
@@ -61,12 +62,12 @@ public class Order {
         this.id = id;
     }
 
-    public String getOrderName() {
-        return orderName;
+    public String getName() {
+        return name;
     }
 
-    public void setOrderName(String orderName) {
-        this.orderName = orderName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public OrderStatus getStatus() {
