@@ -71,7 +71,7 @@ export default {
 
   created() {
     console.log('Configured routerGuard');
-    this.$router.beforeEach(this.routerGuard);
+    // this.$router.beforeEach(this.routerGuard);
 
     const path = this.$router.currentRoute.value.path;
     const isResetPasswordRoute = path.startsWith('/');
@@ -87,28 +87,29 @@ export default {
       this.isSideBarExpanded = isExpanded;
     },
 
-    routerGuard(to,from) {
-      if (to.name === 'LOGIN') {
-        if (getJWT() && isAdmin()) {
-          console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
-          return '/admin-overview';
-        } else if (getJWT() && !isAdmin()) {
-          console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
-          return '/viewer-overview';
-        }
-      }
-
-      if (to.name === 'OVERVIEW') {
-        if (getJWT() && isAdmin()) {
-          console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
-          return '/admin-overview';
-        } else if (getJWT() && !isAdmin()) {
-          console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
-          return '/viewer-overview';
-        }
-      }
-
-    }
+    // TODO literally breaks site -_-
+  //   routerGuard(to,from) {
+  //     if (to.name === 'LOGIN') {
+  //       if (getJWT() && isAdmin()) {
+  //         console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
+  //         return '/admin-overview';
+  //       } else if (getJWT() && !isAdmin()) {
+  //         console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
+  //         return '/viewer-overview';
+  //       }
+  //     }
+  //
+  //     if (to.name === 'OVERVIEW') {
+  //       if (getJWT() && isAdmin()) {
+  //         console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
+  //         return '/admin-overview';
+  //       } else if (getJWT() && !isAdmin()) {
+  //         console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
+  //         return '/viewer-overview';
+  //       }
+  //     }
+  //
+  //   }
   },
 
   watch: {

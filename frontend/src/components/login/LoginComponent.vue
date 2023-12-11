@@ -64,7 +64,7 @@
 
 <script>
 
-import {setAdmin, setId, setJWT, setUsername} from "@/data";
+import {isAdmin, setAdmin, setId, setJWT, setUsername} from "@/data";
 import Team from "@/models/team";
 import User from "@/models/user";
 import Product from "@/models/product";
@@ -178,7 +178,7 @@ export default {
         Project.projects = projects;
         Warehouse.warehouses = warehouses;
 
-        this.$router.push('/overview');
+        this.$router.push(isAdmin() ? '/admin-overview' : '/viewer-overview');
 
 
       } catch (error) {
