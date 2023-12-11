@@ -87,29 +87,30 @@ export default {
       this.isSideBarExpanded = isExpanded;
     },
 
-    // TODO literally breaks site -_-
-  //   routerGuard(to,from) {
-  //     if (to.name === 'LOGIN') {
-  //       if (getJWT() && isAdmin()) {
-  //         console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
-  //         return '/admin-overview';
-  //       } else if (getJWT() && !isAdmin()) {
-  //         console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
-  //         return '/viewer-overview';
-  //       }
-  //     }
-  //
-  //     if (to.name === 'OVERVIEW') {
-  //       if (getJWT() && isAdmin()) {
-  //         console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
-  //         return '/admin-overview';
-  //       } else if (getJWT() && !isAdmin()) {
-  //         console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
-  //         return '/viewer-overview';
-  //       }
-  //     }
-  //
-  //   }
+    // routerGuard(to,from) {
+    //
+    //   this.isLoggedIn = responseOk(getAPI("/api/authentication/status"));
+    //   if (to.name === 'LOGIN') {
+    //     if (this.isLoggedIn && isAdmin()) {
+    //       console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
+    //       return '/admin-overview';
+    //     } else if (getJWT() && !isAdmin()) {
+    //       console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
+    //       return '/viewer-overview';
+    //     }
+    //   }
+    //
+    //   if (to.name === 'OVERVIEW') {
+    //     if (this.isLoggedIn && isAdmin()) {
+    //       console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
+    //       return '/admin-overview';
+    //     } else if (getJWT() && !isAdmin()) {
+    //       console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
+    //       return '/viewer-overview';
+    //     }
+    //   }
+    //
+    // }
   },
 
   watch: {
