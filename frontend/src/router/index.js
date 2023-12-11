@@ -17,6 +17,7 @@ import warehouseOverviewComponent from "@/components/warehouseView/warehouseOver
 const routes = [
     {path: '/', redirect: '/login'},
     {path: '/login', name: 'LOGIN', component: LoginComponent},
+    {path: '/overview', name: 'OVERVIEW'},
     {path: '/viewer-overview', name: 'VIEWER-OVERVIEW', component: ViewerOverviewComponent},
     {path: '/admin-overview', name: 'ADMIN-OVERVIEW', component: AdminOverviewComponent},
     {path: '/orders', component: OrdersOverview},

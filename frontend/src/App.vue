@@ -88,7 +88,6 @@ export default {
     },
 
     routerGuard(to,from) {
-      // global routing guards set up in order to be able to query theSessionService status
       if (to.name === 'LOGIN') {
         if (getJWT() && isAdmin()) {
           console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
@@ -98,6 +97,17 @@ export default {
           return '/viewer-overview';
         }
       }
+
+      if (to.name === 'OVERVIEW') {
+        if (getJWT() && isAdmin()) {
+          console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
+          return '/admin-overview';
+        } else if (getJWT() && !isAdmin()) {
+          console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
+          return '/viewer-overview';
+        }
+      }
+
     }
   },
 
