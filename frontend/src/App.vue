@@ -27,7 +27,7 @@ import {WarehouseAdaptor} from "@/service/warehouse-adaptor";
 import {TeamsAdaptor} from "@/service/teams-adaptor";
 import CONFIG from "@/app-config";
 import {getAPI, responseOk} from "@/backend";
-import {getJWT} from "@/data";
+import {getJWT, isAdmin} from "@/data";
 import {ReportAdaptor} from "@/service/report-adaptor";
 import Orders from "@/models/order";
 import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
@@ -41,6 +41,7 @@ import NotificationComponent from "@/components/general/NotificationComponent.vu
 export default {
   name: 'App',
   components: {NotificationComponent, NavBar},
+
   data() {
     return {
       isLoggedIn: false,
@@ -48,6 +49,7 @@ export default {
       fetchedData: false,
     }
   },
+
   provide() {
 
     // create a singleton reactive service tracking the authorisation data of the session
@@ -67,9 +69,35 @@ export default {
     }
   },
 
+  created() {
+    console.log('Configured routerGuard');
+    this.$router.beforeEach(this.routerGuard);
+
+    const path = this.$router.currentRoute.value.path;
+    const isResetPasswordRoute = path.startsWith('/');
+
+    if (!getJWT() && !isResetPasswordRoute) {
+      this.$router.push('/login');
+    }
+  },
+
   methods: {
+
     updateSidebarState(isExpanded) {
       this.isSideBarExpanded = isExpanded;
+    },
+
+    routerGuard(to,from) {
+      // global routing guards set up in order to be able to query theSessionService status
+      if (to.name === 'LOGIN') {
+        if (getJWT() && isAdmin()) {
+          console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
+          return '/admin-overview';
+        } else if (getJWT() && !isAdmin()) {
+          console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
+          return '/viewer-overview';
+        }
+      }
     }
   },
 
@@ -119,15 +147,6 @@ export default {
           }
         }
       }
-    }
-  },
-
-  created() {
-    const path = this.$router.currentRoute.value.path;
-    const isResetPasswordRoute = path.startsWith('/');
-
-    if (!getJWT() && !isResetPasswordRoute) {
-      this.$router.push('/login');
     }
   },
 
