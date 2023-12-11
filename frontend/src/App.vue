@@ -10,7 +10,7 @@
       <router-view></router-view>
     </div>
 
-    <notification-component ref="notificationComponent"></notification-component>
+    <NotificationComponent ref="notificationComponent"></NotificationComponent>
 
   </div>
 </template>

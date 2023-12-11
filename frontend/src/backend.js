@@ -1,5 +1,6 @@
 import axios from "./axios-config";
 import {getJWT, setJWT} from "@/data";
+import NotificationComponent from "@/components/general/NotificationComponent.vue";
 
 export async function getAPI(endpoint) {
     const response = await axios.get(endpoint, {
@@ -35,14 +36,16 @@ export async function deleteAPI(endpoint) {
 
 function handleAPIError(error) {
     const response = error?.response;
+    // showUnsuccessfulNotification('Something went wrong, please try again');
     if (response?.status === 401 && location.pathname !== "/login") {
         location.assign("/login");
     }
     return response;
 }
 
-function handleAPIRequest(response) {
+function handleAPIRequest(response, notification) {
     const newJWT = response?.headers?.authorization;
+    // showSuccessfulNotification('Action successful');
     if (newJWT) {
         setJWT(newJWT);
     }
@@ -59,10 +62,10 @@ export function responseOk(response) {
     return response?.status && response.status >= 200 && response.status < 300;
 }
 
-export function showSuccessfulNotification() {
-    this.$ref.NotificationComponent.createSuccessfulNotification('Action successful');
-}
-
-export function showUnsuccessfulNotification() {
-    this.$ref.NotificationComponent.createUnsuccessfulNotification('Something went wrong, please try again');
-}
+// export function showSuccessfulNotification(message) {
+//     NotificationComponent.createSuccessfulNotification(message);
+// }
+//
+// export function showUnsuccessfulNotification(message) {
+//     NotificationComponent.createUnsuccessfulNotification(message);
+// }
