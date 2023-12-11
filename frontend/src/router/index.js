@@ -1,5 +1,4 @@
 import {createRouter, createWebHistory} from 'vue-router';
-
 import PasswordResetComponent from "@/components/login/PasswordResetComponent.vue";
 import LoginComponent from "@/components/login/LoginComponent.vue";
 import NotFoundComponent from "@/components/NotFoundComponent.vue";

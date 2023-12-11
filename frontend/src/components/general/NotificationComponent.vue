@@ -5,16 +5,6 @@
 <script>
 export default {
 
-  /* Successful
-  Add as child to your component and call function using
-  this.$refs.notificationComponent.createSuccessfulNotification(message);
-  Send a message as parameter */
-
-  /* Unsuccessful
-  Add as child to your component and call function using
-  this.$refs.notificationComponent.createUnsuccessfulNotification(message);
-  Send a message as parameter */
-
   name: "NotificationComponent",
 
   methods: {
@@ -22,10 +12,10 @@ export default {
     createSuccessfulNotification(message) {
 
       const notificationContainer = document.createElement('div');
-      notificationContainer.classList.add('successfulMessageContainer');
+      notificationContainer.classList.add('notificationMessageContainer');
 
       const notificationMessage = document.createElement('div');
-      notificationMessage.classList.add('successfulMessage');
+      notificationMessage.classList.add('message');
       notificationMessage.textContent = message;
 
       const icon = document.createElement('div');
@@ -49,10 +39,10 @@ export default {
     createUnsuccessfulNotification(message) {
 
       const notificationContainer = document.createElement('div');
-      notificationContainer.classList.add('successfulMessageContainer');
+      notificationContainer.classList.add('notificationContainer');
 
       const notificationMessage = document.createElement('div');
-      notificationMessage.classList.add('successfulMessage');
+      notificationMessage.classList.add('message');
       notificationMessage.textContent = message;
 
       const icon = document.createElement('div');
@@ -80,7 +70,7 @@ export default {
 
 <style>
 
-.successfulMessageContainer {
+.notificationContainer {
   position: absolute;
   display: flex;
   align-items: center;
@@ -92,11 +82,11 @@ export default {
   border-radius: 5px;
   right: 5%;
   bottom: 5%;
-  animation: successful 5.1s ease-in-out;
+  animation: fade 5.1s ease-in-out;
   box-shadow: rgba(0, 0, 0, 0.15) 0 0 10px 1px;
 }
 
-@keyframes successful {
+@keyframes fade {
 
   0% {
     margin-bottom: -15px;
@@ -120,7 +110,7 @@ export default {
 
 }
 
-.successfulMessage {
+.message {
   font-size: 1em;
   font-weight: 600;
   color: #222;
@@ -134,7 +124,7 @@ export default {
 
 .material-symbols-outlined.checkmark {
   transform: scale(1.2);
-  color: #4fd97f;
+  color: #39a65e;
   font-variation-settings:
       'FILL' 0,
       'wght' 400,
@@ -144,7 +134,7 @@ export default {
 
 .material-symbols-outlined.warning {
   transform: scale(1.2);
-  color: #f14440;
+  color: #ce4744;
   font-variation-settings:
       'FILL' 0,
       'wght' 400,

@@ -138,7 +138,7 @@
 
 <script>
 
-import {getId, getUsername, getUserTeam} from "@/data";
+import {getId, getUsername} from "@/data";
 import Project from "@/models/project";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
@@ -155,7 +155,7 @@ export default {
   data() {
     return {
       username: getUsername(),
-      viewerTeam: getUserTeam(), // TODO
+      viewerTeam: null,
       projects: Project.projects,
       reports: [],
       selectedReports: [],
@@ -170,6 +170,7 @@ export default {
 
   mounted() {
     this.fetchReports();
+    console.log()
   },
 
   methods: {
@@ -203,7 +204,7 @@ export default {
         console.log('Successfully posted report:', postedReport.data);
 
         // Notify the user about a successful delete
-        this.$refs.notificationComponent.createSuccessfulNotification(' Report successfully posted');
+        this.$refs.notificationComponent.createSuccessfulNotification('Report successfully posted');
       } else {
 
         // Notify the user about an unsuccessful delete

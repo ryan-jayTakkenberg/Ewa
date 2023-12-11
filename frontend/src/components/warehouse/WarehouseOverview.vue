@@ -1,7 +1,5 @@
 <template>
 
-  <NotificationComponent ref="notificationComponent" />
-
 <SolarTitle class="header" page-title="Warehouse"></SolarTitle>
   <div class="body">
     <div class="body-container">
@@ -49,7 +47,6 @@ export default {
   name: "WarehouseOverview",
   inject: ['warehouseService'],
   components: {
-    NotificationComponent,
     UpdateWarehouse,
     SolarTitle,
     SolarSearchbar,
@@ -86,8 +83,6 @@ export default {
       }catch (error){
         console.error("Error occurred during creation of new warehouse", error)
       }
-
-      this.$refs.notificationComponent.createSuccessfulNotification('Warehouse successfully created'); // TODO implement properly, added for sprint review 3
     },
     async updateWarehouse(warehouse){
       try {
@@ -97,8 +92,6 @@ export default {
       } catch (error){
         console.error("Error occurred during saving of existing warehouse", error)
       }
-
-      this.$refs.notificationComponent.createSuccessfulNotification('Warehouse successfully updated'); // TODO implement properly, added for sprint review 3
     },
     async deleteWarehouse(warehouse){
       // Use the browser-native confirmation dialog
@@ -112,8 +105,6 @@ export default {
           console.error("Error occurred during deleting process", error)
         }
       }
-
-      this.$refs.notificationComponent.createSuccessfulNotification('Warehouse successfully deleted'); // TODO implement properly, added for sprint review 3
     },
     async getWarehouseList(){
       try {

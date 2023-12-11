@@ -1,7 +1,5 @@
 <template>
 
-  <NotificationComponent ref="notificationComponent" />
-
   <SolarTitle class="header" page-title="Project"></SolarTitle>
   <div class="body">
     <div class="body-container">
@@ -55,7 +53,6 @@ export default {
   name: "ProjectOverview",
   inject: ['projectService'],
   components: {
-    NotificationComponent,
     UpdateProject,
     SolarTitle,
     SolarSearchbar,
@@ -91,8 +88,6 @@ export default {
       }catch (error){
         console.error("Error occurred during creation of new Project", error)
       }
-
-      this.$refs.notificationComponent.createSuccessfulNotification('Project successfully created'); // TODO implement properly, added for sprint review 3
     },
     async updateProject(project){
       try {
@@ -101,8 +96,6 @@ export default {
       } catch (error){
         console.error("Error occurred during saving of existing project", error)
       }
-
-      this.$refs.notificationComponent.createSuccessfulNotification('Project successfully updated'); // TODO implement properly, added for sprint review 3
     },
     async deleteProject(project){
       // Use the browser-native confirmation dialog
@@ -116,9 +109,6 @@ export default {
           console.error("Error occurred during deleting process", error)
         }
       }
-
-      this.$refs.notificationComponent.createSuccessfulNotification('Project successfully deleted'); // TODO implement properly, added for sprint review 3
-
     },
     async getProjectList(){
       try {

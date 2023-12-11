@@ -58,3 +58,11 @@ export function getHeaders() {
 export function responseOk(response) {
     return response?.status && response.status >= 200 && response.status < 300;
 }
+
+export function showSuccessfulNotification() {
+    this.$ref.NotificationComponent.createSuccessfulNotification('Action successful');
+}
+
+export function showUnsuccessfulNotification() {
+    this.$ref.NotificationComponent.createUnsuccessfulNotification('Something went wrong, please try again');
+}

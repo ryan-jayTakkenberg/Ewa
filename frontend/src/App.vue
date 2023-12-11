@@ -10,6 +10,8 @@
       <router-view></router-view>
     </div>
 
+    <notification-component ref="notificationComponent"></notification-component>
+
   </div>
 </template>
 
@@ -31,10 +33,14 @@ import Orders from "@/models/order";
 import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
 import {UserAdaptor} from "@/service/user-adaptor";
 import {ProjectAdaptor} from "@/service/project-adaptor";
+import {FetchInterceptor} from "@/service/fetch-interceptor";
+import {SessionService} from "@/service/session-service";
+import {shallowReactive} from "vue";
+import NotificationComponent from "@/components/general/NotificationComponent.vue";
 
 export default {
   name: 'App',
-  components: {NavBar},
+  components: {NotificationComponent, NavBar},
   data() {
     return {
       isLoggedIn: false,
@@ -43,20 +49,30 @@ export default {
     }
   },
   provide() {
+
+    // create a singleton reactive service tracking the authorisation data of the session
+    this.theSessionService = shallowReactive(
+        new SessionService(CONFIG.BACKEND_URL+'/authentication', CONFIG.JWT_STORAGE_ITEM));
+    this.theFetchInterceptor =
+        new FetchInterceptor(this.theSessionService, this.$router);
+
     return {
       warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/api/warehouses"),
       projectService: new ProjectAdaptor(CONFIG.BACKEND_URL+"/api/projects"),
       teamsService: new TeamsAdaptor(CONFIG.BACKEND_URL+"api/teams"),
       reportService: new ReportAdaptor(CONFIG.BACKEND_URL+"/api/viewer-overview"),
       userService: new UserAdaptor(CONFIG.BACKEND_URL+"/api/users"),
-      adminOverviewService: new AdminOverviewAdaptor(CONFIG.BACKEND_URL+"/api/adminview")
+      adminOverviewService: new AdminOverviewAdaptor(CONFIG.BACKEND_URL+"/api/adminview"),
+      sessionService: this.theSessionService,
     }
   },
+
   methods: {
     updateSidebarState(isExpanded) {
       this.isSideBarExpanded = isExpanded;
     }
   },
+
   watch: {
     async '$route'(to, from) {
       // Stop processing if the route hasn't changed
@@ -105,6 +121,7 @@ export default {
       }
     }
   },
+
   created() {
     const path = this.$router.currentRoute.value.path;
     const isResetPasswordRoute = path.startsWith('/');
@@ -112,7 +129,12 @@ export default {
     if (!getJWT() && !isResetPasswordRoute) {
       this.$router.push('/login');
     }
-  }
+  },
+
+  beforeUnmount() {
+    console.log('App.unmounted() has been called.')
+    this.theFetchInterceptor.unregister();
+  },
 
 
 }
