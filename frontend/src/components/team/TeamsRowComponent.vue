@@ -4,10 +4,10 @@ import Team from "@/models/team";
 
 export default {
   name: "teamsRowComponent",
-  inject: ["teamsAdaptor"],
+  inject: ["teamsService"],
   props: {
     teams: {
-      type: Team,  // Use the UserModel as the prop type
+      type: Object,  // Use the UserModel as the prop type
       required: true,
     },
     isChecked: {

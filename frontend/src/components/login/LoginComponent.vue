@@ -143,7 +143,11 @@ export default {
       let response = await postAPI("/api/authentication/login", {
         email: this.emailInput,
         password: this.passwordInput,
-      });
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).catch(() => null);
 
       let jwt = response?.headers?.authorization;
       if (!jwt) {

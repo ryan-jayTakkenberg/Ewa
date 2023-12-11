@@ -3,7 +3,7 @@ import Team from "@/models/team";
 
 export default {
   name: "TeamsEditComponent",
-  inject: ["teamsAdaptor"],
+  inject: ["teamsService"],
   data() {
     return {
       editedTeam: null,
@@ -27,8 +27,12 @@ export default {
   },
   methods: {
     saveTeam() {
-      this.$emit("editTeam", this.editedTeam); // Emit the "edit-team" event
-      this.onClose(); // Close the modal
+      if (this.editedTeam && this.editedTeam.id) {
+        this.$emit("editTeam", this.editedTeam); // Emit the "edit-team" event
+        this.onClose(); // Close the modal
+      } else {
+        console.error("Invalid team data");
+      }
     },
     cloneTeam(team) {
       // Define a custom clone method for the Team object
@@ -69,14 +73,14 @@ export default {
             <div class="col-span-6 sm:col-span-3">
               <label for="name" class="modal-label ">Team name</label>
               <input type="text"
-                     v-model="this.editedTeam.name"
+                     v-model="editedTeam.name"
                      class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
-                     :placeholder="team.name" required>
+                     required>
             </div>
 
             <div class="col-span-6 sm:col-span-3">
               <label for="warehouse" class="modal-label">Warehouse</label>
-              <select v-model="this.editedTeam.warehouse" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+              <select v-model="editedTeam.warehouse" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
                 <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse" >
                   {{ warehouse.name }}
                 </option>

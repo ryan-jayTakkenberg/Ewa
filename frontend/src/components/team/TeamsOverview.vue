@@ -143,17 +143,12 @@ export default {
           console.error("Error deleting team:", error);
         }
       },
-      async asyncUpdateTeamById(teamId) {
-        console.log("asyncUpdateTeamById - Team ID:", teamId);
+      async asyncUpdateTeamById(team) {
         try {
-          if (teamId) {
-            await this.teamsService.asyncUpdateTeam(teamId);
-            await this.getTeams();
-          } else {
-            console.error("Team ID is undefined or not valid");
-          }
-        } catch (error) {
-          console.error("Error updating team:", error);
+          await this.teamsService.asyncUpdateTeam(team)
+          await this.getTeams();
+        } catch (error){
+          console.error("Error occurred during saving of existing project", error)
         }
       },
       async asyncAddTeam(newTeam) {

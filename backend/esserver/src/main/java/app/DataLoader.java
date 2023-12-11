@@ -39,9 +39,10 @@ public class DataLoader implements CommandLineRunner {
         this.createInitialProducts();
         this.createSampleWarehouses();
         this.createSampleReports();
+        this.createSampleOrders();
         this.createSampleTeamAndProjects();
         this.createInitialUsers();
-        this.createSampleOrders();
+
 
 
         System.out.println("Done!");
@@ -103,18 +104,18 @@ public class DataLoader implements CommandLineRunner {
 
         User userTeam1 = new User(PermissionLevel.VIEWER, "viewer", "viewer@solar.nl", LocalDate.now(), "viewer", team4);
         this.userRepo.save(userTeam1);
-        team4.setUser(userTeam1);
+        userTeam1.setTeam(team4);
 
         User viewer1 = new User(PermissionLevel.VIEWER, "H1", "test1@solar.com", LocalDate.now(), "viewer", team2);
         this.userRepo.save(viewer1);
-        team2.setUser(viewer1);
+        userTeam1.setTeam(team2);
 
         User viewer2 = new User(PermissionLevel.VIEWER, "H2", "test2@solar.com", LocalDate.now(), "viewer", null);
         this.userRepo.save(viewer2);
 
         User viewer3 = new User(PermissionLevel.VIEWER, "H3", "test3@solar.com", LocalDate.now(), "viewer", team3);
         this.userRepo.save(viewer3);
-        team3.setUser(viewer3);
+        userTeam1.setTeam(team3);
 
         User viewer4 = new User(PermissionLevel.VIEWER, "H4", "test4@solar.com", LocalDate.now(), "viewer", null);
         this.userRepo.save(viewer4);
@@ -125,7 +126,7 @@ public class DataLoader implements CommandLineRunner {
 
     private void createSampleOrders() {
         // Create Warehouse
-        Warehouse warehouse1 = new Warehouse(1, "Warehouse solar", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
+        Warehouse warehouse1 = new Warehouse(0, "Warehouse solar", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
         warehouseRepo.save(warehouse1);
 
         // Create Teams

@@ -30,8 +30,8 @@ public class Order {
     private String orderedFrom;
     private LocalDate orderDate;
     private LocalDate estimatedDeliveryDate;
-    @ManyToOne
-    @JoinColumn(name = "team_id", nullable = false)
+    @ManyToOne()
+    @JoinColumn(name = "team_id")
     private Team team;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;

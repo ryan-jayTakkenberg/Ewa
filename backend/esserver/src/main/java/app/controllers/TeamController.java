@@ -4,6 +4,7 @@ import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
+import app.models.Order;
 import app.models.Team;
 import app.repositories.TeamJPARepository;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,7 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Team> addNewTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@RequestBody Team team) {
+
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to create an user");
         }
@@ -54,7 +56,7 @@ public class TeamController {
         return ResponseEntity.created(location).body(addedTeam);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Team> updateWarehouse(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id, @RequestBody Team updatedTeams) {
+    public ResponseEntity<Team> updateTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id, @RequestBody Team updatedTeams) {
         Team existingTeam = teamRepository.findById(id);
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to delete an user");
@@ -68,24 +70,24 @@ public class TeamController {
             Team savedTeams = teamRepository.save(updatedTeams);
             return ResponseEntity.ok(savedTeams);
         } else {
-            throw new NotFoundException("Warehouse not found with ID: " + id);
+            throw new NotFoundException("Team not found with ID: " + id);
         }
     }
 
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Team> deleteTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id) {
+    public ResponseEntity<Team> deleteTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable long id) {
         Team teamToDelete = teamRepository.findById(id);
         if (!jwtInfo.isAdmin()) {
-            throw new ForbiddenException("Admin role is required to delete an user");
+            throw new ForbiddenException("Admin role is required to delete a team");
         }
         if (teamToDelete != null) {
+
             teamRepository.delete(teamToDelete);
             return ResponseEntity.ok(teamToDelete);
         }
-
-        return null;
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/projects/{teamId}")

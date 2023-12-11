@@ -10,7 +10,7 @@ export default {
       team: {
         id: '',
         name: '',
-        warehouse: '',
+        warehouse: {},
         users: [],
       },
       idAutoIncrement: 12,
@@ -24,10 +24,6 @@ export default {
     warehouses: Array,
   },
   methods: {
-    saveProject() {
-      console.log("Saving team:", this.editedTeam);
-      this.onClose();
-    },
     saveTeam() {
       const newTeam = {
         name: this.team.name,
@@ -36,7 +32,8 @@ export default {
 
       this.$emit('addUser', newTeam); // emit the custom 'addUser' event
       this.onClose();
-    },
+    }
+    ,
   },
 };
 </script>
@@ -76,8 +73,8 @@ export default {
 
             <div class="col-span-6 sm:col-span-3">
               <label for="warehouse" class="modal-label">Warehouse</label>
-              <select v-model="team.warehouse" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
-                <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse">
+              <select v-model="team.warehouse.id" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+                <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">
                   {{ warehouse.name }}
                 </option>
               </select>

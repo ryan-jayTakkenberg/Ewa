@@ -39,6 +39,11 @@ public class Warehouse {
 
     }
 
+    public Warehouse(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public static Warehouse createSampleOffer(int id){
         String name = "Warehouse " + id;
         String city = String.valueOf(City.values()[(int)(Math.random() * City.values().length)]);

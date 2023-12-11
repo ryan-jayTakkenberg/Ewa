@@ -35,7 +35,7 @@ import Team from "../../models/team";
 
 export default {
   name: "DeleteUserModal",
-  inject: ["teamsAdaptor"],
+  inject: ["teamsService"],
   props: {
     team: {
       type: Team,

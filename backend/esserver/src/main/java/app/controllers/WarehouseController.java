@@ -32,7 +32,7 @@ public class WarehouseController {
 
     @GetMapping
     private List<Warehouse> getWarehouses(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo){
-        if (jwtInfo.isAdmin() || jwtInfo.isViewer()){
+        if (jwtInfo.isAdmin()){
             return warehouseRepository.findAll();
         }
 

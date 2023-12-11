@@ -1,11 +1,15 @@
 package app.models;
 
 import app.enums.PermissionLevel;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 @NamedQueries({
         @NamedQuery(name = "TEAM_ID_COUNT", query = "SELECT COUNT(p) FROM Team t LEFT JOIN t.projects p WHERE t.id = :teamId"),
 })
@@ -17,29 +21,37 @@ public class Team {
     private int id;
     private String name;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "warehouse_id")
     @JsonIncludeProperties({"id", "name"})
     private Warehouse warehouse;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("team")
+    @OneToOne(mappedBy = "team", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private User user;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"team"})
-    private List<Project>  projects;
+    private Set<Project> projects = new HashSet<>();
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    private Set<Order> orders = new HashSet<>();
+
+
     private PermissionLevel permissionLevel;
 
-    public Team(PermissionLevel permissionLevel,int id, String name, Warehouse warehouse) {
+
+
+    public Team(PermissionLevel permissionLevel, int id, String name, Warehouse warehouse) {
         this.permissionLevel = permissionLevel;
         this.id = id;
         this.name = name;
         this.warehouse = warehouse;
-        this.user = user;
     }
     public Team(){
 
+    }
+    public User getUser() {
+        return user;
     }
     public enum Name {
         TeamWest("TeamWest"),
@@ -90,19 +102,22 @@ public class Team {
         }
     }
 
-    public List<Project> getProjects() {
-        return projects;
+
+
+    public void addProject(Project project) {
+        this.projects.add(project);
+        project.setTeam(this);
     }
 
-    public User getUser() {
-        return user;
+    public void removeProject(Project project) {
+        this.projects.remove(project);
+        project.setTeam(null);
     }
+
 
     public void setUser(User user) {
         this.user = user;
     }
 
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
+
 }

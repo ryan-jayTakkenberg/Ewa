@@ -62,7 +62,22 @@ public class Project {
         return notes;
     }
 
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
+
+
+
     public Team getTeam() {
         return team;
+    }
+    public void setTeam(Team team) {
+        if (this.team != null) {
+            this.team.removeProject(this);
+        }
+        this.team = team;
+        if (this.team != null) {
+            this.team.addProject(this);
+        }
     }
 }
