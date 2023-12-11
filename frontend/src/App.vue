@@ -134,6 +134,9 @@ export default {
 
       // Logic for fetching data if logged in
       if (this.isLoggedIn) {
+        if (to.path === '/login') {
+          this.$router.push(isAdmin() ? '/admin-overview' : '/viewer-overview');
+        }
         if (!this.fetchedData) {
           try {
             const [teams, users, productInfos, projects, warehouses, orders] = await Promise.all([
