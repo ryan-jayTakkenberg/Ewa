@@ -4,13 +4,9 @@
 
 <script>
 export default {
-
   name: "NotificationComponent",
-
   methods: {
-
     createSuccessfulNotification(message) {
-
       const notificationContainer = document.createElement('div');
       notificationContainer.classList.add('notificationMessageContainer');
 
@@ -35,9 +31,7 @@ export default {
         notificationContainer.remove();
       }, 5000);
     },
-
     createUnsuccessfulNotification(message) {
-
       const notificationContainer = document.createElement('div');
       notificationContainer.classList.add('notificationContainer');
 
@@ -62,9 +56,59 @@ export default {
         notificationContainer.remove();
       }, 5000);
     },
-
   },
+  staticMethods: {
+    createSuccessfulNotification(message) {
+      const notificationContainer = document.createElement('div');
+      notificationContainer.classList.add('notificationMessageContainer');
 
+      const notificationMessage = document.createElement('div');
+      notificationMessage.classList.add('message');
+      notificationMessage.textContent = message;
+
+      const icon = document.createElement('div');
+      icon.classList.add('icon');
+      const checkmarkIcon = document.createElement('span');
+      checkmarkIcon.classList.add('material-symbols-outlined', 'checkmark');
+      checkmarkIcon.textContent = 'check_circle';
+
+      icon.appendChild(checkmarkIcon);
+
+      notificationContainer.appendChild(notificationMessage);
+      notificationContainer.appendChild(icon);
+
+      document.body.appendChild(notificationContainer);
+
+      setTimeout(() => {
+        notificationContainer.remove();
+      }, 5000);
+    },
+    createUnsuccessfulNotification(message) {
+      const notificationContainer = document.createElement('div');
+      notificationContainer.classList.add('notificationContainer');
+
+      const notificationMessage = document.createElement('div');
+      notificationMessage.classList.add('message');
+      notificationMessage.textContent = message;
+
+      const icon = document.createElement('div');
+      icon.classList.add('icon');
+      const warningIcon = document.createElement('span');
+      warningIcon.classList.add('material-symbols-outlined', 'warning');
+      warningIcon.textContent = 'report';
+
+      icon.appendChild(warningIcon);
+
+      notificationContainer.appendChild(notificationMessage);
+      notificationContainer.appendChild(icon);
+
+      document.body.appendChild(notificationContainer);
+
+      setTimeout(() => {
+        notificationContainer.remove();
+      }, 5000);
+    }
+  }
 }
 </script>
 

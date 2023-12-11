@@ -36,7 +36,7 @@ export async function deleteAPI(endpoint) {
 
 function handleAPIError(error) {
     const response = error?.response;
-    // showUnsuccessfulNotification('Something went wrong, please try again');
+    showUnsuccessfulNotification('Something went wrong, please try again !!!');
     if (response?.status === 401 && location.pathname !== "/login") {
         location.assign("/login");
     }
@@ -45,7 +45,6 @@ function handleAPIError(error) {
 
 function handleAPIRequest(response, notification) {
     const newJWT = response?.headers?.authorization;
-    // showSuccessfulNotification('Action successful');
     if (newJWT) {
         setJWT(newJWT);
     }
@@ -62,10 +61,10 @@ export function responseOk(response) {
     return response?.status && response.status >= 200 && response.status < 300;
 }
 
-// export function showSuccessfulNotification(message) {
-//     NotificationComponent.createSuccessfulNotification(message);
+// function showSuccessfulNotification(message) {
+//     NotificationComponent.staticMethods.createSuccessfulNotification(message);
 // }
-//
-// export function showUnsuccessfulNotification(message) {
-//     NotificationComponent.createUnsuccessfulNotification(message);
-// }
+
+function showUnsuccessfulNotification(message) {
+    NotificationComponent.staticMethods.createUnsuccessfulNotification(message);
+}
