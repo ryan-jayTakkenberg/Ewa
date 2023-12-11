@@ -126,25 +126,42 @@ public class DataLoader implements CommandLineRunner {
 
     private void createSampleOrders() {
         // Create Warehouse
-        Warehouse warehouse1 = new Warehouse(0, "Warehouse solar", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
+        Warehouse warehouse1 = new Warehouse(1, "Warehouse solar", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
         warehouseRepo.save(warehouse1);
 
         // Create Teams
         Team team1 = new Team(PermissionLevel.ADMIN, 1, "Team 1", warehouse1 );
         teamsRepo.save(team1);
+        Team team2 = new Team(PermissionLevel.ADMIN, 2, "Team 2", warehouse2 );
+        teamsRepo.save(team2);
 
         // Create Order and associate with Team and Product
-        Order order = new Order();
-        order.setOrderName("Restock Solar Panels");
-        order.setOrderedFrom("Solar City");
-        order.setOrderDate(LocalDate.now());
-        order.setEstimatedDeliveryDate(LocalDate.now().plusDays(7));
-        order.setTeam(team1);
-        order.setStatus(Order.OrderStatus.PENDING);
+        Order order1 = new Order();
+        order1.setName("Restock Solar Panels");
+        order1.setOrderedFrom("Solar City");
+        order1.setOrderDate(LocalDate.now());
+        order1.setEstimatedDeliveryDate(LocalDate.now().plusDays(7));
+        order1.setTeam(team1);
+        order1.setStatus(Order.OrderStatus.PENDING);
 
         // Associate order with products and add the Product quantity
-        order.addProduct(new Product_Order(2, productsRepo.findById(4), order));
-        order.addProduct(new Product_Order(1, productsRepo.findById(5), order));
+        order1.addProduct(new Product_Order(2, productsRepo.findById(1), order1));
+        order1.addProduct(new Product_Order(1, productsRepo.findById(2), order1));
+
+        orderRepo.save(order1);
+
+        // Create Order 2 and associate with Team and Product
+        Order order2 = new Order();
+        order2.setName("Frames and new solar panels");
+        order2.setOrderedFrom("Green Supply");
+        order2.setOrderDate(LocalDate.now());
+        order2.setEstimatedDeliveryDate(LocalDate.now().plusDays(34));
+        order2.setTeam(team2);
+        order2.setStatus(Order.OrderStatus.PENDING);
+
+        // Associate order with products and add the Product quantity
+        order2.addProduct(new Product_Order(2, productsRepo.findById(3), order2));
+        order2.addProduct(new Product_Order(8, productsRepo.findById(4), order2));
 
         orderRepo.save(order);
     }

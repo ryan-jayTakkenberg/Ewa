@@ -7,6 +7,19 @@ import SolarTable from "@/components/general/SolarTable.vue";
 export default {
   name: "OrderRowComponent",
   components: {SolarTable},
+  emits: ["toggle", "edit", "delete"],
+  props: {
+    order: {
+      type: Order,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      checked: false,
+      productsVisible: false,
+    };
+  },
   computed: {
     Order() {
       return Order
@@ -14,19 +27,6 @@ export default {
     Warehouse() {
       return Warehouse
     }
-  },
-  emits: ["toggle", "edit", "delete"],
-  data() {
-    return {
-      checked: false,
-      productsVisible: false,
-    };
-  },
-  props: {
-    order: {
-      type: Order,
-      required: true,
-    },
   },
   methods: {
     isAdmin,
@@ -45,7 +45,7 @@ export default {
     emitReport() {
       this.$emit("report", this.order);
     },
-    displayProducts() {
+    toggleProducts() {
       this.productsVisible = !this.productsVisible;
     },
     getStatusClass() {
@@ -75,18 +75,27 @@ export default {
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
       </div>
     </td>
-    <!-- Order number  -->
-    <td class="px-6 py-4 font-semibold text-base">{{ order.id }}</td>
+    <!-- Order number and name -->
+    <td class="px-6 py-4">
+      <div class="pl-3">
+        <div class="text-base font-semibold">{{ order.id }}</div>
+        <div class="font-normal text-gray-500">{{ order.name}}</div>
+      </div>
+    </td>
+    <!--      <div class="pl-3">-->
+    <!--        <div class="text-base font-semibold">{{ order.id }}</div>-->
+    <!--        <div class="font-normal text-gray-500">{{ order.name }}</div>-->
+    <!--      </div>-->
     <!-- Order from  -->
     <td class="px-6 py-4">{{ order.orderedFrom }}</td>
     <!-- Order date  -->
-    <td class="px-6 py-4">{{ order.orderDate }}</td>
+    <td class="px-6 py-4 whitespace-nowrap">{{ order.orderDate }}</td>
     <!-- Order estimated delivery date  -->
-    <td class="px-6 py-4">{{ order.estimatedDeliveryDate }}</td>
+    <td class="px-6 py-4 whitespace-nowrap">{{ order.estimatedDeliveryDate }}</td>
     <!-- Order team and warehouse  -->
     <td class="px-6 py-4">
       <div class="font-semibold">{{ order.team.name }}</div>
-      {{ order.team.warehouse }}
+      {{ order.team.warehouse.name }}
     </td>
 
     <!-- Order team all projects names and install dates -->
@@ -94,17 +103,21 @@ export default {
       <div v-if="order.team.projects && order.team.projects.length > 0">
         <div v-for="project in order.team.projects" :key="project.id">
           <div class="font-semibold">{{ project.projectName }}</div>
-          Installation Date:<br>{{ project.installDate }}
+          Installation Date:<br>
+          <div class="whitespace-nowrap">{{ project.installDate }}
+          </div>
         </div>
       </div>
       <div v-else>No projects available.</div>
     </td>
 
+    <!-- Order products  -->
     <td class="px-6 py-4">
-      <div v-if="!productsVisible" class="view-productInfos" @click="displayProducts">View Products</div>
-      <div v-if="productsVisible" class="view-productInfos" @click="displayProducts">Hide Products</div>
+      <div v-if="!productsVisible" class="toggle-product-btn" @click="toggleProducts">View Products</div>
+      <div v-if="productsVisible" class="toggle-product-btn" @click="toggleProducts">Hide Products</div>
     </td>
 
+    <!-- Order status  -->
     <td class="px-6 py-4">
       <div :class="['status', getStatusClass(),]">{{ order.status }}</div>
     </td>
@@ -117,12 +130,24 @@ export default {
     </td>
   </tr>
 
-  <SolarTable :columns="['Product', 'Quantity', 'Price', 'Total Cost']" v-if="productsVisible" class="detail-warehouse w-64">
-    <tr class="tableRow" v-for="(product, index) in order.products" :key="index">
-      <td class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap pl-8">{{ product['product']['name'] }}</td>
-      <td class="px-6 py-4">{{ product.amount }}</td>
-      <td class="px-6 py-4">€ {{ Number(product['product']['price'])?.toFixed(2) }}</td>
-      <td class="px-6 py-4">€ {{ Number(product['product']['price'] * product.amount)?.toFixed(2) }}</td>
+  <!-- Order status  -->
+  <SolarTable v-if="productsVisible" :columns="['Product', 'Price', 'Quantity', 'Total Price']"
+              class="table-row table-row whitespace-nowrap">
+    <tr class="table-row" v-for="(product, index) in order.products" :key="index">
+      <td class="px-6 py-4 whitespace-nowrap">{{ product['product']['name'] }}</td>
+      <td class="px-6 py-4 whitespace-nowrap">€ {{ Number(product['product']['price'])?.toFixed(2) }}</td>
+      <td class="px-6 py-4 whitespace-nowrap">{{ product.amount }} x</td>
+      <td class="px-6 py-4 whitespace-nowrap">€ {{
+          Number(product['product']['price'] * product.amount)?.toFixed(2)
+        }}
+      </td>
+    </tr>
+    <tr>
+      <!-- todo Total price -->
+      <td class="px-6 py-4 font-semibold">Total price</td>
+      <td class="px-6 py-4"></td>
+      <td class="px-6 py-4"></td>
+      <td class="px-6 py-4 font-semibold">€ Total Price Here!</td>
     </tr>
   </SolarTable>
 
@@ -130,8 +155,11 @@ export default {
 
 
 <style scoped>
-.productInfo-row {
-  width: 100vw;
+
+.row-outline {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #fff;
 }
 
 .status {
@@ -165,13 +193,14 @@ export default {
   font-weight: 500;
   color: #C7D02C;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .cancel-btn:hover,
 .report-btn:hover,
 .complete-btn:hover,
 .edit-btn:hover,
-.view-productInfos:hover {
+.toggle-product-btn:hover {
   text-decoration-line: underline;
   cursor: pointer;
 }
@@ -179,22 +208,26 @@ export default {
 .edit-btn {
   font-weight: 500;
   color: blue;
+  white-space: nowrap;
 
 }
 
 .report-btn {
   font-weight: 500;
   color: #333333;
+  white-space: nowrap;
 }
 
 .cancel-btn {
   font-weight: 500;
   color: red;
+  white-space: nowrap;
 }
 
 .report-btn {
   font-weight: 500;
   color: #333333;
+  white-space: nowrap;
 }
 
 .table-row {
@@ -204,11 +237,5 @@ export default {
 
 .table-row:hover {
   background-color: rgb(249 250 251);
-}
-
-.detail-warehouse {
-  border: 1px solid #ccc;
-  padding: 10px;
-  background-color: #fff;
 }
 </style>
