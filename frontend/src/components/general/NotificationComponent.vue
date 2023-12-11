@@ -8,7 +8,7 @@ export default {
   methods: {
     createSuccessfulNotification(message) {
       const notificationContainer = document.createElement('div');
-      notificationContainer.classList.add('notificationMessageContainer');
+      notificationContainer.classList.add('notificationContainer');
 
       const notificationMessage = document.createElement('div');
       notificationMessage.classList.add('message');
@@ -60,7 +60,7 @@ export default {
   staticMethods: {
     createSuccessfulNotification(message) {
       const notificationContainer = document.createElement('div');
-      notificationContainer.classList.add('notificationMessageContainer');
+      notificationContainer.classList.add('notificationContainer');
 
       const notificationMessage = document.createElement('div');
       notificationMessage.classList.add('message');

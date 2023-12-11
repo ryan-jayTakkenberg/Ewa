@@ -36,9 +36,10 @@ export async function deleteAPI(endpoint) {
 
 function handleAPIError(error) {
     const response = error?.response;
-    showUnsuccessfulNotification('Something went wrong, please try again !!!');
     if (response?.status === 401 && location.pathname !== "/login") {
         location.assign("/login");
+    } else {
+        showUnsuccessfulNotification('Something went wrong, please try again !!!');
     }
     return response;
 }
@@ -58,13 +59,34 @@ export function getHeaders() {
 }
 
 export function responseOk(response) {
-    return response?.status && response.status >= 200 && response.status < 300;
+    if (response?.status && response.status >= 200 && response.status < 300) {
+        if (response.config?.method !== 'get') {
+            showSuccessfulNotification(':) Success ----------------------------------------------------------------');
+        }
+        return true;
+    }
+    return false;
 }
 
-// function showSuccessfulNotification(message) {
-//     NotificationComponent.staticMethods.createSuccessfulNotification(message);
-// }
+function showSuccessfulNotification(message) {
+    // Only allow one notification per second (1000ms)
+    if (applyNotificationLimiter(1000)) {
+        NotificationComponent.staticMethods.createSuccessfulNotification(message);
+    }
+}
 
 function showUnsuccessfulNotification(message) {
-    NotificationComponent.staticMethods.createUnsuccessfulNotification(message);
+    // Only allow one notification per second (1000ms)
+    if (applyNotificationLimiter(1000)) {
+        NotificationComponent.staticMethods.createUnsuccessfulNotification(message);
+    }
+}
+
+let lastNotificationTime = 0;
+function applyNotificationLimiter(ms) {
+    if (lastNotificationTime > Date.now() - ms) {
+        return false;
+    }
+    lastNotificationTime = Date.now();
+    return true;
 }
