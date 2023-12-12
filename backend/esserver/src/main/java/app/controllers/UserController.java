@@ -33,24 +33,17 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     private User postUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody User user) {
-        if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create an user");
+        if (!jwtInfo.isAdmin()) {
+            throw new ForbiddenException("Admin role is required to create or edit a user");
+        }
 
+        // Hash given password
         if (user.getPassword() != null) {
-            // Hash given password
             String hashedPassword = HashUtil.hash(user.getPassword());
             user.setPassword(hashedPassword);
         }
 
-        boolean isNewUser = user.getId() == -1;
-        if (isNewUser) return userRepo.save(user);
-        else {
-            User editedUser = this.userRepo.findById(user.getId());
-            if (editedUser != null) {
-                // Save edited user
-                return this.userRepo.save(editedUser);
-            }
-        }
-        return this.userRepo.save(user);
+        return userRepo.save(user);
     }
 
     @DeleteMapping("/{id}")

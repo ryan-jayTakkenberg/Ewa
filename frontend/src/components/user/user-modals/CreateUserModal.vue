@@ -88,7 +88,7 @@ export default {
       return (
           this.user.name.trim() === '' ||
           this.user.email.trim() === '' ||
-          this.user.permissionLevel === '' ||
+          this.user.permissionLevel.trim === '' ||
           this.user.password.trim() === ''
       );
     },

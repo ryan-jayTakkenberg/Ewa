@@ -13,7 +13,6 @@ import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultip
 import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
 import SolarPagination from "@/components/general/SolarPagination.vue";
 import {getId} from "@/data";
-import NotificationComponent from "@/components/general/NotificationComponent.vue";
 
 export default {
   name: "UsersOverview",
@@ -76,7 +75,7 @@ export default {
       this.closeModal();
       let edited = this.selectedUser;
       if (edited) {
-        let index = this.users.findIndex(p => p.id === edited.id);
+        let index = this.users.findIndex(user => user.id === edited.id);
         edited.injectAttributes(updated);
         let user = await edited.putDatabase();
 
@@ -93,10 +92,7 @@ export default {
     },
     async deleteCheckedUsers() {
       this.closeModal();
-      // Uncheck the selected users in the UsersRowComponent
-      this.users.forEach(user => {
-        user.isChecked = false;
-      });
+      this.users.forEach(user => {user.isChecked = false;}); // Uncheck the selected users in the UsersRowComponent
       const userIdsToDelete = this.checkedUsers.map(user => user.id);
 
       // Delete users one by one
@@ -235,6 +231,7 @@ export default {
   margin-left: auto;
   margin-right: 0.5rem;
 }
+
 .header {
   flex-direction: row;
   display: flex;

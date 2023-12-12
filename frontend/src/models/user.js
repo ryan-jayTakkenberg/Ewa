@@ -51,8 +51,8 @@ export default class User {
         return Team.teams.filter(team => team.users.includes(this));
     }
 
-    static createNewUser(email, name, permissionLevel, dateLastLoggedIn, password) {
-        return new User(-1, email, name, permissionLevel, dateLastLoggedIn, password);
+    static createNewUser(email, name, permissionLevel, password) {
+        return new User(-1, email, name, permissionLevel, password);
     }
 
     /**
@@ -65,16 +65,14 @@ export default class User {
             const isNewUser = this.id < 0;
 
             let response = await axios.post("/api/users", classToObject(this), {
-                headers: {"Authorization": getJWT(),}
+                headers: { "Authorization": getJWT() }
             });
 
-            // make a post request to the backend
-            // if the current product id is -1, receive the new user id
             if (isNewUser) {
-                this.id = response.data.id;// receive the new user id
+                this.id = response.data.id;
                 User.users.push(this);
             } else {
-                User.users[User.users.findIndex(o => o.id === this.id)] = this;
+                User.users[User.users.findIndex(u=> u.id === this.id)] = this;
             }
             this.injectAttributes(response.data);
             return this;
@@ -82,6 +80,7 @@ export default class User {
             return null;
         }
     }
+
 
     /**
      * delete this user from the database

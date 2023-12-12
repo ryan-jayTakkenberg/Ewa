@@ -28,6 +28,8 @@ public class User {
     @JsonIncludeProperties({"id", "name"})  // To prevent infinite recursion in JSON serialization
     private Team team;
 
+
+    //todo implement reports user
     @OneToMany(mappedBy = "app_user")
     private Set<Report> reports;
 
