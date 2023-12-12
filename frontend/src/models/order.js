@@ -10,8 +10,8 @@ export default class Order {
     estimatedDeliveryDate;
     team;
     products;
-    quantity;
     status;
+    totalPrice;
 
     static Status = {
         PENDING: "PENDING",
@@ -19,20 +19,20 @@ export default class Order {
         CANCELED: "CANCELED",
     }
 
-    constructor(id, name, orderedFrom, orderDate, estimatedDeliveryDate, team, products, quantity, status) {
+    constructor(id, name, orderedFrom, orderDate, estimatedDeliveryDate, team, products, status, totalPrice) {
         this.id = id;
         this.name = name;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
-        this.team= team;
+        this.team = team;
         this.products = products;
-        this.quantity = quantity;
         this.status = status;
+        this.totalPrice = totalPrice
     }
 
     clone() {
-        return new Order(this.id, this.name, this.orderedFrom, this.orderDate, this.estimatedDeliveryDate, this.team, this.products, this.quantity, this.status);
+        return new Order(this.id, this.name, this.orderedFrom, this.orderDate, this.estimatedDeliveryDate, this.team, this.products, this.status, this.totalPrice);
     }
 
     injectAttributes(from) {
@@ -59,8 +59,8 @@ export default class Order {
         return true;
     }
 
-    static createNewOrder(name, orderDate, estimatedDeliveryDate, team, products, quantity, status) {
-        return new Order(-1, name, orderDate, estimatedDeliveryDate, team, products, quantity, status);
+    static createNewOrder(name, orderDate, estimatedDeliveryDate, team, products, status, totalPrice) {
+        return new Order(-1, name, orderDate, estimatedDeliveryDate, team, products, status, totalPrice);
     }
 
     /**
@@ -98,7 +98,6 @@ export default class Order {
         try {
             const isNewOrder = this.id < 0;
             if (isNewOrder) return false;
-
             // make a post request to the backend to confirm order
             await axios.post(`/api/orders/${this.id}/confirm`, {headers: {"Authorization": getJWT()}});
             return true;

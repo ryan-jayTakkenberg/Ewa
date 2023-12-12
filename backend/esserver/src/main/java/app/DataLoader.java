@@ -128,8 +128,8 @@ public class DataLoader implements CommandLineRunner {
         // Create Warehouse
         Warehouse warehouse1 = new Warehouse(1, "Warehouse solar", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
         warehouseRepo.save(warehouse1);
-        Warehouse warehouse2 = new Warehouse(1, "Warehouse neeman", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
-        warehouseRepo.save(warehouse1);
+        Warehouse warehouse2 = new Warehouse(2, "Warehouse neeman", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
+        warehouseRepo.save(warehouse2);
 
         // Create Teams
         Team team1 = new Team(PermissionLevel.ADMIN, 1, "Team 1", warehouse1 );

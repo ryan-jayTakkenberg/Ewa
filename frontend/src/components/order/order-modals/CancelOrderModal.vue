@@ -24,6 +24,7 @@ import Order from "@/models/order";
 
 export default {
   name: "CancelOrderModal",
+  emits: ['cancel'],
   components: {SolarModal},
   props: {
     order: {
