@@ -7,17 +7,13 @@ import jakarta.persistence.*;
 
 @Entity
 public class Product_Order {
-
     @Id
     @GeneratedValue
     private long id;
-
     private long amount;
-
     @ManyToOne(optional = false, cascade = CascadeType.DETACH)
     @JsonIgnoreProperties({"product_orders"})
     private Product product;
-
     @ManyToOne(optional = false, cascade = CascadeType.DETACH)
     @JsonIgnoreProperties({"products"})
     private Order order;

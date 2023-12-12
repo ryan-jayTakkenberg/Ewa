@@ -132,14 +132,12 @@ export default {
 
   <!-- Order status  -->
   <SolarTable v-if="productsVisible" :columns="['Product', 'Price', 'Quantity', 'Total Price']"
-              class="table-row table-row whitespace-nowrap">
+              class="table-row whitespace-nowrap">
     <tr class="table-row" v-for="(product, index) in order.products" :key="index">
       <td class="px-6 py-4 whitespace-nowrap">{{ product['product']['name'] }}</td>
       <td class="px-6 py-4 whitespace-nowrap">€ {{ Number(product['product']['price'])?.toFixed(2) }}</td>
-      <td class="px-6 py-4 whitespace-nowrap">{{ product.amount }} x</td>
-      <td class="px-6 py-4 whitespace-nowrap">€ {{
-          Number(product['product']['price'] * product.amount)?.toFixed(2)
-        }}
+      <td class="px-6 py-4 whitespace-nowrap">{{ product.amount }} x </td>
+      <td class="px-6 py-4 whitespace-nowrap">€ {{Number(product['product']['price'] * product.amount)?.toFixed(2)}}
       </td>
     </tr>
     <tr>
@@ -147,7 +145,7 @@ export default {
       <td class="px-6 py-4 font-semibold">Total price</td>
       <td class="px-6 py-4"></td>
       <td class="px-6 py-4"></td>
-      <td class="px-6 py-4 font-semibold">€ Total Price Here!</td>
+      <td class="px-6 py-4 font-semibold underline">€ {{order.totalPrice}}</td>
     </tr>
   </SolarTable>
 
