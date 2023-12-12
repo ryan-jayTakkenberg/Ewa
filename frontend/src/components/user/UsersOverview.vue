@@ -66,7 +66,7 @@ export default {
   methods: {
     async createUser(createdUser) {
       this.closeModal();
-      let newUser = await createdUser.putDatabase();
+      let newUser = await createdUser.postDatabase();
       if (newUser) {
         this.users.push(newUser);
       }

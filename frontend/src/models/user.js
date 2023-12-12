@@ -2,6 +2,7 @@ import Team from "@/models/team";
 import axios from "@/axios-config";
 import {getJWT} from "@/data";
 import {classToObject} from "@/models/helper";
+import {deleteAPI, postAPI, putAPI, responseOk} from "@/backend";
 
 export default class User {
 
@@ -55,6 +56,25 @@ export default class User {
         return new User(-1, email, name, permissionLevel, password);
     }
 
+    async postDatabase() {
+        try {
+            const isNewUser = this.id < 0;
+            if (isNewUser) {
+                return false;
+            }
+
+            let response = await postAPI('/api/users', classToObject(this));
+            if (!responseOk(response)) {
+                return;
+            }
+
+            this.injectAttributes(response.data);
+            return this;
+        } catch (e) {
+            return null;
+        }
+    }
+
     /**
      * put this user into the database
      * will add a new user to the database if no user exists
@@ -63,16 +83,22 @@ export default class User {
     async putDatabase() {
         try {
             const isNewUser = this.id < 0;
-
-            let response = await axios.post("/api/users", classToObject(this), {
-                headers: { "Authorization": getJWT() }
-            });
-
             if (isNewUser) {
-                this.id = response.data.id;
+                return false;
+            }
+
+            let response = await putAPI(`/api/users/${this.id}`, classToObject(this));
+            if (!responseOk(response)) {
+                return;
+            }
+
+            // make a post request to the backend
+            // if the current user id is -1, receive the new user id
+            if (isNewUser) {
+                this.id = response.data.id;// receive the new user id
                 User.users.push(this);
             } else {
-                User.users[User.users.findIndex(u=> u.id === this.id)] = this;
+                User.users[User.users.findIndex(o => o.id === this.id)] = this;
             }
             this.injectAttributes(response.data);
             return this;
@@ -88,11 +114,15 @@ export default class User {
     async delDatabase() {
         try {
             const isNewUser = this.id < 0;
-            if (isNewUser) return false;
+            if (isNewUser) {
+                return false;
+            }
+
             // make a delete request to the backend
-            await axios.delete(`/api/users/${this.id}`, {
-                headers: {"Authorization": getJWT()}
-            });
+            if (!await deleteAPI(`/api/users/${this.id}`)) {
+                return false;
+            }
+
             User.users = User.users.filter(o => o.id !== this.id);
             return true;
         } catch (e) {

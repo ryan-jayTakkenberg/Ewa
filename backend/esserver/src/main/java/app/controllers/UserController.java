@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.models.Product;
 import app.util.HashUtil;
 import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
@@ -44,6 +45,23 @@ public class UserController {
         }
 
         return userRepo.save(user);
+    }
+
+    /**
+     * Edit a product to the database
+     * @param jwtInfo the json web token
+     * @param userInfo the product to add or edit
+     * @return the user if it was edited successfully
+     * @apiNote requires admin permission
+     */
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    private User putUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody User userInfo) {
+        if (!jwtInfo.isAdmin()) {
+            throw new ForbiddenException("Admin role is required to edit a user");
+        }
+
+        return userRepo.save(userInfo);
     }
 
     @DeleteMapping("/{id}")

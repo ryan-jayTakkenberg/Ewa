@@ -132,7 +132,6 @@ export default {
 }
 
 .material-symbols-outlined.checkmark {
-  transform: scale(1.2);
   color: #39a65e;
   font-variation-settings:
       'FILL' 0,
@@ -142,7 +141,6 @@ export default {
 }
 
 .material-symbols-outlined.warning {
-  transform: scale(1.2);
   color: #ce4744;
   font-variation-settings:
       'FILL' 0,
