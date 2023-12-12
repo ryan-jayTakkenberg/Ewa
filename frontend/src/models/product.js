@@ -1,5 +1,5 @@
 import {classToObject} from "@/models/helper";
-import {deleteAPI, getAPI, postAPI, responseOk} from "@/backend";
+import {deleteAPI, getAPI, postAPI, putAPI, responseOk} from "@/backend";
 import Warehouse from "@/models/warehouse";
 import Order from "@/models/order";
 import Orders from "@/models/order";
@@ -57,8 +57,11 @@ export default class Product {
     async putDatabase() {
         try {
             const isNewProduct = this.id < 0;
+            if (isNewProduct) {
+                return false;
+            }
 
-            let response = await postAPI("/api/product", classToObject(this));
+            let response = await putAPI(`/api/product/${this.id}`, classToObject(this));
             if (!responseOk(response)) {
                 return;
             }

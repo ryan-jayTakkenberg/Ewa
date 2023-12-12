@@ -42,14 +42,6 @@ export function getUsername() {
     return localStorage.getItem("username") ?? "";
 }
 
-export function removeUsername() {
-    return localStorage.removeItem("username");
-}
-
-export function removeUserTeam() {
-    return localStorage.removeItem("team");
-}
-
 export function removeAll() {
     localStorage.clear();
 }

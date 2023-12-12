@@ -1,14 +1,18 @@
 <template>
-  <div></div>
+  <div class="notificationContainer"></div>
 </template>
+
 
 <script>
 export default {
   name: "NotificationComponent",
+
   methods: {
     createSuccessfulNotification(message) {
-      const notificationContainer = document.createElement('div');
-      notificationContainer.classList.add('notificationContainer');
+      const notificationContainer = document.querySelector('.notificationContainer');
+
+      const notification = document.createElement('div');
+      notification.classList.add('notification');
 
       const notificationMessage = document.createElement('div');
       notificationMessage.classList.add('message');
@@ -22,18 +26,19 @@ export default {
 
       icon.appendChild(checkmarkIcon);
 
-      notificationContainer.appendChild(notificationMessage);
-      notificationContainer.appendChild(icon);
-
-      document.body.appendChild(notificationContainer);
+      notification.appendChild(notificationMessage);
+      notification.appendChild(icon);
+      notificationContainer.appendChild(notification);
 
       setTimeout(() => {
-        notificationContainer.remove();
-      }, 5000);
+        notification.remove();
+      }, 4000);
     },
     createUnsuccessfulNotification(message) {
-      const notificationContainer = document.createElement('div');
-      notificationContainer.classList.add('notificationContainer');
+      const notificationContainer = document.querySelector('.notificationContainer');
+
+      const notification = document.createElement('div');
+      notification.classList.add('notification');
 
       const notificationMessage = document.createElement('div');
       notificationMessage.classList.add('message');
@@ -47,68 +52,16 @@ export default {
 
       icon.appendChild(warningIcon);
 
-      notificationContainer.appendChild(notificationMessage);
-      notificationContainer.appendChild(icon);
-
-      document.body.appendChild(notificationContainer);
+      notification.appendChild(notificationMessage);
+      notification.appendChild(icon);
+      notificationContainer.appendChild(notification);
 
       setTimeout(() => {
-        notificationContainer.remove();
-      }, 5000);
+        notification.remove();
+      }, 4000);
     },
   },
-  staticMethods: {
-    createSuccessfulNotification(message) {
-      const notificationContainer = document.createElement('div');
-      notificationContainer.classList.add('notificationContainer');
 
-      const notificationMessage = document.createElement('div');
-      notificationMessage.classList.add('message');
-      notificationMessage.textContent = message;
-
-      const icon = document.createElement('div');
-      icon.classList.add('icon');
-      const checkmarkIcon = document.createElement('span');
-      checkmarkIcon.classList.add('material-symbols-outlined', 'checkmark');
-      checkmarkIcon.textContent = 'check_circle';
-
-      icon.appendChild(checkmarkIcon);
-
-      notificationContainer.appendChild(notificationMessage);
-      notificationContainer.appendChild(icon);
-
-      document.body.appendChild(notificationContainer);
-
-      setTimeout(() => {
-        notificationContainer.remove();
-      }, 5000);
-    },
-    createUnsuccessfulNotification(message) {
-      const notificationContainer = document.createElement('div');
-      notificationContainer.classList.add('notificationContainer');
-
-      const notificationMessage = document.createElement('div');
-      notificationMessage.classList.add('message');
-      notificationMessage.textContent = message;
-
-      const icon = document.createElement('div');
-      icon.classList.add('icon');
-      const warningIcon = document.createElement('span');
-      warningIcon.classList.add('material-symbols-outlined', 'warning');
-      warningIcon.textContent = 'report';
-
-      icon.appendChild(warningIcon);
-
-      notificationContainer.appendChild(notificationMessage);
-      notificationContainer.appendChild(icon);
-
-      document.body.appendChild(notificationContainer);
-
-      setTimeout(() => {
-        notificationContainer.remove();
-      }, 5000);
-    }
-  }
 }
 </script>
 
@@ -118,16 +71,28 @@ export default {
   position: absolute;
   display: flex;
   align-items: center;
+  flex-direction: column;
+  padding: 1rem;
+  height: auto;
+  width: auto;
+  background: none;
+  //border: 1px solid #222;
+  right: 5%;
+  bottom: 5%;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
+  margin-top: 1rem;
   gap: 1rem;
-  padding: 2rem 1rem;
+  padding: 1rem;
   height: 50px;
   background: #fff;
   border-radius: 5px;
-  right: 5%;
-  bottom: 5%;
-  animation: fade 5.1s ease-in-out;
-  box-shadow: rgba(0, 0, 0, 0.15) 0 0 10px 1px;
+  animation: fade 4s ease-in-out;
+  box-shadow: rgb(34, 34, 34, 0.2) 0 0 2px 1px;
 }
 
 @keyframes fade {
@@ -156,7 +121,7 @@ export default {
 
 .message {
   font-size: 1em;
-  font-weight: 600;
+  font-weight: 500;
   color: #222;
 }
 
