@@ -14,6 +14,7 @@ export default {
   data() {
     return {
       order: {
+        id: -1,
         orderNumber: '',
         orderDate: '',
         estimatedDeliveryDate: '',
@@ -24,8 +25,7 @@ export default {
       OrderStatusOptions: Order.Status,
       teamOptions: Team.teams,
       selectedProduct: null,
-      productOptions: Product.products,
-      selectedProducts: [],
+      productOptions: [...Product.products],
 
     }
   },
@@ -43,10 +43,19 @@ export default {
     },
     addProductsToOrder() {
       // Add selected product to the selected products array
-      this.selectedProducts.unshift(this.selectedProduct)
+      this.order.products.unshift(this.selectedProduct);
+
+      // Remove the selected product from the product options
+      const selectedIndex = this.productOptions.findIndex((product) => product.id === this.selectedProduct.id);
+      if (selectedIndex !== -1) {
+        this.productOptions.splice(selectedIndex, 1);
+      }
+
+      // Reset selectedProduct to null after adding it to selectedProducts
+      this.selectedProduct = null;
     },
     removeProduct(index) {
-      this.selectedProducts.splice(index, 1);
+      this.order.products.splice(index, 1);
     }
   }
 }
@@ -111,7 +120,7 @@ export default {
         <div class="col-span-6 sm:col-span-6">
           <label for="products" class="modal-label">Add Product</label>
           <div class="w-full flex">
-            <select id="products" v-model="selectedProduct" class="product-select" required>
+            <select id="products" v-model="selectedProduct" class="product-select">
               <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
             </select>
             <SolarButton class=" ml-2 add-productInfo-btn" button-text="Add" @click="addProductsToOrder"></SolarButton>
@@ -119,13 +128,13 @@ export default {
         </div>
       </div>
 
-      <!-- Display selected productInfos -->
-      <div class="order-list" v-if="selectedProducts.length > 0">
+      <!-- Display ordered products -->
+      <div class="order-list" v-if="this.order.products.length > 0">
         <h2>Ordered Products:</h2>
         <SolarTable :columns="['Name', 'Price', 'Quantity', 'Action']">
-          <tr class="table-row" v-for="productInfo in selectedProducts" :key="productInfo.id">
-            <td class="px-6 py-4 font-semibold text-base">{{ productInfo.name }}</td>
-            <td class="px-6 py-4">€ {{ productInfo.price }}</td>
+          <tr class="table-row" v-for="product in this.order.products" :key="product.id">
+            <td class="px-6 py-4 font-semibold text-base">{{ product.name }}</td>
+            <td class="px-6 py-4">€ {{ product.price }}</td>
             <td class="px-6 py-4">
               <input
                   type="number"
