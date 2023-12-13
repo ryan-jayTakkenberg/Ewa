@@ -47,17 +47,20 @@ public class OrderController {
     @Autowired
     private OrderJPARepository orderRepo;
 
+    /**
+     * Getting all the orders, if viewer will only return for assigned team warehouse
+     *
+     * @return list of orders
+     */
     @GetMapping
-    private List<Order> getOrders(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
+    private List<Order> getAllOrders(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
 
-        if(jwtInfo.isAdmin()){
+        if (jwtInfo.isAdmin()) {
             return orderRepo.findAll();
         } else
 
-
-
-        //Todo if user is viewer
+            //Todo if user is viewer
 //            Long teamId = jwtInfo.getTeamId();
 //
 //            if (teamId != null){
@@ -75,9 +78,20 @@ public class OrderController {
         return orderRepo.findById(id);
     }
 
-    @PostMapping
+    /**
+     * Add an order to the database
+     *
+     * @param jwtInfo the json web token
+     * @param order   the order to add
+     * @return the order if it was added successfully
+     * @apiNote requires admin permission
+     */
+
+
+    @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private Order postOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Order order) {
+    private Order putOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
+                            @RequestBody Order order) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
@@ -86,8 +100,60 @@ public class OrderController {
         return orderRepo.save(order);
     }
 
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    private Order postOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
+                            @RequestBody Order order) {
+        // Check if the jwt is provided
+        if (jwtInfo == null) throw new ForbiddenException("No token provided");
+        // Check if the user is admin
+        if (!jwtInfo.isAdmin())
+            throw new ForbiddenException("Admin role is required to create a product"); // Check if the user is admin
+        return orderRepo.save(order);
+    }
+
+
+    /**
+     * Deletes an order from the database
+     *
+     * @param jwtInfo the json web token
+     * @param id      the order id
+     * @return the confirmed order
+     * @apiNote no permission requirements
+     */
+    @PutMapping("/{id}/confirm")
+    private Order confirmOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
+                               @PathVariable Long id) {
+        // Check if the jwt is provided
+        if (jwtInfo == null)
+            throw new ForbiddenException("No token provided");
+
+        // Check if order is found
+        Order order = orderRepo.findById(id);
+        if (order == null)
+            throw new BadRequestException("No order found with id: " + id);
+
+        // Check if the order status is suitable for confirmation
+        if (!order.getStatus().equals(Order.OrderStatus.PENDING))
+            throw new ForbiddenException("Order cannot be confirmed. Invalid status.");
+
+        // Update the order status to "DELIVERED"
+        order.setStatus(Order.OrderStatus.DELIVERED);
+        return orderRepo.save(order);
+    }
+
+    /**
+     * Deletes an order from the database
+     *
+     * @param jwtInfo the json web token
+     * @param id      the order id
+     * @return the deleted order
+     * @apiNote requires admin permission
+     */
     @DeleteMapping("/{id}")
-    private Order deleteOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
+    private Order deleteOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
+                              @PathVariable Long id) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
@@ -99,24 +165,6 @@ public class OrderController {
         // Check if order exists
         if (order == null) throw new BadRequestException("No order found with id: " + id); // Check if order is found
         return orderRepo.delete(order);
-    }
-
-    @PutMapping("/{id}/confirm")
-    private Order confirmOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
-        // Check if the jwt is provided
-        if (jwtInfo == null) throw new ForbiddenException("No token provided");
-        // Check if the user is viewer
-        if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to confirm an order");
-        Order order = orderRepo.findById(id);     // Find order by id
-        // Check if order is found
-        if (order == null) throw new BadRequestException("No order found with id: " + id);
-        // Check if the order status is suitable for confirmation
-        if (!order.getStatus().equals(Order.OrderStatus.PENDING)) {
-            throw new ForbiddenException("Order cannot be confirmed. Invalid status.");
-        }
-        // Update the order status to "DELIVERED"
-        order.setStatus(Order.OrderStatus.DELIVERED);
-        return orderRepo.save(order);
     }
 
 }

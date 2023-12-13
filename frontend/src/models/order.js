@@ -1,6 +1,7 @@
 import {getJWT} from "@/data";
 import axios from "../axios-config";
 import {classToObject} from "@/models/helper";
+import {postAPI, putAPI, responseOk} from "@/backend";
 
 export default class Order {
     id;
@@ -59,32 +60,51 @@ export default class Order {
         return true;
     }
 
+    // create a new order with a temporary id indicating a new order
     static createNewOrder(name, orderDate, estimatedDeliveryDate, team, products, status, totalPrice) {
         return new Order(-1, name, orderDate, estimatedDeliveryDate, team, products, status, totalPrice);
     }
 
     /**
-     * put this order into the database
-     * will add a new order to the database if no order exists
-     * will override the existing order with the new order if the order already exists
+     * Update this order in the database
+     * Will update an existing order in the database
      */
     async putDatabase() {
         try {
-            const isNewOrder = this.id < 0;
+            let response = await putAPI(`/api/orders/${this.id}`, classToObject(this),
+                {headers: {"Authorization": getJWT()}});
 
-            let response = await axios.post(
-                "/api/orders", classToObject(this),
-                {headers: {"Authorization": getJWT()}}
-            );
-
-            // make a post request to the backend
-            // if the current order id is -1, receive the new order id
-            if (isNewOrder) {
-                this.id = response.data.id;// receive the new order id
-                Order.orders.push(this);
-            } else {
-                Order.orders[Order.orders.findIndex(o => o.id === this.id)] = this;
+            // Update the local orders array with the updated order
+            const orderIndex = Order.orders.findIndex(order => order.id === this.id);
+            if (orderIndex !== -1) {
+                Order.orders[orderIndex] = this;
             }
+
+            this.injectAttributes(response.data);
+            return this;
+        } catch (e) {
+            return null;
+        }
+    }
+    /**
+     * Add this new order in the database
+     * Will create a new order in the database
+     */
+    async postDatabase() {
+        try {
+            // Check if order is indeed a new order
+            const isNewOrder = this.id < 0;
+            if (!isNewOrder) return false;
+            // Make a post request to the backend
+            let response = await postAPI('/api/orders', classToObject(this));
+            if (!responseOk(response)) return false;
+
+            // Receive the new order id
+            this.id = response.data.id;
+
+            // Update the local orders array with the new order
+            Order.orders.push(this);
+
             this.injectAttributes(response.data);
             return this;
         } catch (e) {
@@ -99,33 +119,30 @@ export default class Order {
             const isNewOrder = this.id < 0;
             if (isNewOrder) return false;
             // make a post request to the backend to confirm order
-            await axios.post(`/api/orders/${this.id}/confirm`, {headers: {"Authorization": getJWT()}});
+            await axios.post(
+                `/api/orders/${this.id}/confirm`,
+                {headers: {"Authorization": getJWT()}});
             return true;
         } catch (e) {
             return false;
         }
     }
 
-
-
-    // /** todo cancel this order in the database
-    //  */
-    // async cancelDatabase() {
-    //     try {
-    //         const isNewOrder = this.id < 0;
-    //         if (isNewOrder) return false;
-    //
-    //         // make a delete request to the backend
-    //         await axios.post(
-    //             `/api/orders/${this.id}`,
-    //             {headers: {"Authorization": getJWT()}}
-    //         );
-    //         Order.orders = Order.orders.filter(o => o.id !== this.id);
-    //         return true;
-    //     } catch (e) {
-    //         return false;
-    //     }
-    // }
+    /** cancel this order in the database
+     */
+    async cancelDatabase() {
+        try {
+            const isNewOrder = this.id < 0;
+            if (isNewOrder) return false;
+            // make a post request to the backend to confirm order
+            await axios.post(
+                `/api/orders/${this.id}/cancel`,
+                {headers: {"Authorization": getJWT()}});
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
 
     /**
      * get all the orders from the database
@@ -133,19 +150,15 @@ export default class Order {
     static async getDatabase() {
         try {
             this.fetching = true;
-            // make a get request to the backend
-            // update "orders" with the response
-            let response = await axios.get(
-                "/api/orders",
-                {headers: {"Authorization": getJWT()}}
-            );
+            // Make a get request to the backend
+            // Update "orders" with the response
+            let response = await axios.get("/api/orders",
+                {headers: {"Authorization": getJWT()}});
 
             let orders = [];
             for (let obj of response.data) {
                 let order = new Order();
-                if (order.injectAttributes(obj)) {
-                    orders.push(order);
-                }
+                if (order.injectAttributes(obj)) orders.push(order);
             }
             return orders;
         } catch (e) {
