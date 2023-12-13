@@ -226,14 +226,15 @@ export default {
         <SolarButton class="create-btn" button-text="Create Order" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable
-          :columns="['', 'order','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'project', 'product', 'status', 'action']">
+          :columns="['', 'order','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'products', 'status', 'action']">
         <OrderRowComponent
             v-for="(order) in paginatedOrders" :key="order.id" :order="order"
+            @toggle="toggleCheckbox(order, $event)"
+            @edit="openEditModal"
+            @cancel="openCancelModal"
             @confirm="openConfirmModal"
             @report="openReportModal"
-            @edit="openEditModal"
-            @delete="openCancelModal"
-            @toggle="toggleCheckbox(order, $event)"> <!-- Pass user and checkbox state -->
+        >
         </OrderRowComponent>
       </SolarTable>
       <SolarPagination :current-page="currentPage" :total-pages="totalPages" @previous="prevPage" @next="nextPage"/>

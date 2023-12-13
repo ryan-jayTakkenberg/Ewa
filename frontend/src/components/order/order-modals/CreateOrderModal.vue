@@ -1,45 +1,38 @@
 <script>
 import Order from "@/models/order";
-import SolarModal from "@/components/general/SolarModal.vue";
 import Team from "@/models/team";
 import Product from "@/models/product";
-import SolarButton from "@/components/general/SolarButton.vue";
+
+import SolarModal from "@/components/general/SolarModal.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
+import SolarButton from "@/components/general/SolarButton.vue";
 
 export default {
   name: "CreateOrderModal",
-  emits: ["create-order"],
+  emits: ['create'],
   components: {SolarTable, SolarButton, SolarModal},
   data() {
     return {
-      OrderStatusOptions: Order.Status,
-      teamOptions: Team.teams,
-      productOptions: Product.productInfos,
-      selectedProducts: [],
-      selectedProduct: null,
       order: {
         orderNumber: '',
         orderDate: '',
         estimatedDeliveryDate: '',
         team: '',
-        productInfos: [],
+        products: [],
         status: '',
       },
+      OrderStatusOptions: Order.Status,
+      teamOptions: Team.teams,
+      selectedProduct: null,
+      productOptions: Product.products,
+      selectedProducts: [],
+
     }
   },
   props: {
     onClose: {
       type: Function,
       required: true,
-    },
-  },
-  computed: {
-    isAnyFieldEmpty() {
-      return (
-          !this.order.team ||
-          !this.order.productInfo ||
-          !this.order.status
-      );
     },
   },
   methods: {
@@ -49,10 +42,11 @@ export default {
       this.$emit('create', orderClass);
     },
     addProductsToOrder() {
-      // Add selected productInfos to the order.productInfos array
-      this.selectedProducts.push(this.selectedProduct)
+      // Add selected product to the selected products array
+      this.selectedProducts.unshift(this.selectedProduct)
     },
-    removeProduct() {
+    removeProduct(index) {
+      this.selectedProducts.splice(index, 1);
     }
   }
 }
@@ -73,35 +67,27 @@ export default {
               required>
         </div>
 
-        <!-- Order Status-->
-        <div class="col-span-6 sm:col-span-3">
-          <label for="order-status" class="modal-label">Order status</label>
-          <select v-model="order.status" class="status-select" required>
-            <option v-for="status in OrderStatusOptions" :key="status" :value="status">{{ status }}</option>
-          </select>
-        </div>
-
         <!-- Select team -->
         <div class="col-span-6 sm:col-span-3">
           <label for="team" class="modal-label">For Team</label>
-          <select v-model="order.team" class="team-select" required>
-            <option v-for="team in teamOptions" :key="team.id" :value="team.name">{{ team.name }}</option>
+          <select id="team" v-model="order.team" class="team-select" required>
+            <option v-for="team in teamOptions" :key="team.id" :value="team">{{ team.name }}</option>
           </select>
         </div>
 
-        <!-- Select team -->
+        <!-- Order Status-->
         <div class="col-span-6 sm:col-span-3">
-          <label for="team" class="modal-label">Project</label>
-          <select v-model="order.team" class="team-select" required>
-            <option v-for="team in teamOptions" :key="team.id" :value="team.name">{{ team.name }}</option>
+          <label for="order-status" class="modal-label">Order status</label>
+          <select id="order-status" v-model="order.status" class="status-select" required>
+            <option v-for="status in OrderStatusOptions" :key="status" :value="status">{{ status }}</option>
           </select>
         </div>
-
 
         <!-- Order date-->
         <div class="col-span-6 sm:col-span-6">
           <label for="date" class="modal-label">Order date</label>
           <input
+              id="date"
               type="date"
               v-model="order.orderDate"
               class="modal-input shadow-sm"
@@ -113,6 +99,7 @@ export default {
         <div class="col-span-6 sm:col-span-6">
           <label for="date" class="modal-label">Estimated delivery date</label>
           <input
+              id="date"
               type="date"
               v-model="order.estimatedDeliveryDate"
               class="modal-input shadow-sm"
@@ -120,14 +107,13 @@ export default {
               required>
         </div>
 
-        <!-- Select productInfos -->
+        <!-- Select products -->
         <div class="col-span-6 sm:col-span-6">
-          <label for="team" class="modal-label">Add Product</label>
+          <label for="products" class="modal-label">Add Product</label>
           <div class="w-full flex">
-            <select v-model="selectedProduct" class="productInfo-select" required>
-              <option v-for="productInfo in productOptions" :key="productInfo.id" :value="productInfo">{{ productInfo.name }}</option>
+            <select id="products" v-model="selectedProduct" class="product-select" required>
+              <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
             </select>
-
             <SolarButton class=" ml-2 add-productInfo-btn" button-text="Add" @click="addProductsToOrder"></SolarButton>
           </div>
         </div>
@@ -149,17 +135,16 @@ export default {
                   required>
             </td>
             <td class="px-6 py-4">
-              <div @click="removeProduct" class="remove-order-btn">Remove productInfo</div>
+              <div @click="removeProduct" class="remove-order-btn">Remove product</div>
             </td>
           </tr>
         </SolarTable>
       </div>
 
-
       <!-- Modal footer -->
       <template v-slot:footer>
         <button @click="onClose" class="cancel-button">Cancel</button>
-        <button type="submit" :disabled="isAnyFieldEmpty" class="ml-auto submit-button">Create Order</button>
+        <button type="submit" class="ml-auto submit-button">Create Order</button>
       </template>
     </SolarModal>
   </form>
@@ -206,7 +191,7 @@ export default {
   padding: 0.625rem;
 }
 
-.productInfo-select {
+.product-select {
   display: flex;
   padding: 0.75rem 1rem;
   font-size: 1rem;
@@ -216,7 +201,7 @@ export default {
   border-color: rgb(209 213 219);
   border-radius: 0.5rem;
   background-color: rgb(249 250 251);
-  height: 42px;
+  height: 45px;
   cursor: pointer;
 }
 

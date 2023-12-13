@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     completeOrder() {
-      this.$emit('confirm', this.order.id); // Emit an event to toggle the checked value
+      this.$emit('confirm', this.order.id);
     },
   }
 };

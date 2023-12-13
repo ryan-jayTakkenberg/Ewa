@@ -7,7 +7,7 @@ import SolarTable from "@/components/general/SolarTable.vue";
 export default {
   name: "OrderRowComponent",
   components: {SolarTable},
-  emits: ["toggle", "edit", "delete"],
+  emits: ['toggle', 'edit', 'cancel', 'confirm', 'report'],
   props: {
     order: {
       type: Order,
@@ -96,19 +96,6 @@ export default {
     <td class="px-6 py-4">
       <div class="font-semibold">{{ order.team.name }}</div>
       {{ order.team.warehouse.name }}
-    </td>
-
-    <!-- Order team all projects names and install dates -->
-    <td class="px-6 py-4">
-      <div v-if="order.team.projects && order.team.projects.length > 0">
-        <div v-for="project in order.team.projects" :key="project.id">
-          <div class="font-semibold">{{ project.projectName }}</div>
-          Installation Date:<br>
-          <div class="whitespace-nowrap">{{ project.installDate }}
-          </div>
-        </div>
-      </div>
-      <div v-else>No projects available.</div>
     </td>
 
     <!-- Order products  -->
