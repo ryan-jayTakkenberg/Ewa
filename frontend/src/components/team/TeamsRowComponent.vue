@@ -52,8 +52,8 @@ export default {
 
     <!-- Edit User -->
     <td class="px-6 py-4">
-      <div @click="editTeam" class="edit-team-btn">Edit teams</div>
-      <div @click="deleteTeam" class="delete-team-btn">delete teams</div>
+      <div @click="editTeam" class="edit-team-btn">Edit team</div>
+      <div @click="deleteTeam" class="delete-team-btn">Delete team</div>
     </td>
 
   </tr>

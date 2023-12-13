@@ -39,12 +39,28 @@ function handleAPIError(error) {
     if (response?.status === 401 && location.pathname !== "/login") {
         location.assign("/login");
     } else {
-        showUnsuccessfulNotification('Something went wrong, please try again !!!');
+        showUnsuccessfulNotification('Something went wrong, please try again');
     }
     return response;
 }
 
-function handleAPIRequest(response, notification) {
+function handleAPIRequest(response) {
+    if (response?.status && response.status >= 200 && response.status < 300) {
+        if (response.config?.method === 'post') {
+            if (response.config.url.includes('/login')) {
+                // Handle login success differently
+                showSuccessfulNotification('Login successful');
+            } else {
+                // Handle other successful requests
+                showSuccessfulNotification('Create successful');
+            }
+        } else if (response.config?.method === 'put') {
+            showSuccessfulNotification('Update successful');
+        } else if (response.config?.method === 'delete') {
+            showSuccessfulNotification('Delete successful');
+        }
+    }
+
     const newJWT = response?.headers?.authorization;
     if (newJWT) {
         setJWT(newJWT);
@@ -59,34 +75,13 @@ export function getHeaders() {
 }
 
 export function responseOk(response) {
-    if (response?.status && response.status >= 200 && response.status < 300) {
-        if (response.config?.method !== 'get') {
-            showSuccessfulNotification(':) Success ----------------------------------------------------------------');
-        }
-        return true;
-    }
-    return false;
+    return !!(response?.status && response.status >= 200 && response.status < 300);
 }
 
 function showSuccessfulNotification(message) {
-    // Only allow one notification per second (1000ms)
-    if (applyNotificationLimiter(1000)) {
-        NotificationComponent.staticMethods.createSuccessfulNotification(message);
-    }
+    NotificationComponent.methods.createSuccessfulNotification(message);
 }
 
 function showUnsuccessfulNotification(message) {
-    // Only allow one notification per second (1000ms)
-    if (applyNotificationLimiter(1000)) {
-        NotificationComponent.staticMethods.createUnsuccessfulNotification(message);
-    }
-}
-
-let lastNotificationTime = 0;
-function applyNotificationLimiter(ms) {
-    if (lastNotificationTime > Date.now() - ms) {
-        return false;
-    }
-    lastNotificationTime = Date.now();
-    return true;
+    NotificationComponent.methods.createUnsuccessfulNotification(message);
 }

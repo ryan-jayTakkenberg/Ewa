@@ -56,10 +56,10 @@ public class ProductController {
     }
 
     /**
-     * Add (or edit) a product to the database
+     * Add a product to the database
      * @param jwtInfo the json web token
      * @param productInfo the product to add or edit
-     * @return the product if it was added or edited successfully
+     * @return the product if it was added successfully
      * @apiNote requires admin permission
      */
     @PostMapping
@@ -67,6 +67,23 @@ public class ProductController {
     private Product postProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Product productInfo) {
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to create a product");
+        }
+
+        return productRepo.save(productInfo);
+    }
+
+    /**
+     * Edit a product to the database
+     * @param jwtInfo the json web token
+     * @param productInfo the product to add or edit
+     * @return the product if it was edited successfully
+     * @apiNote requires admin permission
+     */
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    private Product putProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Product productInfo) {
+        if (!jwtInfo.isAdmin()) {
+            throw new ForbiddenException("Admin role is required to edit a product");
         }
 
         return productRepo.save(productInfo);

@@ -101,32 +101,26 @@ export default {
       for (let edited of this.selectedProducts) {
         edited.injectAttributes(updated);
         if (!await edited.putDatabase()) {
-          this.$refs.notificationComponent.createUnsuccessfulNotification('Failed to update ' + (this.selectedProducts.length === 1 ? 'product' : 'products'));
           return;
         }
       }
       this.updateTable();
-      this.$refs.notificationComponent.createSuccessfulNotification('Successfully updated ' + (this.selectedProducts.length === 1 ? 'product' : 'products'));
     },
     async remove() {
       this.closeModal();
       for (let deleted of this.selectedProducts) {
         if (!await deleted.delDatabase()) {
-          this.$refs.notificationComponent.createUnsuccessfulNotification('Failed to delete ' + (this.selectedProducts.length === 1 ? 'product' : 'products'));
           return;
         }
       }
       this.updateTable();
-      this.$refs.notificationComponent.createSuccessfulNotification('Successfully deleted ' + (this.selectedProducts.length === 1 ? 'product' : 'products'));
     },
     async create(creation) {
       this.closeModal();
       if (!await creation.putDatabase()) {
-        this.$refs.notificationComponent.createUnsuccessfulNotification('Failed to delete product');
         return;
       }
       this.updateTable();
-      this.$refs.notificationComponent.createSuccessfulNotification('Successfully created product');
     },
     handleSearchChange(value) {
       this.filterValue = value.trim().toLowerCase();

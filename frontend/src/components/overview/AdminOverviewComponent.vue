@@ -107,17 +107,9 @@ export default {
 
       // Check if delete was successful (HTTP status code 201)
       if (postedReport.status === 201) {
-
         console.log('Successfully posted report:', postedReport.data);
-
-        // Notify the user about a successful delete
-        this.$refs.notificationComponent.createSuccessfulNotification(' Report successfully posted');
       } else {
-
-        // Notify the user about an unsuccessful delete
         console.log('An error occurred when trying to post the report:', report);
-        this.$refs.notificationComponent.createUnsuccessfulNotification('Unsuccessful post. Try again');
-
       }
 
       this.reportBody = '';
@@ -142,15 +134,8 @@ export default {
             this.reports.splice(indexToDelete, 1);
           }
 
-          // Notify the user about a successful delete
-          const message = this.selectedReports.length > 1 ? 'Reports' : 'Report';
-          this.$refs.notificationComponent.createSuccessfulNotification(`${message} successfully deleted`);
         } else {
-
-          // Notify the user about an unsuccessful delete
           console.log('An error occurred when trying to delete the report with id:', report.id);
-          this.$refs.notificationComponent.createUnsuccessfulNotification('Unsuccessful delete. Try again');
-
         }
       }
 

@@ -33,9 +33,9 @@ import Orders from "@/models/order";
 import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
 import {UserAdaptor} from "@/service/user-adaptor";
 import {ProjectAdaptor} from "@/service/project-adaptor";
-import {FetchInterceptor} from "@/service/fetch-interceptor";
-import {SessionService} from "@/service/session-service";
-import {shallowReactive} from "vue";
+// import {FetchInterceptor} from "@/service/fetch-interceptor";
+// import {SessionService} from "@/service/session-service";
+// import {shallowReactive} from "vue";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
 
 export default {
@@ -53,10 +53,10 @@ export default {
   provide() {
 
     // create a singleton reactive service tracking the authorisation data of the session
-    this.theSessionService = shallowReactive(
-        new SessionService(CONFIG.BACKEND_URL+'/authentication', CONFIG.JWT_STORAGE_ITEM));
-    this.theFetchInterceptor =
-        new FetchInterceptor(this.theSessionService, this.$router);
+    // this.theSessionService = shallowReactive(
+    //     new SessionService(CONFIG.BACKEND_URL+'/authentication', CONFIG.JWT_STORAGE_ITEM));
+    // this.theFetchInterceptor =
+    //     new FetchInterceptor(this.theSessionService,*/ this.$router);
 
     return {
       warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/api/warehouses"),
@@ -65,7 +65,7 @@ export default {
       reportService: new ReportAdaptor(CONFIG.BACKEND_URL+"/api/viewer-overview"),
       userService: new UserAdaptor(CONFIG.BACKEND_URL+"/api/users"),
       adminOverviewService: new AdminOverviewAdaptor(CONFIG.BACKEND_URL+"/api/adminview"),
-      sessionService: this.theSessionService,
+      // sessionService: this.theSessionService,
     }
   },
 

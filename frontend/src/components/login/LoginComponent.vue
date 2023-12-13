@@ -125,6 +125,7 @@ export default {
         this.resetErrorMessage = 'Error sending reset email. Please try again.';
       }
     },
+
     showLogin() {
 
       this.showLoginForm = true;
@@ -185,11 +186,13 @@ export default {
         console.error(error);
       }
     },
+
     togglePasswordResetForm() {
       this.showPasswordResetForm = !this.showPasswordResetForm;
       this.showLoginForm = false;
       this.errorMessage = '';
     },
+
   },
 }
 </script>
