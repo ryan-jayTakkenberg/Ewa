@@ -74,7 +74,7 @@ export default class Team {
     static async getDatabase() {
         try {
             this.fetching = true;
-            const response = await getAPI("/api/projects");
+            const response = await getAPI("/api/teams");
             return response.data;
         } catch (e) {
             return [];
