@@ -52,22 +52,24 @@ export default class User {
         return Team.teams.filter(team => team.users.includes(this));
     }
 
-    static createNewUser(email, name, permissionLevel, password) {
-        return new User(-1, email, name, permissionLevel, password);
+    static createNewUser(email, name, permissionLevel, lastLogin, password) {
+        return new User(-1, email, name, permissionLevel, null, password);
     }
 
+
+    /**
+     * create new  user in the database
+     */
     async postDatabase() {
         try {
+            // Check if is new user
             const isNewUser = this.id < 0;
-            if (isNewUser) {
-                return false;
-            }
+            if (!isNewUser) return false;
 
             let response = await postAPI('/api/users', classToObject(this));
-            if (!responseOk(response)) {
-                return;
-            }
-
+            if (!responseOk(response)) return;
+            this.id = response.data.id;
+            User.users.push(this);
             this.injectAttributes(response.data);
             return this;
         } catch (e) {
@@ -76,30 +78,19 @@ export default class User {
     }
 
     /**
-     * put this user into the database
-     * will add a new user to the database if no user exists
+     * edit this user in the database
      * will override the existing user with the new user if the user already exists
      */
     async putDatabase() {
         try {
+            // Check if is new user
             const isNewUser = this.id < 0;
-            if (isNewUser) {
-                return false;
-            }
+            if (isNewUser) return false;
 
             let response = await putAPI(`/api/users/${this.id}`, classToObject(this));
-            if (!responseOk(response)) {
-                return;
-            }
+            if (!responseOk(response)) return false;
 
-            // make a post request to the backend
-            // if the current user id is -1, receive the new user id
-            if (isNewUser) {
-                this.id = response.data.id;// receive the new user id
-                User.users.push(this);
-            } else {
-                User.users[User.users.findIndex(o => o.id === this.id)] = this;
-            }
+            User.users[User.users.findIndex(o => o.id === this.id)] = this;
             this.injectAttributes(response.data);
             return this;
         } catch (e) {

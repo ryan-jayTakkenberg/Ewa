@@ -33,7 +33,7 @@ export default {
   data() {
     return {
       inputValue: '', // Store the input value for searching users
-      users: [...User.users].filter(user => user.id !== getId()),
+      users: [...User.users].filter(user => user.id !== getId()),// Filter out user itself
       selectedUser: null,  // The selected user for editing / deleting
       checkedUsers: [], // A list of the selected users for editing / deleting multiple users at once
       showCreateModal: false,
@@ -67,9 +67,7 @@ export default {
     async createUser(createdUser) {
       this.closeModal();
       let newUser = await createdUser.postDatabase();
-      if (newUser) {
-        this.users.push(newUser);
-      }
+      if (newUser) this.users.push(newUser);
     },
     async editUser(updated) {
       this.closeModal();
@@ -78,10 +76,7 @@ export default {
         let index = this.users.findIndex(user => user.id === edited.id);
         edited.injectAttributes(updated);
         let user = await edited.putDatabase();
-
-        if (user) {
-          this.users[index] = user;
-        }
+        if (user) this.users[index] = user;
       }
     },
     async deleteUser() {

@@ -62,8 +62,8 @@ export default {
     return {
       PermissionLevelOptions: User.PermissionLevel,
       user: {
-        name: '',
         email: '',
+        name: '',
         permissionLevel: '',
         password: '',
       },
@@ -95,10 +95,10 @@ export default {
   },
   methods: {
     createUser() {
-      let userClass = new User();
-      userClass.injectAttributes(this.user);
-      this.$emit('create-user', userClass);
-      // Close the modal
+      let newUser = User.createNewUser();
+      newUser.injectAttributes(this.user);
+      this.$emit('create-user', newUser);
+      console.log(newUser);
       this.onClose();
     },
   }
