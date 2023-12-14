@@ -64,6 +64,5 @@ it('has table', () => {
         .find(th => th.element.innerHTML?.toLowerCase().includes(TABLE_HEADER_CONTAINS.toLowerCase()));
 
     expect(userTableHeader?.exists(),
-        `missing a user table`)
-        .toBe(true);
+        `missing a user table`).toBe(true);
 });
