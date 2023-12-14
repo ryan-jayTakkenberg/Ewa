@@ -23,33 +23,27 @@ public class UserController {
      * Get a list of users based on the provided JWT token.
      *
      * @param jwtInfo the JSON Web Token
-     * @return a list of users if the requester is an admin; otherwise, return the user corresponding to the JWT token.
+     * @return a list of users if the requester is an admin
+     * @throws ForbiddenException if the requester is not an admin
+     * @apiNote requires admin permission
      */
     @GetMapping
     private List<User> getUsers(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
-        // Check if the user is admin else return only user itself
-        if (jwtInfo.isAdmin()) return userRepo.findAll();
-        else return List.of(userRepo.findById(jwtInfo.getId()));
+        // Check if the user is admin
+        if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create or edit a user");
+        return userRepo.findAll();
     }
-//    /**
-//     * Get a user by ID.
-//     * @param id the ID of the user to retrieve
-//     * @return the user with the specified ID
-//     */
-//    @GetMapping("/{id}")
-//    private User getUserById(@PathVariable long id) {
-//        return userRepo.findById(id);
-//    }
 
     /**
      * Create a new user or edit an existing user in the database.
      *
      * @param jwtInfo the JSON Web Token
-     * @param user    the user to create or edit
-     * @return the created or edited user
+     * @param user    the user to create
+     * @return the created user if created successfully
      * @throws ForbiddenException if the requester is not an admin
+     * @apiNote requires admin permission
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -58,12 +52,8 @@ public class UserController {
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create or edit a user");
-
         // Hash given password
-        if (user.getPassword() != null) {
-            String hashedPassword = HashUtil.hash(user.getPassword());
-            user.setPassword(hashedPassword);
-        }
+        if (user.getPassword() != null) user.setPassword(HashUtil.hash(user.getPassword()));
         // Save user
         return userRepo.save(user);
     }
@@ -72,21 +62,35 @@ public class UserController {
      * Edit a user in the database
      *
      * @param jwtInfo  the json web token
-     * @param userInfo the user to add or edit
+     * @param user the user to add or edit
      * @return the user if it was edited successfully
+     * @throws ForbiddenException if the requester is not an admin
      * @apiNote requires admin permission
      */
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    private User putUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody User userInfo) {
+    private User putUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody User user) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to edit a user");
+        // Check if user is found
+        User existingUser = userRepo.findById(user.getId());
+        if (existingUser == null) throw new BadRequestException("No user found for ID" + user.getId());
         // Save user
-        return userRepo.save(userInfo);
+        return userRepo.save(user);
     }
 
+    /**
+     * Deletes a user in the database
+     *
+     * @param jwtInfo  the json web token
+     * @param id the user id to delete
+     * @return the user if it was deleted successfully
+     * @throws ForbiddenException if the requester is not an admin
+     * @throws BadRequestException if id is not valid
+     * @apiNote requires admin permission
+     */
     @DeleteMapping("/{id}")
     private User deleteProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
         // Check if the jwt is provided
@@ -95,12 +99,11 @@ public class UserController {
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to delete an user");
         // Check if id is not null
         if (id == null) throw new BadRequestException("No valid ID provided for user");
-        // Find user by id
-        User user = userRepo.findById(id);
         // Check if user is found
-        if (user == null) throw new BadRequestException("No user found for id");
+        User exisitingUser = userRepo.findById(id);
+        if (exisitingUser == null) throw new BadRequestException("No user found for id");
         // Delete user
-        return userRepo.delete(user);
+        return userRepo.delete(exisitingUser);
     }
 
 }

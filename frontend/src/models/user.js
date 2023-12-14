@@ -37,13 +37,9 @@ export default class User {
     }
 
     equals(other) {
-        if (!other) {
-            return false;
-        }
+        if (!other) return false;
         for (let attr of Object.keys(this)) {
-            if (typeof this[attr] !== typeof other[attr] || `${this[attr]}` !== `${other[attr]}`) {
-                return false;
-            }
+            if (typeof this[attr] !== typeof other[attr] || `${this[attr]}` !== `${other[attr]}`) return false;
         }
         return true;
     }
@@ -56,7 +52,6 @@ export default class User {
         return new User(-1, email, name, permissionLevel, null, password);
     }
 
-
     /**
      * create new  user in the database
      */
@@ -65,9 +60,10 @@ export default class User {
             // Check if is new user
             const isNewUser = this.id < 0;
             if (!isNewUser) return false;
-
+            // make a post request to the backend
             let response = await postAPI('/api/users', classToObject(this));
             if (!responseOk(response)) return;
+
             this.id = response.data.id;
             User.users.push(this);
             this.injectAttributes(response.data);
@@ -83,10 +79,10 @@ export default class User {
      */
     async putDatabase() {
         try {
-            // Check if is new user
+            // Check if is not a new user
             const isNewUser = this.id < 0;
             if (isNewUser) return false;
-
+            // make a put request to the backend
             let response = await putAPI(`/api/users/${this.id}`, classToObject(this));
             if (!responseOk(response)) return false;
 
@@ -105,14 +101,9 @@ export default class User {
     async delDatabase() {
         try {
             const isNewUser = this.id < 0;
-            if (isNewUser) {
-                return false;
-            }
-
+            if (isNewUser) return false;
             // make a delete request to the backend
-            if (!await deleteAPI(`/api/users/${this.id}`)) {
-                return false;
-            }
+            if (!await deleteAPI(`/api/users/${this.id}`)) return false;
 
             User.users = User.users.filter(o => o.id !== this.id);
             return true;
@@ -122,7 +113,7 @@ export default class User {
     }
 
     /**
-     * get all the products from the database
+     * get all the users from the database
      */
     static async getDatabase() {
         try {
