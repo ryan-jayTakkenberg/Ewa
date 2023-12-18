@@ -6,6 +6,7 @@ import Product from "@/models/product";
 import SolarModal from "@/components/general/SolarModal.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
+import User from "@/models/user";
 
 export default {
   name: "CreateOrderModal",
@@ -14,7 +15,6 @@ export default {
   data() {
     return {
       order: {
-        id: -1,
         orderNumber: '',
         orderDate: '',
         estimatedDeliveryDate: '',
@@ -37,9 +37,10 @@ export default {
   },
   methods: {
     createOrder() {
-      let orderClass = new Order();
-      orderClass.injectAttributes(this.order);
-      this.$emit('create', orderClass);
+      let newOrder = Order.createNewOrder();
+      newOrder.injectAttributes(this.order);
+      this.$emit('create', newOrder);
+      console.log(newOrder);
     },
     addProductsToOrder() {
       // Add selected product to the selected products array

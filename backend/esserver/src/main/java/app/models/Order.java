@@ -16,15 +16,7 @@ import java.util.Set;
 public class Order {
     public enum OrderStatus {PENDING, DELIVERED, CANCELED}
 
-    /*
-     * BACKEND: MODEL
-     * Every model should have an @Entity annotation before the class.
-     * Every model should also have an @Id annotation, every id must be unique!
-     *
-     * You can see all the tables in: 'localhost:8085/api/h2-console'
-     * Remember to set the 'JDBC URL' to 'jdbc:h2:mem:testdb'
-     */
-    @Id
+     @Id
     @GeneratedValue
     private long id;
     private String name;
@@ -52,8 +44,7 @@ public class Order {
         this.status = status;
     }
 
-    public Order() {
-    }
+    public Order() {}
 
     public long getId() {
         return id;

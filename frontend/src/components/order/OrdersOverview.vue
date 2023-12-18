@@ -78,29 +78,26 @@ export default {
     },
     async createOrder(createdOrder) {
       this.closeModal();
-      let newOrder = await createdOrder.putDatabase();
-      if (newOrder) {
-        this.orders.push(newOrder);
-      }
+      let newOrder = await createdOrder.postDatabase();
+      if (newOrder) this.orders.push(newOrder);
     },
 
-    // async editUser(updated) {
-    //   // Assuming there is only one user in this.selectedProducts
-    //   let edited = this.selectedUser;
+    // async editOrder(updated) {
+    //   let edited = this.selectedOrder;
     //
     //   if (edited) {
-    //     let index = this.users.findIndex(p => p.id === edited.id);
+    //     let index = this.orders.findIndex(o => o.id === edited.id);
     //     edited.injectAttributes(updated);
-    //     let user = await edited.putDatabase();
+    //     let order = await edited.putDatabase();
     //
-    //     if (user) {
-    //       this.users[index] = user;
+    //     if (order) {
+    //       this.orders[index] = order;
     //     }
     //   }
     //
     //   this.closeModal();
     // },
-    //
+
 
     async confirmOrder() {
       this.closeModal();

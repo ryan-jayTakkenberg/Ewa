@@ -66,28 +66,27 @@ export default class Order {
     }
 
     /**
-     * Update this order in the database
-     * Will update an existing order in the database
+     * Edit this order in the database
      */
     async putDatabase() {
         try {
-            let response = await putAPI(`/api/orders/${this.id}`, classToObject(this),
-                {headers: {"Authorization": getJWT()}});
+            // Check if is not a new user
+            const isNewOrder = this.id < 0;
+            if (isNewOrder) return false;
+            // make a put request to the backend
+            let response = await putAPI(`/api/orders/${this.id}`, classToObject(this));
+            if (!responseOk(response)) return false;
 
-            // Update the local orders array with the updated order
-            const orderIndex = Order.orders.findIndex(order => order.id === this.id);
-            if (orderIndex !== -1) {
-                Order.orders[orderIndex] = this;
-            }
-
+            Order.orders[Order.orders.findIndex(o => o.id === this.id)] = this;
             this.injectAttributes(response.data);
             return this;
         } catch (e) {
             return null;
         }
     }
+
     /**
-     * Add this new order in the database
+     * Create this new order in the database
      * Will create a new order in the database
      */
     async postDatabase() {

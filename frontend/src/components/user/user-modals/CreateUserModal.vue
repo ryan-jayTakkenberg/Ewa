@@ -45,7 +45,7 @@
       <!-- Modal footer -->
       <template v-slot:footer>
         <button @click="onClose" class="cancel-button">Cancel</button>
-        <button type="submit" :disabled="isAnyFieldEmpty" class="ml-auto submit-button">Create User</button>
+        <button type="submit" class="ml-auto submit-button">Create User</button>
       </template>
     </SolarModal>
   </form>
@@ -98,8 +98,6 @@ export default {
       let newUser = User.createNewUser();
       newUser.injectAttributes(this.user);
       this.$emit('create-user', newUser);
-      console.log(newUser);
-      this.onClose();
     },
   }
 }

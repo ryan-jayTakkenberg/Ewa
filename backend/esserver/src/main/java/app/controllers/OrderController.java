@@ -4,6 +4,7 @@ import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
 import app.models.Order;
+import app.models.User;
 import app.repositories.OrderJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,35 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/orders") // TODO update correct path
 public class OrderController {
-
-    /*
-     * PRODUCT CONTROLLER
-     * This controller class manages the CRUD (Create, Read, Update, Delete) operations for the 'Order' entity.
-     *
-     * Endpoints:
-     * - GET /orders: Retrieves a list of all orders that belong to the logged-in users team, or all orders for admin
-     * - POST /orders: Creates a new order. Can only be done by admin
-     * - PUT /orders/{id}: Updates the order by given ID, can be done by admin for modifying orders or viewer for
-     *                     updating status of order to 'DELIVERED'.
-     * - DELETE /orders/{id}: Removes an order by ID (when the order is completed). Can only be done by admin
-     *
-     * Authorization:
-     * - All endpoints require a valid JWT token, and a ForbiddenException is thrown if no token is provided.
-     * - Admin-level token is required for creating and deleting products; otherwise, a ForbiddenException is thrown.
-     *
-     * Error Handling:
-     * - Throws ForbiddenException for authentication and authorization issues.
-     * - Throws BadRequestException for invalid or missing parameters.
-     *
-     * Dependencies:
-     * - Autowired 'ProductJPARepository' for database interaction.
-     * - Utilizes 'JWToken' for extracting JWT information from the request attributes.
-     *
-     * Note:
-     * - The controller assumes a REST structure and adheres to HTTP status codes.
-     * - Ensure that the 'ProductJPARepository' is properly configured for database operations.
-     * - POST can also be used to UPDATE (edit) the entity
-     */
 
     @Autowired
     private OrderJPARepository orderRepo;
@@ -70,7 +42,6 @@ public class OrderController {
 //;              }
 //        }
             throw new ForbiddenException("Team information not found in token");
-
     }
 
     @GetMapping("/{id}")
@@ -79,15 +50,13 @@ public class OrderController {
     }
 
     /**
-     * Add an order to the database
+     * Update an existing order in the database
      *
      * @param jwtInfo the json web token
      * @param order   the order to add
-     * @return the order if it was added successfully
+     * @return the order if it was updated successfully
      * @apiNote requires admin permission
      */
-
-
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
     private Order putOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
@@ -95,12 +64,22 @@ public class OrderController {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
-        if (!jwtInfo.isAdmin())
-            throw new ForbiddenException("Admin role is required to create a product"); // Check if the user is admin
+        if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create an order");
+        // Check if order is found
+        Order existingOrder = orderRepo.findById(order.getId());
+        if (existingOrder == null) throw new BadRequestException("No order found for ID" + order.getId());
         return orderRepo.save(order);
     }
 
 
+    /**
+     * create a new order in the database
+     *
+     * @param jwtInfo the json web token
+     * @param order   the new order to add
+     * @return the new order if it was added successfully
+     * @apiNote requires admin permission
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     private Order postOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
@@ -108,8 +87,7 @@ public class OrderController {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
-        if (!jwtInfo.isAdmin())
-            throw new ForbiddenException("Admin role is required to create a product"); // Check if the user is admin
+        if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create an order");
         return orderRepo.save(order);
     }
 
@@ -126,13 +104,11 @@ public class OrderController {
     private Order confirmOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
                                @PathVariable Long id) {
         // Check if the jwt is provided
-        if (jwtInfo == null)
-            throw new ForbiddenException("No token provided");
+        if (jwtInfo == null) throw new ForbiddenException("No token provided");
 
         // Check if order is found
         Order order = orderRepo.findById(id);
-        if (order == null)
-            throw new BadRequestException("No order found with id: " + id);
+        if (order == null) throw new BadRequestException("No order found with id: " + id);
 
         // Check if the order status is suitable for confirmation
         if (!order.getStatus().equals(Order.OrderStatus.PENDING))

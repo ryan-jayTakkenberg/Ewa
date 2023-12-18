@@ -75,7 +75,6 @@ export default class User {
 
     /**
      * edit this user in the database
-     * will override the existing user with the new user if the user already exists
      */
     async putDatabase() {
         try {
