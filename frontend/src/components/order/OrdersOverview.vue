@@ -106,11 +106,12 @@ export default {
     },
 
     //todo cancel
-    // async cancelOrder() {
-    //   this.closeModal();
-    //   const canceledOrder = this.selectedOrder;
-    //   await canceledOrder.cancelDatabase();
-    // },
+    async cancelOrder() {
+      this.closeModal();
+      const canceledOrder = this.selectedOrder;
+      await canceledOrder.cancelDatabase();
+    },
+    
     //
     // async deleteCheckedUsers() {
     //   // Close the modal

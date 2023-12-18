@@ -6,10 +6,19 @@
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
       </svg>
-      <p>Are you sure you want to cancel the order:</p>
+      <p>Are you sure you want to cancel the following order? : </p>
     </div>
-    <p><br/><br/><strong>{{ order.orderNumber }}</strong><br/>{{ order.project }}
-    <br> {{ order.productInfos }}</p>
+      <div class="px-6 py-4 whitespace-nowrap">{{ order.id }} {{ order.team.name }}
+        <div class="px-6 py-4"><span class="font-semibold">{{ order.id }}</span> <br>{{ order.name }}</div>
+        <div class="px-6 py-4 whitespace-nowrap">{{ order.team.name }}</div>
+        <div class="px-6 py-4 whitespace-nowrap">
+          <div v-for="(product, index) in order.products" :key="index">
+            <div>{{ product.product.name }}<br></div>
+          </div>
+        </div>
+        <div class="px-6 py-4 whitespace-nowrap">{{ order.totalPrice }}</div>
+      </div>
+
     <!-- Modal footer -->
     <template v-slot:footer>
       <button @click="onClose" class="cancel-button">Cancel</button>
@@ -21,11 +30,12 @@
 <script>
 import SolarModal from "@/components/general/SolarModal.vue";
 import Order from "@/models/order";
+import SolarTable from "@/components/general/SolarTable.vue";
 
 export default {
   name: "CancelOrderModal",
   emits: ['cancel'],
-  components: {SolarModal},
+  components: {SolarTable, SolarModal},
   props: {
     order: {
       type: Order,
