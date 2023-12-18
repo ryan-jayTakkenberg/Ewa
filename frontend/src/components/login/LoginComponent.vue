@@ -165,19 +165,20 @@ export default {
       console.log(response.data);
 
       try {
-        const [teams, users, productInfos, projects, warehouses] = await Promise.all([
-          Team.getDatabase(),
-          User.getDatabase(),
-          Product.getDatabase(),
-          Project.getDatabase(),
-          Warehouse.getDatabase(),
-        ]);
-
-        Team.teams = teams;
-        User.users = users;
-        Product.productInfos = productInfos;
-        Project.projects = projects;
-        Warehouse.warehouses = warehouses;
+        // <!> ALREADY DONE IN App.vue at $route watcher <!>
+        // const [teams, users, productInfos, projects, warehouses] = await Promise.all([
+        //   Team.getDatabase(),
+        //   User.getDatabase(),
+        //   Product.getDatabase(),
+        //   Project.getDatabase(),
+        //   Warehouse.getDatabase(),
+        // ]);
+        //
+        // Team.teams = teams;
+        // User.users = users;
+        // Product.productInfos = productInfos;
+        // Project.projects = projects;
+        // Warehouse.warehouses = warehouses;
 
         this.$router.push(isAdmin() ? '/admin-overview' : '/viewer-overview');
 

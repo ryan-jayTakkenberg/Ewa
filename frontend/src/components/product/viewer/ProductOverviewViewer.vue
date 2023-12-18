@@ -3,22 +3,20 @@
     <TitleComponent page-title="Products" />
   </div>
 
-  <div class="">
-    <div class="">
-      <div class="flex justify-between mb-4 mx-4">
-        <div>
-          <SearchBarComponent place-holder="Search For Products" @search="handleSearchChange" />
-        </div>
+  <div>
+    <div class="flex justify-between mb-4 mx-4">
+      <div>
+        <SearchBarComponent place-holder="Search For Products" @search="handleSearchChange" />
       </div>
-      <SolarTable :columns="['product', 'price', '']">
-        <ProductRowComponentViewer
-            ref="rowComponent"
-            v-for="(product, index) in filteredProducts"
-            :key="index"
-            :productInfo="product">
-        </ProductRowComponentViewer>
-      </SolarTable>
     </div>
+    <SolarTable :columns="['product', 'price', '']">
+      <ProductRowComponentViewer
+          ref="rowComponent"
+          v-for="(product, index) in filteredProducts"
+          :key="index"
+          :productInfo="product">
+      </ProductRowComponentViewer>
+    </SolarTable>
   </div>
 </template>
 
@@ -39,10 +37,7 @@ export default {
   },
   data() {
     return {
-      modal: '',
-      selectedProducts: [],  // Track the selected productInfo
-      filterValue: '', // Store the input value for searching
-      checkedProducts: [], // A list of the selected ID's
+      filterValue: '',
     };
   },
   computed: {
@@ -58,13 +53,6 @@ export default {
     },
   },
   methods: {
-    closeModal() {
-      this.modal = '';
-      this.checkedProducts = [];
-      if (this.$refs.rowComponent instanceof Array) {
-        this.$refs.rowComponent.forEach(row => row.checked = false);
-      }
-    },
     handleSearchChange(value) {
       this.filterValue = value.trim().toLowerCase();
     },
