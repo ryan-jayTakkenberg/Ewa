@@ -77,41 +77,41 @@ public class ProductController {
     /**
      * Add a product to the database
      * @param jwtInfo the json web token
-     * @param productInfo the product to add or edit
+     * @param product the product to add or edit
      * @return the product if it was added successfully
      * @apiNote requires admin permission
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private Product postProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Product productInfo) {
+    private Product postProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Product product) {
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to create a product");
         }
-        if (productRepo.findById(productInfo.getId()) != null) {
-            throw new BadRequestException("Product already exists for id: " + productInfo.getId());
+        if (productRepo.findById(product.getId()) != null) {
+            throw new BadRequestException("Product already exists for id: " + product.getId());
         }
 
-        return productRepo.save(productInfo);
+        return productRepo.save(product);
     }
 
     /**
      * Edit a product to the database
      * @param jwtInfo the json web token
-     * @param productInfo the product to add or edit
+     * @param product the product to add or edit
      * @return the product if it was edited successfully
      * @apiNote requires admin permission
      */
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    private Product putProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Product productInfo) {
+    @ResponseStatus(HttpStatus.OK)
+    private Product putProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Product product) {
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to edit a product");
         }
-        if (productRepo.findById(productInfo.getId()) == null) {
-            throw new NotFoundException("No product found for id: " + productInfo.getId());
+        if (productRepo.findById(product.getId()) == null) {
+            throw new NotFoundException("No product found for id: " + product.getId());
         }
 
-        return productRepo.save(productInfo);
+        return productRepo.save(product);
     }
 
     /**
