@@ -1,4 +1,4 @@
-package app.repositories;
+package app.controllers;
 
 import app.enums.PermissionLevel;
 import app.jwt.JWTConfig;
