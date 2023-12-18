@@ -2,6 +2,7 @@ package app.repositories;
 
 import app.models.Product;
 import jakarta.persistence.Entity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,6 +19,11 @@ class ProductJPARepositoryTests {
 
     @Autowired
     private EntityRepositoryJPA<Product> productRepo;
+
+    @BeforeEach
+    void autowiredSuccessfully() {
+        assertNotNull(productRepo);
+    }
 
     @Test
     void testRepoCRUD() {

@@ -1,7 +1,4 @@
 <template>
-
-  <NotificationComponent ref="notificationComponent" />
-
   <TitleComponent class="header" page-title="Products"></TitleComponent>
 
   <div class="body">
@@ -47,12 +44,10 @@ import EditProductModal from "@/components/product/admin/modals/EditProductModal
 import CreateProductModal from "@/components/product/admin/modals/CreateProductModal";
 import Product from "@/models/product";
 import SolarButton from "@/components/general/SolarButton.vue";
-import NotificationComponent from "@/components/general/NotificationComponent.vue";
 
 export default {
   name: "UsersOverview",
   components: {
-    NotificationComponent,
     SolarButton,
     ProductRowComponent,
     SolarDropdownMenuItem,
@@ -64,6 +59,9 @@ export default {
     EditProductModal,
     CreateProductModal,
   },
+  inject: [
+      'productService',
+  ],
   data() {
     return {
       modal: '',
@@ -100,7 +98,7 @@ export default {
       this.closeModal();
       for (let edited of this.selectedProducts) {
         edited.injectAttributes(updated);
-        if (!await edited.putDatabase()) {
+        if (!await this.productService.editOrUpdate(edited)) {
           return;
         }
       }
@@ -109,7 +107,7 @@ export default {
     async remove() {
       this.closeModal();
       for (let deleted of this.selectedProducts) {
-        if (!await deleted.delDatabase()) {
+        if (!await this.productService.deleteOrRemove(deleted.id)) {
           return;
         }
       }
@@ -117,7 +115,7 @@ export default {
     },
     async create(creation) {
       this.closeModal();
-      if (!await creation.putDatabase()) {
+      if (!await this.productService.addOrCreate(creation)) {
         return;
       }
       this.updateTable();
@@ -144,11 +142,11 @@ export default {
     openCreateModal() {
       this.modal = "create";
     },
-    toggleCheckbox(productInfo, isChecked) {
+    toggleCheckbox(product, isChecked) {
       if (isChecked) {
-        this.checkedProducts.push(productInfo.id);
+        this.checkedProducts.push(product.id);
       } else {
-        this.checkedProducts = this.checkedProducts.filter(id => id !== productInfo.id);
+        this.checkedProducts = this.checkedProducts.filter(id => id !== product.id);
       }
     },
     getSelected() {

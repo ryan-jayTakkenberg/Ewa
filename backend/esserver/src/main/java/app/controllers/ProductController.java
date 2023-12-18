@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
+import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
 import app.models.Product;
 import app.repositories.ProductJPARepository;
@@ -56,6 +57,24 @@ public class ProductController {
     }
 
     /**
+     * Get a specific product
+     * @return The product for the specified id
+     */
+    @GetMapping("/{id}")
+    private Product getProduct(@PathVariable Long id) {
+        if (id == null) {
+            throw new BadRequestException("Missing field: 'id'");
+        }
+
+        Product product = productRepo.findById(id);
+        if (product == null) {
+            throw new NotFoundException("Product not found for id: " + id);
+        }
+
+        return product;
+    }
+
+    /**
      * Add a product to the database
      * @param jwtInfo the json web token
      * @param productInfo the product to add or edit
@@ -68,6 +87,9 @@ public class ProductController {
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to create a product");
         }
+        if (productRepo.findById(productInfo.getId()) != null) {
+            throw new BadRequestException("Product already exists for id: " + productInfo.getId());
+        }
 
         return productRepo.save(productInfo);
     }
@@ -79,11 +101,14 @@ public class ProductController {
      * @return the product if it was edited successfully
      * @apiNote requires admin permission
      */
-    @PutMapping("/{id}")
+    @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
     private Product putProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Product productInfo) {
         if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to edit a product");
+        }
+        if (productRepo.findById(productInfo.getId()) == null) {
+            throw new NotFoundException("No product found for id: " + productInfo.getId());
         }
 
         return productRepo.save(productInfo);

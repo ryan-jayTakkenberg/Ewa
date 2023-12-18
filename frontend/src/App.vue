@@ -37,6 +37,7 @@ import {ProjectAdaptor} from "@/service/project-adaptor";
 // import {SessionService} from "@/service/session-service";
 // import {shallowReactive} from "vue";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
+import {ProductAdaptor} from "@/service/product-adaptor";
 
 export default {
   name: 'App',
@@ -47,6 +48,7 @@ export default {
       isLoggedIn: false,
       isSideBarExpanded: false,
       fetchedData: false,
+      productService: new ProductAdaptor(),
     }
   },
 
@@ -65,6 +67,7 @@ export default {
       reportService: new ReportAdaptor(CONFIG.BACKEND_URL+"/api/viewer-overview"),
       userService: new UserAdaptor(CONFIG.BACKEND_URL+"/api/users"),
       adminOverviewService: new AdminOverviewAdaptor(CONFIG.BACKEND_URL+"/api/adminview"),
+      productService: this.productService,
       // sessionService: this.theSessionService,
     }
   },
@@ -140,10 +143,10 @@ export default {
         }
         if (!this.fetchedData) {
           try {
-            const [teams, users, productInfos, projects, warehouses, orders] = await Promise.all([
+            const [teams, users, products, projects, warehouses, orders] = await Promise.all([
               Team.getDatabase(),
               User.getDatabase(),
-              Product.getDatabase(),
+              this.productService.fetchAll(),
               Project.getDatabase(),
               Warehouse.getDatabase(),
               Orders.getDatabase(),
@@ -151,7 +154,7 @@ export default {
 
             Team.teams = teams;
             User.users = users;
-            Product.products = productInfos;
+            Product.products = products;
             Project.projects = projects;
             Warehouse.warehouses = warehouses;
             Orders.orders = orders;
