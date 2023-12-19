@@ -36,7 +36,7 @@ export async function deleteAPI(endpoint) {
 
 function handleAPIError(error) {
     const response = error?.response;
-    console.log(location.pathname);
+    console.log('error on: ', location.pathname);
     if (response?.status === 401 && location.pathname !== "/login") {
         location.assign("/login");
     }

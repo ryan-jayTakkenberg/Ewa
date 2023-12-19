@@ -7,7 +7,7 @@
       <div class="logoContainer"></div>
       <div class="welcomeContainer" v-show="!showLoginForm && !showPasswordResetForm">
         <h1 class="title">Welcome</h1>
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam delectus deleniti dolorem eius fuga hic iste iure minus.</p>
+        <p class="description">This is a management system regarding Solar Sedum, an innovative and sustainable solar panel company.</p>
         <button class="showLoginFormButton" v-on:click="showLogin()">Login</button>
       </div>
 

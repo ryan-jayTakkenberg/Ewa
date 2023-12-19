@@ -35,7 +35,7 @@ import SolarTable from "@/components/general/SolarTable.vue";
 export default {
   name: "CancelOrderModal",
   emits: ['cancel'],
-  components: {SolarTable, SolarModal},
+  components: {/*SolarTable*/ SolarModal}, // TODO fix error
   props: {
     order: {
       type: Order,
