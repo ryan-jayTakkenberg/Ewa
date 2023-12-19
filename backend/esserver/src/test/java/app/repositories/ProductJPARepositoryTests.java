@@ -2,6 +2,7 @@ package app.repositories;
 
 import app.models.Product;
 import jakarta.persistence.Entity;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +21,11 @@ class ProductJPARepositoryTests {
 
     @Autowired
     private EntityRepositoryJPA<Product> productRepo;
+
+    @BeforeAll
+    static void setup() {
+        Locale.setDefault(Locale.ENGLISH);
+    }
 
     @BeforeEach
     void autowiredSuccessfully() {
