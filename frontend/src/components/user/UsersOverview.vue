@@ -1,18 +1,24 @@
 <script>
 import User from "@/models/user";
+import {getId} from "@/data";
+
 import TitleComponent from "@/components/general/SolarTitle.vue";
-import SolarTable from "@/components/general/SolarTable.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
 import SolarSearchbar from "@/components/general/SolarSearchbar.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
-import DeleteUserModal from "@/components/user/user-modals/DeleteUserModal.vue";
-import UpdateUserModal from "@/components/user/user-modals/UpdateUserModal.vue";
-import CreateUserModal from "@/components/user/user-modals/CreateUserModal.vue";
-import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultipleUsersModal.vue";
+import SolarTable from "@/components/general/SolarTable.vue";
 import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
 import SolarPagination from "@/components/general/SolarPagination.vue";
-import {getId} from "@/data";
+
+import CreateUserModal from "@/components/user/user-modals/CreateUserModal.vue";
+import EditUserModal from "@/components/user/user-modals/EditUserModal.vue";
+import DeleteUserModal from "@/components/user/user-modals/DeleteUserModal.vue";
+import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultipleUsersModal.vue";
+
+
+
+
 
 export default {
   name: "UsersOverview",
@@ -26,13 +32,14 @@ export default {
     SolarTable,
     UsersRowComponent,
     CreateUserModal,
-    UpdateUserModal,
+    EditUserModal,
     DeleteUserModal,
     DeleteMultipleUsersModal,
   },
+  inject: ['userService'],
   data() {
     return {
-      inputValue: '', // Store the input value for searching users
+      filterValue: '', // Store the input value for searching
       users: [...User.users].filter(user => user.id !== getId()),// Filter out user itself
       selectedUser: null,  // The selected user for editing / deleting
       checkedUsers: [], // A list of the selected users for editing / deleting multiple users at once
@@ -44,50 +51,62 @@ export default {
       itemsPerPage: 10,
     };
   },
+  mounted() {
+    this.users = this.userService.fetchAll();
+  },
   computed: {
     totalPages() {
-      return Math.ceil(this.filterUsers.length / this.itemsPerPage);
-    },
-    paginatedUsers() {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      const endIndex = startIndex + this.itemsPerPage;
-      return this.filterUsers.slice(startIndex, endIndex);
-    },
-    filterUsers() {
-      return this.users.filter(p => {
-        // Perform case-insensitive search
-        return Object.keys(p).some(key => `${p[key]}`.toLowerCase().includes(this.inputValue));
-      });
+      return Math.ceil(this.filteredUsers.length / this.itemsPerPage);
     },
     isActionButtonDisabled() {
       return this.checkedUsers.length === 0;
     },
+    paginatedUsers() {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.filteredUsers.slice(startIndex, endIndex);
+    },
+    filteredUsers() {
+      return User.users.filter(p => {
+        for (let key of Object.keys(p)) {
+          if (`${p[key]}`.toLowerCase().includes(this.filterValue)) {
+            return true;
+          }
+        }
+        return false;
+      });
+    },
   },
   methods: {
+    getSelected() {
+      return User.users.filter(p => this.checkedUsers.includes(p.id));
+    },
+    updateTable() {
+      this.filterValue += ' ';
+      this.filterValue = this.filterValue.trim();
+    },
     async createUser(createdUser) {
       this.closeModal();
-      let newUser = await createdUser.postDatabase();
-      if (newUser) this.users.push(newUser);
+      await this.userService.asyncCreate(createdUser);
+      this.updateTable();
     },
     async editUser(updated) {
       this.closeModal();
-      let edited = this.selectedUser;
-      if (edited) {
-        let index = this.users.findIndex(user => user.id === edited.id);
-        edited.injectAttributes(updated);
-        let user = await edited.putDatabase();
-        if (user) this.users[index] = user;
-      }
+      await this.userService.asyncUpdate(updated)
+      this.updateTable();
     },
     async deleteUser() {
       this.closeModal();
       const deletedUser = this.selectedUser;
-      this.users = this.users.filter(user => user.id !== deletedUser.id);
-      await deletedUser.delDatabase();
+      await this.userService.asyncDeleteById(deletedUser.id);
+      this.updateTable();
     },
     async deleteCheckedUsers() {
       this.closeModal();
-      this.users.forEach(user => {user.isChecked = false;}); // Uncheck the selected users in the UsersRowComponent
+      this.users.forEach(user => {
+        // Uncheck the selected users in the UsersRowComponent
+        user.isChecked = false;
+      });
       const userIdsToDelete = this.checkedUsers.map(user => user.id);
 
       // Delete users one by one
@@ -105,9 +124,10 @@ export default {
         }
       }
       this.checkedUsers = [];
+      this.updateTable();
     },
-    handleInputValueChange(value) {
-      this.inputValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
+    handleFilterValueChange(value) {
+      this.filterValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
     },
     openCreateModal() {
       this.showCreateModal = true;
@@ -157,18 +177,14 @@ export default {
       }
     },
     nextPage() {
-      const lastPage = Math.ceil(this.filterUsers.length / this.itemsPerPage);
+      const lastPage = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
       if (this.currentPage < lastPage) {
         this.currentPage++;
       }
     },
   },
-  watch: {
-    '$route'(to) {
-      this.selectedUser = this.findSelectedRouteFromParam(to);
-    }
-  }
 }
+
 </script>
 
 <template>
@@ -180,7 +196,7 @@ export default {
         <SolarDropdownMenuButton text-button="Action" ref="dropdownButton" :disabled="isActionButtonDisabled">
           <SolarDropdownMenuItem text-menu-item="Delete Users" @click="openDeleteMultipleUsersModal"/>
         </SolarDropdownMenuButton>
-        <SolarSearchbar place-holder="Search For Users" @search="handleInputValueChange"></SolarSearchbar>
+        <SolarSearchbar place-holder="Search For Users" @search="handleFilterValueChange"></SolarSearchbar>
         <SolarButton class="create-btn" button-text="Create User" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable :columns="[' ', 'User', 'Function', 'Last Logged In', 'Action']">
@@ -194,35 +210,16 @@ export default {
       <SolarPagination @previous="prevPage" :current-page="currentPage" :total-pages="totalPages" @next="nextPage"/>
     </div>
   </div>
-
   <!-- Conditionally render modals based on boolean modal states -->
-  <CreateUserModal
-      v-if="showCreateModal"
-      :on-close="closeModal"
-      @create-user="createUser"
-  />
-  <UpdateUserModal
-      v-if="showUpdateModal"
-      :on-close="closeModal"
-      :user="selectedUser"
-      @update-user="editUser"
-  />
-  <DeleteUserModal
-      v-if="showDeleteModal"
-      :on-close="closeModal"
-      :user="selectedUser"
-      @delete-user="deleteUser"
-  />
-  <DeleteMultipleUsersModal
-      v-if="showDeleteMultipleModal"
-      :on-close="closeModal"
-      :users-to-delete="checkedUsers"
-      @delete-users="deleteCheckedUsers"
-  />
+  <CreateUserModal v-if="showCreateModal" :on-close="closeModal" @create-user="createUser"/>
+  <EditUserModal v-if="showUpdateModal" :on-close="closeModal" :user="selectedUser" @edit-user="editUser"/>
+  <DeleteUserModal v-if="showDeleteModal" :on-close="closeModal" :user="selectedUser" @delete-user="deleteUser"/>
+  <DeleteMultipleUsersModal v-if="showDeleteMultipleModal" :on-close="closeModal" :users-to-delete="checkedUsers"
+      @delete-users="deleteCheckedUsers"/>
 </template>
 
 <style scoped>
-.create-btn{
+.create-btn {
   margin-left: auto;
   margin-right: 0.5rem;
 }

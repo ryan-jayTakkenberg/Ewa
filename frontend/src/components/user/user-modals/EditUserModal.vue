@@ -4,9 +4,9 @@ import User from "@/models/user";
 import SolarModal from "@/components/general/SolarModal.vue";
 
 export default {
-  name: "UpdateUserModal",
+  name: "EditUserModal",
   components: {SolarModal},
-  emits: ['update-user'],
+  emits: ['edit-user'],
   data() {
     return {
       PermissionLevelOptions: User.PermissionLevel,
@@ -14,6 +14,19 @@ export default {
       currentPasswordVisible: false,
       newPasswordVisible: false,
     }
+  },
+  props: {
+    user: {
+      type: Object,
+      required: true,
+    },
+    onClose: {
+      type: Function,
+      required: true,
+    },
+  },
+  created() {
+    this.clonedUser = { ...this.user };
   },
   computed: {
     hasChanged() {
@@ -29,39 +42,18 @@ export default {
       return false;
     },
   },
-  props: {
-    user: {
-      type: User,
-      required: true,
-    },
-    onClose: {
-      type: Function,
-      required: true,
-    },
-  },
+
   methods: {
-    updateUser() {
-      // Emit the updated scooter
-      this.$emit('update-user', this.clonedUser);
-      this.onClose();
+    editUser() {
+      this.$emit('edit-user', this.clonedUser); // Emit the updated scooter
     },
-    toggleCurrentPasswordVisibility() {
-      this.currentPasswordVisible = !this.currentPasswordVisible;
-    },
-    toggleNewPasswordVisibility() {
-      this.newPasswordVisible = !this.newPasswordVisible;
-    },
-  },
-  created() {
-    this.clonedUser = this.user.clone();
-    console.log(this.clonedUser);
   },
 }
 </script>
 
 <template>
-  <form @submit.prevent="updateUser" @keydown.enter.prevent="">
-  <SolarModal title="Edit User" @close-modal="onClose">
+  <form @submit.prevent="editUser" @keydown.enter.prevent="">
+    <SolarModal title="Edit User" @close-modal="onClose">
       <div class="modal-grid">
         <div class="col-span-6 sm:col-span-3">
           <label for="name" class="modal-label ">Name</label>
@@ -98,7 +90,7 @@ export default {
         <button type="submit" class="ml-auto submit-button" :disabled="!hasChanged">Save changes
         </button>
       </template>
-  </SolarModal>
+    </SolarModal>
   </form>
 </template>
 

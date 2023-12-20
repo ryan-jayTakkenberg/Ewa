@@ -49,9 +49,8 @@ export default {
   },
 
   methods: {
-
     async fetchAllUsers() {
-      this.users = await this.userService.fetchAllUsers();
+      this.users = await this.userService.fetchAll();
     },
 
     async fetchAllProjects() {

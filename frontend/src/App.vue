@@ -49,6 +49,7 @@ export default {
       isSideBarExpanded: false,
       fetchedData: false,
       productService: new ProductAdaptor(),
+      userService: new UserAdaptor(),
     }
   },
 
@@ -145,7 +146,7 @@ export default {
           try {
             const [teams, users, products, projects, warehouses, orders] = await Promise.all([
               Team.getDatabase(),
-              User.getDatabase(),
+              this.userService.fetchAll(),
               this.productService.fetchAll(),
               Project.getDatabase(),
               Warehouse.getDatabase(),

@@ -1,15 +1,9 @@
 import Team from "@/models/team";
-import axios from "@/axios-config";
-import {getJWT} from "@/data";
-import {classToObject} from "@/models/helper";
-import {deleteAPI, postAPI, putAPI, responseOk} from "@/backend";
 
 export default class User {
+    static users = [];
 
-    static PermissionLevel = {
-        VIEWER: "VIEWER",
-        ADMIN: "ADMIN",
-    }
+    static PermissionLevel = {VIEWER: "VIEWER", ADMIN: "ADMIN",}
 
     constructor(id, email, name, permissionLevel, lastLogin, password) {
         this.id = id;
@@ -51,93 +45,4 @@ export default class User {
     static createNewUser(email, name, permissionLevel, lastLogin, password) {
         return new User(-1, email, name, permissionLevel, null, password);
     }
-
-    /**
-     * create new  user in the database
-     */
-    async postDatabase() {
-        try {
-            // Check if is new user
-            const isNewUser = this.id < 0;
-            if (!isNewUser) return false;
-            // make a post request to the backend
-            let response = await postAPI('/api/users', classToObject(this));
-            if (!responseOk(response)) return;
-
-            this.id = response.data.id;
-            User.users.push(this);
-            this.injectAttributes(response.data);
-            return this;
-        } catch (e) {
-            return null;
-        }
-    }
-
-    /**
-     * edit this user in the database
-     */
-    async putDatabase() {
-        try {
-            // Check if is not a new user
-            const isNewUser = this.id < 0;
-            if (isNewUser) return false;
-            // make a put request to the backend
-            let response = await putAPI(`/api/users/${this.id}`, classToObject(this));
-            if (!responseOk(response)) return false;
-
-            User.users[User.users.findIndex(o => o.id === this.id)] = this;
-            this.injectAttributes(response.data);
-            return this;
-        } catch (e) {
-            return null;
-        }
-    }
-
-
-    /**
-     * delete this user from the database
-     */
-    async delDatabase() {
-        try {
-            const isNewUser = this.id < 0;
-            if (isNewUser) return false;
-            // make a delete request to the backend
-            if (!await deleteAPI(`/api/users/${this.id}`)) return false;
-
-            User.users = User.users.filter(o => o.id !== this.id);
-            return true;
-        } catch (e) {
-            return false;
-        }
-    }
-
-    /**
-     * get all the users from the database
-     */
-    static async getDatabase() {
-        try {
-            this.fetching = true;
-            // make a get request to the backend
-            // update "products" with the response
-            let response = await axios.get("/api/users", {
-                headers: {"Authorization": getJWT()}
-            });
-
-            let users = [];
-            for (let obj of response.data) {
-                let user = new User();
-                if (user.injectAttributes(obj)) {
-                    users.push(user);
-                }
-            }
-            return users;
-        } catch (e) {
-            return [];
-        } finally {
-            this.fetching = false;
-        }
-    }
-
-    static fetching = true;
-    static users = [];
 }

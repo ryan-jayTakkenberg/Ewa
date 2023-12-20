@@ -59,7 +59,6 @@ export default {
   async created() {
     this.projectClone = this.project.clone();
     this.teamList = await this.teamsService.asyncFindAll();
-
   },
   computed: {
     hasChanged() {

@@ -8,7 +8,9 @@
       </svg>
       <p>Are you sure you want to delete the user:</p>
     </div>
+
     <p><br/><br/><strong>{{ user.name }}</strong><br/>{{ user.email }}</p>
+
     <!-- Modal footer -->
     <template v-slot:footer>
       <button @click="onClose" class="cancel-button">Cancel</button>
@@ -18,7 +20,6 @@
 </template>
 
 <script>
-import User from "@/models/user";
 import SolarModal from "@/components/general/SolarModal.vue";
 
 export default {
@@ -26,7 +27,7 @@ export default {
   components: {SolarModal},
   props: {
     user: {
-      type: User,
+      type: Object,
       required: true,
     },
     onClose: {
@@ -36,7 +37,7 @@ export default {
   },
   methods: {
     deleteUser() {
-      this.$emit('delete-user', this.user.id); // Emit an event to toggle the checked value
+      this.$emit('delete-user', this.user.id);
     },
   }
 };
