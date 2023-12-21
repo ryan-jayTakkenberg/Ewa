@@ -4,7 +4,6 @@ import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
 import app.models.Order;
-import app.models.User;
 import app.repositories.OrderJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,7 +59,7 @@ public class OrderController {
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
     private Order putOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
-                            @RequestBody Order order) {
+                           @RequestBody Order order) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
@@ -68,6 +67,7 @@ public class OrderController {
         // Check if order is found
         Order existingOrder = orderRepo.findById(order.getId());
         if (existingOrder == null) throw new BadRequestException("No order found for ID" + order.getId());
+
         return orderRepo.save(order);
     }
 
@@ -92,9 +92,10 @@ public class OrderController {
         return orderRepo.save(order);
     }
 
+// todo order confirmation
 
     /**
-     * Deletes an order from the database
+     * Confirms an order in the database
      *
      * @param jwtInfo the json web token
      * @param id      the order id
@@ -106,17 +107,42 @@ public class OrderController {
                                @PathVariable Long id) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
-
         // Check if order is found
         Order order = orderRepo.findById(id);
         if (order == null) throw new BadRequestException("No order found with id: " + id);
-
         // Check if the order status is suitable for confirmation
         if (!order.getStatus().equals(Order.OrderStatus.PENDING))
             throw new ForbiddenException("Order cannot be confirmed. Invalid status.");
-
         // Update the order status to "DELIVERED"
         order.setStatus(Order.OrderStatus.DELIVERED);
+
+        return orderRepo.save(order);
+    }
+
+    // todo order cancellation
+
+    /**
+     * Cancel an order in the database
+     *
+     * @param jwtInfo the json web token
+     * @param id      the order id
+     * @return the confirmed order
+     * @apiNote no permission requirements
+     */
+    @PutMapping("/{id}/cancel")
+    private Order cancelOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
+                              @PathVariable Long id) {
+        // Check if the jwt is provided
+        if (jwtInfo == null) throw new ForbiddenException("No token provided");
+        // Check if order is found
+        Order order = orderRepo.findById(id);
+        if (order == null) throw new BadRequestException("No order found with id: " + id);
+        // Check if the order status is suitable for cancellation
+        if (!order.getStatus().equals(Order.OrderStatus.PENDING))
+            throw new ForbiddenException("Order cannot be confirmed. Invalid status.");
+        // Update the order status to "CANCELED"
+        order.setStatus(Order.OrderStatus.CANCELED);
+
         return orderRepo.save(order);
     }
 
