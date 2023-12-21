@@ -60,7 +60,7 @@ export default {
           <input
               type="text"
               v-model="this.clonedUser.name"
-              class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
+              class="modal-input shadow-sm"
               placeholder="Name"
               required>
         </div>
@@ -70,15 +70,14 @@ export default {
           <input
               type="email"
               v-model="this.clonedUser.email"
-              class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600"
+              class="modal-input shadow-sm"
               placeholder="Email"
               required>
         </div>
         <div class="col-span-6 sm:col-span-3">
           <label for="user-role" class="modal-label">Function</label>
           <select v-model="this.clonedUser.permissionLevel" class="role-select">
-            <option v-for="permissionLevel in PermissionLevelOptions"
-                    :key="permissionLevel"
+            <option v-for="permissionLevel in PermissionLevelOptions" :key="permissionLevel"
                     :value="permissionLevel">{{ permissionLevel }}
             </option>
           </select>
@@ -87,7 +86,7 @@ export default {
       <!-- Modal footer -->
       <template v-slot:footer>
         <button @click="onClose" class="cancel-button">Cancel</button>
-        <button type="submit" class="ml-auto submit-button" :disabled="!hasChanged">Save changes
+        <button type="submit" class="submit-button" :disabled="!hasChanged">Save changes
         </button>
       </template>
     </SolarModal>
@@ -124,6 +123,7 @@ export default {
   line-height: 1.25rem;
   padding: 0.625rem 1.25rem;
   text-align: center;
+  margin-left: auto;
 }
 
 .submit-button:hover {

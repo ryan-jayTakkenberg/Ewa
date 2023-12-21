@@ -1,5 +1,4 @@
 <script>
-import Order from "@/models/order";
 import TitleComponent from "@/components/general/SolarTitle.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
@@ -13,6 +12,7 @@ import CreateOrderModal from "@/components/order/order-modals/CreateOrderModal.v
 import CancelOrderModal from "@/components/order/order-modals/CancelOrderModal.vue";
 import ConfirmOrderModal from "@/components/order/order-modals/ConfirmOrderModal.vue";
 import ReportComponent from "@/components/manage/ReportComponent.vue";
+import Order from "@/models/order";
 
 export default {
   name: "OrdersOverview",
@@ -30,10 +30,10 @@ export default {
     SolarTable,
     SolarPagination,
   },
+  inject: ['orderService'],
   data() {
     return {
-      inputValue: '', // Store the input value for searching orders
-      orders: [...Order.orders],
+      filterValue: '', // Store the input value for searching orders
       selectedOrder: null,  // The selected order for editing / deleting
       checkedOrders: [], // A list of the selected orders for editing multiple orders at once
       showCreateModal: false,
@@ -47,17 +47,21 @@ export default {
   },
   computed: {
     totalPages() {
-      console.log(this.orders)
-      return Math.ceil(this.filterOrders.length / this.itemsPerPage);
+      return Math.ceil(this.filteredOrders.length / this.itemsPerPage);
     },
     paginatedOrders() {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
       const endIndex = startIndex + this.itemsPerPage;
-      return this.filterOrders.slice(startIndex, endIndex);
+      return this.filteredOrders.slice(startIndex, endIndex);
     },
-    filterOrders() {
-      return this.orders.filter(p => {
-        return Object.keys(p).some(key => `${p[key]}`.toLowerCase().includes(this.inputValue));
+    filteredOrders() {
+      return Order.orders.filter(p => {
+        for (let key of Object.keys(p)) {
+          if (`${p[key]}`.toLowerCase().includes(this.filterValue)) {
+            return true;
+          }
+        }
+        return false;
       });
     },
     isActionButtonDisabled() {
@@ -65,96 +69,60 @@ export default {
     },
   },
   methods: {
+    updateTable() {
+      this.filterValue += ' ';
+      this.filterValue = this.filterValue.trim();
+    },
+
     prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
       }
     },
     nextPage() {
-      const lastPage = Math.ceil(this.filterOrders.length / this.itemsPerPage);
+      const lastPage = Math.ceil(this.filteredOrders.length / this.itemsPerPage);
       if (this.currentPage < lastPage) {
         this.currentPage++;
       }
     },
     async createOrder(createdOrder) {
       this.closeModal();
-      let newOrder = await createdOrder.postDatabase();
-      if (newOrder) this.orders.push(newOrder);
+      await this.orderService.asyncCreate(createdOrder);
+      this.updateTable();
     },
 
+    // todo edit order
     // async editOrder(updated) {
-    //   let edited = this.selectedOrder;
-    //
-    //   if (edited) {
-    //     let index = this.orders.findIndex(o => o.id === edited.id);
-    //     edited.injectAttributes(updated);
-    //     let order = await edited.putDatabase();
-    //
-    //     if (order) {
-    //       this.orders[index] = order;
-    //     }
-    //   }
-    //
     //   this.closeModal();
+    //   await this.orderService.asyncUpdate(updated)
+    //   this.updateTable();
     // },
 
+    // todo Deletion possible or not ?
+    // async deleteOrder() {
+    //   this.closeModal();
+    //   const deletedOrder = this.selectedOrder;
+    //   await this.orderService.asyncDeleteById(deletedOrder.id);
+    //   this.updateTable();
+    // },
 
     async confirmOrder() {
       this.closeModal();
-      const canceledOrder = this.selectedOrder;
-      await canceledOrder.confirmDatabase();
+      const confirmedOrder = this.selectedOrder;
+      await this.orderService.asyncConfirmById(confirmedOrder.id);
+      await confirmedOrder.confirmDatabase();
     },
 
-    //todo cancel
     async cancelOrder() {
       this.closeModal();
       const canceledOrder = this.selectedOrder;
-      await canceledOrder.cancelDatabase();
+      await this.orderService.asyncCancelById(canceledOrder.id);
     },
-    
-    //
-    // async deleteCheckedUsers() {
-    //   // Close the modal
-    //   this.closeModal();
-    //
-    //   // Uncheck the selected users in the UsersRowComponent
-    //   this.users.forEach(user => {
-    //     user.isChecked = false;
-    //   });
-    //
-    //   // Get the IDs of the users to delete
-    //   const userIdsToDelete = this.checkedUsers.map(user => user.id);
-    //
-    //   // Delete users one by one
-    //   for (const userId of userIdsToDelete) {
-    //     const deletedUserIndex = this.users.findIndex(user => user.id === userId);
-    //
-    //     if (deletedUserIndex !== -1) {
-    //       const deletedUser = this.users[deletedUserIndex];
-    //
-    //       // Delete user
-    //       await deletedUser.delDatabase();
-    //
-    //       // Remove the user from the users array
-    //       this.users.splice(deletedUserIndex, 1);
-    //     }
-    //   }
-    //   // Clear the checkedUsers array
-    //   this.checkedUsers = [];
-    // },
-    // TODO edit checkedUsers oneByONe
-    //  Check if there are any selected users
-    // if (this.checkedUsers.length > 0) {
-    //   const userToEdit = this.checkedUsers[0];
-    //   this.openEditModal(userToEdit);
-    // this.closeDropdown();
-    //
-    //   // Remove the first user from the array
-    //   this.checkedUsers.splice(0, 1);
-    // }
-    handleInputValueChange(value) {
+
+
+    handleFilterValueChange(value) {
       console.log(value);
-      this.inputValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
+      this.filterValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
     },
     openCreateModal() {
       this.showCreateModal = true;
@@ -220,7 +188,7 @@ export default {
         <SolarDropdownMenuButton text-button="Action" ref="dropdownButton" :disabled="isActionButtonDisabled">
           <SolarDropdownMenuItem text-menu-item="Confirm Orders" @click="openConfirmMultipleOrdersModal"/>
         </SolarDropdownMenuButton>
-        <SolarSearchbar place-holder="Search For Orders" @search="handleInputValueChange"></SolarSearchbar>
+        <SolarSearchbar place-holder="Search For Orders" @search="handleFilterValueChange"></SolarSearchbar>
         <SolarButton class="create-btn" button-text="Create Order" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable

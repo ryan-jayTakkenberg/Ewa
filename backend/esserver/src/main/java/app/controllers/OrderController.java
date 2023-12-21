@@ -88,6 +88,7 @@ public class OrderController {
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create an order");
+
         return orderRepo.save(order);
     }
 

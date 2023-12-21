@@ -7,6 +7,7 @@ import app.jwt.JWToken;
 import app.models.User;
 import app.repositories.UserJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,7 +68,7 @@ public class UserController {
      * @throws ForbiddenException if the requester is not an admin
      * @apiNote requires admin permission
      */
-    @PutMapping("/{id}")
+    @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
     private User putUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody User user) {
         // Check if the jwt is provided

@@ -1,6 +1,5 @@
 <script>
 import User from "@/models/user";
-import {getId} from "@/data";
 
 import TitleComponent from "@/components/general/SolarTitle.vue";
 import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
@@ -40,19 +39,15 @@ export default {
   data() {
     return {
       filterValue: '', // Store the input value for searching
-      users: [...User.users].filter(user => user.id !== getId()),// Filter out user itself
       selectedUser: null,  // The selected user for editing / deleting
       checkedUsers: [], // A list of the selected users for editing / deleting multiple users at once
+      currentPage: 1, // Tracking the current page for navigation
+      itemsPerPage: 10, // Total displayed items per page
       showCreateModal: false,
       showUpdateModal: false,
       showDeleteModal: false,
       showDeleteMultipleModal: false,
-      currentPage: 1,
-      itemsPerPage: 10,
     };
-  },
-  mounted() {
-    this.users = this.userService.fetchAll();
   },
   computed: {
     totalPages() {
@@ -103,24 +98,12 @@ export default {
     },
     async deleteCheckedUsers() {
       this.closeModal();
-      this.users.forEach(user => {
-        // Uncheck the selected users in the UsersRowComponent
+      for (const user of this.checkedUsers) {
         user.isChecked = false;
-      });
-      const userIdsToDelete = this.checkedUsers.map(user => user.id);
-
-      // Delete users one by one
-      for (const userId of userIdsToDelete) {
-        const deletedUserIndex = this.users.findIndex(user => user.id === userId);
-
-        if (deletedUserIndex !== -1) {
-          const deletedUser = this.users[deletedUserIndex];
-
-          // Delete user from database
-          await deletedUser.delDatabase();
-
-          // Remove the user from the users array
-          this.users.splice(deletedUserIndex, 1);
+        try {
+          await this.userService.asyncDeleteById(user.id);
+        } catch (error) {
+          console.error(`Error deleting user with ID ${user.id}:`, error);
         }
       }
       this.checkedUsers = [];

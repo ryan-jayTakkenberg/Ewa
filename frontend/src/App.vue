@@ -16,28 +16,30 @@
 </template>
 
 <script>
-
+// import {FetchInterceptor} from "@/service/fetch-interceptor";
+// import {SessionService} from "@/service/session-service";
+// import {shallowReactive} from "vue";
+import {getAPI, responseOk} from "@/backend";
+import {getJWT, isAdmin} from "@/data";
+import CONFIG from "@/app-config";
 import Team from "@/models/team";
 import User from "@/models/user";
 import Product from "@/models/product";
 import Project from "@/models/project";
 import Warehouse from "@/models/warehouse";
+import Orders from "@/models/order";
 import NavBar from "@/components/navigation/NavBar.vue";
+import NotificationComponent from "@/components/general/NotificationComponent.vue";
+
+import {ProductAdaptor} from "@/service/product-adaptor";
+import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
+import {OrderAdaptor} from "@/service/order-adaptor";
+
+import {ProjectAdaptor} from "@/service/project-adaptor";
+import {ReportAdaptor} from "@/service/report-adaptor";
 import {WarehouseAdaptor} from "@/service/warehouse-adaptor";
 import {TeamsAdaptor} from "@/service/teams-adaptor";
-import CONFIG from "@/app-config";
-import {getAPI, responseOk} from "@/backend";
-import {getJWT, isAdmin} from "@/data";
-import {ReportAdaptor} from "@/service/report-adaptor";
-import Orders from "@/models/order";
-import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
 import {UserAdaptor} from "@/service/user-adaptor";
-import {ProjectAdaptor} from "@/service/project-adaptor";
-// import {FetchInterceptor} from "@/service/fetch-interceptor";
-// import {SessionService} from "@/service/session-service";
-// import {shallowReactive} from "vue";
-import NotificationComponent from "@/components/general/NotificationComponent.vue";
-import {ProductAdaptor} from "@/service/product-adaptor";
 
 export default {
   name: 'App',
@@ -50,6 +52,7 @@ export default {
       fetchedData: false,
       productService: new ProductAdaptor(),
       userService: new UserAdaptor(),
+      orderService: new OrderAdaptor(),
     }
   },
 
@@ -62,11 +65,12 @@ export default {
     //     new FetchInterceptor(this.theSessionService,*/ this.$router);
 
     return {
+      orderService: this.orderService,
       warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/api/warehouses"),
       projectService: new ProjectAdaptor(CONFIG.BACKEND_URL+"/api/projects"),
       teamsService: new TeamsAdaptor(CONFIG.BACKEND_URL+"api/teams"),
       reportService: new ReportAdaptor(CONFIG.BACKEND_URL+"/api/viewer-overview"),
-      userService: new UserAdaptor(CONFIG.BACKEND_URL+"/api/users"),
+      userService: this.userService,
       adminOverviewService: new AdminOverviewAdaptor(CONFIG.BACKEND_URL+"/api/adminview"),
       productService: this.productService,
       // sessionService: this.theSessionService,
@@ -150,7 +154,7 @@ export default {
               this.productService.fetchAll(),
               Project.getDatabase(),
               Warehouse.getDatabase(),
-              Orders.getDatabase(),
+              this.orderService.fetchAll(),
             ]);
 
             Team.teams = teams;

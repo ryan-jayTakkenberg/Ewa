@@ -10,7 +10,7 @@ export default {
   emits: ['toggle', 'edit', 'cancel', 'confirm', 'report'],
   props: {
     order: {
-      type: Order,
+      type: Object,
       required: true,
     },
   },

@@ -1,6 +1,7 @@
 import {deleteAPI, getAPI, postAPI, putAPI, responseOk} from "@/backend";
 import User from "@/models/user";
 import {classToObject} from "@/models/helper";
+
 export class UserAdaptor {
 
     static ENDPOINT = "/api/users";
@@ -38,8 +39,10 @@ export class UserAdaptor {
         }
     }
     async asyncUpdate(user) {
+        console.log(user);
         try {
-            const response = await putAPI(UserAdaptor.ENDPOINT, classToObject(user));
+            const response = await putAPI(UserAdaptor.ENDPOINT, user);
+            console.log(response);
             if (!responseOk(response)) return response;
 
             // Update the clientside user list
