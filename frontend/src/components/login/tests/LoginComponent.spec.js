@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import LoginComponent from './LoginComponent.vue';
+import LoginComponent from '../LoginComponent.vue';
 import axios from 'axios';
 
 let wrapper;

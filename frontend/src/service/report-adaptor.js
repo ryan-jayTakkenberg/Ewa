@@ -16,7 +16,6 @@ export class ReportAdaptor {
             // Get the ID of the logged-in user
             const userId = getId();
 
-            // TODO replace with backend query when we have a real database
             // Filter reports based on the receiver_id matching the logged-in user's ID
             return response.data.filter(report => report.receiverId === userId);
 
@@ -26,26 +25,6 @@ export class ReportAdaptor {
             return [];
         }
     }
-
-    // async fetchAdminReports() {
-    //     try {
-    //         const response = await getAPI("/api/reports");
-    //         console.log('Reports Response Data:', response.data);
-    //
-    //         if (!responseOk(response)) {
-    //             console.warn('Response not OK:', response.data);
-    //             return [];
-    //         }
-    //
-    //         // Filter out all the reports where the receiver is equal to "admin"
-    //
-    //         return response.data.filter(report => report.receiverId === 1); // 1 = admin ID
-    //
-    //     } catch (error) {
-    //         console.error('An unexpected error occurred:', error);
-    //         return [];
-    //     }
-    // }
 
     async postReport(report) {
         try {

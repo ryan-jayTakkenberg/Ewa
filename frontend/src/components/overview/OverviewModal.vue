@@ -3,10 +3,6 @@
   <div class="background">
     <div class="modal">
 
-<!--      <div class="header">-->
-<!--        <div class="image"></div>-->
-<!--      </div>-->
-
       <div class="description"> {{ description() }} </div>
 
       <div class="reportContainer">

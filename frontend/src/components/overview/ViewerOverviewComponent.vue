@@ -7,7 +7,7 @@
       :selectedReports="selectedReports"
   />
 
-  <!--- Persona ---------------------------------------------------------------------------------->
+  <!--- persona ---------------------------------------------------------------------------------->
   <div class="personaContainer">
 
     <div class="header">
@@ -139,7 +139,6 @@
 import {getId, getUsername} from "@/data";
 import Project from "@/models/project";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
-import NotificationComponent from "@/components/general/NotificationComponent.vue";
 
 export default {
 
@@ -167,7 +166,6 @@ export default {
 
   mounted() {
     this.fetchReports();
-    console.log()
   },
 
   methods: {
