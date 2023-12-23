@@ -1,9 +1,10 @@
 <template>
   <div class="main">
-    <div class="backgroundImgContainer">
 
-    </div>
+    <div class="backgroundImgContainer"></div>
+
     <div class="loginContainer">
+
       <div class="logoContainer"></div>
       <div class="welcomeContainer" v-show="!showLoginForm && !showPasswordResetForm">
         <h1 class="title">Welcome</h1>
@@ -33,7 +34,7 @@
               <span class="material-symbols-outlined report-icon">report</span>
             </div>
 
-          <button class="loginButton">Login</button>
+          <button type="submit" class="loginButton">Login</button>
         </form>
 
       <!-- Password Reset Form -->
@@ -55,21 +56,17 @@
         </form>
        </div><div class="linkWrapper" v-show="!showPasswordResetForm">
       <a href="#" v-on:click.prevent="togglePasswordResetForm">Can't sign in?</a>
-    </div>
+        </div>
       </div>
       <!-- Link to Toggle Password Reset Form -->
 
-  </div>
-    </template>
+    </div>
+
+</template>
 
 <script>
 
 import {isAdmin, setAdmin, setId, setJWT, setUsername} from "@/data";
-import Team from "@/models/team";
-import User from "@/models/user";
-import Product from "@/models/product";
-import Project from "@/models/project";
-import Warehouse from "@/models/warehouse";
 import {postAPI} from "@/backend";
 
 export default {
@@ -78,16 +75,14 @@ export default {
   data() {
     return {
       showLoginForm: false,
-      usernameDummy: 'test',
-      passwordDummy: 'test',
       emailInput: '',
       passwordInput: '',
       errorMessage: '',
+
       showPasswordResetForm: false,
       resetErrorMessage: '',
       newPasswordInput: '',
       resetToken:'',
-
     }
   },
 
@@ -152,7 +147,7 @@ export default {
 
       let jwt = response?.headers?.authorization;
       if (!jwt) {
-        this.errorMessage = 'Invalid Email or Password';
+        this.errorMessage = 'Invalid login, please try again';
         return;
       }
 
@@ -179,9 +174,7 @@ export default {
         // Product.productInfos = productInfos;
         // Project.projects = projects;
         // Warehouse.warehouses = warehouses;
-
         this.$router.push(isAdmin() ? '/admin-overview' : '/viewer-overview');
-
 
       } catch (error) {
         console.error(error);

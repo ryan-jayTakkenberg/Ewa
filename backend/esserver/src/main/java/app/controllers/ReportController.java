@@ -1,10 +1,8 @@
 package app.controllers;
 
 import app.exceptions.BadRequestException;
-import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
 import app.models.Report;
-import app.models.Team;
 import app.repositories.ReportJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,7 +54,10 @@ public class ReportController {
     @ResponseStatus(HttpStatus.CREATED)
     private Report postReport(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Report report) {
 
-        // TODO check logged in user id and post new report into their respective database
+        // Check for invalid data (e.g., null/0 values)
+        if (report.getSenderId() == 0 || report.getReceiverId() == 0) {
+            throw new BadRequestException("Invalid data in the report");
+        }
 
         return reportRepo.save(report);
     }
