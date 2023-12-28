@@ -1,9 +1,7 @@
 import { mount } from '@vue/test-utils';
 import ViewerOverviewComponent from '../ViewerOverviewComponent.vue';
-import axios from "axios";
 
 let wrapper;
-jest.mock('axios');
 
 // Define constants for element selectors
 const REPORTS_CONTAINER = '.reportsContainer';
@@ -12,9 +10,15 @@ const DELETE_REPORT_BUTTON = '.deleteMessage';
 
 beforeEach(() => {
     wrapper = mount(ViewerOverviewComponent, {
-        mocks: {
-            $nextTick: jest.fn(),
-        },
+        global: {
+            provide: {
+                reportService: {
+                    fetchReports: jest.fn(() => Promise.resolve([])),
+                    postReport: jest.fn(() => Promise.resolve()),
+                    deleteReport: jest.fn(() => Promise.resolve()),
+                },
+            }
+        }
     });
 });
 
@@ -40,16 +44,31 @@ describe('ViewerOverviewComponent', () => {
     });
 
     it('fetches reports', async () => {
+        // Arrange
+        console.log('Injection:', wrapper.vm.$inject); // Debugging statement
+        const mockReports = [{ id: 1, body: 'Test report', date: '23-12-2023', senderId: 1, senderName: 'Test', receiverId: 2 }];
+        wrapper.vm.fetchReports.mockResolvedValue(mockReports);
 
+        // Act
+        console.log('Before fetchReports:', wrapper.vm.reports); // Debugging statement
+        await wrapper.vm.fetchReports();
+        console.log('After fetchReports:', wrapper.vm.reports); // Debugging statement
 
+        // Assert
+        expect(wrapper.vm.reports).toEqual(mockReports);
     });
-
 
     it('posts a report', async () => {
 
     });
 
     it('calls modal on delete reports', async () => {
+        const showModalSpy = jest.spyOn(wrapper.vm, 'showModal');
+        await wrapper.vm.showModal();
+        expect(showModalSpy).toHaveBeenCalled();
+    });
+
+    it('deletes reports', async () => {
 
     });
 
