@@ -157,7 +157,7 @@ export default {
       setUsername(response.data.name);
       // setUserTeam(response.data.team);
 
-      console.log(response.data);
+      // console.log('Logged in user`;', response.data);
 
       try {
         // <!> ALREADY DONE IN App.vue at $route watcher <!>

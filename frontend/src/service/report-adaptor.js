@@ -9,7 +9,8 @@ export class ReportAdaptor {
             // console.log('Reports Response Data:', response.data);
 
             if (!responseOk(response)) {
-                console.warn('Response not OK:', response.data);
+                // console.warn('Response not OK:', response.data);
+                // replaced with error notification in fetch interceptor
                 return [];
             }
 
@@ -33,6 +34,7 @@ export class ReportAdaptor {
 
             if (!responseOk(response)) {
                 // console.warn('Post Report Response not OK:', response.data);
+                // replaced with error notification in fetch interceptor
                 return null;
             }
 
@@ -47,9 +49,11 @@ export class ReportAdaptor {
     async deleteReport(id) {
         try {
             const response = await deleteAPI(`/api/reports/${id}`);
+            // console.log('Report to delete:', id);
 
             if (!responseOk(response)) {
                 // console.warn('Delete Report Response not OK:', response.data);
+                // replaced with error notification in fetch interceptor
                 return null;
             }
 

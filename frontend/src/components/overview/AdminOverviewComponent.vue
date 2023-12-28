@@ -13,7 +13,6 @@ export default {
 
   name: "AdminOverviewComponent",
   components: {
-    NotificationComponent,
     OverviewModal,
     SolarTable,
   },
@@ -82,7 +81,7 @@ export default {
 
     async fetchReports() {
       this.reports = await this.reportService.fetchReports();
-      console.log('Fetched reports: ', [...this.reports]);
+      // console.log('Fetched reports: ', [...this.reports]);
     },
 
 
@@ -106,7 +105,7 @@ export default {
 
       // Check if delete was successful (HTTP status code 201)
       if (postedReport.status === 201) {
-        console.log('Successfully posted report:', postedReport.data);
+        // console.log('Successfully posted report:', postedReport.data);
       } else {
         console.log('An error occurred when trying to post the report:', report);
       }
@@ -125,7 +124,7 @@ export default {
         // Check if delete was successful (HTTP status code 200)
         if (deletedReport.status === 200) {
 
-          console.log('Successfully deleted report:', deletedReport);
+          // console.log('Successfully deleted report:', deletedReport);
 
           // Remove the deleted report from the reports array
           const indexToDelete = this.reports.findIndex((r) => r.id === report.id);

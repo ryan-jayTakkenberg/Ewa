@@ -9,7 +9,7 @@ export class UserAdaptor {
     async fetchAll() {
         try {
             const response = await getAPI(UserAdaptor.ENDPOINT);
-            console.log('Users Response Data:', response.data);
+            // console.log('Users Response Data:', response.data);
 
             if (!responseOk(response)) {
                 console.warn('Response not OK:', response.data);
