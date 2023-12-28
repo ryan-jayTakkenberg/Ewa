@@ -6,7 +6,6 @@ import Product from "@/models/product";
 import SolarModal from "@/components/general/SolarModal.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
-import User from "@/models/user";
 
 export default {
   name: "CreateOrderModal",
