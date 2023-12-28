@@ -4,6 +4,7 @@ import app.util.HashUtil;
 import app.enums.PermissionLevel;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -44,6 +45,14 @@ public class User {
 
     public User() {
 
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getResetToken() {
@@ -100,10 +109,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public Team getTeam() {

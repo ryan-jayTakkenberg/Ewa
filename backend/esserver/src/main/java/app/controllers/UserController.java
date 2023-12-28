@@ -53,6 +53,8 @@ public class UserController {
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create or edit a user");
+        // Check if it is a new user
+        if (userRepo.findById(user.getId()) != null) throw new BadRequestException("User already exists for id: " + user.getId());
         // Hash given password
         if (user.getPassword() != null) user.setPassword(HashUtil.hash(user.getPassword()));
         // Save user
@@ -69,7 +71,7 @@ public class UserController {
      * @apiNote requires admin permission
      */
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     private User putUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody User user) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
@@ -93,7 +95,7 @@ public class UserController {
      * @apiNote requires admin permission
      */
     @DeleteMapping("/{id}")
-    private User deleteProduct(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
+    private User deleteUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin

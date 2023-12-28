@@ -59,6 +59,6 @@ export default class Order {
 
     // create a new order with a temporary id indicating a new order
     static createNewOrder(name, orderDate, estimatedDeliveryDate, team, products, status, totalPrice) {
-        return new Order(-1, name, orderDate, estimatedDeliveryDate, team, products, status, totalPrice);
+        return new Order(null, name, orderDate, estimatedDeliveryDate, team, products, status, totalPrice);
     }
 }

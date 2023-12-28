@@ -58,6 +58,7 @@ export default {
     removeProduct(index) {
       this.order.products.splice(index, 1);
     }
+
   }
 }
 </script>
@@ -124,7 +125,9 @@ export default {
             <select id="products" v-model="selectedProduct" class="product-select">
               <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
             </select>
-            <SolarButton class=" ml-2 add-productInfo-btn" button-text="Add" @click="addProductsToOrder"></SolarButton>
+            <SolarButton class=" ml-2 add-productInfo-btn" button-text="Add" @click="addProductsToOrder"
+                         :disabled="!selectedProduct"
+            ></SolarButton>
           </div>
         </div>
       </div>
@@ -137,12 +140,12 @@ export default {
             <td class="px-6 py-4 font-semibold text-base">{{ product.name }}</td>
             <td class="px-6 py-4">€ {{ product.price }}</td>
             <td class="px-6 py-4">
-              <input
-                  type="number"
-                  id="number-input"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                  placeholder="0"
-                  required>
+              <input v-model="product.amount"
+                     type="number"
+                     id="number-input"
+                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                     placeholder="0"
+                     required>
             </td>
             <td class="px-6 py-4">
               <div @click="removeProduct" class="remove-order-btn">Remove product</div>

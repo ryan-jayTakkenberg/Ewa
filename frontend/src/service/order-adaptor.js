@@ -20,7 +20,12 @@ export class OrderAdaptor {
     }
     async asyncCreate(order) {
         try {
+            console.log(order);
             const response = await postAPI(OrderAdaptor.ENDPOINT, classToObject(order));
+
+            console.log(response);
+            console.log(response.data);
+
             if (!responseOk(response)) {
                 console.error(response.data);
                 return {};
