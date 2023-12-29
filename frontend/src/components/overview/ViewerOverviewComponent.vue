@@ -51,8 +51,8 @@
         <div class="projectHeader">
           <div class="projectTitle">Project: {{ project.projectName }}</div>
           <div class="statusWrapper">
-            <div class="projectStatus"> Status: </div>
-            <div class="statusColor"></div>
+<!--            <div class="projectStatus"> Status: </div>-->
+<!--            <div class="statusColor"></div>-->
           </div>
         </div>
 

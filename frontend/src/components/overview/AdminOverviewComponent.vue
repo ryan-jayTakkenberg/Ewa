@@ -294,8 +294,6 @@ export default {
       :selectedReports="selectedReports"
   />
 
-  <NotificationComponent ref="notificationComponent" />
-
   <!--- Persona ---------------------------------------------------------------------------------->
   <div class="personaContainer">
 
@@ -380,8 +378,8 @@ export default {
         <div class="projectHeader">
           <div class="projectTitle">{{ project.projectName }}</div>
           <div class="statusWrapper">
-            <div class="projectStatus"> Status: </div>
-            <div class="statusColor" :style="{ background: getStatusColor(project) }"></div>
+<!--            <div class="projectStatus"> Status: </div>-->
+<!--            <div class="statusColor" :style="{ background: getStatusColor(project) }"></div>-->
           </div>
         </div>
 
