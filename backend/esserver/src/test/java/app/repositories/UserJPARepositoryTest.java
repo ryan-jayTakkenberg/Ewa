@@ -17,7 +17,7 @@ import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = { Repository.class, Entity.class }))
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Repository.class, Entity.class}))
 class UserJPARepositoryTest {
 
     @Autowired
@@ -35,9 +35,9 @@ class UserJPARepositoryTest {
 
     @Test
     void testRepoCRUD() {
-        // create
-        final PermissionLevel USER_PERMISSIONLEVEL =  PermissionLevel.ADMIN;
-        final String USER_NAME =  "Full Name";
+        // Create User
+        final PermissionLevel USER_PERMISSIONLEVEL = PermissionLevel.ADMIN;
+        final String USER_NAME = "Full Name";
         final String USER_EMAIL = "email@mail.com";
         final String USER_PASSWORD = "password";
 
@@ -45,17 +45,16 @@ class UserJPARepositoryTest {
 
         assertTrue(user.getId() <= 0);
         User savedUser = userRepo.save(user);
-        assertTrue(savedUser.getId() > 0 );
+        assertTrue(savedUser.getId() > 0);
         assertEquals(savedUser.getPermissionLevel(), USER_PERMISSIONLEVEL);
         assertEquals(savedUser.getName(), USER_NAME);
         assertEquals(savedUser.getEmail(), USER_EMAIL);
 
-
-        // read
+        // Read User
         assertEquals(userRepo.findAll(), List.of(savedUser));
         assertEquals(userRepo.findById(savedUser.getId()), savedUser);
 
-        // update
+        // Update User
         final PermissionLevel UPDATED_USER_PERMISSIONLEVEL = PermissionLevel.VIEWER;
         final String UPDATED_USER_NAME = "Updated Full Name";
         final String UPDATED_USER_EMAIL = "updatedemail@maill.com";
@@ -76,11 +75,10 @@ class UserJPARepositoryTest {
         assertEquals(updatedUser.getEmail(), UPDATED_USER_EMAIL);
         assertNotEquals(updatedUser.getEmail(), USER_EMAIL);
 
-        // delete
+        // Delete User
         assertFalse(userRepo.findAll().isEmpty());
         User deletedUser = userRepo.delete(updatedUser);
         assertNull(userRepo.findById(deletedUser.getId()));
         assertTrue(userRepo.findAll().isEmpty());
     }
-
 }
