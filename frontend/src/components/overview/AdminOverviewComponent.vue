@@ -154,8 +154,7 @@ export default {
       // Set the receiverId to the id of the selected report's sender
       this.receiverId = this.selectedReports[0].senderId;
 
-      // Optionally, you can update the UI to reflect the selected user in the dropdown
-      // For example, you can find the index of the selected user and set it as the selected index
+      // Find the index of the selected user and set it as the selected index
       const selectedIndex = this.filteredUsers.findIndex(user => user.id === this.receiverId);
       if (selectedIndex !== -1) {
         this.$refs.selectUser.selectedIndex = selectedIndex;
@@ -475,12 +474,12 @@ export default {
 
 .insightContainer:nth-child(4) {
   border-right: 2px solid #e5e5e5;
-  padding-right: 1rem;
-  margin-right: 1rem;
+  //padding-right: 1rem;
+  //margin-right: 1rem;
 }
 
 #textBig, #textBigRed, #textBigGreen {
-  font-size: 4rem;
+  font-size: 3rem;
   text-align: center;
   width: 100%;
   font-weight: 500;
@@ -516,11 +515,14 @@ export default {
 
 .insightContainer {
   display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
+  gap: 1rem;
   padding: 1rem;
-  flex: 1 0 auto;
-  margin: 0.5rem;
-  min-width: 250px;
+  width: auto;
+  height: auto;
+  //flex: 1 0 auto;
 }
 
 #warehouseSelect {
@@ -562,10 +564,9 @@ h1 {
 }
 
 .medium {
-  font-size: 1rem;
-  font-weight: 400;
-  color: #aaa;
-  height: 25px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #999;
 }
 
 .bold {
@@ -579,6 +580,15 @@ h1 {
   width: 100%;
   padding: 2rem 3rem;
   border-bottom: 2px solid #e5e5e5;
+}
+
+.sectionContainer.agenda {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  padding: 2rem 3rem;
+  border-bottom: 2px solid #e5e5e5;
+  overflow-x: auto;
 }
 
 .dateContainer {
@@ -696,7 +706,7 @@ h1 {
 }
 
 p {
-  margin-top: 2rem;
+  //margin-top: 2rem;
   font-weight: 300;
   color: #222;
 }
