@@ -68,7 +68,7 @@
             <div class="descriptionValue">{{ project.installDate }}</div>
           </div>
         </div>
-        <p>Click for more details</p>
+<!--        <p>Click for more details</p>-->
 
       </div>
     </div>
