@@ -18,7 +18,8 @@ public class Team {
     private int id;
     private String name;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "warehouse_id")
     @JsonIncludeProperties({"id", "name"})
     private Warehouse warehouse;
 
@@ -43,6 +44,13 @@ public class Team {
         this.name = name;
         this.warehouse = warehouse;
     }
+
+    public Team(String name, Warehouse warehouse) {
+        this.id = 0;
+        this.name = name;
+        this.warehouse = warehouse;
+    }
+
     public Team(){
 
     }

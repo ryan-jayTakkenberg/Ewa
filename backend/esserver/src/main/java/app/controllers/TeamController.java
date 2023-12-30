@@ -5,8 +5,14 @@ import app.exceptions.ForbiddenException;
 import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
 import app.models.Order;
+import app.models.Product;
 import app.models.Team;
+import app.models.Warehouse;
 import app.repositories.TeamJPARepository;
+import app.repositories.WarehouseJPARepository;
+import app.util.JsonBuilder;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -20,9 +26,12 @@ import java.util.List;
 public class TeamController {
 
     private final TeamJPARepository teamRepository;
+    private final WarehouseJPARepository warehouseRepository;
 
-    public TeamController(TeamJPARepository teamRepository) {
+
+    public TeamController(TeamJPARepository teamRepository, WarehouseJPARepository warehouseRepository) {
         this.teamRepository = teamRepository;
+        this.warehouseRepository = warehouseRepository;
     }
 
     @GetMapping
@@ -34,27 +43,34 @@ public class TeamController {
         return List.of(teamRepository.findById(jwtInfo.getId()));
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<Team> addNewTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@RequestBody Team team) {
-
+    public Team addNewTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody JsonNode json) {
         if (!jwtInfo.isAdmin()) {
-            throw new ForbiddenException("Admin role is required to create an user");
+            throw new ForbiddenException("Admin role is required to create a user");
         }
 
-        if (team == null) {
-            return ResponseEntity.badRequest().build();
+        JsonBuilder jsonBuilder = JsonBuilder.parse(json);
+
+        System.out.println("<!>");
+
+        String name = jsonBuilder.getStringFromField("name");
+
+        System.out.println(name);
+
+        long warehouseId = jsonBuilder.getLongFromField("warehouseId");
+
+        System.out.println(warehouseId);
+
+        Warehouse warehouse = warehouseRepository.findById(warehouseId);
+        if (warehouse == null) {
+            throw new NotFoundException("Warehouse not found for id: " + warehouseId);
         }
 
-        Team addedTeam = teamRepository.save(team);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(addedTeam.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(addedTeam);
+        return teamRepository.save(new Team(name, warehouse));
     }
+
+
     @PutMapping("/{id}")
     public ResponseEntity<Team> updateTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id, @RequestBody Team updatedTeams) {
         Team existingTeam = teamRepository.findById(id);

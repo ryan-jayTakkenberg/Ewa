@@ -1,7 +1,9 @@
 package app.util;
 
 import app.exceptions.BadRequestException;
+import app.exceptions.NotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * @author leon
@@ -33,10 +35,14 @@ public class JsonBuilder {
 
     public long getLongFromField(String field) {
         if (!json.has(field)) {
-            throw new BadRequestException(String.format("Missing field: '%s'", field));
+            String errorMessage = String.format("Missing field: '%s'", field);
+            System.err.println(errorMessage);
+            throw new BadRequestException(errorMessage);
         }
         if (!json.get(field).isNumber()) {
-            throw new BadRequestException(String.format("Field '%s' must be a number", field));
+            String errorMessage = String.format("Field '%s' must be a number", field);
+            System.err.println(errorMessage);
+            throw new BadRequestException(errorMessage);
         }
         return json.get(field).asLong();
     }

@@ -30,7 +30,12 @@ export default {
         warehouse: this.team.warehouse,
       };
 
-      this.$emit('addUser', newTeam); // emit the custom 'addUser' event
+      const json = {
+        name: this.team.name,
+        warehouseId: this.team.warehouse.id,
+      }
+
+      this.$emit('addUser', json); // emit the custom 'addUser' event
       this.onClose();
     }
     ,
