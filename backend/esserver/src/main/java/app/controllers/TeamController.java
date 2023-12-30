@@ -52,21 +52,17 @@ public class TeamController {
 
         JsonBuilder jsonBuilder = JsonBuilder.parse(json);
 
-        System.out.println("<!>");
-
         String name = jsonBuilder.getStringFromField("name");
-
-        System.out.println(name);
-
+        // You cannot post a warehouse object, so only supply the id
         long warehouseId = jsonBuilder.getLongFromField("warehouseId");
 
-        System.out.println(warehouseId);
-
+        // Find the warehouse object from the supplied id
         Warehouse warehouse = warehouseRepository.findById(warehouseId);
         if (warehouse == null) {
             throw new NotFoundException("Warehouse not found for id: " + warehouseId);
         }
 
+        // Now create the team object with the required warehouse object
         return teamRepository.save(new Team(name, warehouse));
     }
 
