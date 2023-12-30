@@ -18,9 +18,10 @@ public class Team {
     private int id;
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
     @JsonIncludeProperties({"id", "name"})
+    @JsonBackReference
     private Warehouse warehouse;
 
     @OneToOne(mappedBy = "team", cascade = CascadeType.ALL)
@@ -35,9 +36,17 @@ public class Team {
 
     // TODO why does team have permission level? User already has this?!
     private PermissionLevel permissionLevel;
+    public Team(){
+
+    }
 
 
 
+    public Team(String name, Warehouse warehouse) {
+        this.id = 0;
+        this.name = name;
+        this.warehouse = warehouse;
+    }
     public Team(PermissionLevel permissionLevel, int id, String name, Warehouse warehouse) {
         this.permissionLevel = permissionLevel;
         this.id = id;
@@ -45,15 +54,8 @@ public class Team {
         this.warehouse = warehouse;
     }
 
-    public Team(String name, Warehouse warehouse) {
-        this.id = 0;
-        this.name = name;
-        this.warehouse = warehouse;
-    }
 
-    public Team(){
 
-    }
     public User getUser() {
         return user;
     }

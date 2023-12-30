@@ -3,6 +3,7 @@ package app.models;
 import app.models.relations.Product_Warehouse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -19,13 +20,20 @@ public class Warehouse {
     private String address;
     private String postalCode;
 
-    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnoreProperties("warehouse")
+    @JsonManagedReference
     private final Set<Team> teams = new HashSet<>();
 
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"warehouse"})
     private final Set<Product_Warehouse> products = new HashSet<>();
+
+    public Warehouse(){
+
+    }
+
 
     public Warehouse(int id, String name, String city, String address, String postalCode) {
         this.id = id;
@@ -35,14 +43,7 @@ public class Warehouse {
         this.postalCode = postalCode;
     }
 
-    public Warehouse(){
 
-    }
-
-    public Warehouse(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 
     public static Warehouse createSampleOffer(int id){
         String name = "Warehouse " + id;
