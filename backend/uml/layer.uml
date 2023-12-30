@@ -556,9 +556,12 @@
       <point x="-124.0" y="-138.0" />
     </edge>
   </edges>
-  <settings layout="Series Parallel" zoom="0.7450580596923828" showDependencies="true" x="1329.1113832670435" y="1254.73004288" />
+  <settings layout="Series Parallel" zoom="0.7436821470571363" showDependencies="true" x="1515.4613857627119" y="1291.9733785310734" />
   <SelectedNodes>
+    <node>app.controllers.ProductController</node>
+    <node>app.models.Product</node>
     <node>app.repositories.ProductJPARepository</node>
+    <node>app.repositories.EntityRepositoryJPA</node>
   </SelectedNodes>
   <Categories>
     <Category>Constructors</Category>
