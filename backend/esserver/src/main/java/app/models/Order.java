@@ -23,8 +23,7 @@ public class Order {
     private String orderedFrom;
     private LocalDate orderDate;
     private LocalDate estimatedDeliveryDate;
-    @ManyToOne()
-    @JoinColumn(name = "team_id")
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Team team;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
