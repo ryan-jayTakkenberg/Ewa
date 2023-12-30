@@ -2,12 +2,9 @@ package app.models;
 
 import app.enums.PermissionLevel;
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @NamedQueries({
@@ -21,22 +18,21 @@ public class Team {
     private int id;
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "warehouse_id")
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonIncludeProperties({"id", "name"})
     private Warehouse warehouse;
 
-    @OneToOne(mappedBy = "team", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToOne(mappedBy = "team", cascade = CascadeType.ALL)
     private User user;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"team"})
-    private Set<Project> projects = new HashSet<>();
+    private final Set<Project> projects = new HashSet<>();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
-    private Set<Order> orders = new HashSet<>();
+    private final Set<Order> orders = new HashSet<>();
 
-
+    // TODO why does team have permission level? User already has this?!
     private PermissionLevel permissionLevel;
 
 
@@ -117,6 +113,10 @@ public class Team {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Project> getProjects() {
+        return projects;
     }
 
 

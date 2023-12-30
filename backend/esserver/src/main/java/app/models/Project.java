@@ -25,7 +25,7 @@ public class Project {
     private LocalDate installDate;
     private String notes;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonIncludeProperties({"id", "name"})
     private Team team;
 
