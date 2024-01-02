@@ -8,16 +8,8 @@
       </svg>
       <p>Are you sure you want to cancel the following order? : </p>
     </div>
-      <div class="px-6 py-4 whitespace-nowrap">{{ order.id }} {{ order.team.name }}
-        <div class="px-6 py-4"><span class="font-semibold">{{ order.id }}</span> <br>{{ order.name }}</div>
-        <div class="px-6 py-4 whitespace-nowrap">{{ order.team.name }}</div>
-        <div class="px-6 py-4 whitespace-nowrap">
-          <div v-for="(product, index) in order.products" :key="index">
-            <div>{{ product.product.name }}<br></div>
-          </div>
-        </div>
-        <div class="px-6 py-4 whitespace-nowrap">{{ order.totalPrice }}</div>
-      </div>
+
+    <p><strong>{{ order.id }}</strong> {{ order.name }}</p>
 
     <!-- Modal footer -->
     <template v-slot:footer>
@@ -30,12 +22,11 @@
 <script>
 import SolarModal from "@/components/general/SolarModal.vue";
 import Order from "@/models/order";
-import SolarTable from "@/components/general/SolarTable.vue";
 
 export default {
   name: "CancelOrderModal",
   emits: ['cancel'],
-  components: {/*SolarTable*/ SolarModal}, // TODO fix error
+  components: {SolarModal}, // TODO fix error
   props: {
     order: {
       type: Order,

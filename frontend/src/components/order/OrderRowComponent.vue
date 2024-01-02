@@ -10,7 +10,7 @@ export default {
   emits: ['toggle', 'edit', 'cancel', 'confirm', 'report'],
   props: {
     order: {
-      type: Object,
+      type: Order,
       required: true,
     },
   },
@@ -78,14 +78,14 @@ export default {
     <!-- Order number and name -->
     <td class="px-6 py-4">
       <div class="pl-3">
-        <div class="text-base font-semibold">{{ order.id }}</div>
+        <div class="text-base font-semibold">{{ order.id}}</div>
         <div class="font-normal text-gray-500">{{ order.name}}</div>
       </div>
     </td>
-    <!--      <div class="pl-3">-->
-    <!--        <div class="text-base font-semibold">{{ order.id }}</div>-->
-    <!--        <div class="font-normal text-gray-500">{{ order.name }}</div>-->
-    <!--      </div>-->
+<!--          <div class="pl-3">-->
+<!--            <div class="text-base font-semibold">{{ order.id }}</div>-->
+<!--            <div class="font-normal text-gray-500">{{ order.name }}</div>-->
+<!--          </div>-->
     <!-- Order from  -->
     <td class="px-6 py-4">{{ order.orderedFrom }}</td>
     <!-- Order date  -->
@@ -95,7 +95,7 @@ export default {
     <!-- Order team and warehouse  -->
     <td class="px-6 py-4">
       <div class="font-semibold">{{ order.team.name }}</div>
-      {{ order.team.warehouse.name }}
+      {{ order && order.team && order.team.warehouse ? order.team.warehouse.name : 'N/A' }}
     </td>
 
     <!-- Order products  -->

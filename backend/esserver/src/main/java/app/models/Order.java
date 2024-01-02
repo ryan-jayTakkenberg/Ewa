@@ -10,13 +10,12 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Entity
 @Table(name = "order_table")
 public class Order {
     public enum OrderStatus {PENDING, DELIVERED, CANCELED}
 
-     @Id
+    @Id
     @GeneratedValue
     private long id;
     private String name;
@@ -29,21 +28,21 @@ public class Order {
     private OrderStatus status;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"order"})
-    private Set<Product_Order> products = new HashSet<>();
+    private Set<Product_Order> orderedProducts = new HashSet<>();
     private double totalPrice;
 
-    public Order(long id, String name, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, Set<Product_Order> products, OrderStatus status) {
-        this.id = id;
+    public Order(String name, String orderedFrom, LocalDate orderDate, LocalDate estimatedDeliveryDate, Team team, Set<Product_Order> orderedProducts, OrderStatus status) {
         this.name = name;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
         this.team = team;
-        this.products = products;
+        this.orderedProducts = orderedProducts;
         this.status = status;
     }
 
-    public Order() {}
+    public Order() {
+    }
 
     public long getId() {
         return id;
@@ -61,20 +60,24 @@ public class Order {
         this.name = name;
     }
 
-    public OrderStatus getStatus() {
-        return status;
+    public Team getTeam() {
+        return team;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    public Set<Product_Order> getProducts() {
+        return orderedProducts;
+    }
+
+    public Set<Product_Order> getOrderedProducts() {
+        return orderedProducts;
     }
 
     public String getOrderedFrom() {
         return orderedFrom;
-    }
-
-    public void setOrderedFrom(String orderedFrom) {
-        this.orderedFrom = orderedFrom;
     }
 
     public LocalDate getOrderDate() {
@@ -92,16 +95,21 @@ public class Order {
     public void setEstimatedDeliveryDate(LocalDate estimatedDeliveryDate) {
         this.estimatedDeliveryDate = estimatedDeliveryDate;
     }
-    public Team getTeam() {
-        return team;
+
+    public void setOrderedFrom(String orderedFrom) {
+        this.orderedFrom = orderedFrom;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setOrderedProducts(Set<Product_Order> orderedProducts) {
+        this.orderedProducts = orderedProducts;
     }
 
-    public Set<Product_Order> getProducts() {
-        return products;
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 
     public double getTotalPrice() {
@@ -112,8 +120,20 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
+    public void addProductOrder(Product_Order productOrder) {
+        this.orderedProducts.add(productOrder);
+        productOrder.setOrder(this);
+        updateTotalPrice();
+    }
+
+    public void removeProductOrder(Product_Order productOrder) {
+        this.orderedProducts.remove(productOrder);
+        productOrder.setOrder(null);
+        updateTotalPrice();
+    }
+
     private void updateTotalPrice() {
-        double totalPrice = this.products.stream()
+        double totalPrice = this.orderedProducts.stream()
                 .mapToDouble(productOrder -> productOrder.getProduct().getPrice() * productOrder.getAmount())
                 .sum();
 
@@ -121,10 +141,5 @@ public class Order {
         BigDecimal roundedTotalPrice = BigDecimal.valueOf(totalPrice).setScale(2, RoundingMode.HALF_UP);
 
         this.setTotalPrice(roundedTotalPrice.doubleValue());
-    }
-
-    public void addProduct(Product_Order product) {
-        this.products.add(product);
-        updateTotalPrice();
     }
 }

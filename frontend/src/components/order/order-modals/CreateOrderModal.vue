@@ -14,16 +14,20 @@ export default {
   data() {
     return {
       order: {
-        orderNumber: '',
+        name: '',
+        orderedFrom:'',
         orderDate: '',
         estimatedDeliveryDate: '',
         team: '',
-        products: [],
+        orderedProducts: [],
         status: '',
       },
       OrderStatusOptions: Order.Status,
       teamOptions: Team.teams,
-      selectedProduct: null,
+      productOrder:{
+        product: null,
+        amount: null,
+      },
       productOptions: [...Product.products],
 
     }
@@ -42,8 +46,18 @@ export default {
       console.log(newOrder);
     },
     addProductsToOrder() {
+      let product = this.selectedProduct;
+      let amount = this.selectedProduct.amount;
+
       // Add selected product to the selected products array
-      this.order.products.unshift(this.selectedProduct);
+      this.order.products.unshift(productOrder);
+
+      // Create a plain object for the frontend product order
+      let productOrder = {
+        product: product,
+        amount: amount,
+        order: null
+      };
 
       // Remove the selected product from the product options
       const selectedIndex = this.productOptions.findIndex((product) => product.id === this.selectedProduct.id);
@@ -66,6 +80,18 @@ export default {
   <form @submit.prevent="createOrder" @keydown.enter.prevent="">
     <SolarModal title="Create Order" @close-modal="onClose" class="modal">
       <div class="modal-grid">
+
+        <!-- Order name-->
+        <div class="col-span-6 sm:col-span-3">
+          <label for="name" class="modal-label">Order name</label>
+          <input
+              type="text"
+              v-model="order.name"
+              class="modal-input shadow-sm"
+              placeholder="Order name"
+              required>
+        </div>
+
         <!-- Ordered from -->
         <div class="col-span-6 sm:col-span-3">
           <label for="name" class="modal-label">Ordered From</label>
@@ -121,7 +147,7 @@ export default {
         <div class="col-span-6 sm:col-span-6">
           <label for="products" class="modal-label">Add Product</label>
           <div class="w-full flex">
-            <select id="products" v-model="selectedProduct" class="product-select">
+            <select id="products" v-model="productOrder" class="product-select">
               <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
             </select>
             <SolarButton class=" ml-2 add-productInfo-btn" button-text="Add" @click="addProductsToOrder"
@@ -139,7 +165,7 @@ export default {
             <td class="px-6 py-4 font-semibold text-base">{{ product.name }}</td>
             <td class="px-6 py-4">€ {{ product.price }}</td>
             <td class="px-6 py-4">
-              <input v-model="product.amount"
+              <input v-model="product.amount" type="number" min="1" />
                      type="number"
                      id="number-input"
                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"

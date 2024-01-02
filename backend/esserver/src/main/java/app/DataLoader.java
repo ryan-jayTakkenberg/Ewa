@@ -147,8 +147,8 @@ public class DataLoader implements CommandLineRunner {
         order1.setStatus(Order.OrderStatus.PENDING);
 
         // Associate order with products and add the Product quantity
-        order1.addProduct(new Product_Order(2, productsRepo.findById(1), order1));
-        order1.addProduct(new Product_Order(1, productsRepo.findById(2), order1));
+        order1.addProductOrder(new Product_Order(2, productsRepo.findById(1), order1));
+        order1.addProductOrder(new Product_Order(1, productsRepo.findById(2), order1));
 
         orderRepo.save(order1);
 
@@ -162,8 +162,8 @@ public class DataLoader implements CommandLineRunner {
         order2.setStatus(Order.OrderStatus.PENDING);
 
         // Associate order with products and add the Product quantity
-        order2.addProduct(new Product_Order(2, productsRepo.findById(3), order2));
-        order2.addProduct(new Product_Order(8, productsRepo.findById(4), order2));
+        order2.addProductOrder(new Product_Order(2, productsRepo.findById(3), order2));
+        order2.addProductOrder(new Product_Order(8, productsRepo.findById(4), order2));
 
         orderRepo.save(order2);
     }

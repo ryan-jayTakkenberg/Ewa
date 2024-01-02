@@ -17,9 +17,16 @@ public class OrderJPARepository implements EntityRepositoryJPA<Order> {
 
     @Override
     public List<Order> findAll() {
-        TypedQuery<Order> query = this.em.createQuery("select a from Order a", Order.class);
+        TypedQuery<Order> query = this.em.createQuery("select o from Order o", Order.class);
         return query.getResultList();
     }
+
+    public List<Order> findAllForWarehouse(long teamId) {
+        TypedQuery<Order> query = this.em.createQuery("select o from Order o where o.team.id = :teamId", Order.class);
+        query.setParameter("teamId", teamId);
+        return query.getResultList();
+    }
+
 
     @Override
     public Order findById(long id) {

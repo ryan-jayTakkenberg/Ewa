@@ -15,10 +15,6 @@ import EditUserModal from "@/components/user/user-modals/EditUserModal.vue";
 import DeleteUserModal from "@/components/user/user-modals/DeleteUserModal.vue";
 import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultipleUsersModal.vue";
 
-
-
-
-
 export default {
   name: "UsersOverview",
   components: {
@@ -87,7 +83,7 @@ export default {
     },
     async editUser(updated) {
       this.closeModal();
-      await this.userService.asyncUpdate(updated)
+      await this.userService.asyncUpdate(updated);
       this.updateTable();
     },
     async deleteUser() {

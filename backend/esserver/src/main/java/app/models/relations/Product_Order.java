@@ -12,9 +12,11 @@ public class Product_Order {
     private long id;
     private long amount;
     @ManyToOne(optional = false, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "product_id")
     @JsonIgnoreProperties({"product_orders"})
     private Product product;
     @ManyToOne(optional = false, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "order_id")
     @JsonIgnoreProperties({"products"})
     private Order order;
 

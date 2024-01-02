@@ -4,7 +4,9 @@ import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
 import app.models.Order;
+import app.models.User;
 import app.repositories.OrderJPARepository;
+import app.repositories.UserJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,9 @@ public class OrderController {
     @Autowired
     private OrderJPARepository orderRepo;
 
+    @Autowired
+    private UserJPARepository userRepo;
+
     /**
      * Getting all the orders, if viewer will only return for assigned team warehouse
      *
@@ -26,21 +31,15 @@ public class OrderController {
     @GetMapping
     private List<Order> getAllOrders(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
-
-        if (jwtInfo.isAdmin()) {
-            return orderRepo.findAll();
-        } else
-
-            //Todo if user is viewer
-//            Long teamId = jwtInfo.getTeamId();
-//
-//            if (teamId != null){
-//                return orderRepo.findByTeamId(teamId);
-//            } else {
-//                throw new ForbiddenException("Team information not found in token")
-//;              }
-//        }
-            throw new ForbiddenException("Team information not found in token");
+        if (jwtInfo.isAdmin()) return orderRepo.findAll();
+        if (jwtInfo.isViewer()){
+            final long userId = jwtInfo.getId();
+            User user = userRepo.findById(userId);
+            if (user == null) throw new ForbiddenException("Viewer user not found");
+            final long teamId = user.getTeam().getId();
+            return orderRepo.findAllForWarehouse(teamId);
+        }
+        throw new ForbiddenException("Invalid user permission level");
     }
 
     @GetMapping("/{id}")
@@ -57,9 +56,8 @@ public class OrderController {
      * @apiNote requires admin permission
      */
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    private Order putOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
-                           @RequestBody Order order) {
+    @ResponseStatus(HttpStatus.OK)
+    private Order putOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Order order) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
@@ -82,17 +80,14 @@ public class OrderController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private Order postOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
-                            @RequestBody Order order) {
+    private Order createOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Order order) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create an order");
-
         // Check if order is a new order
         if (orderRepo.findById(order.getId()) != null)
             throw new BadRequestException("Order already exists for id: " + order.getId());
-
         return orderRepo.save(order);
     }
 
@@ -107,8 +102,8 @@ public class OrderController {
      * @apiNote no permission requirements
      */
     @PutMapping("/{id}/confirm")
-    private Order confirmOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
-                               @PathVariable Long id) {
+    @ResponseStatus(HttpStatus.OK)
+    private Order confirmOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if order is found
@@ -134,6 +129,7 @@ public class OrderController {
      * @apiNote no permission requirements
      */
     @PutMapping("/{id}/cancel")
+    @ResponseStatus(HttpStatus.OK)
     private Order cancelOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
                               @PathVariable Long id) {
         // Check if the jwt is provided

@@ -1,19 +1,20 @@
+import Order from "@/models/order";
 import {deleteAPI, getAPI, postAPI, putAPI, responseOk} from "@/backend";
 import {classToObject} from "@/models/helper";
-import Order from "@/models/order";
 
 export class OrderAdaptor {
-
     static ENDPOINT = "/api/orders";
 
     async fetchAll() {
         try {
             const response = await getAPI(OrderAdaptor.ENDPOINT);
             if (!responseOk(response)) {
-                console.error(response.data);
+                console.warn('Response not OK:', response.data);
                 return [];
             }
-            return response.data
+            return response.data.map(data => new Order(data.id,  data.name, data.orderedFrom, data.orderDate,
+                data.estimatedDeliveryDate, data.team, data.products, data.status, data.totalPrice));
+
         } catch (error) {
             return [];
         }
@@ -49,12 +50,14 @@ export class OrderAdaptor {
                 console.error(response.data);
                 return {};
             }
-
+            const data = response.data;
             // Update the clientside order list
-            order.injectAttributes(response.data);
+            order.injectAttributes(data);
             Order.orders[Order.orders.findIndex(o => o.id === order.id)] = order;
 
-            return response.data;
+            return new Order(data.id,  data.name, data.orderedFrom, data.orderDate, data.estimatedDeliveryDate,
+                data.team, data.products, data.status, data.totalPrice);
+
         } catch (error) {
             return {};
         }

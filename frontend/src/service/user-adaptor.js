@@ -1,9 +1,8 @@
-import {deleteAPI, getAPI, postAPI, putAPI, responseOk} from "@/backend";
 import User from "@/models/user";
+import {deleteAPI, getAPI, postAPI, putAPI, responseOk} from "@/backend";
 import {classToObject} from "@/models/helper";
 
 export class UserAdaptor {
-
     static ENDPOINT = "/api/users";
 
     async fetchAll() {
@@ -16,13 +15,14 @@ export class UserAdaptor {
                 return [];
             }
 
-            return response.data
+            return response.data.map(data => new User(data.id, data.email, data.name, data.permissionLevel, data.lastLogin))
 
         } catch (error) {
             console.error('An unexpected error occurred:', error);
             return [];
         }
     }
+
     async asyncCreate(user) {
         try {
             const response = await postAPI(UserAdaptor.ENDPOINT, classToObject(user));
@@ -38,6 +38,7 @@ export class UserAdaptor {
             return {};
         }
     }
+
     async asyncUpdate(user) {
         console.log(user);
         try {
@@ -45,11 +46,13 @@ export class UserAdaptor {
             console.log(response);
             if (!responseOk(response)) return response;
 
+            const data = response.data
+
             // Update the clientside user list
-            user.injectAttributes(response.data);
+            user.injectAttributes(data);
             User.users[User.users.findIndex(o => o.id === user.id)] = user;
 
-            return response.data;
+            return new User(data.id, data.email, data.name, data.permissionLevel, data.lastLogin);
         } catch (error) {
             return {};
         }

@@ -62,6 +62,7 @@ class UserJPARepositoryTest {
         savedUser.setPermissionLevel(UPDATED_USER_PERMISSIONLEVEL);
         savedUser.setName(UPDATED_USER_NAME);
         savedUser.setEmail(UPDATED_USER_EMAIL);
+
         User updatedUser = userRepo.save(savedUser);
         assertEquals(userRepo.findAll(), List.of(updatedUser));
         assertEquals(userRepo.findById(updatedUser.getId()), updatedUser);
