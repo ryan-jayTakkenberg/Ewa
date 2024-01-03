@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/orders") // TODO update correct path
+@RequestMapping("/orders")
 public class OrderController {
 
     @Autowired
@@ -37,7 +37,7 @@ public class OrderController {
             User user = userRepo.findById(userId);
             if (user == null) throw new ForbiddenException("Viewer user not found");
             final long teamId = user.getTeam().getId();
-            return orderRepo.findAllForWarehouse(teamId);
+            return orderRepo.findAllByWarehouseId(teamId);
         }
         throw new ForbiddenException("Invalid user permission level");
     }

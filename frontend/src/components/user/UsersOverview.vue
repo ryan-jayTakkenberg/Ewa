@@ -178,7 +178,7 @@ export default {
         <SolarSearchbar place-holder="Search For Users" @search="handleFilterValueChange"></SolarSearchbar>
         <SolarButton class="create-btn" button-text="Create User" @click="openCreateModal"></SolarButton>
       </div>
-      <SolarTable :columns="[' ', 'User', 'Function', 'Last Logged In', 'Action']">
+      <SolarTable :columns="[' ', 'User', 'Function', 'Team', 'Last Logged In', 'Action']">
         <UsersRowComponent
             v-for="(user) in paginatedUsers" :key="user.id" :user="user"
             @edit="openEditModal"

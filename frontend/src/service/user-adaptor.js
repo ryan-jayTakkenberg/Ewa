@@ -15,7 +15,7 @@ export class UserAdaptor {
                 return [];
             }
 
-            return response.data.map(data => new User(data.id, data.email, data.name, data.permissionLevel, data.lastLogin))
+            return response.data.map(data => new User(data.id, data.email, data.name, data.permissionLevel, data.lastLogin, data.password, data.team))
 
         } catch (error) {
             console.error('An unexpected error occurred:', error);

@@ -25,6 +25,7 @@ public class UserController {
      *
      * @param jwtInfo the JSON Web Token
      * @return a list of users if the requester is an admin
+     * @throws ForbiddenException if no token provided
      * @throws ForbiddenException if the requester is not an admin
      * @apiNote requires admin permission
      */
@@ -43,7 +44,9 @@ public class UserController {
      * @param jwtInfo the JSON Web Token
      * @param user    the user to create
      * @return the created user if created successfully
+     * @throws ForbiddenException if no token provided
      * @throws ForbiddenException if the requester is not an admin
+     * @throws BadRequestException if already existing user found for id
      * @apiNote requires admin permission
      */
     @PostMapping
@@ -62,12 +65,14 @@ public class UserController {
     }
 
     /**
-     * Edit a user in the database
+     * Update a user in the database
      *
      * @param jwtInfo  the json web token
      * @param user the user to add or edit
      * @return the user if it was edited successfully
+     * @throws ForbiddenException if no token provided
      * @throws ForbiddenException if the requester is not an admin
+     * @throws BadRequestException if no existing user found for id
      * @apiNote requires admin permission
      */
     @PutMapping
@@ -90,8 +95,10 @@ public class UserController {
      * @param jwtInfo  the json web token
      * @param id the user id to delete
      * @return the user if it was deleted successfully
+     * @throws ForbiddenException if no token provided
      * @throws ForbiddenException if the requester is not an admin
      * @throws BadRequestException if id is not valid
+     * @throws BadRequestException if no existing user found for id
      * @apiNote requires admin permission
      */
     @DeleteMapping("/{id}")

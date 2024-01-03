@@ -6,9 +6,11 @@ import app.jwt.JWToken;
 import app.models.*;
 import app.models.Order;
 import app.models.relations.Product_Order;
+import app.repositories.ProductJPARepository;
+import app.repositories.TeamJPARepository;
+import app.repositories.WarehouseJPARepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,25 +41,25 @@ class OrderControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     private static String token;
-
     private static Warehouse testWarehouse;
-
     private static Team testTeam;
     private static Product testProduct;
+
+    @Autowired
+    private WarehouseJPARepository warehouseRepository;
+
+    @Autowired
+    private TeamJPARepository teamRepository;
+
+    @Autowired
+    private ProductJPARepository productRepository;
 
     private static ObjectMapper objectMapper;
 
     @BeforeAll
     static void setup() {
         Locale.setDefault(Locale.ENGLISH);
-        // Create a test product
-        testProduct = new Product("name", 12, "description");
-        // Create a test warehouse
-        testWarehouse = new Warehouse(1, "Test Warehouse", "city", "address", "0000AM");
-        // Create a test team
-        testTeam = new Team(PermissionLevel.ADMIN, 1, "Test Team", testWarehouse);
 
         JWTConfig JwtConfig = new JWTConfig();
         JWToken jwt = new JWToken(-1, PermissionLevel.ADMIN, "127.0.0.1", JwtConfig.getExpiration());
@@ -68,42 +70,19 @@ class OrderControllerTest {
 
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
+
+        // Create a test product
+        testProduct = new Product("name", 12, "description");
+        // Create a test warehouse
+        testWarehouse = new Warehouse(1, "Test Warehouse", "city", "address", "0000AM");
+        // Create a test team
+        testTeam = new Team(PermissionLevel.ADMIN, 1, "Test Team", testWarehouse);
+
     }
 
     @BeforeEach
     void autowiredSuccessfully() {
         assertNotNull(mockMvc);
-    }
-
-    @Test
-    void createProductSuccessful() throws Exception {
-        Product product = new Product("product name", 100, "product description");
-
-        assertFalse(product.getId() > 0);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String productJson = objectMapper.writeValueAsString(product);
-
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .post("/product")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(productJson)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-
-        ResultActions response = mockMvc.perform(builder);
-        response.andExpectAll(
-                status().isCreated(),
-                jsonPath("$.id", greaterThan(0)),
-                jsonPath("$.name").value(product.getName()),
-                jsonPath("$.price").value(product.getPrice()),
-                jsonPath("$.description").value(product.getDescription())
-        );
-
-        String responseJson = response.andReturn().getResponse().getContentAsString();
-        product = objectMapper.readValue(responseJson, Product.class);
-
-        assertNotNull(product);
-        assertTrue(product.getId() > 0);
     }
 
     @Test

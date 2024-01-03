@@ -96,32 +96,13 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createInitialUsers() {
-        Team team4 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Noord-Holland", warehouseRepo.findById(1)));
-        Team team2 = this.teamsRepo.save(new Team(PermissionLevel.VIEWER, 0, "Team Hallo", warehouseRepo.findById(2)));
-        Team team3 = this.teamsRepo.save(new Team(PermissionLevel.VIEWER, 0, "Team Test", warehouseRepo.findById(3)));
+        // Create Admin account
+        User userAdmin = new User(PermissionLevel.ADMIN, "admin", "admin@solar.nl", LocalDate.now(), "admin", null);
+        this.userRepo.save(userAdmin);
 
-        this.userRepo.save(new User(PermissionLevel.ADMIN, "admin", "admin@solar.nl", LocalDate.now(), "admin", null));
-
-        User userTeam1 = new User(PermissionLevel.VIEWER, "viewer", "viewer@solar.nl", LocalDate.now(), "viewer", team4);
-        this.userRepo.save(userTeam1);
-        userTeam1.setTeam(team4);
-
-        User viewer1 = new User(PermissionLevel.VIEWER, "H1", "test1@solar.com", LocalDate.now(), "viewer", team2);
-        this.userRepo.save(viewer1);
-        userTeam1.setTeam(team2);
-
-        User viewer2 = new User(PermissionLevel.VIEWER, "H2", "test2@solar.com", LocalDate.now(), "viewer", null);
-        this.userRepo.save(viewer2);
-
-        User viewer3 = new User(PermissionLevel.VIEWER, "H3", "test3@solar.com", LocalDate.now(), "viewer", team3);
-        this.userRepo.save(viewer3);
-        userTeam1.setTeam(team3);
-
-        User viewer4 = new User(PermissionLevel.VIEWER, "H4", "test4@solar.com", LocalDate.now(), "viewer", null);
-        this.userRepo.save(viewer4);
-
-        User viewer5 = new User(PermissionLevel.VIEWER, "H5", "test5@solar.com", LocalDate.now(), "viewer", null);
-        this.userRepo.save(viewer5);
+        // Create User account
+        User userViewer = new User(PermissionLevel.VIEWER, "viewer", "viewer@solar.nl", LocalDate.now(), "viewer", teamsRepo.findById(1));
+        this.userRepo.save(userViewer);
     }
 
     private void createSampleOrders() {

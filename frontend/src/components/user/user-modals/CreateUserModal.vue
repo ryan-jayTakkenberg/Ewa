@@ -31,6 +31,13 @@
           </select>
         </div>
 
+        <div v-if="user.permissionLevel === User.PermissionLevel.VIEWER" class="col-span-6 sm:col-span-3">
+          <label for="team" class="modal-label">Team</label>
+          <select v-model="user.team" class="role-select" required>
+            <option v-for="team in teamOptions" :key="team.id" :value="team">{{ team.name }}</option>
+          </select>
+        </div>
+
         <div class="col-span-6 sm:col-span-3">
           <label for="password" class="modal-label">Password</label>
           <input
@@ -54,9 +61,15 @@
 <script>
 import User from "@/models/user";
 import SolarModal from "@/components/general/SolarModal.vue";
+import Team from "@/models/team";
 
 export default {
   name: "CreateUserModal",
+  computed: {
+    User() {
+      return User
+    }
+  },
   components: {SolarModal},
   data() {
     return {
@@ -66,7 +79,9 @@ export default {
         name: '',
         permissionLevel: '',
         password: '',
+        team: null,
       },
+      teamOptions: Team.teams,
       passwordRequirements: {
         minLength: 8, // Minimum password length
         hasUppercase: false, // Whether it requires an uppercase letter
@@ -81,16 +96,6 @@ export default {
     onClose: {
       type: Function,
       required: true,
-    },
-  },
-  computed: {
-    isAnyFieldEmpty() {
-      return (
-          this.user.name.trim() === '' ||
-          this.user.email.trim() === '' ||
-          this.user.permissionLevel.trim() === '' ||
-          this.user.password.trim() === ''
-      );
     },
   },
   methods: {

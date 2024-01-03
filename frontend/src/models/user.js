@@ -1,21 +1,20 @@
-import Team from "@/models/team";
-
 export default class User {
     static users = [];
 
     static PermissionLevel = {VIEWER: "VIEWER", ADMIN: "ADMIN",}
 
-    constructor(id, email, name, permissionLevel, lastLogin, password) {
+    constructor(id, email, name, permissionLevel, lastLogin, password, team) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.permissionLevel = permissionLevel;
         this.lastLogin = lastLogin;
         this.password = password;
+        this.team = team;
     }
 
     clone() {
-        return new User(this.id, this.email, this.name, this.permissionLevel, this.lastLogin, this.password);
+        return new User(...Object.values(this));
     }
 
     injectAttributes(from) {
@@ -38,11 +37,7 @@ export default class User {
         return true;
     }
 
-    getTeams() {
-        return Team.teams.filter(team => team.users.includes(this));
-    }
-
-    static createNewUser(email, name, permissionLevel, lastLogin, password) {
-        return new User(null, email, name, permissionLevel, null, password);
+    static createNewUser(email, name, permissionLevel, lastLogin, password, team) {
+        return new User(null, email, name, permissionLevel, null, password, team);
     }
 }

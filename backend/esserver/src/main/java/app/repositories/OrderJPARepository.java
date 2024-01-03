@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -20,13 +21,11 @@ public class OrderJPARepository implements EntityRepositoryJPA<Order> {
         TypedQuery<Order> query = this.em.createQuery("select o from Order o", Order.class);
         return query.getResultList();
     }
-
-    public List<Order> findAllForWarehouse(long teamId) {
-        TypedQuery<Order> query = this.em.createQuery("select o from Order o where o.team.id = :teamId", Order.class);
-        query.setParameter("teamId", teamId);
+    public List<Order> findAllByWarehouseId(long warehouseId) {
+        TypedQuery<Order> query = this.em.createQuery("SELECT o FROM Order o WHERE o.team.warehouse.id = :warehouseId", Order.class);
+        query.setParameter("warehouseId", warehouseId);
         return query.getResultList();
     }
-
 
     @Override
     public Order findById(long id) {
