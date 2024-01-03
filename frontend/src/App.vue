@@ -16,9 +16,7 @@
 </template>
 
 <script>
-// import {FetchInterceptor} from "@/service/fetch-interceptor";
-// import {SessionService} from "@/service/session-service";
-// import {shallowReactive} from "vue";
+
 import {getAPI, responseOk} from "@/backend";
 import {getJWT, isAdmin} from "@/data";
 import CONFIG from "@/app-config";
@@ -30,11 +28,9 @@ import Warehouse from "@/models/warehouse";
 import Orders from "@/models/order";
 import NavBar from "@/components/navigation/NavBar.vue";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
-
 import {ProductAdaptor} from "@/service/product-adaptor";
 import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
 import {OrderAdaptor} from "@/service/order-adaptor";
-
 import {ProjectAdaptor} from "@/service/project-adaptor";
 import {ReportAdaptor} from "@/service/report-adaptor";
 import {WarehouseAdaptor} from "@/service/warehouse-adaptor";

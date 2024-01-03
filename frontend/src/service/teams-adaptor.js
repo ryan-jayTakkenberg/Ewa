@@ -27,11 +27,12 @@ export class TeamsAdaptor {
     // Fetches a team by its ID from the API
     async asyncFindById(id) {
         const response = await getAPI(`/api/teams/${id}`);
+        console.log(response);
 
         // Check if the response is successful
         if (!responseOk(response)) {
             console.error(response.data);
-            return {};
+            throw new Error('Failed to fetch team with ID: ' + id);
         }
 
         // Return the response data

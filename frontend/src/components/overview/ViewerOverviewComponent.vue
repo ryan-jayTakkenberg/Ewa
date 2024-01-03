@@ -25,14 +25,16 @@
 
         <div class="infoTitle">
           <div class="medium">Currently working in:</div>
+          <div class="medium">Warehouse:</div>
           <div class="medium">Ongoing projects:</div>
-          <div class="medium">Unread reports:</div>
+          <div class="medium">Reports:</div>
         </div>
 
         <div class="infoValue">
-          <div class="bold">Team 2</div>
-          <div class="bold">1</div>
-          <div class="bold">3</div>
+          <div class="bold">{{ currentTeam }}</div>
+          <div class="bold">{{ currentWarehouse }}</div>
+          <div class="bold">{{ Project.projects.length }}</div>
+          <div class="bold"> {{ reports.length }}</div>
         </div>
 
       </div>
@@ -50,10 +52,6 @@
       <div class="projectWrapper" v-for="(project, index) in projects" :key="index">
         <div class="projectHeader">
           <div class="projectTitle">Project: {{ project.projectName }}</div>
-          <div class="statusWrapper">
-<!--            <div class="projectStatus"> Status: </div>-->
-<!--            <div class="statusColor"></div>-->
-          </div>
         </div>
 
         <div class="projectDescription">
@@ -68,7 +66,6 @@
             <div class="descriptionValue">{{ project.installDate }}</div>
           </div>
         </div>
-<!--        <p>Click for more details</p>-->
 
       </div>
     </div>
@@ -139,11 +136,12 @@
 import {getId, getUsername} from "@/data";
 import Project from "@/models/project";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
+import Team from "../../models/team";
 
 export default {
 
   name: "UserOverviewComponent",
-  inject: ['reportService', 'projectService'],
+  inject: ['reportService', 'projectService', 'teamsService'],
   components: {
     OverviewModal,
   },
@@ -151,7 +149,8 @@ export default {
   data() {
     return {
       username: getUsername(),
-      viewerTeam: null,
+      currentTeam: null,
+      currentWarehouse: null,
       projects: Project.projects,
       reports: [],
       selectedReports: [],
@@ -166,6 +165,9 @@ export default {
 
   mounted() {
     this.fetchReports();
+    this.getLoggedInUserTeam();
+    // this.getLoggedInUserTeamAPI();
+    this.getLoggedInUserWarehouse();
   },
 
   methods: {
@@ -195,7 +197,7 @@ export default {
 
       // Check if delete was successful (HTTP status code 201)
       if (postedReport.status === 201) {
-        // console.log('Successfully posted report:', postedReport.data);
+        console.log('Successfully posted report:', postedReport.data);
       } else {
         console.log('An error occurred when trying to post the report:', report);
       }
@@ -214,7 +216,7 @@ export default {
         // Check if delete was successful (HTTP status code 200)
         if (deletedReport.status === 200) {
 
-          // console.log('Successfully deleted report:', deletedReport);
+          console.log('Successfully deleted report:', deletedReport);
 
           // Remove the deleted report from the reports array
           const indexToDelete = this.reports.findIndex((r) => r.id === report.id);
@@ -232,6 +234,21 @@ export default {
       console.log('Your current reports after delete: ', [...this.reports]);
     },
 
+    getLoggedInUserTeam() {
+      const loggedInUserId = getId();
+      const team = Team.teams.find(team => team.id === loggedInUserId);
+      return this.currentTeam = team ? team.name : "Currently not in a team";
+    },
+
+    getLoggedInUserTeamAPI() {
+      return this.currentTeam = this.teamsService.asyncFindById(getId());
+    },
+
+    getLoggedInUserWarehouse() {
+      const loggedInUserId = getId();
+      const team = Team.teams.find(team => team.id === loggedInUserId);
+      return this.currentWarehouse = team ? team.warehouse.name : "Currently not in a warehouse";
+    },
 
     showModal() {
 
@@ -265,6 +282,12 @@ export default {
   },
 
   computed: {
+    Team() {
+      return Team
+    },
+    Project() {
+      return Project
+    },
     dayOfTheWeek() {
       const today = new Date();
       today.setDate(today.getDate());
@@ -402,10 +425,6 @@ h1 {
   border-radius: 5px;
   padding: 1rem;
   cursor: pointer;
-}
-
-.projectWrapper:hover {
-  background: #f5f5f5;
 }
 
 .projectHeader {

@@ -108,10 +108,9 @@ export default {
     },
 
     async submitPasswordReset() {
+
       try {
         let response = await postAPI("/api/request-password-reset?email=" + encodeURIComponent(this.emailInput));
-
-        // Handle the response
         console.log("Reset email sent", response);
         this.emailInput = '';
         this.togglePasswordResetForm();
@@ -160,22 +159,7 @@ export default {
       // console.log('Logged in user`;', response.data);
 
       try {
-        // <!> ALREADY DONE IN App.vue at $route watcher <!>
-        // const [teams, users, productInfos, projects, warehouses] = await Promise.all([
-        //   Team.getDatabase(),
-        //   User.getDatabase(),
-        //   Product.getDatabase(),
-        //   Project.getDatabase(),
-        //   Warehouse.getDatabase(),
-        // ]);
-        //
-        // Team.teams = teams;
-        // User.users = users;
-        // Product.productInfos = productInfos;
-        // Project.projects = projects;
-        // Warehouse.warehouses = warehouses;
         this.$router.push(isAdmin() ? '/admin-overview' : '/viewer-overview');
-
       } catch (error) {
         console.error(error);
       }

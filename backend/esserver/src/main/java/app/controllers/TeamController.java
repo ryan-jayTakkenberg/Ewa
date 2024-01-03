@@ -66,6 +66,17 @@ public class TeamController {
         return teamRepository.save(new Team(name, warehouse));
     }
 
+    @GetMapping("/{id}")
+    public Team getTeamById(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id) {
+
+        Team team = teamRepository.findById(id);
+
+        if (team != null) {
+            return team;
+        } else {
+            throw new NotFoundException("Team not found with ID: " + id);
+        }
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Team> updateTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id, @RequestBody Team updatedTeams) {
@@ -85,8 +96,6 @@ public class TeamController {
             throw new NotFoundException("Team not found with ID: " + id);
         }
     }
-
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Team> deleteTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable long id) {
