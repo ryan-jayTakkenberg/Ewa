@@ -94,6 +94,7 @@ export default {
           </select>
         </div>
       </div>
+
       <!-- Modal footer -->
       <template v-slot:footer>
         <button @click="onClose" class="cancel-button">Cancel</button>

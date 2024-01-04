@@ -3,6 +3,7 @@ package app.controllers;
 import app.enums.PermissionLevel;
 import app.jwt.JWTConfig;
 import app.jwt.JWToken;
+import app.models.Team;
 import app.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -34,7 +35,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
     private static String token;
     private static User testUser;
-//    private static Team testTeam;
+    private static Team testTeam;
     private static final long EXISTING_USER_ID = 1;
     private static final long NON_EXISTING_USER_ID = 0;
 
@@ -52,17 +53,15 @@ class UserControllerTest {
     void setupEach() {
         // Create a test user
         testUser = new User();
-        testUser.setId(NON_EXISTING_USER_ID);
         testUser.setPermissionLevel(PermissionLevel.ADMIN);
         testUser.setName("User Name");
         testUser.setEmail("user@email.com");
         testUser.setPassword("User Password");
 
-//
-//        // Create a test team
-//        testTeam = new Team();
-//        testTeam.setId(1);
-//        testTeam.setName("Team Name");
+        // Create a test team
+        Team testTeam = new Team();
+        testTeam.setId(1);
+        testTeam.setName("Team Name");
     }
 
     @BeforeEach
@@ -86,6 +85,7 @@ class UserControllerTest {
     void createUserSuccessful() throws Exception {
         testUser.setId(NON_EXISTING_USER_ID);
         assertFalse(testUser.getId() > 0);
+        testUser.setTeam(testTeam);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
