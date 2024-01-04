@@ -68,14 +68,6 @@ public class Order {
         this.team = team;
     }
 
-    public Set<Product_Order> getProducts() {
-        return orderedProducts;
-    }
-
-    public Set<Product_Order> getOrderedProducts() {
-        return orderedProducts;
-    }
-
     public String getOrderedFrom() {
         return orderedFrom;
     }
@@ -100,10 +92,6 @@ public class Order {
         this.orderedFrom = orderedFrom;
     }
 
-    public void setOrderedProducts(Set<Product_Order> orderedProducts) {
-        this.orderedProducts = orderedProducts;
-    }
-
     public OrderStatus getStatus() {
         return status;
     }
@@ -120,13 +108,13 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public void addProductOrder(Product_Order productOrder) {
-        this.orderedProducts.add(productOrder);
-        productOrder.setOrder(this);
+    public void addOrderedProduct(int amount, Product product) {
+        Product_Order newProductOrder = new Product_Order(amount, product, this);
+        this.orderedProducts.add(newProductOrder);
         updateTotalPrice();
     }
 
-    public void removeProductOrder(Product_Order productOrder) {
+    public void removeOrderedProduct(Product_Order productOrder) {
         this.orderedProducts.remove(productOrder);
         productOrder.setOrder(null);
         updateTotalPrice();

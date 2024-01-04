@@ -3,7 +3,6 @@ package app.controllers;
 import app.enums.PermissionLevel;
 import app.jwt.JWTConfig;
 import app.jwt.JWToken;
-import app.models.*;
 import app.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -20,8 +19,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-
-import java.time.LocalDate;
 import java.util.Locale;
 
 import static org.hamcrest.Matchers.greaterThan;
@@ -35,27 +32,37 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     private static String token;
-
-    private static Team testTeam;
+    private static User testUser;
+//    private static Team testTeam;
+    private static final long EXISTING_USER_ID = 1;
+    private static final long NON_EXISTING_USER_ID = 0;
 
     @BeforeAll
-    static void setup() {
+    static void setupAll() {
         Locale.setDefault(Locale.ENGLISH);
-
-        // Create a test warehouse
-        Warehouse testWarehouse = new Warehouse(1, "Test Warehouse", "city", "address", "0000AM");
-
-        // Create a test team
-        testTeam = new Team(PermissionLevel.ADMIN, 1, "Test Team", testWarehouse);
-
         JWTConfig JwtConfig = new JWTConfig();
         JWToken jwt = new JWToken(-1, PermissionLevel.ADMIN, "127.0.0.1", JwtConfig.getExpiration());
         token = jwt.encode(JwtConfig.getIssuer(), JwtConfig.getPassphrase());
-
         assertNotNull(token);
         assertTrue(token.length() > 0);
+    }
+
+    @BeforeEach
+    void setupEach() {
+        // Create a test user
+        testUser = new User();
+        testUser.setId(NON_EXISTING_USER_ID);
+        testUser.setPermissionLevel(PermissionLevel.ADMIN);
+        testUser.setName("User Name");
+        testUser.setEmail("user@email.com");
+        testUser.setPassword("User Password");
+
+//
+//        // Create a test team
+//        testTeam = new Team();
+//        testTeam.setId(1);
+//        testTeam.setName("Team Name");
     }
 
     @BeforeEach
@@ -64,14 +71,27 @@ class UserControllerTest {
     }
 
     @Test
-    void createUserSuccessful() throws Exception {
-        User user = new User(PermissionLevel.ADMIN, "full name", "email@mail.com", null, "password", null);
+    void getUsers() throws Exception {
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/users")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
-        assertFalse(user.getId() > 0);
+        ResultActions response = mockMvc.perform(builder);
+        response.andExpectAll(
+                status().isOk(),
+                jsonPath("$").isArray()
+        );
+    }
+
+    @Test
+    void createUserSuccessful() throws Exception {
+        testUser.setId(NON_EXISTING_USER_ID);
+        assertFalse(testUser.getId() > 0);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        String userJson = objectMapper.writeValueAsString(user);
+        String userJson = objectMapper.writeValueAsString(testUser);
+
+        System.out.println(userJson);
 
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .post("/users")
@@ -83,29 +103,27 @@ class UserControllerTest {
         response.andExpectAll(
                 status().isCreated(),
                 jsonPath("$.id", greaterThan(0)),
-                jsonPath("$.permissionLevel").value(user.getPermissionLevel().name()),
-                jsonPath("$.name").value(user.getName()),
-                jsonPath("$.email").value(user.getEmail()),
-                jsonPath("$.lastLogin").value(user.getLastLogin())
+                jsonPath("$.permissionLevel").value(testUser.getPermissionLevel().name()),
+                jsonPath("$.name").value(testUser.getName()),
+                jsonPath("$.email").value(testUser.getEmail()),
+                jsonPath("$.lastLogin").value(testUser.getLastLogin())
         );
 
         String responseJson = response.andReturn().getResponse().getContentAsString();
-        user = objectMapper.readValue(responseJson, User.class);
+        testUser = objectMapper.readValue(responseJson, User.class);
 
-        assertNotNull(user);
-        assertTrue(user.getId() > 0);
+        assertNotNull(testUser);
+        assertTrue(testUser.getId() > 0);
     }
 
     @Test
     void createUserFail() throws Exception {
-        User user = new User(PermissionLevel.ADMIN, "full name", "email@mail.com", LocalDate.of(2023, 10, 1), "password", testTeam);
-        user.setId(1);
-
-        assertTrue(user.getId() > 0);
+        testUser.setId(EXISTING_USER_ID);
+        assertTrue(testUser.getId() > 0);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        String userJson = objectMapper.writeValueAsString(user);
+        String userJson = objectMapper.writeValueAsString(testUser);
 
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .post("/users")
@@ -118,32 +136,13 @@ class UserControllerTest {
         response.andExpect(status().isBadRequest());
     }
 
-
-    @Test
-    void getUsers() throws Exception {
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .get("/users")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-
-        ResultActions response = mockMvc.perform(builder);
-        response.andExpectAll(
-                status().isOk(),
-                jsonPath("$").isArray()
-        );
-    }
-
     @Test
     void updateUserFail() throws Exception {
-        final long ID = -1;
-
-        User user = new User(PermissionLevel.ADMIN, "full name", "email@mail.com", LocalDate.of(2023, 10, 1), "password", testTeam );
-        user.setId(ID);
-
-        assertFalse(user.getId() > 0);
-
+        testUser.setId(NON_EXISTING_USER_ID);
+        assertFalse(testUser.getId() > 0);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        String userJson = objectMapper.writeValueAsString(user);
+        String userJson = objectMapper.writeValueAsString(testUser);
 
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .put("/user")
@@ -157,16 +156,12 @@ class UserControllerTest {
 
     @Test
     void updateUserSuccessful() throws Exception {
-        final long ID = 1;
-
-        User user = new User(PermissionLevel.ADMIN, "full name", "email@mail.com", LocalDate.of(2023, 10, 1), "password", testTeam );
-        user.setId(ID);
-
-        assertTrue(user.getId() > 0);
+        testUser.setId(EXISTING_USER_ID);
+        assertTrue(testUser.getId() > 0);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        String userJson = objectMapper.writeValueAsString(user);
+        String userJson = objectMapper.writeValueAsString(testUser);
 
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .put("/users")
@@ -177,21 +172,19 @@ class UserControllerTest {
         ResultActions response = mockMvc.perform(builder);
         response.andExpectAll(
                 status().isOk(),
-                jsonPath("$.id").value(ID),
-                jsonPath("$.permissionLevel").value(user.getPermissionLevel().name()),
-                jsonPath("$.name").value(user.getName()),
-                jsonPath("$.email").value(user.getEmail()),
-                jsonPath("$.password").value(user.getPassword()),
-                jsonPath("$.lastLogin").value(user.getLastLogin().toString())
+                jsonPath("$.id").value(EXISTING_USER_ID),
+                jsonPath("$.permissionLevel").value(testUser.getPermissionLevel().name()),
+                jsonPath("$.name").value(testUser.getName()),
+                jsonPath("$.email").value(testUser.getEmail()),
+                jsonPath("$.password").value(testUser.getPassword()),
+                jsonPath("$.lastLogin").value(testUser.getLastLogin())
         );
     }
 
     @Test
     void deleteUserFail() throws Exception {
-        final long ID = -1;
-
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .delete("/users/" + ID)
+                .delete("/users/" + NON_EXISTING_USER_ID)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
         ResultActions response = mockMvc.perform(builder);
@@ -200,17 +193,15 @@ class UserControllerTest {
 
     @Test
     void deleteUserSuccessful() throws Exception {
-        final long ID = 2;
-
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .delete("/users/" + ID)
+                .delete("/users/" + EXISTING_USER_ID)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
         ResultActions response = mockMvc.perform(builder);
         response.andExpectAll(
                 status().isOk(),
                 jsonPath("$").exists(),
-                jsonPath("$.id").value(ID)
+                jsonPath("$.id").value(EXISTING_USER_ID)
         );
     }
 }

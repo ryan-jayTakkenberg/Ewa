@@ -38,6 +38,6 @@ export default class User {
     }
 
     static createNewUser(email, name, permissionLevel, lastLogin, password, team) {
-        return new User(null, email, name, permissionLevel, null, password, team);
+        return new User(-1, email, name, permissionLevel, null, password, team);
     }
 }

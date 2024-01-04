@@ -2,7 +2,6 @@ package app;
 
 import app.enums.PermissionLevel;
 import app.models.*;
-import app.models.relations.Product_Order;
 import app.models.relations.Product_Warehouse;
 import app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -42,8 +40,6 @@ public class DataLoader implements CommandLineRunner {
         this.createSampleOrders();
         this.createSampleTeamAndProjects();
         this.createInitialUsers();
-
-
 
         System.out.println("Done!");
     }
@@ -128,8 +124,8 @@ public class DataLoader implements CommandLineRunner {
         order1.setStatus(Order.OrderStatus.PENDING);
 
         // Associate order with products and add the Product quantity
-        order1.addProductOrder(new Product_Order(2, productsRepo.findById(1), order1));
-        order1.addProductOrder(new Product_Order(1, productsRepo.findById(2), order1));
+        order1.addOrderedProduct(2, productsRepo.findById(1));
+        order1.addOrderedProduct(2, productsRepo.findById(2));
 
         orderRepo.save(order1);
 
@@ -143,8 +139,8 @@ public class DataLoader implements CommandLineRunner {
         order2.setStatus(Order.OrderStatus.PENDING);
 
         // Associate order with products and add the Product quantity
-        order2.addProductOrder(new Product_Order(2, productsRepo.findById(3), order2));
-        order2.addProductOrder(new Product_Order(8, productsRepo.findById(4), order2));
+        order2.addOrderedProduct(2, productsRepo.findById(3));
+        order2.addOrderedProduct(8, productsRepo.findById(4));
 
         orderRepo.save(order2);
     }

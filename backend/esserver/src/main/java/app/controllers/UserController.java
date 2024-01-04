@@ -57,7 +57,7 @@ public class UserController {
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create or edit a user");
         // Check if it is a new user
-        if (userRepo.findById(user.getId()) != null) throw new BadRequestException("User already exists for id: " + user.getId());
+        if (user.getId() != 0 ) throw new BadRequestException("Cannot create new user with id: " + user.getId());
         // Hash given password
         if (user.getPassword() != null) user.setPassword(HashUtil.hash(user.getPassword()));
         // Save user

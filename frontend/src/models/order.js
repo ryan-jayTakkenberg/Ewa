@@ -7,7 +7,7 @@ export default class Order {
     orderDate;
     estimatedDeliveryDate;
     team;
-    products;
+    orderedProducts;
     status;
     totalPrice;
 
@@ -17,20 +17,20 @@ export default class Order {
         CANCELED: "CANCELED",
     }
 
-    constructor(id, name, orderedFrom, orderDate, estimatedDeliveryDate, team, products, status, totalPrice) {
+    constructor(id, name, orderedFrom, orderDate, estimatedDeliveryDate, team, orderedProducts, status, totalPrice) {
         this.id = id;
         this.name = name;
         this.orderedFrom = orderedFrom;
         this.orderDate = orderDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
         this.team = team;
-        this.products = products;
+        this.orderedProducts = orderedProducts;
         this.status = status;
         this.totalPrice = totalPrice
     }
 
     clone() {
-        return new Order(this.id, this.name, this.orderedFrom, this.orderDate, this.estimatedDeliveryDate, this.team, this.products, this.status, this.totalPrice);
+        return new Order(this.id, this.name, this.orderedFrom, this.orderDate, this.estimatedDeliveryDate, this.team, this.orderedProducts, this.status, this.totalPrice);
     }
 
     injectAttributes(from) {
@@ -58,7 +58,7 @@ export default class Order {
     }
 
     // create a new order with a temporary id indicating a new order
-    static createNewOrder(name, orderedFrom, orderDate, estimatedDeliveryDate, team, products, status) {
-        return new Order(null, name, orderedFrom, orderDate, estimatedDeliveryDate, team, products, status);
+    static createNewOrder(name, orderedFrom, orderDate, estimatedDeliveryDate, team, orderedProducts, status) {
+        return new Order(null, name, orderedFrom, orderDate, estimatedDeliveryDate, team, orderedProducts, status);
     }
 }
