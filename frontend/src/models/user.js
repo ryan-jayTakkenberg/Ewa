@@ -1,6 +1,7 @@
 export default class User {
-    static users = [];
 
+    static currentUser = null;
+    static users = [];
     static PermissionLevel = {VIEWER: "VIEWER", ADMIN: "ADMIN",}
 
     constructor(id, email, name, permissionLevel, lastLogin, password, team) {
@@ -38,6 +39,23 @@ export default class User {
     }
 
     static createNewUser(email, name, permissionLevel, lastLogin, password, team) {
-        return new User(-1, email, name, permissionLevel, null, password, team);
+        return new User(null, email, name, permissionLevel, null, password, team);
+    }
+
+    static getUserById(id) {
+        return User.users.find(user => user.id === id);
+    }
+
+    static getLoggedInUserTeam(id) {
+        const loggedInUser = User.getUserById(id);
+        // console.log(loggedInUser);
+        // console.log(User.users);
+
+        if (loggedInUser) {
+            const team = loggedInUser.team;
+            return team ? team : "Currently not in a team";
+        } else {
+            return "User not found";
+        }
     }
 }
