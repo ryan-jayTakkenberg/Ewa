@@ -67,7 +67,7 @@ export default {
       teamsService: new TeamsAdaptor(CONFIG.BACKEND_URL+"api/teams"),
       reportService: new ReportAdaptor(CONFIG.BACKEND_URL+"/api/viewer-overview"),
       userService: this.userService,
-      adminOverviewService: new AdminOverviewAdaptor(CONFIG.BACKEND_URL+"/api/adminview"),
+      // adminOverviewService: new AdminOverviewAdaptor(CONFIG.BACKEND_URL+"/api/adminview"),
       productService: this.productService,
       // sessionService: this.theSessionService,
     }

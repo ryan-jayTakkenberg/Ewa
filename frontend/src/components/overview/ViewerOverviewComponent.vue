@@ -137,6 +137,7 @@ import {getId, getUsername} from "@/data";
 import Project from "@/models/project";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
 import Team from "../../models/team";
+import User from "@/models/user";
 
 export default {
 
@@ -149,6 +150,7 @@ export default {
   data() {
     return {
       username: getUsername(),
+      userId: getId(),
       currentTeam: null,
       currentWarehouse: null,
       projects: Project.projects,
@@ -167,7 +169,7 @@ export default {
     this.fetchReports();
     this.getLoggedInUserTeam();
     // this.getLoggedInUserTeamAPI();
-    this.getLoggedInUserWarehouse();
+    // this.getLoggedInUserWarehouse();
   },
 
   methods: {
@@ -235,9 +237,7 @@ export default {
     },
 
     getLoggedInUserTeam() {
-      const loggedInUserId = getId();
-      const team = Team.teams.find(team => team.id === loggedInUserId);
-      return this.currentTeam = team ? team.name : "Currently not in a team";
+      return this.currentTeam = User.getLoggedInUserTeam(this.userId);
     },
 
     getLoggedInUserTeamAPI() {
@@ -245,9 +245,7 @@ export default {
     },
 
     getLoggedInUserWarehouse() {
-      const loggedInUserId = getId();
-      const team = Team.teams.find(team => team.id === loggedInUserId);
-      return this.currentWarehouse = team ? team.warehouse.name : "Currently not in a warehouse";
+      // return this.currentWarehouse = Team.getLoggedInUserWarehouse(this.currentTeam);
     },
 
     showModal() {
@@ -282,6 +280,9 @@ export default {
   },
 
   computed: {
+    User() {
+      return User
+    },
     Team() {
       return Team
     },
