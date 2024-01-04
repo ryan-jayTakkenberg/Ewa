@@ -643,10 +643,6 @@ h1 {
   cursor: pointer;
 }
 
-.projectWrapper:hover {
-  background: #f5f5f5;
-}
-
 .projectHeader {
   display: flex;
   justify-content: space-between;
