@@ -33,7 +33,7 @@
         <div class="infoValue">
           <div class="bold">{{ currentTeam?.name ?? "Currently not in a team" }}</div>
           <div class="bold">{{ currentWarehouse?.name ?? "No warehouse assigned" }}</div>
-          <div class="bold">{{ this.userProjects.length }}</div>
+          <div class="bold">{{ this.userProjects?.length }}</div>
           <div class="bold"> {{ reports.length }}</div>
         </div>
 
@@ -154,8 +154,8 @@ export default {
       userId: getId(),
       currentTeam: null,
       currentWarehouse: null,
-      allProjects: Project.projects,
-      userProjects: null,
+      allProjects: [],
+      userProjects: [],
       reports: [],
       selectedReports: [],
       reportBody: "",
@@ -166,11 +166,12 @@ export default {
     }
   },
 
-  created() {
-    this.fetchReports();
-    this.getLoggedInUserTeam();
-    this.getLoggedInUserWarehouse();
-    this.getLoggedInUserProjects();
+  async created() {
+    await this.fetchReports();
+    await this.fetchProjects();
+    await this.getLoggedInUserTeam();
+    await this.getLoggedInUserWarehouse();
+    await this.getLoggedInUserProjects();
   },
 
   methods: {
@@ -178,6 +179,11 @@ export default {
     async fetchReports() {
       this.reports = await this.reportService.fetchReports();
       // console.log('Fetched reports: ', [...this.reports]);
+    },
+
+    async fetchProjects() {
+      this.allProjects = await this.projectService.asyncFindAll();
+      console.log('Fetched projects: ', [...this.allProjects]);
     },
 
     async postReport() {
@@ -255,6 +261,7 @@ export default {
       this.userProjects = this.currentTeam && this.allProjects
           ? this.allProjects.filter(project => project.team.id === this.currentTeam.id)
           : [];
+      console.log(this.userProjects);
     },
 
     showModal() {
