@@ -61,20 +61,28 @@ public class WarehouseController {
     }
 
     @PutMapping("/{id}")
-    public Warehouse updateWarehouse(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id, @RequestBody Warehouse updatedWarehouse) {
+    public Warehouse updateWarehouse(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id, @RequestBody JsonNode json) {
         Warehouse existingWarehouse = warehouseRepository.findById(id);
         if (!jwtInfo.isAdmin()){
             throw new ForbiddenException("Admin role is required to alter a warehouse");
         }
 
+        JsonBuilder jsonBuilder = JsonBuilder.parse(json);
+        int warehouseId = jsonBuilder.getIntFromField("id");
+        String name = jsonBuilder.getStringFromField("name");
+        String address = jsonBuilder.getStringFromField("address");
+        String city = jsonBuilder.getStringFromField("city");
+        String postalCode = jsonBuilder.getStringFromField("postalCode");
+
         if (existingWarehouse == null) {
             throw new NotFoundException("Warehouse not found with ID: " + id);
         }
 
-        if (id != updatedWarehouse.getId()) {
+        if (id != warehouseId) {
             throw new BadRequestException("ID in path does not match ID in request.");
         }
 
+        Warehouse updatedWarehouse = new Warehouse(warehouseId, name, address, city, postalCode);
         return warehouseRepository.save(updatedWarehouse);
     }
 

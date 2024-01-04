@@ -65,7 +65,15 @@ export default {
   },
   methods: {
     saveChanges(){
-      this.$emit("update-warehouse", this.warehouseClone)
+      const json = {
+        id: this.warehouseClone.id,
+        name: this.warehouseClone.name,
+        address: this.warehouseClone.address,
+        city: this.warehouseClone.city,
+        postalCode: this.warehouseClone.postalCode
+      }
+      console.log(json)
+      this.$emit("update-warehouse", json)
       this.closePopUp()
     },
     closePopUp(){
