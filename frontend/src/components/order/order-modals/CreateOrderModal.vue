@@ -157,11 +157,11 @@ export default {
       <div class="order-list" v-if="this.order.orderedProducts.length > 0">
         <h2>Ordered Products:</h2>
         <SolarTable :columns="['Name', 'Price', 'Quantity', 'Action']">
-          <tr class="table-row" v-for="product in this.order.orderedProducts" :key="product.id">
-            <td class="px-6 py-4 font-semibold text-base">{{ product.name }}</td>
-            <td class="px-6 py-4">€ {{ product.price }}</td>
+          <tr class="table-row" v-for="orderedProduct in this.order.orderedProducts" :key="orderedProduct.id">
+            <td class="px-6 py-4 font-semibold text-base">{{ orderedProduct.product.name }}</td>
+            <td class="px-6 py-4">€ {{ orderedProduct.product.price }}</td>
             <td class="px-6 py-4">
-              <input v-model="product.amount"
+              <input v-model="orderedProduct.amount"
                      type="number"
                      id="number-input"
                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"

@@ -5,12 +5,19 @@ import app.exceptions.ForbiddenException;
 import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
 import app.models.Project;
+import app.models.Team;
 import app.repositories.ProjectJPARepository;
+import app.repositories.TeamJPARepository;
+import app.util.JsonBuilder;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -19,8 +26,11 @@ public class ProjectController {
 
     private final ProjectJPARepository projectsRepo;
 
-    public ProjectController(ProjectJPARepository projectJPARepository){
+    private final TeamJPARepository teamsRepo;
+
+    public ProjectController(ProjectJPARepository projectJPARepository, TeamJPARepository teamJPARepository){
      this.projectsRepo = projectJPARepository;
+     this.teamsRepo = teamJPARepository;
     }
 
     @GetMapping
@@ -36,39 +46,58 @@ public class ProjectController {
         return projectsRepo.findById(id);
     }
 
-
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<Project> addNewProject(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Project project) {
-        if (!jwtInfo.isAdmin()){
+    public Project addNewProject(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody JsonNode json) {
+        if (!jwtInfo.isAdmin()) {
             throw new ForbiddenException("Admin role is required to create a project");
         }
 
-        if (project == null){
-            return ResponseEntity.badRequest().build();
+        JsonBuilder jsonBuilder = JsonBuilder.parse(json);
+
+        int projectId = jsonBuilder.getIntFromField("projectId");
+        String name = jsonBuilder.getStringFromField("projectName");
+        String clientName = jsonBuilder.getStringFromField("clientName");
+        String installDate = jsonBuilder.getStringFromField("installDate");
+        String notes = jsonBuilder.getStringFromField("notes");
+        long teamId = jsonBuilder.getLongFromField("teamId");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
+        LocalDate installDateToLocalDate = LocalDate.parse(installDate, formatter);
+
+        Team team = teamsRepo.findById(teamId);
+        if (team == null){
+            throw new NotFoundException("Team not found for id: " + teamId);
         }
 
-        Project addedProject = projectsRepo.save(project);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(addedProject.getProjectId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(addedProject);
+        return projectsRepo.save(new Project(projectId, name, clientName, installDateToLocalDate, notes, team));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Project> updateProject(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtinfo, @PathVariable long id, @RequestBody Project updatedProject){
+    public ResponseEntity<Project> updateProject(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtinfo, @PathVariable long id, @RequestBody JsonNode json){
         Project existingProject = projectsRepo.findById(id);
         if (!jwtinfo.isAdmin()){
             throw new ForbiddenException("Admin role is required to alter a project");
         }
 
+        JsonBuilder jsonBuilder = JsonBuilder.parse(json);
+
+        int projectId = jsonBuilder.getIntFromField("projectId");
+        String name = jsonBuilder.getStringFromField("projectName");
+        String clientName = jsonBuilder.getStringFromField("clientName");
+        String installDate = jsonBuilder.getStringFromField("installDate");
+        String notes = jsonBuilder.getStringFromField("notes");
+        long teamId = jsonBuilder.getLongFromField("teamId");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
+        LocalDate installDateToLocalDate = LocalDate.parse(installDate, formatter);
+
+        Team team = teamsRepo.findById(teamId);
+
         if (existingProject != null){
-            if (id != updatedProject.getProjectId()){
+            if (id != projectId){
                 throw new BadRequestException("ID in path does not match id in request");
             }
+
+            Project updatedProject = new Project(projectId, name, clientName, installDateToLocalDate, notes, team);
 
             Project savedProject = projectsRepo.save(updatedProject);
             return ResponseEntity.ok(savedProject);

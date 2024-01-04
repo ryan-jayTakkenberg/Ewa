@@ -76,7 +76,17 @@ export default {
   },
   methods: {
     saveChanges(){
-      this.$emit("update-project", this.projectClone)
+
+        const json = {
+          projectId: this.projectClone.projectId,
+          projectName: this.projectClone.projectName,
+          clientName: this.projectClone.clientName,
+          installDate: this.projectClone.installDate,
+          notes: this.projectClone.notes,
+          teamId: this.projectClone.team.id
+        }
+
+      this.$emit("update-project", json)
       this.closePopUp()
     },
     closePopUp(){

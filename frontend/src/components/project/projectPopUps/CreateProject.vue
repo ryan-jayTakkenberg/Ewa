@@ -71,15 +71,15 @@ export default {
   },
   methods: {
     createProject(){
-      const newProject = new Project(
-          this.project.projectId,
-          this.project.projectName,
-          this.project.clientName,
-          this.project.installDate,
-          this.project.notes,
-          this.project.team
-      );
-      this.$emit("create-project", newProject);
+      const json = {
+        projectId: this.project.projectId,
+        projectName: this.project.projectName,
+        clientName: this.project.clientName,
+        installDate: this.project.installDate,
+        notes: this.project.notes,
+        teamId: this.project.team.id
+      }
+      this.$emit("create-project", json);
       this.closePopUp();
     },
     closePopUp(){
