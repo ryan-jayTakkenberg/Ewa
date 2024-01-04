@@ -73,6 +73,9 @@ public class WarehouseController {
         String address = jsonBuilder.getStringFromField("address");
         String city = jsonBuilder.getStringFromField("city");
         String postalCode = jsonBuilder.getStringFromField("postalCode");
+        int maxStorage = jsonBuilder.getIntFromField("maxStorage");
+        int minStorage = jsonBuilder.getIntFromField("minStorage");
+        int currentStorage = jsonBuilder.getIntFromField("currentStorage");
 
         if (existingWarehouse == null) {
             throw new NotFoundException("Warehouse not found with ID: " + id);
@@ -82,7 +85,7 @@ public class WarehouseController {
             throw new BadRequestException("ID in path does not match ID in request.");
         }
 
-        Warehouse updatedWarehouse = new Warehouse(warehouseId, name, address, city, postalCode);
+        Warehouse updatedWarehouse = new Warehouse(warehouseId, name, address, city, postalCode, maxStorage, minStorage, currentStorage);
         return warehouseRepository.save(updatedWarehouse);
     }
 

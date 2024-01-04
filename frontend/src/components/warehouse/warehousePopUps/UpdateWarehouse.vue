@@ -21,6 +21,22 @@
         <input type="text" v-model="this.warehouseClone.postalCode"
                class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
       </div>
+        <div class="col-span-6 sm:col-span-3">
+          <label class="modal-label">Max Storage</label>
+          <input type="text" v-model="this.warehouseClone.maxStorage"
+                 class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+        </div>
+        <div class="col-span-6 sm:col-span-3">
+          <label class="modal-label">Min Storage</label>
+          <input type="text" v-model="this.warehouseClone.minStorage"
+                 class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+        </div>
+      <div class="col-span-6 sm:col-span-3">
+        <label class="modal-label">Current Storage</label>
+        <input type="text" v-model="this.warehouseClone.currentStorage"
+               class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+      </div>
+
     </div>
     <!-- Modal footer -->
     <template v-slot:footer>
@@ -70,8 +86,12 @@ export default {
         name: this.warehouseClone.name,
         address: this.warehouseClone.address,
         city: this.warehouseClone.city,
-        postalCode: this.warehouseClone.postalCode
-      }
+        postalCode: this.warehouseClone.postalCode,
+        maxStorage: parseInt(this.warehouseClone.maxStorage, 10),
+        minStorage: parseInt(this.warehouseClone.minStorage, 10),
+        currentStorage: parseInt(this.warehouseClone.currentStorage, 10)
+      };
+
       console.log(json)
       this.$emit("update-warehouse", json)
       this.closePopUp()

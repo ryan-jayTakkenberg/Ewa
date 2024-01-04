@@ -69,7 +69,7 @@ class WarehouseControllerTest {
 
     @Test
     void createWarehouse() throws Exception {
-        Warehouse warehouse = new Warehouse(0,"Test-name", "Amsterdam", "Bijlmer", "1234 EF");
+        Warehouse warehouse = new Warehouse(0,"Test-name", "Amsterdam", "Bijlmer", "1234 EF", 100, 20, 0);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -116,7 +116,7 @@ class WarehouseControllerTest {
 
     @Test
     void updateWarehouse() throws Exception {
-        Warehouse warehouse = new Warehouse(1, "Test", "Amsterdam", "Bijlmer", "9012 AF");
+        Warehouse warehouse = new Warehouse(1, "Test", "Amsterdam", "Bijlmer", "9012 AF", 100, 20, 0);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String warehouseJson = objectMapper.writeValueAsString(warehouse);
@@ -133,7 +133,7 @@ class WarehouseControllerTest {
 
     @Test
     void updateWarehouseInvalidData() throws Exception {
-        Warehouse warehouse = new Warehouse(0, "Test", "Amsterdam", "Bijlmer", "9012 AF");
+        Warehouse warehouse = new Warehouse(0, "Test", "Amsterdam", "Bijlmer", "9012 AF", 100, 20, 0);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String warehouseJson = objectMapper.writeValueAsString(warehouse);

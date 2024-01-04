@@ -62,17 +62,17 @@ public class DataLoader implements CommandLineRunner {
 
     private void createSampleWarehouses() {
         Warehouse[] warehouses = {
-                new Warehouse(0, "Solar Sedum", "Amsterdam", "Straat 111", "1234 AB"),
-                new Warehouse(0, "HvA Warehouse", "Amsterdam", "Straat 222", "1234 CD"),
-                new Warehouse(0, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF"),
-                new Warehouse(0, "Green Left", "Amsterdam", "Straat 444", "1234 GH")
+                new Warehouse(0, "Solar Sedum", "Amsterdam", "Straat 111", "1234 AB", 100, 20, 0),
+                new Warehouse(0, "HvA Warehouse", "Amsterdam", "Straat 222", "1234 CD", 100, 20, 0),
+                new Warehouse(0, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF", 100, 20, 0),
+                new Warehouse(0, "Green Left", "Amsterdam", "Straat 444", "1234 GH", 100, 20, 0)
         };
 
         List<Product> products = productsRepo.findAll();
         Random random = new Random();
 
         for (Warehouse warehouse : warehouses) {
-            Product_Warehouse product_warehouse = new Product_Warehouse(random.nextInt(10) + 1, products.stream().skip(random.nextInt(products.size())).findFirst().orElse(null), warehouse);
+            Product_Warehouse product_warehouse = new Product_Warehouse(random.nextInt(100) + 1, products.stream().skip(random.nextInt(products.size())).findFirst().orElse(null), warehouse);
             warehouse.addProduct(product_warehouse);
             warehouseRepo.save(warehouse);
         }
@@ -102,7 +102,7 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createSampleOrders() {
-        Warehouse warehouse1 = new Warehouse(1, "Warehouse solar", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
+        Warehouse warehouse1 = new Warehouse(1, "Warehouse solar", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA", 100, 20, 0);
         warehouseRepo.save(warehouse1);
 
         Team team1 = new Team(PermissionLevel.ADMIN, 1, "Team 1", warehouse1);

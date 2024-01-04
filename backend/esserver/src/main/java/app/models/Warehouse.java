@@ -19,6 +19,9 @@ public class Warehouse {
     private String city;
     private String address;
     private String postalCode;
+    private int maxStorage;
+    private int minStorage;
+    private int currentStorage;
 
 
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -35,12 +38,16 @@ public class Warehouse {
     }
 
 
-    public Warehouse(int id, String name, String city, String address, String postalCode) {
+    public Warehouse(int id, String name, String city, String address, String postalCode, int maxStorage, int minStorage
+    ,int currentStorage) {
         this.id = id;
         this.name = name;
         this.city = city;
         this.address = address;
         this.postalCode = postalCode;
+        this.maxStorage = maxStorage;
+        this.minStorage = minStorage;
+        this.currentStorage = currentStorage;
     }
 
 
@@ -54,8 +61,11 @@ public class Warehouse {
         int number3 = (int) Math.floor((Math.random() * 9 + 1));
         int number4 = (int) Math.floor((Math.random() * 9 + 1));
         String postalCode = number1+ "" + number2 + "" + number3 + "" + number4 + " AB";
+        int maxStorage = 100;
+        int minStorage = maxStorage / 5;
+        int currentStorage = 35;
 
-        return new Warehouse(id, name, city, address, postalCode);
+        return new Warehouse(id, name, city, address, postalCode, maxStorage, minStorage, currentStorage );
 
     }
 
@@ -110,6 +120,30 @@ public class Warehouse {
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
+    public int getMaxStorage() {
+        return maxStorage;
+    }
+
+    public void setMaxStorage(int maxStorage) {
+        this.maxStorage = maxStorage;
+    }
+
+    public int getMinStorage() {
+        return minStorage;
+    }
+
+    public void setMinStorage(int minStorage) {
+        this.minStorage = minStorage;
+    }
+
+    public int getCurrentStorage() {
+        return currentStorage;
+    }
+
+    public void setCurrentStorage(int currentStorage) {
+        this.currentStorage = currentStorage;
+    }
+
 
     public Set<Product_Warehouse> getProducts() {
         return products;

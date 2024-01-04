@@ -8,8 +8,11 @@ export default class Warehouse {
     city;
     teams;
     products;
+    maxStorage;
+    minStorage;
+    currentStorage;
 
-    constructor(id, name, address, postalCode, city, teams, products) {
+    constructor(id, name, address, postalCode, city, teams, products, maxStorage, minStorage, currentStorage) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -17,6 +20,9 @@ export default class Warehouse {
         this.city = city;
         this.teams = teams;
         this.products = products;
+        this.maxStorage = maxStorage
+        this.minStorage = minStorage
+        this.currentStorage = currentStorage
     }
 
     static copyConstructor(warehouse) {
