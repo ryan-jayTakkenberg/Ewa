@@ -162,7 +162,7 @@ class TeamControllerTest {
 
     @Test
     void deleteTeam() throws Exception {
-        Warehouse existingWarehouse = new Warehouse(3, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF");
+        Warehouse existingWarehouse = new Warehouse(2, "Warehouse neeman", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
 
         Team team = new Team("Test Team", existingWarehouse);
 
@@ -194,13 +194,13 @@ class TeamControllerTest {
         ResultActions deleteResponse = mockMvc.perform(deleteBuilder);
         deleteResponse.andExpect(status().isOk());  // Dit moet 200 OK zijn als de verwijdering succesvol is
 
-        // Probeert het verwijderde team op te halen, verwacht 405 (Method Not Allowed)
+        // Probeert het verwijderde team op te halen, verwacht 404 (Not Found) omdat het team verwijderd is
         MockHttpServletRequestBuilder getBuilder = MockMvcRequestBuilders
                 .get("/teams/" + team.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
         ResultActions getResponse = mockMvc.perform(getBuilder);
-        getResponse.andExpect(status().isMethodNotAllowed());  // Aangepast naar 405
+        getResponse.andExpect(status().isNotFound());  // Aangepast naar 404
     }
 
 

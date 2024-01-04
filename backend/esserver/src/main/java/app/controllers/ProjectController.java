@@ -25,10 +25,7 @@ public class ProjectController {
 
     @GetMapping
     private List<Project> getProjects(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
-        if (jwtInfo.isAdmin()) {
-            return projectsRepo.findAll();
-        }
-        return List.of(projectsRepo.findById(jwtInfo.getId()));
+        return projectsRepo.findAll();
     }
 
     @GetMapping ("/{id}")
