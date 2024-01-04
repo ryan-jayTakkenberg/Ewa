@@ -31,8 +31,8 @@
         </div>
 
         <div class="infoValue">
-          <div class="bold">{{ currentTeam }}</div>
-          <div class="bold">{{ currentWarehouse }}</div>
+          <div class="bold">{{ currentTeam?.name ?? "Not in a team" }}</div>
+          <div class="bold">{{ currentWarehouse?.name ?? "No warehouse" }}</div>
           <div class="bold">{{ Project.projects.length }}</div>
           <div class="bold"> {{ reports.length }}</div>
         </div>
@@ -167,7 +167,8 @@ export default {
 
   mounted() {
     this.fetchReports();
-    this.getLoggedInUserTeam();
+    this.currentTeam = this.getLoggedInUserTeam();
+    this.currentWarehouse = this.getLoggedInUserWarehouse();
     // this.getLoggedInUserTeamAPI();
     // this.getLoggedInUserWarehouse();
   },
@@ -237,7 +238,7 @@ export default {
     },
 
     getLoggedInUserTeam() {
-      return this.currentTeam = User.getLoggedInUserTeam(this.userId);
+      return Team.teams.find(team => team.id === this.userId);
     },
 
     getLoggedInUserTeamAPI() {
@@ -245,7 +246,7 @@ export default {
     },
 
     getLoggedInUserWarehouse() {
-      // return this.currentWarehouse = Team.getLoggedInUserWarehouse(this.currentTeam);
+      return this.currentTeam?.warehouse;
     },
 
     showModal() {
