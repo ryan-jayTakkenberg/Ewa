@@ -118,7 +118,7 @@ class OrderControllerTest {
                 jsonPath("$.orderDate").value(order.getOrderDate().toString()),
                 jsonPath("$.estimatedDeliveryDate").value(order.getEstimatedDeliveryDate().toString()),
                 jsonPath("$.team.id").value(order.getTeam().getId()),
-                jsonPath("$.products[0].product.name").value(order.getName()),
+                jsonPath("$.orderedProducts").value(order.getOrderedProducts()),
                 jsonPath("$.status").value(order.getStatus().toString())
         );
 

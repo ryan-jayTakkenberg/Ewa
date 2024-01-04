@@ -86,8 +86,7 @@ public class OrderController {
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create an order");
         // Check if order is a new order
-        if (orderRepo.findById(order.getId()) != null)
-            throw new BadRequestException("Order already exists for id: " + order.getId());
+        if (orderRepo.findById(order.getId()) != null) throw new BadRequestException("Order already exists for id: " + order.getId());
         return orderRepo.save(order);
     }
 

@@ -41,8 +41,7 @@ public class Order {
         this.status = status;
     }
 
-    public Order() {
-    }
+    public Order() {}
 
     public long getId() {
         return id;
@@ -106,6 +105,14 @@ public class Order {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public Set<Product_Order> getOrderedProducts() {
+        return orderedProducts;
+    }
+
+    public void setOrderedProducts(Set<Product_Order> orderedProducts) {
+        this.orderedProducts = orderedProducts;
     }
 
     public void addOrderedProduct(int amount, Product product) {

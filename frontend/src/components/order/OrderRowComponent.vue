@@ -78,14 +78,14 @@ export default {
     <!-- Order number and name -->
     <td class="px-6 py-4">
       <div class="pl-3">
-        <div class="text-base font-semibold">{{ order.id}}</div>
-        <div class="font-normal text-gray-500">{{ order.name}}</div>
+        <div class="text-base font-semibold">{{ order.id }}</div>
+        <div class="font-normal text-gray-500">{{ order.name }}</div>
       </div>
     </td>
-<!--          <div class="pl-3">-->
-<!--            <div class="text-base font-semibold">{{ order.id }}</div>-->
-<!--            <div class="font-normal text-gray-500">{{ order.name }}</div>-->
-<!--          </div>-->
+    <!--          <div class="pl-3">-->
+    <!--            <div class="text-base font-semibold">{{ order.id }}</div>-->
+    <!--            <div class="font-normal text-gray-500">{{ order.name }}</div>-->
+    <!--          </div>-->
     <!-- Order from  -->
     <td class="px-6 py-4">{{ order.orderedFrom }}</td>
     <!-- Order date  -->
@@ -120,19 +120,18 @@ export default {
   <!-- Order status  -->
   <SolarTable v-if="productsVisible" :columns="['Product', 'Price', 'Quantity', 'Total Price']"
               class="table-row whitespace-nowrap">
-    <tr class="table-row" v-for="(product, index) in order.products" :key="index">
-      <td class="px-6 py-4 whitespace-nowrap">{{ product['product']['name'] }}</td>
-      <td class="px-6 py-4 whitespace-nowrap">€ {{ Number(product['product']['price'])?.toFixed(2) }}</td>
-      <td class="px-6 py-4 whitespace-nowrap">{{ product.amount }} x </td>
-      <td class="px-6 py-4 whitespace-nowrap">€ {{Number(product['product']['price'] * product.amount)?.toFixed(2)}}
-      </td>
+    <tr class="table-row" v-for="(orderedProducts, index) in order.products" :key="index">
+      <td class="px-6 py-4 whitespace-nowrap">{{ orderedProducts.name }}</td>
+      <td class="px-6 py-4 whitespace-nowrap">€ {{ orderedProducts.price }}}</td>
+      <td class="px-6 py-4 whitespace-nowrap">{{ orderedProducts.amount }} x</td>
+      <td class="px-6 py-4 whitespace-nowrap">€ {{ orderedProducts.price }}</td>
     </tr>
     <tr>
       <!-- todo Total price -->
       <td class="px-6 py-4 font-semibold">Total price</td>
       <td class="px-6 py-4"></td>
       <td class="px-6 py-4"></td>
-      <td class="px-6 py-4 font-semibold underline">€ {{order.totalPrice}}</td>
+      <td class="px-6 py-4 font-semibold underline">€ {{ order.totalPrice }}</td>
     </tr>
   </SolarTable>
 

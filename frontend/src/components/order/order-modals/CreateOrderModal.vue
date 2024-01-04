@@ -28,6 +28,7 @@ export default {
         product: null,
         amount: null,
       },
+      selectedProduct: null,
       productOptions: [...Product.products],
 
     }
@@ -49,24 +50,19 @@ export default {
       let product = this.selectedProduct;
       let amount = this.selectedProduct.amount;
 
+      // Create a plain object for the frontend product order
+      let productOrder = { product: product, amount: amount };
+
       // Add selected product to the selected products array
       this.order.orderedProducts.unshift(productOrder);
 
-      // Create a plain object for the frontend product order
-      let productOrder = {
-        product: product,
-        amount: amount,
-        order: null
-      };
-
       // Remove the selected product from the product options
       const selectedIndex = this.productOptions.findIndex((product) => product.id === this.selectedProduct.id);
-      if (selectedIndex !== -1) {
-        this.productOptions.splice(selectedIndex, 1);
-      }
+      if (selectedIndex !== -1) this.productOptions.splice(selectedIndex, 1);
 
       // Reset selectedProduct to null after adding it to selectedProducts
       this.selectedProduct = null;
+
     },
     removeProduct(index) {
       this.order.orderedProducts.splice(index, 1);
@@ -147,11 +143,11 @@ export default {
         <div class="col-span-6 sm:col-span-6">
           <label for="products" class="modal-label">Add Product</label>
           <div class="w-full flex">
-            <select id="products" v-model="productOrder" class="product-select">
+            <select id="products" v-model="selectedProduct" class="product-select">
               <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
             </select>
             <SolarButton class=" ml-2 add-productInfo-btn" button-text="Add" @click="addProductsToOrder"
-                         :disabled="!selectedProduct"
+                         :disabled="!this.selectedProduct"
             ></SolarButton>
           </div>
         </div>
@@ -165,7 +161,7 @@ export default {
             <td class="px-6 py-4 font-semibold text-base">{{ product.name }}</td>
             <td class="px-6 py-4">€ {{ product.price }}</td>
             <td class="px-6 py-4">
-              <input v-model="product.amount" type="number" min="1" />
+              <input v-model="product.amount"
                      type="number"
                      id="number-input"
                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
