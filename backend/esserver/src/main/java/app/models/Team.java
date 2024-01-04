@@ -25,6 +25,7 @@ public class Team {
     private Warehouse warehouse;
 
     @OneToOne(mappedBy = "team", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"team"})
     private User user;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
@@ -108,8 +109,6 @@ public class Team {
         }
     }
 
-
-
     public void addProject(Project project) {
         this.projects.add(project);
         project.setTeam(this);
@@ -120,7 +119,6 @@ public class Team {
         project.setTeam(null);
     }
 
-
     public void setUser(User user) {
         this.user = user;
     }
@@ -128,6 +126,5 @@ public class Team {
     public Set<Project> getProjects() {
         return projects;
     }
-
 
 }
