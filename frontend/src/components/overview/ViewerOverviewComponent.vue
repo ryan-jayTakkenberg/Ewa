@@ -31,9 +31,9 @@
         </div>
 
         <div class="infoValue">
-          <div class="bold">{{ currentTeam?.name ?? "Not in a team" }}</div>
-          <div class="bold">{{ currentWarehouse?.name ?? "No warehouse" }}</div>
-          <div class="bold">{{ Project.projects.length }}</div>
+          <div class="bold">{{ currentTeam?.name ?? "Currently not in a team" }}</div>
+          <div class="bold">{{ currentWarehouse?.name ?? "No warehouse assigned" }}</div>
+          <div class="bold">{{ this.userProjects.length }}</div>
           <div class="bold"> {{ reports.length }}</div>
         </div>
 
@@ -49,7 +49,7 @@
     <h1 class="sectionTitle">Ongoing Projects for: {{capitalizeFirstLetter(username)}}</h1>
     <div class="projectContainer">
 
-      <div class="projectWrapper" v-for="(project, index) in projects" :key="index">
+      <div class="projectWrapper" v-for="(project, index) in userProjects" :key="index">
         <div class="projectHeader">
           <div class="projectTitle">Project: {{ project.projectName }}</div>
         </div>
@@ -138,6 +138,7 @@ import Project from "@/models/project";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
 import Team from "../../models/team";
 import User from "@/models/user";
+import {getAPI, responseOk} from "@/backend";
 
 export default {
 
@@ -153,24 +154,23 @@ export default {
       userId: getId(),
       currentTeam: null,
       currentWarehouse: null,
-      projects: Project.projects,
+      allProjects: Project.projects,
+      userProjects: null,
       reports: [],
       selectedReports: [],
       reportBody: "",
       senderId: getId(),
       senderName: getUsername(),
       receiverId: 1, // admin id
-
       modal: false,
     }
   },
 
-  mounted() {
+  created() {
     this.fetchReports();
-    this.currentTeam = this.getLoggedInUserTeam();
-    this.currentWarehouse = this.getLoggedInUserWarehouse();
-    // this.getLoggedInUserTeamAPI();
-    // this.getLoggedInUserWarehouse();
+    this.getLoggedInUserTeam();
+    this.getLoggedInUserWarehouse();
+    this.getLoggedInUserProjects();
   },
 
   methods: {
@@ -238,15 +238,23 @@ export default {
     },
 
     getLoggedInUserTeam() {
-      return Team.teams.find(team => team.id === this.userId);
-    },
+      const loggedInUser = User.users[0]; // Assuming there's only one user in the response
 
-    getLoggedInUserTeamAPI() {
-      return this.currentTeam = this.teamsService.asyncFindById(getId());
+      if (loggedInUser && loggedInUser.team) {
+        return this.currentTeam = loggedInUser.team;
+      } else {
+        return "";
+      }
     },
 
     getLoggedInUserWarehouse() {
-      return this.currentTeam?.warehouse;
+      return this.currentWarehouse = this.currentTeam?.warehouse;
+    },
+
+    getLoggedInUserProjects() {
+      this.userProjects = this.currentTeam && this.allProjects
+          ? this.allProjects.filter(project => project.team.id === this.currentTeam.id)
+          : [];
     },
 
     showModal() {
