@@ -13,7 +13,7 @@ export class OrderAdaptor {
                 return [];
             }
             return response.data.map(data => new Order(data.id,  data.name, data.orderedFrom, data.orderDate,
-                data.estimatedDeliveryDate, data.team, data.products, data.status, data.totalPrice));
+                data.estimatedDeliveryDate, data.team, data.orderedProducts, data.status, data.totalPrice));
 
         } catch (error) {
             return [];
@@ -56,7 +56,7 @@ export class OrderAdaptor {
             Order.orders[Order.orders.findIndex(o => o.id === order.id)] = order;
 
             return new Order(data.id,  data.name, data.orderedFrom, data.orderDate, data.estimatedDeliveryDate,
-                data.team, data.products, data.status, data.totalPrice);
+                data.team, data.orderedProducts, data.status, data.totalPrice);
 
         } catch (error) {
             return {};

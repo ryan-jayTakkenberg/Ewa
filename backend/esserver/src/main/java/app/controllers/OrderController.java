@@ -2,16 +2,23 @@ package app.controllers;
 
 import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
+import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
 import app.models.Order;
+import app.models.Product;
 import app.models.User;
+import app.models.relations.Product_Order;
 import app.repositories.OrderJPARepository;
+import app.repositories.ProductJPARepository;
 import app.repositories.UserJPARepository;
+import app.util.JsonBuilder;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/orders")
@@ -19,6 +26,9 @@ public class OrderController {
 
     @Autowired
     private OrderJPARepository orderRepo;
+
+    @Autowired
+    private ProductJPARepository productRepo;
 
     @Autowired
     private UserJPARepository userRepo;
@@ -32,7 +42,7 @@ public class OrderController {
     private List<Order> getAllOrders(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         if (jwtInfo.isAdmin()) return orderRepo.findAll();
-        if (jwtInfo.isViewer()){
+        if (jwtInfo.isViewer()) {
             final long userId = jwtInfo.getId();
             User user = userRepo.findById(userId);
             if (user == null) throw new ForbiddenException("Viewer user not found");
@@ -71,7 +81,7 @@ public class OrderController {
 
 
     /**
-     * create a new order in the database
+     * create a new order in the database with products
      *
      * @param jwtInfo the json web token
      * @param order   the new order to add
@@ -80,15 +90,28 @@ public class OrderController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private Order createOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Order order) {
+    private Order createOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
+                              @RequestBody Order order) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create an order");
         // Check if order is a new order
-        if (orderRepo.findById(order.getId()) != null) throw new BadRequestException("Order already exists for id: " + order.getId());
+        if (orderRepo.findById(order.getId()) != null)
+            throw new BadRequestException("Order already exists for id: " + order.getId());
+        // Process the orderedProducts in the order
+        Set<Product_Order> productOrders = order.getOrderedProducts();
+        if (productOrders != null && !productOrders.isEmpty()) {
+            for (Product_Order productOrder : productOrders) {
+                // Find the product
+                Product product = productRepo.findById(productOrder.getProduct().getId());
+                if (product == null)
+                    throw new NotFoundException("Cannot find product with id: " + productOrder.getProduct().getId());
+            }
+        }
         return orderRepo.save(order);
     }
+
 
 // todo order confirmation
 
@@ -168,5 +191,4 @@ public class OrderController {
         if (order == null) throw new BadRequestException("No order found with id: " + id); // Check if order is found
         return orderRepo.delete(order);
     }
-
 }

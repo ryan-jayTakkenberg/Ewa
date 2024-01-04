@@ -102,46 +102,32 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createSampleOrders() {
-        // Create Warehouse
         Warehouse warehouse1 = new Warehouse(1, "Warehouse solar", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
         warehouseRepo.save(warehouse1);
-        Warehouse warehouse2 = new Warehouse(2, "Warehouse neeman", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
-        warehouseRepo.save(warehouse2);
 
-        // Create Teams
-        Team team1 = new Team(PermissionLevel.ADMIN, 1, "Team 1", warehouse1 );
+        Team team1 = new Team(PermissionLevel.ADMIN, 1, "Team 1", warehouse1);
         teamsRepo.save(team1);
-        Team team2 = new Team(PermissionLevel.ADMIN, 2, "Team 2", warehouse2 );
-        teamsRepo.save(team2);
 
         // Create Order and associate with Team and Product
         Order order1 = new Order();
-        order1.setName("Restock Solar Panels");
+        order1.setName("Test Order");
         order1.setOrderedFrom("Solar City");
         order1.setOrderDate(LocalDate.now());
         order1.setEstimatedDeliveryDate(LocalDate.now().plusDays(7));
         order1.setTeam(team1);
         order1.setStatus(Order.OrderStatus.PENDING);
 
-        // Associate order with products and add the Product quantity
-        order1.addOrderedProduct(2, productsRepo.findById(1));
-        order1.addOrderedProduct(2, productsRepo.findById(2));
+        // Add sample products to the order (assuming productRepo is a repository for Product)
+        Product product1 = new Product("Product 1", 10.0, "Description 1");
+        productsRepo.save(product1);
 
+        Product product2 = new Product("Product 2", 20.0, "Description 2");
+        productsRepo.save(product2);
+
+        // Associate order with products and add the Product quantity
+        order1.addOrderedProduct(2, product1);
+        order1.addOrderedProduct(3, product2);
         orderRepo.save(order1);
-
-        // Create Order 2 and associate with Team and Product
-        Order order2 = new Order();
-        order2.setName("Frames and new solar panels");
-        order2.setOrderedFrom("Green Supply");
-        order2.setOrderDate(LocalDate.now());
-        order2.setEstimatedDeliveryDate(LocalDate.now().plusDays(34));
-        order2.setTeam(team2);
-        order2.setStatus(Order.OrderStatus.PENDING);
-
-        // Associate order with products and add the Product quantity
-        order2.addOrderedProduct(2, productsRepo.findById(3));
-        order2.addOrderedProduct(8, productsRepo.findById(4));
-
-        orderRepo.save(order2);
     }
+
 }
