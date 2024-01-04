@@ -7,7 +7,6 @@ import app.jwt.JWToken;
 import app.models.User;
 import app.repositories.UserJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +33,7 @@ public class UserController {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
-        if (!jwtInfo.isAdmin()) {
-            return List.of(userRepo.findById(jwtInfo.getId()));
-        }
+        if (!jwtInfo.isAdmin()) {return List.of(userRepo.findById(jwtInfo.getId()));}
         return userRepo.findAll();
     }
 
