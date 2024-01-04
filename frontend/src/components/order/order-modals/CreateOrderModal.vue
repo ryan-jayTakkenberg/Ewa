@@ -50,7 +50,7 @@ export default {
       let amount = this.selectedProduct.amount;
 
       // Add selected product to the selected products array
-      this.order.products.unshift(productOrder);
+      this.order.orderedProducts.unshift(productOrder);
 
       // Create a plain object for the frontend product order
       let productOrder = {
@@ -69,7 +69,7 @@ export default {
       this.selectedProduct = null;
     },
     removeProduct(index) {
-      this.order.products.splice(index, 1);
+      this.order.orderedProducts.splice(index, 1);
     }
 
   }
