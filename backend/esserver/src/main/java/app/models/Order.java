@@ -115,7 +115,7 @@ public class Order {
         this.orderedProducts = orderedProducts;
     }
 
-    public void addOrderedProduct(int amount, Product product) {
+    public void addOrderedProduct(long amount, Product product) {
         Product_Order newProductOrder = new Product_Order(amount, product, this);
         this.orderedProducts.add(newProductOrder);
         updateTotalPrice();
