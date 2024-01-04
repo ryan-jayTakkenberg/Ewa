@@ -49,10 +49,17 @@ export class UserAdaptor {
             const data = response.data
 
             // Update the clientside user list
-            user.injectAttributes(data);
-            User.users[User.users.findIndex(o => o.id === user.id)] = user;
+            let index = User.users.findIndex(o => o.id === user.id);
+            let userClass = User.users[index];
+            if (userClass) {
+                userClass.injectAttributes(data);
+                User.users[index] = userClass;
+                return userClass;
+            }
 
-            return new User(data.id, data.email, data.name, data.permissionLevel, data.lastLogin);
+            // Error?
+            console.error("Unable to find user");
+            return data;
         } catch (error) {
             return {};
         }
