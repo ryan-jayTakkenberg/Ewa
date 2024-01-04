@@ -1,8 +1,6 @@
 <script>
-import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
 import {getId, getUsername} from "@/data";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
-import NotificationComponent from "@/components/general/NotificationComponent.vue";
 import Project from "@/models/project";
 import {getAPI, responseOk} from "@/backend";
 import Warehouse from "@/models/warehouse";
@@ -26,6 +24,7 @@ export default {
       globalTotalStock: '350',
       username: getUsername(),
       projects: [],
+      projectsCount: Project.projects.length,
       reports: [],
       selectedReports: [],
       reportBody: "",
@@ -42,7 +41,6 @@ export default {
 
   mounted() {
     this.fetchAllUsers();
-    this.loadOngoingProjectsCount()
     this.fetchReports()
     this.fetchAllProjects()
   },
@@ -141,7 +139,6 @@ export default {
       this.modal = false;
 
       console.log('Your current reports after delete: ', [...this.reports]);
-      this.unresolvedReports = this.loadOngoingProjectsCount()
 
     },
 
@@ -191,20 +188,6 @@ export default {
       }
     },
 
-    async loadOngoingProjectsCount() {
-          const adaptor = new AdminOverviewAdaptor();
-          const count = await adaptor.fetchOngoingProjectsCount();
-          if (count !== null) {
-            this.ongoingProjects = count;
-          }
-    },
-
-    getStatusColor(project) {
-      const today = new Date();
-      const installDate = new Date(project.installDate);
-      return installDate < today ? '#FF0000' : '#5DDB88'; // Red if install date has passed, Green otherwise
-    },
-
   },
 
   computed: {
@@ -246,22 +229,23 @@ export default {
         });
       });
 
-      this.orders.forEach(order => {
-        order.products.forEach(product => {
-          const id = product['product']['id'];
-          console.log(product['product']);
-
-          if (!totals[id]) {
-            totals[id] = {
-              name: product['product']['name'],
-              inWarehouse: 0,
-              inOrders: 0,
-            };
-          }
-
-          totals[id].inOrders += product.amount;
-        });
-      });
+      // TODO geeft error
+      // this.orders.forEach(order => {
+      //   order.products.forEach(product => {
+      //     const id = product['product']['id'];
+      //     console.log(product['product']);
+      //
+      //     if (!totals[id]) {
+      //       totals[id] = {
+      //         name: product['product']['name'],
+      //         inWarehouse: 0,
+      //         inOrders: 0,
+      //       };
+      //     }
+      //
+      //     totals[id].inOrders += product.amount;
+      //   });
+      // });
 
       return totals;
     },
@@ -273,7 +257,6 @@ export default {
       immediate: true,
       handler(to, from) {
         // Call your data fetching methods here
-        this.loadOngoingProjectsCount();
         this.fetchReports();
 
       }
@@ -320,12 +303,12 @@ export default {
     <div class="insightContainer">
       <p class="medium">Total Ongoing Projects:</p>
       <div class="meetingWrapper">
-        <div id="textBig"> {{ ongoingProjects }} </div>
+        <div id="textBig"> {{ projectsCount }} </div>
       </div>
     </div>
 
     <div class="insightContainer">
-      <p class="medium">Unresolved Reports:</p>
+      <p class="medium">Reports:</p>
       <div class="meetingWrapper">
         <div id="textBigRed"> {{ unresolvedReports }} </div>
       </div>
@@ -658,10 +641,6 @@ h1 {
   border-radius: 5px;
   padding: 1rem;
   cursor: pointer;
-}
-
-.projectWrapper:hover {
-  background: #f5f5f5;
 }
 
 .projectHeader {
