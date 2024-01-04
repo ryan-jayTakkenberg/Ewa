@@ -2,6 +2,7 @@
 
 import User from "@/models/user";
 import SolarModal from "@/components/general/SolarModal.vue";
+import Team from "@/models/team";
 
 export default {
   name: "EditUserModal",
@@ -13,8 +14,10 @@ export default {
       clonedUser: null,
       currentPasswordVisible: false,
       newPasswordVisible: false,
+      TeamOptions: Team.teams,
     }
   },
+
   props: {
     user: {
       type: Object,
@@ -79,6 +82,14 @@ export default {
           <select v-model="this.clonedUser.permissionLevel" class="role-select">
             <option v-for="permissionLevel in PermissionLevelOptions" :key="permissionLevel"
                     :value="permissionLevel">{{ permissionLevel }}
+            </option>
+          </select>
+        </div>
+
+        <div v-if="user.permissionLevel === PermissionLevelOptions.VIEWER" class="col-span-6 sm:col-span-3">
+          <label for="user-role" class="modal-label">Team</label>
+          <select v-model="this.clonedUser.team" class="role-select">
+            <option v-for="team in TeamOptions" :key="team.id" :value="team">{{ team.name }}
             </option>
           </select>
         </div>

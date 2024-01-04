@@ -34,7 +34,7 @@
         <div v-if="user.permissionLevel === User.PermissionLevel.VIEWER" class="col-span-6 sm:col-span-3">
           <label for="team" class="modal-label">Team</label>
           <select v-model="user.team" class="role-select" required>
-            <option v-for="team in teamOptions" :key="team.id" :value="team">{{ team.name }}</option>
+            <option v-for="team in TeamOptions" :key="team.id" :value="team">{{ team.name }}</option>
           </select>
         </div>
 
@@ -81,7 +81,7 @@ export default {
         password: '',
         team: null,
       },
-      teamOptions: Team.teams,
+      TeamOptions: Team.teams,
       passwordRequirements: {
         minLength: 8, // Minimum password length
         hasUppercase: false, // Whether it requires an uppercase letter
