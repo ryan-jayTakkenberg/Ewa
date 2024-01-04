@@ -670,20 +670,6 @@ h1 {
   align-items: center;
 }
 
-.projectStatus {
-  font-size: 1.2rem;
-  font-weight: 400;
-  color: #222;
-}
-
-.statusColor {
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  margin-left: 0.5rem;
-  background: #5DDB88;
-}
-
 p {
   //margin-top: 2rem;
   font-weight: 300;
