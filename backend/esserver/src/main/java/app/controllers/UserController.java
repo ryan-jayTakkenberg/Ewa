@@ -33,7 +33,7 @@ public class UserController {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
-//        return List.of(userRepo.findById(jwtInfo.getId()));
+//        if (!jwtInfo.isAdmin()) {return List.of(userRepo.findById(jwtInfo.getId()));} // destroys report system
         return userRepo.findAll();
     }
 
