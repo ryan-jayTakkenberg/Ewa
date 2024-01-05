@@ -112,7 +112,7 @@
         <div class="sendReportInputWrapper">
           <div class="sendReportInput">Send a report to:</div>
           <select v-model="receiverId" class="reportReceiverSelect" ref="selectUser">
-            <option v-for="user in availableUsers" :value="user.id" :key="user.id">{{ user.name }}</option>
+            <option v-for="user in availableUsers" :value="user.id" :key="user.id">{{ capitalizeFirstLetter(user.name) }}</option>
           </select>
         </div>
 
