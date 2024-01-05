@@ -28,7 +28,14 @@ export default {
   methods: {
     saveTeam() {
       if (this.editedTeam && this.editedTeam.id) {
-        this.$emit("editTeam", this.editedTeam); // Emit the "edit-team" event
+        // Adjust the payload structure based on backend expectations
+        const json = {
+          id: this.editedTeam.id,
+          name: this.editedTeam.name,
+          warehouseId: this.editedTeam.warehouseId,
+        };
+
+        this.$emit("editTeam", json); // Emit the "edit-team" event
         this.onClose(); // Close the modal
       } else {
         console.error("Invalid team data");
@@ -80,8 +87,8 @@ export default {
 
             <div class="col-span-6 sm:col-span-3">
               <label for="warehouse" class="modal-label">Warehouse</label>
-              <select v-model="editedTeam.warehouse" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
-                <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse" >
+              <select v-model="editedTeam.warehouseId" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+                <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">
                   {{ warehouse.name }}
                 </option>
               </select>

@@ -82,9 +82,9 @@ public class DataLoader implements CommandLineRunner {
 
 
     private void createSampleTeamAndProjects() {
-        Team team1 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Bijlmer", warehouseRepo.findById(1)));
-        Team team2 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Aalsmeer", warehouseRepo.findById(2)));
-        Team team3 = this.teamsRepo.save(new Team(PermissionLevel.ADMIN, 0, "Team Purmerend", warehouseRepo.findById(3)));
+        Team team1 = this.teamsRepo.save(new Team("Team Bijlmer", warehouseRepo.findById(1)));
+        Team team2 = this.teamsRepo.save(new Team( "Team Aalsmeer", warehouseRepo.findById(2)));
+        Team team3 = this.teamsRepo.save(new Team("Team Purmerend", warehouseRepo.findById(3)));
 
         LocalDate installDate = LocalDate.of(2023, 11, 21);
         this.projectsRepo.save(new Project(1, "Blue", "HVA", installDate, "Project to install solar panels to Company A", team1));
@@ -107,7 +107,7 @@ public class DataLoader implements CommandLineRunner {
         Warehouse warehouse1 = new Warehouse(1, "Warehouse solar", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA", 100, 20, 0);
         warehouseRepo.save(warehouse1);
 
-        Team team1 = new Team(PermissionLevel.ADMIN, 1, "Team 1", warehouse1);
+        Team team1 = new Team(  "Team 1", warehouse1);
         teamsRepo.save(team1);
 
         // Create Order and associate with Team
