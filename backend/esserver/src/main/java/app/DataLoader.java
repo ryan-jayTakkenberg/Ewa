@@ -2,6 +2,7 @@ package app;
 
 import app.enums.PermissionLevel;
 import app.models.*;
+import app.models.relations.Product_Order;
 import app.models.relations.Product_Warehouse;
 import app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ public class DataLoader implements CommandLineRunner {
 
     @Autowired
     private ProductJPARepository productsRepo;
+    @Autowired Product_OrderJPARepository product_OrderRepo;
     @Autowired
     private UserJPARepository userRepo;
     @Autowired
@@ -108,7 +110,7 @@ public class DataLoader implements CommandLineRunner {
         Team team1 = new Team(PermissionLevel.ADMIN, 1, "Team 1", warehouse1);
         teamsRepo.save(team1);
 
-        // Create Order and associate with Team and Product
+        // Create Order and associate with Team
         Order order1 = new Order();
         order1.setName("Test Order");
         order1.setOrderedFrom("Solar City");
@@ -124,10 +126,15 @@ public class DataLoader implements CommandLineRunner {
         Product product2 = new Product("Product 2", 20.0, "Description 2");
         productsRepo.save(product2);
 
-        // Associate order with products and add the Product quantity
-        order1.addOrderedProduct(2, product1);
-        order1.addOrderedProduct(3, product2);
+        // Create and associate Product_Order entities
+        Product_Order productOrder1 = new Product_Order(2, product1, order1);
+        Product_Order productOrder2 = new Product_Order(3, product2, order1);
+
+        // Associate ordered products with the order
+        order1.addOrderedProduct(productOrder1);
+        order1.addOrderedProduct(productOrder2);
+
+        // Save the order along with associated product orders
         orderRepo.save(order1);
     }
-
 }

@@ -48,7 +48,7 @@ export default {
     },
     addProductsToOrder() {
       let product = this.selectedProduct;
-      let amount = this.selectedProduct.amount;
+      let amount = product.amount;
 
       // Create a plain object for the frontend product order
       let productOrder = { product: product, amount: amount };
@@ -146,7 +146,7 @@ export default {
             <select id="products" v-model="selectedProduct" class="product-select">
               <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
             </select>
-            <SolarButton class=" ml-2 add-productInfo-btn" button-text="Add" @click="addProductsToOrder"
+            <SolarButton class="ml-2 add-productInfo-btn" button-text="Add" @click="addProductsToOrder"
                          :disabled="!this.selectedProduct"
             ></SolarButton>
           </div>
@@ -157,7 +157,7 @@ export default {
       <div class="order-list" v-if="this.order.orderedProducts.length > 0">
         <h2>Ordered Products:</h2>
         <SolarTable :columns="['Name', 'Price', 'Quantity', 'Action']">
-          <tr class="table-row" v-for="orderedProduct in this.order.orderedProducts" :key="orderedProduct.id">
+          <tr class="table-row" v-for="(orderedProduct, index) in this.order.orderedProducts" :key="index">
             <td class="px-6 py-4 font-semibold text-base">{{ orderedProduct.product.name }}</td>
             <td class="px-6 py-4">€ {{ orderedProduct.product.price }}</td>
             <td class="px-6 py-4">

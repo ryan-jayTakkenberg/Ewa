@@ -21,11 +21,7 @@ export class OrderAdaptor {
     }
     async asyncCreate(order) {
         try {
-            console.log(order);
             const response = await postAPI(OrderAdaptor.ENDPOINT, classToObject(order));
-
-            console.log(response);
-            console.log(response.data);
 
             if (!responseOk(response)) {
                 console.error(response.data);
@@ -63,49 +59,62 @@ export class OrderAdaptor {
         }
     }
 
-    // async asyncDeleteById(id) {
-    //     try {
-    //         const response = await deleteAPI(`${OrderAdaptor.ENDPOINT}/${id}`);
-    //         if (!responseOk(response)) return response;
-    //
-    //         // Update the clientside order list
-    //         Order.orders = Order.orders.filter(o => o.id !== id);
-    //
-    //         return response.data;
-    //     } catch (error) {
-    //         return {};
-    //     }
-    // }
-
-    async asyncConfirmOrder(order) {
+    async asyncDeleteById(id) {
         try {
-            const response = await deleteAPI(`${OrderAdaptor.ENDPOINT}/confirm`);
+            const response = await deleteAPI(`${OrderAdaptor.ENDPOINT}/${id}`);
+            if (!responseOk(response)) return response;
+
+            // Update the clientside order list
+            Order.orders = Order.orders.filter(o => o.id !== id);
+
+            return response.data;
+        } catch (error) {
+            return {};
+        }
+    }
+
+    // ...
+    async asyncConfirm(id) {
+        try {
+            const response = await deleteAPI(`${OrderAdaptor.ENDPOINT}/${id}`);
+            const data = response.data;
 
             if (!responseOk(response)) {
-                console.error(response.data);
+                console.error(data);
                 return {};
             }
 
-            // Update the clientside order list
+            // Create a new Order instance and update the clientside order list
+            const updatedOrder = new Order(data.id, data.name, data.orderedFrom, data.orderDate, data.estimatedDeliveryDate,
+                data.team, data.orderedProducts, data.status, data.totalPrice);
 
-            return response.data;
+            Order.orders[Order.orders.findIndex(o => o.id === updatedOrder.id)] = updatedOrder;
+
+            return data;
         } catch (error) {
             return {};
         }
     }
 
-    async asyncCancelOrder(id) {
+    async asyncCancel(id) {
         try {
             const response = await postAPI(`${OrderAdaptor.ENDPOINT}/${id}/delete`);
+            const data = response.data;
+
             if (!responseOk(response)) return response;
 
+            // Create a new Order instance and update the clientside order list
+            const updatedOrder = new Order(data.id, data.name, data.orderedFrom, data.orderDate, data.estimatedDeliveryDate,
+                data.team, data.orderedProducts, data.status, data.totalPrice);
 
-            // Update the clientside order list
+            Order.orders[Order.orders.findIndex(o => o.id === updatedOrder.id)] = updatedOrder;
 
-            return response.data;
+            return data;
         } catch (error) {
             return {};
         }
     }
+// ...
+
 
 }

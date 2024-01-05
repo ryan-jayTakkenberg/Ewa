@@ -140,8 +140,6 @@ public class OrderController {
         return orderRepo.save(order);
     }
 
-    // todo order cancellation
-
     /**
      * Cancel an order in the database
      *
