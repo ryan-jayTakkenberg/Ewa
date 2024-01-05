@@ -1,17 +1,17 @@
 <template>
 
-  <OverviewModal
+  <overview-modal
       v-if="modal"
       @confirm-delete="deleteReport"
       @cancel-delete="closeModal"
       :selectedReports="selectedReports"
   />
 
-  <!--- persona ---------------------------------------------------------------------------------->
-  <div class="personaContainer">
+  <!--- user ---------------------------------------------------------------------------------->
+  <div class="container">
 
     <div class="header">
-      <h1>Hi, {{ capitalizeFirstLetter(username) }}</h1>
+      <h1 class="hiText">Hi, {{ capitalizeFirstLetter(username) }}</h1>
 
       <div class="dateContainer">
         <div class="dayOfTheWeek">{{ dayOfTheWeek }}</div>
@@ -19,24 +19,18 @@
       </div>
     </div>
 
-    <div class="welcomeContainer">
+    <div class="userInfoContainer">
 
-      <div class="infoContainer">
+      <div class="infoTitleContainer">
+        <div class="infoTitle">Currently working in:</div>
+        <div class="infoTitle">Ongoing projects:</div>
+        <div class="infoTitle">Reports:</div>
+      </div>
 
-        <div class="infoTitle">
-          <div class="medium">Currently working in:</div>
-          <div class="medium">Warehouse:</div>
-          <div class="medium">Ongoing projects:</div>
-          <div class="medium">Reports:</div>
-        </div>
-
-        <div class="infoValue">
-          <div class="bold">{{ currentTeam?.name ?? "Currently not in a team" }}</div>
-          <div class="bold">{{ currentWarehouse?.name ?? "No warehouse assigned" }}</div>
-          <div class="bold">{{ this.userProjects?.length }}</div>
-          <div class="bold"> {{ reports.length }}</div>
-        </div>
-
+      <div class="infoValueContainer">
+        <div class="infoValue">{{ currentTeam?.name ?? "Currently not in a team" }}</div>
+        <div class="infoValue">{{ this.userProjects?.length }}</div>
+        <div class="infoValue"> {{ reports.length }}</div>
       </div>
 
     </div>
@@ -44,7 +38,7 @@
   </div>
 
   <!--- projects ---------------------------------------------------------------------------------->
-  <div class="sectionContainer">
+  <div class="container">
 
     <h1 class="sectionTitle">Ongoing Projects for: {{capitalizeFirstLetter(username)}}</h1>
     <div class="projectContainer">
@@ -72,27 +66,23 @@
   </div>
 
   <!--- reports ---------------------------------------------------------------------------------->
-  <div class="sectionContainer">
+  <div class="container">
 
-    <div class="reportsHeader">
-      <h1 class="sectionTitle">Reports</h1>
-      <div class="buttonContainer">
-      </div>
-    </div>
+    <h1 class="sectionTitle">Reports</h1>
 
     <div class="reportsContainerWrapper">
 
-      <div class="reportsContainer">
+      <div class="inboxReportsContainer">
 
         <div class="inboxHeader">
-          <div class="containerTitle">Inbox</div>
+          <div class="reportContainerTitle">Inbox</div>
 
           <div class="buttonWrapper">
-            <button class="deleteMessage" @click="showModal">
-              <span class="material-symbols-outlined">delete</span>
+            <button class="replyReport" @click="replyReport">
+              <span class="material-symbols-outlined">reply</span>
             </button>
-            <button class="filterMessage">
-              <span class="material-symbols-outlined">filter_alt</span>
+            <button class="deleteReport" @click="showModal">
+              <span class="material-symbols-outlined">delete</span>
             </button>
           </div>
         </div>
@@ -118,7 +108,14 @@
       </div>
 
       <div class="sendReportsContainer">
-        <div class="containerTitle">Send a report to the admin</div>
+
+        <div class="sendReportInputWrapper">
+          <div class="sendReportInput">Send a report to:</div>
+          <select v-model="receiverId" class="reportReceiverSelect" ref="selectUser">
+            <option v-for="user in availableUsers" :value="user.id" :key="user.id">{{ user.name }}</option>
+          </select>
+        </div>
+
         <textarea v-model="reportBody" placeholder="Type your report here..." class="reportInput"></textarea>
         <button @click="postReport" class="sendReportButton">Send</button>
 
@@ -143,9 +140,9 @@ import {getAPI, responseOk} from "@/backend";
 export default {
 
   name: "UserOverviewComponent",
-  inject: ['reportService', 'projectService', 'teamsService'],
+  inject: ['reportService', 'projectService', 'teamsService', 'userService'],
   components: {
-    OverviewModal,
+    "overview-modal": OverviewModal,
   },
 
   data() {
@@ -161,20 +158,26 @@ export default {
       reportBody: "",
       senderId: getId(),
       senderName: getUsername(),
-      receiverId: 1, // admin id
+      receiverId: "",
+      users: [],
       modal: false,
     }
   },
 
-  async created() {
-    await this.fetchReports();
-    await this.fetchProjects();
-    await this.getLoggedInUserTeam();
-    await this.getLoggedInUserWarehouse();
-    await this.getLoggedInUserProjects();
+  mounted() {
+    this.fetchAllUsers();
+    this.fetchReports();
+    this.fetchProjects();
+    this.getLoggedInUserTeam();
+    this.getLoggedInUserProjects();
   },
 
   methods: {
+
+    async fetchAllUsers() {
+      this.users = await this.userService.fetchAll();
+      // console.log('Fetched users: ', [...this.users]);
+    },
 
     async fetchReports() {
       this.reports = await this.reportService.fetchReports();
@@ -183,7 +186,7 @@ export default {
 
     async fetchProjects() {
       this.allProjects = await this.projectService.asyncFindAll();
-      console.log('Fetched projects: ', [...this.allProjects]);
+      // console.log('Fetched projects: ', [...this.allProjects]);
     },
 
     async postReport() {
@@ -212,6 +215,16 @@ export default {
       }
 
       this.reportBody = '';
+    },
+
+    replyReport() {
+
+      if (this.selectedReports.length !== 1) {
+        alert("Please select exactly one report to reply to.");
+        return;
+      }
+
+      this.receiverId = this.selectedReports[0].senderId;
     },
 
     async deleteReport() {
@@ -253,10 +266,6 @@ export default {
       }
     },
 
-    getLoggedInUserWarehouse() {
-      return this.currentWarehouse = this.currentTeam?.warehouse;
-    },
-
     getLoggedInUserProjects() {
       this.userProjects = this.currentTeam && this.allProjects
           ? this.allProjects.filter(project => project.team.id === this.currentTeam.id)
@@ -296,6 +305,7 @@ export default {
   },
 
   computed: {
+
     User() {
       return User
     },
@@ -305,6 +315,7 @@ export default {
     Project() {
       return Project
     },
+
     dayOfTheWeek() {
       const today = new Date();
       today.setDate(today.getDate());
@@ -312,9 +323,15 @@ export default {
 
       return today.toLocaleDateString(undefined, options);
     },
+
     numberOfTheDay() {
       const today = new Date();
       return today.getUTCDate()
+    },
+
+    availableUsers() {
+      // Filter out users with the same id as you, because you can't send a report to yourself
+     return this.users.filter(user => user.id !== this.userId);
     },
   },
 
@@ -324,85 +341,76 @@ export default {
 
 <style scoped>
 
-.personaContainer {
+.container {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  padding: 3rem 3rem 2rem 3rem;
-  border-bottom: 2px solid #e5e5e5;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-}
-
-.welcomeContainer {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
-
-h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #222;
-  margin-bottom: 2rem;
-}
-
-.infoContainer {
-  display: flex;
-  gap: 1rem;
-}
-
-.medium {
-  font-size: 1rem;
-  font-weight: 400;
-  color: #aaa;
-  height: 25px;
-}
-
-.bold {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #222;
-  height: 25px;
-}
-
-.sectionContainer {
   width: 100%;
   padding: 2rem 3rem;
-  border-bottom: 2px solid #e5e5e5;
-}
-
-.dateContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 100px;
-  height: 100px;
-  background: #f5f5f5;
-  border-radius: 10px;
-}
-
-.dayOfTheWeek {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #222;
-}
-
-.dayOfTheWeekNum {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #222;
+  border-bottom: 2px solid var(--col-border);
 }
 
 .sectionTitle {
   text-align: left;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #222;
+  font-size: var(--font-size-medium);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .hiText {
+    font-size: var(--font-size-large);
+    font-weight: var(--font-weight-bold);
+    color: var(--col-black);
+  }
+
+  .dateContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100px;
+    height: 100px;
+    background: #f5f5f5;
+    border-radius: 10px;
+  }
+
+  .dayOfTheWeek {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #222;
+  }
+
+  .dayOfTheWeekNum {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #222;
+  }
+
+}
+
+.userInfoContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+
+  .infoTitle {
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-medium);
+    color: var(--col-grey);
+    height: 25px;
+  }
+
+  .infoValue {
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold);
+    color: var(--col-black);
+    height: 25px;
+  }
+
 }
 
 .projectContainer {
@@ -413,82 +421,57 @@ h1 {
   padding: 1rem 0.15rem;
   overflow-x: auto;
   margin-top: 1rem;
-}
 
-.projectContainer::-webkit-scrollbar {
-  width: 5px;
-}
+  .projectContainer::-webkit-scrollbar {
+    width: 5px;
+  }
 
-.projectContainer::-webkit-scrollbar-thumb {
-  background-color: #e5e5e5;
-  border-radius: 10px;
-}
+  .projectContainer::-webkit-scrollbar-thumb {
+    background-color: var(--col-border);
+    border-radius: 10px;
+  }
 
-.projectContainer::-webkit-scrollbar-track {
-  background-color: #f5f5f5;
-  border-radius: 10px;
-}
+  .projectContainer::-webkit-scrollbar-track {
+    background-color: var(--col-light-grey);
+    border-radius: 10px;
+  }
 
-.descriptionTitle {
-  font-weight: 600;
-}
+  .projectWrapper {
+    min-width: 500px;
+    width: auto;
+    flex: 0 0 auto;
+    background: var(--col-white);
+    border: 2px solid var(--col-black);
+    border-radius: 5px;
+    padding: 1rem;
+  }
 
-.projectWrapper {
-  min-width: 500px;
-  width: auto;
-  flex: 0 0 auto;
-  background: #fff;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  padding: 1rem;
-  cursor: pointer;
-}
+  .projectHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
 
-.projectHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-}
+  .projectTitle {
+    font-size: 1.2rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--col-black);
+  }
 
-.projectTitle {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #222;
-}
+  .projectDescription {
+    display: flex;
+    gap: 2rem;
+  }
 
-.projectDescription {
-  display: flex;
-  gap: 2rem;
-}
+  .descriptionTitle {
+    font-weight: var(--font-weight-bold);
+  }
 
-.descriptionValue {
-  font-weight: 300;
-}
+  .descriptionValue {
+    font-weight: var(--font-weight-small);
+  }
 
-.statusWrapper {
-  display: flex;
-  align-items: center;
-}
-
-.projectStatus {
-  font-size: 1.2rem;
-  font-weight: 400;
-  color: #222;
-}
-
-.statusColor {
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  margin-left: 0.5rem;
-  background: #5DDB88;
-}
-
-p {
-  margin-top: 2rem;
-  font-weight: 300;
-  color: #222;
 }
 
 .reportsContainerWrapper {
@@ -496,161 +479,169 @@ p {
   justify-content: space-between;
   gap: 1rem;
   width: 100%;
-}
+  margin-top: 2rem;
 
-.reportsContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 2rem;
-  height: 500px;
-  width: 100%;
-  background: #f5f5f5;
-  border-radius: 10px;
-}
+  .inboxReportsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    height: 500px;
+    width: 100%;
+    background: #f5f5f5;
+    border-radius: 10px;
+  }
 
-.reportsHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 50%;
-  margin-bottom: 1rem;
-}
+  .selected {
+    outline: 2px solid var(--col-black);
+  }
 
-.reportWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  min-height: 150px;
-  height: auto;
-  flex: 0 0 auto;
-  background: #fff;
-  padding: 1rem;
-  border-radius: 5px;
-  border: 1px solid #e5e5e5;
-  cursor: pointer;
-}
+  .sendReportsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    height: 500px;
+    width: 100%;
+    background: var(--col-light-grey);
+    border-radius: 10px;
+  }
 
-.selected {
-  outline: 2px solid #222;
-}
+  .sendReportInputWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 40px;
+  }
 
-.sendReportsContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 2rem;
-  height: 500px;
-  width: 100%;
-  background: #f5f5f5;
-  border-radius: 10px;
-}
+  .sendReportInput {
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold);
+    color: var(--col-black);
+    width: 200px;
+  }
 
-.containerTitle {
-  font-size: 1em;
-  font-weight: 600;
-  color: #222;
-}
+  .reportReceiverSelect {
+    width: 100%;
+    border-radius: 5px;
+    padding: 10px;
+  }
 
-.reportInput {
-  height: 80%;
-  padding: 0.5rem;
-  border-radius: 5px;
-  resize: vertical;
-  min-height: 20%;
-  max-height: 70%;
-}
+  .reportInput {
+    height: 50%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    resize: vertical;
+    min-height: 20%;
+    max-height: 75%;
+  }
 
-.sendReportButton {
-  width: 100px;
-  height: 50px;
-  background: #c5ce2c;
-  color: #fff;
-  font-size: 1em;
-  font-weight: 600;
-  border-radius: 5px;
-  outline: none;
-  cursor: pointer;
-}
+  .sendReportButton {
+    width: 150px;
+    height: 50px;
+    background: var(--col-solar);
+    color: var(--col-white);
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-bold);
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+  }
 
-.inboxHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 10px;
-  padding: 0 0 0 1rem;
-  background: #fff;
-}
+  .inboxHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    padding: 0 1rem;
+    background: var(--col-white);
+  }
 
-.actualReports {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  height: 500px;
-  width: 100%;
-  border-radius: 10px;
-  overflow-y: scroll;
-}
+  .actualReports {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    height: 500px;
+    width: 100%;
+    border-radius: 10px;
+    overflow-y: scroll;
+  }
 
-.actualReports::-webkit-scrollbar {
-  width: 10px;
-}
+  .actualReports::-webkit-scrollbar {
+    width: 10px;
+  }
 
-.actualReports::-webkit-scrollbar-thumb {
-  background-color: #e5e5e5;
-  border-radius: 10px;
-}
+  .actualReports::-webkit-scrollbar-thumb {
+    background-color: #e5e5e5;
+    border-radius: 10px;
+  }
 
-.actualReports::-webkit-scrollbar-track {
-  background-color: #f5f5f5;
-  border-radius: 10px;
-}
+  .actualReports::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+    border-radius: 10px;
+  }
 
-.reportHeader {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #e5e5e5;
-  width: 100%;
-}
+  .reportWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    min-height: 150px;
+    height: auto;
+    flex: 0 0 auto;
+    background: var(--col-white);
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid var(--col-border);
+    cursor: pointer;
+  }
 
-.reportSender {
-  font-weight: 600;
-  color: #222;
-}
+  .reportHeader {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--col-border);
+    width: 100%;
+  }
 
-.reportDate {
-  font-weight: 400;
-  color: #c5c5c5;
-}
+  .reportSender {
+    font-weight: var(--font-weight-bold);
+    color: var(--col-black);
+  }
 
-.reportBody {
-  font-weight: 400;
-  color: #222;
-}
+  .reportDate {
+    font-weight: var(--font-weight-medium);
+    color: var(--col-grey);
+  }
 
-.buttonWrapper {
-  display: flex;
-  gap: 1rem;
-}
+  .reportBody {
+    font-weight: var(--font-weight-medium);
+    color: var(--col-black);
+  }
 
-.filterMessage,
-.deleteMessage {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  width: 50px;
-  background: none;
-  outline: none;
-  cursor: pointer;
-}
+  .buttonWrapper {
+    display: flex;
+    gap: 1rem;
+  }
 
-.filterMessage:hover,
-.deleteMessage:hover {
-  background: #c5ce2c;
-  color: #fff;
+  .replyReport,
+  .deleteReport {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 50px;
+    background: none;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .replyReport:hover,
+  .deleteReport:hover {
+    background: var(--col-solar);
+    color: var(--col-white);
+  }
+
 }
 
 .material-symbols-outlined {
