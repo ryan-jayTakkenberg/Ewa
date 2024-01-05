@@ -40,12 +40,25 @@ export default {
   },
 
   mounted() {
-    this.fetchAllUsers();
+    this.fetchAllUsers()
     this.fetchReports()
     this.fetchAllProjects()
+    this.calculateTotalStock()
   },
 
   methods: {
+    calculateTotalStock() {
+      let totalStock = 0;
+
+      this.warehouses.forEach(warehouse => {
+        warehouse.products.forEach(product => {
+          totalStock += product.amount;
+        });
+      });
+
+      this.globalTotalStock = totalStock.toString();
+    },
+
     async fetchAllUsers() {
       this.users = await this.userService.fetchAll();
     },
