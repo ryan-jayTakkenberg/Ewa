@@ -46,9 +46,6 @@ public class TeamController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Team addNewTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody JsonNode json) {
-        if (!jwtInfo.isAdmin()) {
-            throw new ForbiddenException("Admin role is required to create a user");
-        }
 
         JsonBuilder jsonBuilder = JsonBuilder.parse(json);
 
@@ -79,24 +76,38 @@ public class TeamController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Team> updateTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@PathVariable long id, @RequestBody Team updatedTeams) {
-        Team existingTeam = teamRepository.findById(id);
-        if (!jwtInfo.isAdmin()) {
-            throw new ForbiddenException("Admin role is required to delete an user");
-        }
-        if (existingTeam != null) {
-            if (id != updatedTeams.getId()) {
-                throw new BadRequestException("ID in path does not match ID in request.");
-            }
 
-            updatedTeams.setId((int) id);
-            Team savedTeams = teamRepository.save(updatedTeams);
-            return ResponseEntity.ok(savedTeams);
-        } else {
-            throw new NotFoundException("Team not found with ID: " + id);
+    @PutMapping("/{id}")
+    public Team updateTeam(
+            @RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
+            @PathVariable long id,
+            @RequestBody JsonNode json) {
+        if (!jwtInfo.isAdmin()) {
+            throw new ForbiddenException("Admin role is required to create a user");
         }
+
+        JsonBuilder jsonBuilder = JsonBuilder.parse(json);
+
+        String name = jsonBuilder.getStringFromField("name");
+        // You cannot post a warehouse object, so only supply the id
+        long warehouseId = jsonBuilder.getLongFromField("warehouseId");
+
+        // Find the warehouse object from the supplied id
+        Warehouse warehouse = warehouseRepository.findById(warehouseId);
+        if (warehouse == null) {
+            throw new NotFoundException("Warehouse not found for id: " + warehouseId);
+        }
+
+        // Now create the team object with the required warehouse object
+        Team team = new Team(name, warehouse);
+
+        int teamId = (int) id;
+
+        team.setId(teamId);
+
+        return teamRepository.save(team);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Team> deleteTeam(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable long id) {

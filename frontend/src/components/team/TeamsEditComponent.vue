@@ -39,7 +39,7 @@ export default {
       return {
         id: team.id,
         name: team.name,
-        warehouse: team.warehouse
+        warehouseId: this.team.warehouse.id
       };
     }
   },
