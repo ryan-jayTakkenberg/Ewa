@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
-    <NavBar
+    <app-navbar
         v-if="isLoggedIn"
         :sidebarIsExpanded="isSideBarExpanded"
         @sidebar-expanded="updateSidebarState"
-    ></NavBar>
+    ></app-navbar>
 
     <div v-if="fetchedData || !isLoggedIn" class="router-view" :class="{ 'router-view-responsive': true }">
       <router-view></router-view>
     </div>
 
-    <NotificationComponent ref="notificationComponent"></NotificationComponent>
+    <app-notification ref="notificationComponent"></app-notification>
 
   </div>
 </template>
@@ -19,17 +19,15 @@
 
 import {getAPI, responseOk} from "@/backend";
 import {getJWT, isAdmin} from "@/data";
-import CONFIG from "@/app-config";
 import Team from "@/models/team";
 import User from "@/models/user";
 import Product from "@/models/product";
 import Project from "@/models/project";
 import Warehouse from "@/models/warehouse";
 import Orders from "@/models/order";
-import NavBar from "@/components/navigation/NavBar.vue";
+import NavBarComponent from "@/components/navigation/NavBarComponent.vue";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
 import {ProductAdaptor} from "@/service/product-adaptor";
-import {AdminOverviewAdaptor} from "@/service/admin-overview-adaptor";
 import {OrderAdaptor} from "@/service/order-adaptor";
 import {ProjectAdaptor} from "@/service/project-adaptor";
 import {ReportAdaptor} from "@/service/report-adaptor";
@@ -39,13 +37,20 @@ import {UserAdaptor} from "@/service/user-adaptor";
 
 export default {
   name: 'App',
-  components: {NotificationComponent, NavBar},
+  components: {
+    'app-navbar': NavBarComponent,
+    'app-notification': NotificationComponent
+  },
 
   data() {
     return {
       isLoggedIn: false,
       isSideBarExpanded: false,
       fetchedData: false,
+      warehouseService: new WarehouseAdaptor(),
+      projectService: new ProjectAdaptor(),
+      teamsService: new TeamsAdaptor(),
+      reportService: new ReportAdaptor(),
       productService: new ProductAdaptor(),
       userService: new UserAdaptor(),
       orderService: new OrderAdaptor(),
@@ -54,28 +59,19 @@ export default {
 
   provide() {
 
-    // create a singleton reactive service tracking the authorisation data of the session
-    // this.theSessionService = shallowReactive(
-    //     new SessionService(CONFIG.BACKEND_URL+'/authentication', CONFIG.JWT_STORAGE_ITEM));
-    // this.theFetchInterceptor =
-    //     new FetchInterceptor(this.theSessionService,*/ this.$router);
-
     return {
       orderService: this.orderService,
-      warehouseService: new WarehouseAdaptor(CONFIG.BACKEND_URL+"/api/warehouses"),
-      projectService: new ProjectAdaptor(CONFIG.BACKEND_URL+"/api/projects"),
-      teamsService: new TeamsAdaptor(CONFIG.BACKEND_URL+"api/teams"),
-      reportService: new ReportAdaptor(CONFIG.BACKEND_URL+"/api/viewer-overview"),
+      warehouseService: this.warehouseService,
+      projectService: this.projectService,
+      teamsService: this.teamsService,
+      reportService: this.reportService,
       userService: this.userService,
-      // adminOverviewService: new AdminOverviewAdaptor(CONFIG.BACKEND_URL+"/api/adminview"),
       productService: this.productService,
-      // sessionService: this.theSessionService,
     }
   },
 
   created() {
     console.log('Configured routerGuard');
-    // this.$router.beforeEach(this.routerGuard);
 
     const path = this.$router.currentRoute.value.path;
     const isResetPasswordRoute = path.startsWith('/');
@@ -91,30 +87,6 @@ export default {
       this.isSideBarExpanded = isExpanded;
     },
 
-    // routerGuard(to,from) {
-    //
-    //   this.isLoggedIn = responseOk(getAPI("/api/authentication/status"));
-    //   if (to.name === 'LOGIN') {
-    //     if (this.isLoggedIn && isAdmin()) {
-    //       console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
-    //       return '/admin-overview';
-    //     } else if (getJWT() && !isAdmin()) {
-    //       console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
-    //       return '/viewer-overview';
-    //     }
-    //   }
-    //
-    //   if (to.name === 'OVERVIEW') {
-    //     if (this.isLoggedIn && isAdmin()) {
-    //       console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
-    //       return '/admin-overview';
-    //     } else if (getJWT() && !isAdmin()) {
-    //       console.log("Intercepted route from '" + from.name + "' to '" + to.name + "'");
-    //       return '/viewer-overview';
-    //     }
-    //   }
-    //
-    // }
   },
 
   watch: {
@@ -171,14 +143,15 @@ export default {
 
   beforeUnmount() {
     console.log('App.unmounted() has been called.')
-    this.theFetchInterceptor.unregister();
+    // this.theFetchInterceptor.unregister();
   },
 
-
 }
+
 </script>
 
 <style>
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -201,14 +174,13 @@ export default {
   overflow: auto;
 }
 
-body{
-  overflow: hidden;
-}
-
 @media only screen and (max-width: 750px) {
+
   .router-view-responsive {
     width: calc(100vw - 70px);
     margin-left: auto;
   }
+
 }
+
 </style>
