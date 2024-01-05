@@ -96,10 +96,9 @@ class OrderControllerTest {
         objectMapper.registerModule(new JavaTimeModule());
 
         // Create a Product_Order with a reference to the saved product
-        Product_Order productOrder = new Product_Order(2, testProduct, order);
-        order.setOrderedProducts(Set.of(productOrder));
-
-
+//        Product_Order productOrder = new Product_Order(2, testProduct, order);
+//        order.setOrderedProducts(Set.of(productOrder));
+//
         // Convert the order object to JSON
         String orderJson = objectMapper.writeValueAsString(order);
 
