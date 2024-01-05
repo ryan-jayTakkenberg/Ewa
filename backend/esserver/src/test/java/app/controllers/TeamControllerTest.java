@@ -76,7 +76,7 @@ class TeamControllerTest {
     @Test
     void addNewTeam() throws Exception {
         // Existing warehouse with ID 3
-        Warehouse existingWarehouse = new Warehouse(3, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF");
+        Warehouse existingWarehouse = new Warehouse(3, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF", 100, 20, 0);
 
         // Create a new team associated with the existing warehouse
         Team team = new Team("Test Team", existingWarehouse);
@@ -112,7 +112,7 @@ class TeamControllerTest {
 
     @Test
     void updateTeam() throws Exception {
-        Warehouse existingWarehouse = new Warehouse(3, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF");
+        Warehouse existingWarehouse = new Warehouse(3, "Dutch Warehouse", "Amsterdam", "Straat 333", "1234 EF", 100, 20, 0);
 
         Team team = new Team("Updated Team", existingWarehouse);
 
@@ -162,7 +162,7 @@ class TeamControllerTest {
 
     @Test
     void deleteTeam() throws Exception {
-        Warehouse existingWarehouse = new Warehouse(2, "Warehouse neeman", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA");
+        Warehouse existingWarehouse = new Warehouse(2, "Warehouse neeman", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA", 100, 20 , 0);
 
         Team team = new Team("Test Team", existingWarehouse);
 

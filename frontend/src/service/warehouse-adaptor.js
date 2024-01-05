@@ -18,7 +18,8 @@ export class WarehouseAdaptor {
             return [];
         }
 
-        return response.data.map(data => new Warehouse(data.id, data.name, data.address, data.postalCode, data.city, data.teams, data.products));
+        return response.data.map(data => new Warehouse(data.id, data.name, data.address, data.postalCode, data.city, data.teams, data.products,
+            data.maxStorage, data.minStorage, data.currentStorage));
     }
 
     async asyncFindById(id) {
@@ -60,12 +61,14 @@ export class WarehouseAdaptor {
         const data = response.data;
 
         // Checking if the response contains the updated team information
-        if (!data.id || !data.name || !data.address || !data.postalCode || !data.city) {
+        if (!data.id || !data.name || !data.address || !data.postalCode || !data.city ||!data.maxStorage ||!data.minStorage
+            ||!data.currentStorage) {
             console.error("Failed to update warehouse. Empty response: " + data);
             return {};
         }
 
-        return new Warehouse(data.id, data.name, data.address, data.postalCode, data.city);
+        return new Warehouse(data.id, data.name, data.address, data.postalCode, data.city, data.maxStorage, data.minStorage,
+            data.currentStorage);
     }
 
     async asyncDeleteById(id) {

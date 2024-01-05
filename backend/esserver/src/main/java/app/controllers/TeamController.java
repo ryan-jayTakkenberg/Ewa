@@ -63,7 +63,8 @@ public class TeamController {
         }
 
         // Now create the team object with the required warehouse object
-        return teamRepository.save(new Team(name, warehouse));
+        Team team = new Team(name, warehouse);
+        return teamRepository.save(team);
     }
 
     @GetMapping("/{id}")

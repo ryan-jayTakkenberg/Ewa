@@ -8,7 +8,7 @@
         <SolarButton class="ml-auto mr-2" button-text="Add Warehouse" @click="showCreateWarehouse = true"></SolarButton>
       </div>
 
-      <SolarTable :columns="['Name', 'Address', 'Postal code', 'Action']">
+      <SolarTable :columns="['Name', 'Address', 'Postal code','Max Storage','Min Storage','Current Storage', 'Action']">
         <WarehouseRowAdmin
             v-for="(warehouse, index) in warehouses"
             :key="index"
@@ -108,9 +108,15 @@ export default {
     },
     async getWarehouseList(){
       try {
-        this.warehouses = await this.warehouseService.asyncFindAll()
+        const response = await this.warehouseService.asyncFindAll();
+        this.warehouses = response.map(warehouse => {
+          // Calculate the total amount of products for each warehouse
+          const totalProducts = warehouse.products.reduce((total, product) => total + product.amount, 0);
+          // Update the currentStorage with the total amount of products
+          return { ...warehouse, currentStorage: totalProducts };
+        });
       } catch (error){
-        console.error("Error occurred while getting the data from the backend", error)
+        console.error("Error occurred while getting the data from the backend", error);
       }
     },
     openUpdateWarehouse(warehouse){
