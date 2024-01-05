@@ -69,7 +69,7 @@ class OrderControllerTest {
 
         // Create test product, team and warehouse
         testProduct = new Product("Product 1", 10.0, "Description 1");
-        testWarehouse = new Warehouse(1, "Test Warehouse", "city", "address", "0000AM");
+        testWarehouse = new Warehouse(1, "Test Warehouse", "city", "address", "0000AM" ,1, 1, 1);
         testTeam = new Team(PermissionLevel.ADMIN, 1, "Test Team", testWarehouse);
     }
 
