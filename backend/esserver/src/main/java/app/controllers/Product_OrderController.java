@@ -4,8 +4,14 @@ import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
+import app.models.Order;
+import app.models.Product;
 import app.models.relations.Product_Order;
+import app.repositories.OrderJPARepository;
+import app.repositories.ProductJPARepository;
 import app.repositories.Product_OrderJPARepository;
+import app.util.JsonBuilder;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +21,12 @@ import java.util.List;
 @RequestMapping("/product_order")
 public class Product_OrderController {
     private final Product_OrderJPARepository productOrderRepo;
-    public Product_OrderController(Product_OrderJPARepository productRepo) {
+    private final ProductJPARepository productRepo;
+    private final OrderJPARepository orderRepo;
+    public Product_OrderController(Product_OrderJPARepository productRepo, ProductJPARepository productRepo1, OrderJPARepository orderRepo) {
         this.productOrderRepo = productRepo;
+        this.productRepo = productRepo1;
+        this.orderRepo = orderRepo;
     }
 
     /**
@@ -53,13 +63,27 @@ public class Product_OrderController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private Product_Order postProductOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Product_Order productOrder) {
+    private Product_Order postProductOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody JsonNode json) {
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create a product_order");
 
-        if (productOrderRepo.findById(productOrder.getId()) != null)
-            throw new BadRequestException("Product already exists for id: " + productOrder.getId());
+        JsonBuilder jsonBuilder = JsonBuilder.parse(json);
+        long productId = jsonBuilder.getLongFromField("productId");
+        long orderId = jsonBuilder.getLongFromField("orderId");
+        long amount = jsonBuilder.getLongFromField("amount");
 
-        return productOrderRepo.save(productOrder);
+        Product product = productRepo.findById(productId);
+        if (product == null) {
+            throw new NotFoundException("No product found for id: " + productId);
+        }
+
+        Order order = orderRepo.findById(orderId);
+        if (order == null) {
+            throw new NotFoundException("No order found for id: " + orderId);
+        }
+
+        Product_Order product_order = new Product_Order(amount, product, order);
+
+        return productOrderRepo.save(product_order);
     }
 
     /**
