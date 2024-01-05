@@ -63,7 +63,12 @@ export default {
     }
   },
   created() {
-    this.warehouseClone = this.warehouse.clone();
+    if (this.warehouse) {
+      // Using object spread to create a shallow clone
+      this.warehouseClone = { ...this.warehouse };
+    } else {
+      console.error('Warehouse prop is not set');
+    }
   },
   computed: {
     hasChanged() {

@@ -40,12 +40,46 @@ export default {
   },
 
   mounted() {
-    this.fetchAllUsers();
+    this.fetchAllUsers()
     this.fetchReports()
     this.fetchAllProjects()
+    this.calculateTotalStock()
+    this.calculateLowStockWarehouses()
   },
 
   methods: {
+    calculateTotalStock() {
+      let totalStock = 0;
+
+      this.warehouses.forEach(warehouse => {
+        warehouse.products.forEach(product => {
+          totalStock += product.amount;
+        });
+      });
+
+      this.globalTotalStock = totalStock.toString();
+    },
+    calculateLowStockWarehouses() {
+      let lowStockCount = 0;
+
+      this.warehouses.forEach(warehouse => {
+        let currentStorage = 0;
+
+        // Calculate current storage for each warehouse
+        warehouse.products.forEach(product => {
+          currentStorage += product.amount;
+        });
+
+        // Check if the current storage is less than the minimum storage
+        if (currentStorage < warehouse.minStorage) {
+          lowStockCount++;
+        }
+      });
+
+      this.warehousesLowStock = lowStockCount.toString();
+    },
+
+
     async fetchAllUsers() {
       this.users = await this.userService.fetchAll();
     },
