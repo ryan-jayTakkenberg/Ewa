@@ -61,7 +61,7 @@
     <SolarTable :columns="['product', 'quantity', 'ordered']">
       <tr class="border-gray-100 border-b text-base font-medium" v-for="(product, index) in this.productTotals" v-bind:key="index">
         <!--Product Name -->
-        <td class="pl-6 text-gray-900 whitespace-nowrap">{{ product.name }}</td>
+        <td class="pl-6 text-gray-900 whitespace-nowrap">{{ product?.name }}</td>
         <!--Products In Warehouse -->
         <td class="px-6 py-4" :class="{'text-red-600': product.inWarehouse + product.inOrders < 10}">{{ product.inWarehouse }}</td>
         <!--Products In Warehouse -->
