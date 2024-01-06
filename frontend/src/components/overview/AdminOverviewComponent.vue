@@ -256,10 +256,10 @@ export default {
 
     async fetchAllUsers() {
       this.allUsers = await this.userService.fetchAll();
-      // console.log('all users: ', [...this.allUsers]);
-      this.availableUsers = this.allUsers.filter(user => user.id !== this.userId);
-      // console.log('available users: ', [...this.availableUsers]);
+      const currentUserId = getId();
+      this.availableUsers = this.allUsers.filter(user => user.id !== currentUserId);
     },
+
 
     async fetchUserReports() {
       this.reports = await this.reportService.fetchReports();
