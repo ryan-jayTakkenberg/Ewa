@@ -201,6 +201,7 @@ export default {
       selectedReports: [],
       reportBody: "",
       receiverId: "",
+      userId: getId(),
       senderId: getId(),
       senderUsername: getUsername(),
       allUsers: [],
@@ -256,10 +257,10 @@ export default {
 
     async fetchAllUsers() {
       this.allUsers = await this.userService.fetchAll();
-      const currentUserId = getId();
-      this.availableUsers = this.allUsers.filter(user => user.id !== currentUserId);
+      // console.log('all users: ', [...this.allUsers]);
+      this.availableUsers = this.allUsers.filter(user => user.id !== this.userId);
+      // console.log('available users: ', [...this.availableUsers]);
     },
-
 
     async fetchUserReports() {
       this.reports = await this.reportService.fetchReports();
