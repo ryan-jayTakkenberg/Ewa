@@ -113,6 +113,8 @@ export default {
 
     async fetchReports() {
       this.reports = await this.reportService.fetchReports();
+      this.unresolvedReports = this.reports.filter(report => report.senderRole !== 'ADMIN').length.toString();
+
       // console.log('Fetched reports: ', [...this.reports]);
     },
 
@@ -168,7 +170,7 @@ export default {
           console.log('An error occurred when trying to delete the report with id:', report.id);
         }
       }
-
+      this.unresolvedReports = this.reports.length
       this.selectedReports = [];
       this.modal = false;
 
@@ -287,12 +289,10 @@ export default {
   },
 
   watch: {
-    '$route': {
-      immediate: true,
-      handler(to, from) {
-        // Call your data fetching methods here
-        this.fetchReports();
-
+    '$route'(to, from) {
+      // Check if the route has changed to the Overview page
+      if (to.path === '/admin-overview' || to.path === '/viewer-overview') {
+        this.reloadData();
       }
     }
   },
