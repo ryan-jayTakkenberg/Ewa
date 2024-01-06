@@ -154,7 +154,6 @@ export default {
       username: getUsername(),
       userId: getId(),
       currentTeam: null,
-      currentWarehouse: null,
       allProjects: [],
       userProjects: [],
       reports: [],
