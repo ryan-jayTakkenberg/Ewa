@@ -87,7 +87,7 @@ public class Product_OrderController {
     }
 
     /**
-     * Edit a product_order from the database
+     * Edit a product_order from the database wil create new one if not exists
      *
      * @param jwtInfo      the json web token
      * @param productOrder the product_order to add or edit
@@ -97,9 +97,10 @@ public class Product_OrderController {
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     private Product_Order putProductOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Product_Order productOrder) {
-        if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to edit a product");
-        if (productOrderRepo.findById(productOrder.getId()) == null)
-            throw new NotFoundException("No ordered product found for id: " + productOrder.getId());
+        if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to edit or create a product order");
+
+        Product product = productRepo.findById(productOrder.getProduct().getId());
+        if (product == null) throw new NotFoundException("No product found for id: " + productOrder.getProduct().getId());
 
         return productOrderRepo.save(productOrder);
     }

@@ -1,6 +1,7 @@
 import Order from "@/models/order";
 import {deleteAPI, getAPI, postAPI, putAPI, responseOk} from "@/backend";
 import {classToObject} from "@/models/helper";
+import User from "@/models/user";
 
 export class OrderAdaptor {
     static ENDPOINT = "/api/orders";
@@ -61,7 +62,7 @@ export class OrderAdaptor {
 
     async asyncDeleteById(id) {
         try {
-            const response = await deleteAPI(`${OrderAdaptor.ENDPOINT}/${id}`);
+            const response = await deleteAPI(`${OrderAdaptor.ENDPOINT}/${id}/cancel`);
             if (!responseOk(response)) return response;
 
             // Update the clientside order list
@@ -72,49 +73,51 @@ export class OrderAdaptor {
             return {};
         }
     }
-
-    // ...
-    async asyncConfirm(id) {
+    async asyncConfirmById(id) {
         try {
-            const response = await deleteAPI(`${OrderAdaptor.ENDPOINT}/${id}`);
+            const response = await putAPI(`${OrderAdaptor.ENDPOINT}/${id}/confirm`);
             const data = response.data;
+            if (!responseOk(response)) {
+                console.error(data);
+                return {};
+            }
+            // Update the clientside order list
+            let index = Order.orders.findIndex(o => o.id === id);
+            let orderClass = Order.orders[index];
+            if (orderClass) {
+                orderClass.injectAttributes(data);
+                Order.orders[index] = orderClass;
+                return orderClass;
+            }
 
+            return data;
+        } catch (error) {
+            return {};
+        }
+    }
+
+    async asyncCancelById(id) {
+        try {
+            const response = await putAPI(`${OrderAdaptor.ENDPOINT}/${id}/cancel`);
+            const data = response.data;
             if (!responseOk(response)) {
                 console.error(data);
                 return {};
             }
 
-            // Create a new Order instance and update the clientside order list
-            const updatedOrder = new Order(data.id, data.name, data.orderedFrom, data.orderDate, data.estimatedDeliveryDate,
-                data.team, data.orderedProducts, data.status, data.totalPrice);
-
-            Order.orders[Order.orders.findIndex(o => o.id === updatedOrder.id)] = updatedOrder;
-
-            return data;
-        } catch (error) {
-            return {};
-        }
-    }
-
-    async asyncCancel(id) {
-        try {
-            const response = await postAPI(`${OrderAdaptor.ENDPOINT}/${id}/delete`);
-            const data = response.data;
-
-            if (!responseOk(response)) return response;
-
-            // Create a new Order instance and update the clientside order list
-            const updatedOrder = new Order(data.id, data.name, data.orderedFrom, data.orderDate, data.estimatedDeliveryDate,
-                data.team, data.orderedProducts, data.status, data.totalPrice);
-
-            Order.orders[Order.orders.findIndex(o => o.id === updatedOrder.id)] = updatedOrder;
+            // Update the clientside order list
+            let index = Order.orders.findIndex(o => o.id === id);
+            let orderClass = Order.orders[index];
+            if (orderClass) {
+                orderClass.injectAttributes(data);
+                Order.orders[index] = orderClass;
+                return orderClass;
+            }
 
             return data;
         } catch (error) {
             return {};
         }
     }
-// ...
-
 
 }

@@ -43,11 +43,8 @@ export class UserAdaptor {
         console.log(user);
         try {
             const response = await putAPI(UserAdaptor.ENDPOINT, user);
-            console.log(response);
             if (!responseOk(response)) return response;
-
             const data = response.data
-
             // Update the clientside user list
             let index = User.users.findIndex(o => o.id === user.id);
             let userClass = User.users[index];

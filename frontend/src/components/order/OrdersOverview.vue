@@ -9,10 +9,12 @@ import OrderRowComponent from "@/components/order/OrderRowComponent.vue";
 import SolarPagination from "@/components/general/SolarPagination.vue";
 
 import CreateOrderModal from "@/components/order/order-modals/CreateOrderModal.vue";
+import EditOrderModal from "@/components/order/order-modals/EditOrderModal.vue";
 import CancelOrderModal from "@/components/order/order-modals/CancelOrderModal.vue";
 import ConfirmOrderModal from "@/components/order/order-modals/ConfirmOrderModal.vue";
 import ReportComponent from "@/components/manage/ReportComponent.vue";
 import Order from "@/models/order";
+
 
 export default {
   name: "OrdersOverview",
@@ -20,6 +22,7 @@ export default {
     ReportComponent,
     ConfirmOrderModal,
     CreateOrderModal,
+    EditOrderModal,
     CancelOrderModal,
     SolarDropdownMenuItem,
     TitleComponent,
@@ -100,11 +103,20 @@ export default {
     },
 
     // todo edit order
-    // async editOrder(updated) {
-    //   this.closeModal();
-    //   await this.orderService.asyncUpdate(updated)
-    //   this.updateTable();
-    // },
+    async editOrder(updatedOrder, updatedOrderedProducts) {
+      updatedOrder = await this.orderService.asyncUpdate(updatedOrder);
+      this.closeModal();
+      for (const updatedOrderedProduct of updatedOrderedProducts) {
+        // Set orderId for each orderedProduct in orderedProducts
+        updatedOrderedProduct.orderId = updatedOrder.id;
+        // Convert object to json and
+        const orderedProductJson = JSON.stringify(updatedOrderedProduct);
+        // Create orderedProduct
+        await this.product_OrderService.asyncUpdate(orderedProductJson);
+      }
+
+      this.updateTable();
+    },
 
     // todo Deletion possible or not ?
     // async deleteOrder() {
@@ -118,7 +130,6 @@ export default {
       this.closeModal();
       const confirmedOrder = this.selectedOrder;
       await this.orderService.asyncConfirmById(confirmedOrder.id);
-      await confirmedOrder.confirmDatabase();
     },
 
     async cancelOrder() {
@@ -221,12 +232,12 @@ export default {
       :on-close="closeModal"
       @create="createOrder"
   />
-  <!--  <EditOrderModal-->
-  <!--      v-if="showEditModal"-->
-  <!--      :on-close="closeModal"-->
-  <!--      :user="selectedUser"-->
-  <!--      @edit-order="editOrder"-->
-  <!--  />-->
+  <EditOrderModal
+      v-if="showEditModal"
+      :on-close="closeModal"
+      :order="selectedOrder"
+      @edit="editOrder"
+  />
 
   <CancelOrderModal
       v-if="showCancelModal" :order="selectedOrder"
