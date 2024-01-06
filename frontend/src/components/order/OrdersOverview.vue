@@ -30,7 +30,7 @@ export default {
     SolarTable,
     SolarPagination,
   },
-  inject: ['orderService'],
+  inject: ['orderService', 'product_OrderService'],
   data() {
     return {
       filterValue: '', // Store the input value for searching orders
@@ -85,9 +85,17 @@ export default {
         this.currentPage++;
       }
     },
-    async createOrder(createdOrder) {
+    async createOrder(createdOrder, orderedProducts) {
       this.closeModal();
-      await this.orderService.asyncCreate(createdOrder);
+      createdOrder = await this.orderService.asyncCreate(createdOrder);
+      for (const orderedProduct of orderedProducts) {
+        // Set orderId for each orderedProduct in orderedProducts
+        orderedProduct.orderId = createdOrder.id;
+        // Convert object to json and
+        const orderedProductJson = JSON.stringify(orderedProduct);
+        // Create orderedProduct
+        await this.product_OrderService.asyncCreate(orderedProductJson);
+      }
       this.updateTable();
     },
 
