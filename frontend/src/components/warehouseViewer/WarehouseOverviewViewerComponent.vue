@@ -79,13 +79,13 @@ export default {
       <!-- Searchbar -->
       <SearchBarComponent class="mx-4" place-holder="Search For Warehouses" @input="handleInputValueChange"></SearchBarComponent></div>
 
-      <SolarTable :columns="['Warehouse', 'Location', 'Address', 'Team(s)', 'Action']">
+      <SolarTable :columns="['Warehouse', 'Location', 'Address', 'Team(s)', /* 'Action' */]">
         <WarehouseRowComponent
             v-for="(warehouse) in userWarehouses"
             :key="warehouse.id"
             :warehouse="warehouse"
             :isChecked="warehouse.isChecked">
-            @show-more="showMoreDetails">
+<!--            @show-more="showMoreDetails">-->
         </WarehouseRowComponent>
       </SolarTable>
 

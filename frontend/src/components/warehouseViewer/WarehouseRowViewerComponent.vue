@@ -15,9 +15,9 @@
 
     <td>{{ warehouse.teams ? warehouse.teams.map(team => team.name).join(', ') : 'N/A' }}</td>
 
-    <td class="px-6 py-4">
-      <div @click="showMore" class="edit-user-btn">{{ showedit ? 'Close details' : 'See details' }}</div>
-    </td>
+<!--    <td class="px-6 py-4">-->
+<!--      <div @click="showMore" class="edit-user-btn">{{ showedit ? 'Close details' : 'See details' }}</div>-->
+<!--    </td>-->
   </tr>
 
   <tr v-if="showedit">
