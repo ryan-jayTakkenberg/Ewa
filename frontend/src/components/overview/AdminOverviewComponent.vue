@@ -1,4 +1,177 @@
+<template>
+
+  <OverviewModal
+      v-if="modal"
+      @confirm-delete="deleteReport"
+      @cancel-delete="closeModal"
+      :selectedReports="selectedReports"
+  />
+
+  <!--- user ---------------------------------------------------------------------------------->
+  <div class="sectionContainer">
+
+    <div class="header">
+      <h1 class="hiText">Hi, {{ capitalizeFirstLetter(username) }}</h1>
+
+      <div class="dateContainer">
+        <div class="dayOfTheWeek">{{ dayOfTheWeek }}</div>
+        <div class="dayOfTheWeekNum">{{ numberOfTheDay }}</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!--- forecasting ---------------------------------------------------------------------------------->
+  <div class="sectionContainer">
+
+    <div class="forecastingWrapper">
+      <div class="dataContainer">
+        <p class="title">Products to be installed:</p>
+        <p class="value">{{ productsSold }}</p>
+      </div>
+
+      <div class="dataContainer">
+        <p class="title">Total Ongoing Projects:</p>
+        <p class="value">{{ allProjects.length }}</p>
+      </div>
+
+      <div class="dataContainer">
+        <p class="title">Reports:</p>
+        <p class="value">{{ reports.length }}</p>
+      </div>
+
+      <div class="dataContainer">
+        <p class="title">Global Amount of Stock:</p>
+        <p class="value">{{ globalTotalStock }}</p>
+      </div>
+
+      <div class="dataContainer">
+        <p class="title">Amount of warehouses with low stock:</p>
+        <p class="value">{{ warehousesLowStock }}</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!--- inventory ---------------------------------------------------------------------------------->
+  <div class="sectionContainer">
+
+    <h1 class="inventoryTitle">Inventory</h1>
+
+    <SolarTable :columns="['product', 'quantity', 'ordered']">
+      <tr class="border-gray-100 border-b text-base font-medium" v-for="(product, index) in this.productTotals" v-bind:key="index">
+        <!--Product Name -->
+        <td class="pl-6 text-gray-900 whitespace-nowrap">{{ product.name }}</td>
+        <!--Products In Warehouse -->
+        <td class="px-6 py-4" :class="{'text-red-600': product.inWarehouse + product.inOrders < 10}">{{ product.inWarehouse }}</td>
+        <!--Products In Warehouse -->
+        <td class="px-6 py-4" :class="{'text-red-600': product.inWarehouse < 10 && !product.inOrders}">{{ product.inOrders }}</td>
+      </tr>
+    </SolarTable>
+
+  </div>
+
+  <!--- projects ---------------------------------------------------------------------------------->
+  <div class="sectionContainer">
+
+    <h1 class="sectionTitle">All ongoing projects:</h1>
+
+    <div class="projectContainer" v-if="allProjects?.length > 0">
+
+      <div class="projectWrapper" v-for="(project, index) in allProjects" :key="index">
+        <div class="projectHeader">
+          <div class="projectTitle">Project: {{ project.projectName }}</div>
+        </div>
+
+        <div class="projectDescription">
+          <div class="infoTitleProjects">
+            <div class="descriptionTitle">Client:</div>
+            <div class="descriptionTitle">Install Team:</div>
+            <div class="descriptionTitle">Install Date:</div>
+          </div>
+          <div class="infoValueProjects">
+            <div class="descriptionValue">{{ project.clientName }}</div>
+            <div class="descriptionValue">{{ project.team.name }}</div>
+            <div class="descriptionValue">{{ project.installDate }}</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="noProjectsMessage" v-else>There are currently no projects</div>
+
+  </div>
+
+  <!--- reports ---------------------------------------------------------------------------------->
+  <div class="sectionContainer">
+
+    <h1 class="sectionTitle">Reports</h1>
+
+    <div class="reportsContainerWrapper">
+
+      <div class="inboxReportsContainer">
+
+        <div class="inboxHeader">
+          <div class="reportContainerTitle">Inbox</div>
+
+          <div class="buttonWrapper">
+            <button class="replyReport" @click="replyReport">
+              <span class="material-symbols-outlined">reply</span>
+            </button>
+            <button class="deleteReport" @click="showModal">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="actualReports">
+          <div
+              class="reportWrapper"
+              v-for="(report, index) in reports"
+              :key="index"
+              @click="toggleSelected(index)"
+              :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
+
+            <div class="reportHeader">
+              <div class="reportSender"> {{ capitalizeFirstLetter(report.senderName) }} </div>
+              <div class="reportDate"> {{ report.date }} </div>
+            </div>
+
+            <div class="reportBody"> {{ report.body }} </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="sendReportsContainer">
+
+        <div class="sendReportInputWrapper">
+          <div class="sendReportInput">Send a report to:</div>
+
+          <div class="selectDropdown">
+            <select v-model="receiverId" class="reportReceiverSelect" ref="selectUser">
+              <option v-for="user in this.availableUsers" :value="user.id" :key="user.id">{{ capitalizeFirstLetter(user.name) }}</option>
+            </select>
+            <span class="material-symbols-outlined arrow">expand_more</span>
+          </div>
+
+        </div>
+
+        <textarea v-model="reportBody" placeholder="Type your report here..." class="reportInput"></textarea>
+        <button @click="postReport" class="sendReportButton">Send</button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</template>
+
 <script>
+
 import {getId, getUsername} from "@/data";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
 import Project from "@/models/project";
@@ -23,15 +196,15 @@ export default {
       warehousesLowStock: '3',
       globalTotalStock: '350',
       username: getUsername(),
-      projects: [],
-      projectsCount: Project.projects.length,
+      allProjects: [],
       reports: [],
       selectedReports: [],
       reportBody: "",
       receiverId: "",
       senderId: getId(),
       senderUsername: getUsername(),
-      users: [],
+      allUsers: [],
+      availableUsers: [],
       modal: false,
       ongoingProjects: "",
       warehouses: Warehouse.warehouses,
@@ -41,13 +214,14 @@ export default {
 
   mounted() {
     this.fetchAllUsers()
-    this.fetchReports()
+    this.fetchUserReports()
     this.fetchAllProjects()
     this.calculateTotalStock()
     this.calculateLowStockWarehouses()
   },
 
   methods: {
+
     calculateTotalStock() {
       let totalStock = 0;
 
@@ -59,6 +233,7 @@ export default {
 
       this.globalTotalStock = totalStock.toString();
     },
+
     calculateLowStockWarehouses() {
       let lowStockCount = 0;
 
@@ -79,43 +254,22 @@ export default {
       this.warehousesLowStock = lowStockCount.toString();
     },
 
-
     async fetchAllUsers() {
-      this.users = await this.userService.fetchAll();
+      this.allUsers = await this.userService.fetchAll();
+      // console.log('all users: ', [...this.allUsers]);
+      this.availableUsers = this.allUsers.filter(user => user.id !== this.userId);
+      // console.log('available users: ', [...this.availableUsers]);
     },
 
-    async fetchAllProjects() {
-      try {
-        const response = await getAPI("api/projects");
-
-        if (!responseOk(response)) {
-          console.error('Error fetching projects:', response.data);
-          return;
-        }
-
-        if (!Array.isArray(response.data)) {
-          console.error('Invalid JSON array received:', response.data);
-          return;
-        }
-
-        this.projects = response.data.map(data => new Project(
-            data.projectId,
-            data.projectName,
-            data.clientName,
-            data.installDate,
-            data.notes,
-            data.team
-        ));
-      } catch (error) {
-        console.error('An error occurred while fetching projects:', error);
-      }
-    },
-
-    async fetchReports() {
+    async fetchUserReports() {
       this.reports = await this.reportService.fetchReports();
       // console.log('Fetched reports: ', [...this.reports]);
     },
 
+    async fetchAllProjects() {
+      this.allProjects = await this.projectService.asyncFindAll();
+      // console.log('all projects: ', [...this.allProjects]);
+    },
 
     async postReport() {
 
@@ -145,6 +299,16 @@ export default {
       this.reportBody = '';
     },
 
+    replyReport() {
+
+      if (this.selectedReports.length !== 1) {
+        alert("Please select exactly one report to reply to.");
+        return;
+      }
+
+      this.receiverId = this.selectedReports[0].senderId;
+    },
+
     async deleteReport() {
 
       // Send delete request per selected report to the adaptor
@@ -156,14 +320,13 @@ export default {
         // Check if delete was successful (HTTP status code 200)
         if (deletedReport.status === 200) {
 
-          // console.log('Successfully deleted report:', deletedReport);
+          console.log('Successfully deleted report:', deletedReport);
 
           // Remove the deleted report from the reports array
           const indexToDelete = this.reports.findIndex((r) => r.id === report.id);
           if (indexToDelete !== -1) {
             this.reports.splice(indexToDelete, 1);
           }
-
         } else {
           console.log('An error occurred when trying to delete the report with id:', report.id);
         }
@@ -172,24 +335,7 @@ export default {
       this.selectedReports = [];
       this.modal = false;
 
-      console.log('Your current reports after delete: ', [...this.reports]);
-
-    },
-
-    replyReport() {
-      if (this.selectedReports.length !== 1) {
-        alert("Please select exactly one report to reply to.");
-        return;
-      }
-
-      // Set the receiverId to the id of the selected report's sender
-      this.receiverId = this.selectedReports[0].senderId;
-
-      // Find the index of the selected user and set it as the selected index
-      const selectedIndex = this.filteredUsers.findIndex(user => user.id === this.receiverId);
-      if (selectedIndex !== -1) {
-        this.$refs.selectUser.selectedIndex = selectedIndex;
-      }
+      // console.log('Your current reports after delete: ', [...this.reports]);
     },
 
     showModal() {
@@ -287,12 +433,10 @@ export default {
   },
 
   watch: {
-    '$route': {
-      immediate: true,
-      handler(to, from) {
-        // Call your data fetching methods here
-        this.fetchReports();
-
+    '$route'(to, from) {
+      // Check if the route has changed to the Overview page
+      if (to.path === '/admin-overview' || to.path === '/viewer-overview') {
+        this.reloadData();
       }
     }
   },
@@ -301,311 +445,33 @@ export default {
 
 </script>
 
-<template>
-
-  <OverviewModal
-      v-if="modal"
-      @confirm-delete="deleteReport"
-      @cancel-delete="closeModal"
-      :selectedReports="selectedReports"
-  />
-
-  <!--- Persona ---------------------------------------------------------------------------------->
-  <div class="personaContainer">
-
-    <div class="header">
-      <h1>Hi, {{ capitalizeFirstLetter(username) }}</h1>
-
-      <div class="dateContainer">
-        <div class="dayOfTheWeek">{{ dayOfTheWeek }}</div>
-        <div class="dayOfTheWeekNum">{{ numberOfTheDay }}</div>
-      </div>
-    </div>
-
-  </div>
-
-  <!--- Agenda ---------------------------------------------------------------------------------->
-  <div class="sectionContainer agenda">
-
-    <div class="insightContainer">
-      <p class="medium"> Products sold this week:</p>
-      <div class="meetingWrapper">
-        <div id="textBigGreen"> {{ productsSold }} </div>
-      </div>
-    </div>
-
-    <div class="insightContainer">
-      <p class="medium">Total Ongoing Projects:</p>
-      <div class="meetingWrapper">
-        <div id="textBig"> {{ projectsCount }} </div>
-      </div>
-    </div>
-
-    <div class="insightContainer">
-      <p class="medium">Reports:</p>
-      <div class="meetingWrapper">
-        <div id="textBigRed"> {{ unresolvedReports }} </div>
-      </div>
-    </div>
-
-    <!--- forecasting ------------------------------------------------------------------------------->
-    <div class="insightContainer">
-      <p class="medium"> Global Amount of Stock:</p>
-      <div class="meetingWrapper">
-        <div id="textBig"> {{ globalTotalStock }} </div>
-      </div>
-    </div>
-
-    <div class="insightContainer">
-      <p class="medium">Amount of warehouses with low stock:</p>
-      <div class="meetingWrapper">
-        <div id="textBigRed"> {{ warehousesLowStock }} </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <!--- inventory ---------------------------------------------------------------------------------->
-  <div class="sectionContainer">
-
-    <h1 class="sectionTitle">Inventory</h1>
-
-    <SolarTable :columns="['product', 'quantity', 'ordered']">
-      <tr class="border-gray-100 border-b text-base font-medium" v-for="(product, index) in this.productTotals" v-bind:key="index">
-        <!--Product Name -->
-        <td class="pl-6 text-gray-900 whitespace-nowrap">{{ product.name }}</td>
-        <!--Products In Warehouse -->
-        <td class="px-6 py-4" :class="{'text-red-600': product.inWarehouse + product.inOrders < 10}">{{ product.inWarehouse }}</td>
-        <!--Products In Warehouse -->
-        <td class="px-6 py-4" :class="{'text-red-600': product.inWarehouse < 10 && !product.inOrders}">{{ product.inOrders }}</td>
-      </tr>
-    </SolarTable>
-
-  </div>
-
-  <!--- projects ---------------------------------------------------------------------------------->
-  <div class="sectionContainer">
-
-    <h1 class="sectionTitle">Ongoing Projects</h1>
-    <div class="projectContainer">
-
-      <div class="projectWrapper" v-for="(project, index) in projects" :key="index">
-        <div class="projectHeader">
-          <div class="projectTitle">{{ project.projectName }}</div>
-          <div class="statusWrapper">
-<!--            <div class="projectStatus"> Status: </div>-->
-<!--            <div class="statusColor" :style="{ background: getStatusColor(project) }"></div>-->
-          </div>
-        </div>
-
-        <div class="projectDescription">
-          <div class="infoTitle">
-            <div class="descriptionTitle">Client:</div>
-            <div class="descriptionTitle">Install Team:</div>
-            <div class="descriptionTitle">Install Date:</div>
-          </div>
-          <div class="infoValue">
-            <div class="descriptionValue">{{ project.clientName }}</div>
-            <div class="descriptionValue">{{ project.team.name }}</div>
-            <div class="descriptionValue">{{ project.installDate }}</div>
-          </div>
-        </div>
-<!--        <p>Click for more details</p>-->
-
-      </div>
-    </div>
-  </div>
-
-  <!--- reports ---------------------------------------------------------------------------------->
-  <div class="sectionContainer">
-
-    <div class="reportsHeader">
-      <h1 class="sectionTitle">Reports</h1>
-      <div class="buttonContainer">
-      </div>
-    </div>
-
-    <div class="reportsContainerWrapper">
-
-      <div class="reportsContainer">
-
-        <div class="inboxHeader">
-          <div class="containerTitle">Inbox</div>
-
-          <div class="buttonWrapper">
-            <button class="replyReport" @click="replyReport">
-              <span class="material-symbols-outlined">reply</span>
-            </button>
-            <button class="deleteReport" @click="showModal">
-              <span class="material-symbols-outlined">delete</span>
-            </button>
-            <button class="filterReport">
-              <span class="material-symbols-outlined">filter_alt</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="actualReports">
-          <div
-              class="reportWrapper"
-              v-for="(report, index) in reports"
-              :key="index"
-              @click="toggleSelected(index)"
-              :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
-
-            <div class="reportHeader">
-              <div class="reportSender"> {{ capitalizeFirstLetter(report.senderName) }} </div>
-              <div class="reportDate"> {{ report.date }} </div>
-            </div>
-
-            <div class="reportBody"> {{ report.body }} </div>
-
-          </div>
-        </div>
-
-      </div>
-
-      <div class="sendReportsContainer">
-
-        <div class="wrapper">
-          <label>Send a report to:</label>
-          <select v-model="receiverId" class="reportReceiver" ref="selectUser">
-            <option v-for="user in filteredUsers" :value="user.id" :key="user.id">{{ user.name }}</option>
-          </select>
-        </div>
-
-        <textarea v-model="reportBody" placeholder="Type your report here..." class="reportInput"></textarea>
-        <button @click="postReport" class="sendReportButton">Send</button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-</template>
-
 <style scoped>
 
-.insightContainer:nth-child(4) {
-  border-right: 2px solid #e5e5e5;
-  //padding-right: 1rem;
-  //margin-right: 1rem;
-}
-
-#textBig, #textBigRed, #textBigGreen {
-  font-size: 3rem;
-  text-align: center;
-  width: 100%;
-  font-weight: 500;
-  line-height: 0.8;
-}
-
-#textBigGreen{
-  color: green;
-}
-#textBigRed{
-  color: red;
-}
-.sectionHeading {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #222;
-  text-align: center;
-  margin: 2rem 0 1rem;
-}
-
-#sectionTitles {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
-}
-
-.agenda {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-  align-items: flex-start;
-}
-
-.insightContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  width: auto;
-  height: auto;
-  //flex: 1 0 auto;
-}
-
-#warehouseSelect {
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-.personaContainer {
+.sectionContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 3rem 3rem 2rem 3rem;
-  border-bottom: 2px solid #e5e5e5;
+  padding: 2rem 3rem;
+  border-bottom: 2px solid var(--col-border);
+}
+
+.sectionTitle {
+  text-align: left;
+  font-size: var(--font-size-medium);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
 }
 
 .header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
 }
 
-.welcomeContainer {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
-
-h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #222;
-  margin-bottom: 2rem;
-}
-
-.infoContainer {
-  display: flex;
-  gap: 1rem;
-}
-
-.medium {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #999;
-}
-
-.bold {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #222;
-  height: 25px;
-}
-
-.sectionContainer {
-  width: 100%;
-  padding: 2rem 3rem;
-  border-bottom: 2px solid #e5e5e5;
-}
-
-.sectionContainer.agenda {
-  display: flex;
-  gap: 1rem;
-  width: 100%;
-  padding: 2rem 3rem;
-  border-bottom: 2px solid #e5e5e5;
-  overflow-x: auto;
+.hiText {
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
 }
 
 .dateContainer {
@@ -615,27 +481,50 @@ h1 {
   flex-direction: column;
   width: 100px;
   height: 100px;
-  background: #f5f5f5;
+  padding-top: 5px;
+  background: var(--col-light-grey);
   border-radius: 10px;
 }
 
 .dayOfTheWeek {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #222;
+  color: var(--col-black);
 }
 
 .dayOfTheWeekNum {
   font-size: 2rem;
   font-weight: 800;
-  color: #222;
+  color: var(--col-black);
 }
 
-.sectionTitle {
+.forecastingWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dataContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.value {
+  font-size: 40px;
+  font-weight: 600;
+}
+
+.inventoryTitle {
   text-align: left;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #222;
+  font-size: var(--font-size-medium);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
+  margin-bottom: 2rem;
 }
 
 .projectContainer {
@@ -648,33 +537,33 @@ h1 {
   margin-top: 1rem;
 }
 
+.noProjectsMessage {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  margin-top: 2rem;
+}
+
 .projectContainer::-webkit-scrollbar {
   width: 5px;
 }
 
 .projectContainer::-webkit-scrollbar-thumb {
-  background-color: #e5e5e5;
+  background-color: var(--col-border);
   border-radius: 10px;
 }
 
 .projectContainer::-webkit-scrollbar-track {
-  background-color: #f5f5f5;
+  background-color: var(--col-light-grey);
   border-radius: 10px;
 }
 
-.descriptionTitle {
-  font-weight: 600;
-}
-
 .projectWrapper {
-  min-width: 500px;
-  width: auto;
-  flex: 0 0 auto;
-  background: #fff;
-  border: 2px solid #ccc;
+  min-width: 400px;
+  height: auto;
+  background: var(--col-white);
+  border: 2px solid var(--col-black);
   border-radius: 5px;
   padding: 1rem;
-  cursor: pointer;
 }
 
 .projectHeader {
@@ -686,8 +575,8 @@ h1 {
 
 .projectTitle {
   font-size: 1.2rem;
-  font-weight: 700;
-  color: #222;
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
 }
 
 .projectDescription {
@@ -695,19 +584,18 @@ h1 {
   gap: 2rem;
 }
 
+.descriptionTitle {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
+  height: 25px;
+}
+
 .descriptionValue {
-  font-weight: 300;
-}
-
-.statusWrapper {
-  display: flex;
-  align-items: center;
-}
-
-p {
-  //margin-top: 2rem;
-  font-weight: 300;
-  color: #222;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--col-black);
+  height: 25px;
 }
 
 .reportsContainerWrapper {
@@ -715,9 +603,10 @@ p {
   justify-content: space-between;
   gap: 1rem;
   width: 100%;
+  margin-top: 2rem;
 }
 
-.reportsContainer {
+.inboxReportsContainer {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -728,31 +617,13 @@ p {
   border-radius: 10px;
 }
 
-.reportsHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 50%;
-  margin-bottom: 1rem;
-}
-
-.reportWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  min-height: 150px;
-  height: auto;
-  flex: 0 0 auto;
-  background: #fff;
-  padding: 1rem;
-  border-radius: 5px;
-  border: 1px solid #e5e5e5;
-  cursor: pointer;
+.reportContainerTitle {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
 }
 
 .selected {
-  outline: 2px solid #222;
+  outline: 2px solid var(--col-black);
 }
 
 .sendReportsContainer {
@@ -762,18 +633,58 @@ p {
   padding: 2rem;
   height: 500px;
   width: 100%;
-  background: #f5f5f5;
+  background: var(--col-light-grey);
   border-radius: 10px;
 }
 
-.containerTitle {
-  font-size: 1em;
-  font-weight: 600;
-  color: #222;
+.sendReportInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: auto;
+}
+
+.sendReportInput {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
+  width: 200px;
+}
+
+.selectDropdown {
+  position: relative;
+  height: 50px;
+  width: 100%;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.material-symbols-outlined.arrow {
+  position: absolute;
+  top: 28%;
+  right: 25px;
+  color: var(--col-black);
+  font-variation-settings:
+      'FILL' 0,
+      'wght' 500,
+      'GRAD' 0,
+      'opsz' 40
+}
+
+.reportReceiverSelect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  padding-left: 15px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 .reportInput {
-  height: 80%;
+  height: 50%;
   padding: 0.5rem;
   border-radius: 5px;
   resize: vertical;
@@ -782,12 +693,12 @@ p {
 }
 
 .sendReportButton {
-  width: 100px;
+  width: 150px;
   height: 50px;
-  background: #c5ce2c;
-  color: #fff;
-  font-size: 1em;
-  font-weight: 600;
+  background: var(--col-solar);
+  color: var(--col-white);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
   border-radius: 5px;
   outline: none;
   cursor: pointer;
@@ -798,8 +709,8 @@ p {
   align-items: center;
   justify-content: space-between;
   border-radius: 10px;
-  padding: 0 0 0 1rem;
-  background: #fff;
+  padding: 0 1rem;
+  background: var(--col-white);
 }
 
 .actualReports {
@@ -827,26 +738,41 @@ p {
   border-radius: 10px;
 }
 
+.reportWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  min-height: 150px;
+  height: auto;
+  flex: 0 0 auto;
+  background: var(--col-white);
+  padding: 1rem;
+  border-radius: 5px;
+  border: 1px solid var(--col-border);
+  cursor: pointer;
+}
+
 .reportHeader {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--col-border);
   width: 100%;
 }
 
 .reportSender {
-  font-weight: 600;
-  color: #222;
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
 }
 
 .reportDate {
-  font-weight: 400;
-  color: #c5c5c5;
+  font-weight: var(--font-weight-medium);
+  color: var(--col-grey);
 }
 
 .reportBody {
-  font-weight: 400;
-  color: #222;
+  font-weight: var(--font-weight-medium);
+  color: var(--col-black);
 }
 
 .buttonWrapper {
@@ -854,9 +780,8 @@ p {
   gap: 1rem;
 }
 
-.filterReport,
-.deleteReport,
-.replyReport {
+.replyReport,
+.deleteReport {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -867,11 +792,10 @@ p {
   cursor: pointer;
 }
 
-.filterReport:hover,
-.deleteReport:hover,
-.replyReport:hover {
-  background: #c5ce2c;
-  color: #fff;
+.replyReport:hover,
+.deleteReport:hover {
+  background: var(--col-solar);
+  color: var(--col-white);
 }
 
 .material-symbols-outlined {
@@ -880,21 +804,6 @@ p {
       'wght' 500,
       'GRAD' 0,
       'opsz' 40
-}
-
-label {
-  font-weight: 500;
-  width: 35%;
-}
-
-.wrapper {
-  display: flex;
-}
-
-.reportReceiver {
-  border-radius: 5px;
-  padding: 0 0.5em;
-  width: 150px;
 }
 
 </style>

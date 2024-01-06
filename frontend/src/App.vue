@@ -177,13 +177,4 @@ export default {
   overflow: auto;
 }
 
-@media only screen and (max-width: 750px) {
-
-  .router-view-responsive {
-    width: calc(100vw - 70px);
-    margin-left: auto;
-  }
-
-}
-
 </style>

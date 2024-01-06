@@ -79,4 +79,18 @@ export class UserAdaptor {
         }
     }
 
+    async getById(id) {
+        try {
+            const response = await getAPI(`${UserAdaptor.ENDPOINT}/${id}`);
+            if (!responseOk(response)) return response;
+
+            // Update the clientside user list
+            // User.users = User.users.filter(o => o.id !== id);
+
+            return response.data;
+        } catch (error) {
+            return {};
+        }
+    }
+
 }

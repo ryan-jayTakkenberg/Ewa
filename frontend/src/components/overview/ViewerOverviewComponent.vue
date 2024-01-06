@@ -8,7 +8,7 @@
   />
 
   <!--- user ---------------------------------------------------------------------------------->
-  <div class="container">
+  <div class="sectionContainer">
 
     <div class="header">
       <h1 class="hiText">Hi, {{ capitalizeFirstLetter(username) }}</h1>
@@ -29,7 +29,7 @@
 
       <div class="infoValueContainer">
         <div class="infoValue">{{ currentTeam?.name ?? "Currently not in a team" }}</div>
-        <div class="infoValue">{{ this.userProjects?.length }}</div>
+        <div class="infoValue">{{ this.userProjects.length }}</div>
         <div class="infoValue"> {{ reports.length }}</div>
       </div>
 
@@ -38,10 +38,11 @@
   </div>
 
   <!--- projects ---------------------------------------------------------------------------------->
-  <div class="container">
+  <div class="sectionContainer">
 
     <h1 class="sectionTitle">Ongoing Projects for: {{capitalizeFirstLetter(username)}}</h1>
-    <div class="projectContainer">
+
+    <div class="projectContainer" v-if="userProjects?.length > 0">
 
       <div class="projectWrapper" v-for="(project, index) in userProjects" :key="index">
         <div class="projectHeader">
@@ -49,12 +50,12 @@
         </div>
 
         <div class="projectDescription">
-          <div class="infoTitle">
+          <div class="infoTitleProjects">
             <div class="descriptionTitle">Client:</div>
             <div class="descriptionTitle">Install Team:</div>
             <div class="descriptionTitle">Install Date:</div>
           </div>
-          <div class="infoValue">
+          <div class="infoValueProjects">
             <div class="descriptionValue">{{ project.clientName }}</div>
             <div class="descriptionValue">{{ project.team.name }}</div>
             <div class="descriptionValue">{{ project.installDate }}</div>
@@ -63,10 +64,13 @@
 
       </div>
     </div>
+
+    <div class="noProjectsMessage" v-else>There are currently no projects</div>
+
   </div>
 
   <!--- reports ---------------------------------------------------------------------------------->
-  <div class="container">
+  <div class="sectionContainer">
 
     <h1 class="sectionTitle">Reports</h1>
 
@@ -111,9 +115,14 @@
 
         <div class="sendReportInputWrapper">
           <div class="sendReportInput">Send a report to:</div>
-          <select v-model="receiverId" class="reportReceiverSelect" ref="selectUser">
-            <option v-for="user in availableUsers" :value="user.id" :key="user.id">{{ capitalizeFirstLetter(user.name) }}</option>
-          </select>
+
+          <div class="selectDropdown">
+            <select v-model="receiverId" class="reportReceiverSelect" ref="selectUser">
+              <option v-for="user in this.availableUsers" :value="user.id" :key="user.id">{{ capitalizeFirstLetter(user.name) }}</option>
+            </select>
+            <span class="material-symbols-outlined arrow">expand_more</span>
+          </div>
+
         </div>
 
         <textarea v-model="reportBody" placeholder="Type your report here..." class="reportInput"></textarea>
@@ -125,22 +134,17 @@
 
   </div>
 
-
 </template>
 
 <script>
 
 import {getId, getUsername} from "@/data";
-import Project from "@/models/project";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
-import Team from "../../models/team";
-import User from "@/models/user";
-import {getAPI, responseOk} from "@/backend";
 
 export default {
 
   name: "UserOverviewComponent",
-  inject: ['reportService', 'projectService', 'teamsService', 'userService'],
+  inject: ['reportService', 'projectService', 'userService'],
   components: {
     "overview-modal": OverviewModal,
   },
@@ -150,7 +154,6 @@ export default {
       username: getUsername(),
       userId: getId(),
       currentTeam: null,
-      currentWarehouse: null,
       allProjects: [],
       userProjects: [],
       reports: [],
@@ -159,34 +162,49 @@ export default {
       senderId: getId(),
       senderName: getUsername(),
       receiverId: "",
-      users: [],
+      allUsers: [],
+      availableUsers: [],
       modal: false,
     }
   },
 
   mounted() {
     this.fetchAllUsers();
-    this.fetchReports();
-    this.fetchProjects();
-    this.getLoggedInUserTeam();
-    this.getLoggedInUserProjects();
+    this.fetchCurrentUserTeam();
+    this.fetchUserReports();
+    this.fetchUserProjects();
   },
 
   methods: {
 
     async fetchAllUsers() {
-      this.users = await this.userService.fetchAll();
-      // console.log('Fetched users: ', [...this.users]);
+      this.allUsers = await this.userService.fetchAll();
+      // console.log('all users: ', [...this.allUsers]);
+      this.availableUsers = this.allUsers.filter(user => user.id !== this.userId);
+      // console.log('available users: ', [...this.availableUsers]);
     },
 
-    async fetchReports() {
+    async fetchCurrentUserTeam() {
+      this.currentUser = await this.userService.getById(this.userId);
+      this.currentTeam = this.currentUser.team
+      // console.log("current user:", this.currentUser);
+    },
+
+    async fetchUserReports() {
       this.reports = await this.reportService.fetchReports();
       // console.log('Fetched reports: ', [...this.reports]);
     },
 
-    async fetchProjects() {
+    async fetchUserProjects() {
       this.allProjects = await this.projectService.asyncFindAll();
-      // console.log('Fetched projects: ', [...this.allProjects]);
+      // console.log('all projects: ', [...this.allProjects]);
+
+      if (this.currentTeam) {
+        this.userProjects = this.allProjects.filter(project => project.team.id === this.currentTeam.id);
+        // console.log('filtered projects: ', [...this.userProjects]);
+      } else {
+        this.userProjects = [];
+      }
     },
 
     async postReport() {
@@ -253,24 +271,7 @@ export default {
       this.selectedReports = [];
       this.modal = false;
 
-      console.log('Your current reports after delete: ', [...this.reports]);
-    },
-
-    getLoggedInUserTeam() {
-      const loggedInUser = User.users[0]; // Assuming there's only one user in the response
-
-      if (loggedInUser && loggedInUser.team) {
-        return this.currentTeam = loggedInUser.team;
-      } else {
-        return "";
-      }
-    },
-
-    getLoggedInUserProjects() {
-      this.userProjects = this.currentTeam && this.allProjects
-          ? this.allProjects.filter(project => project.team.id === this.currentTeam.id)
-          : [];
-      console.log(this.userProjects);
+      // console.log('Your current reports after delete: ', [...this.reports]);
     },
 
     showModal() {
@@ -306,16 +307,6 @@ export default {
 
   computed: {
 
-    User() {
-      return User
-    },
-    Team() {
-      return Team
-    },
-    Project() {
-      return Project
-    },
-
     dayOfTheWeek() {
       const today = new Date();
       today.setDate(today.getDate());
@@ -329,10 +320,6 @@ export default {
       return today.getUTCDate()
     },
 
-    availableUsers() {
-      // Filter out users with the same id as you, because you can't send a report to yourself
-     return this.users.filter(user => user.id !== this.userId);
-    },
   },
 
 }
@@ -341,7 +328,7 @@ export default {
 
 <style scoped>
 
-.container {
+.sectionContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -360,57 +347,52 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
 
-  .hiText {
-    font-size: var(--font-size-large);
-    font-weight: var(--font-weight-bold);
-    color: var(--col-black);
-  }
+.hiText {
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
+}
 
-  .dateContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 100px;
-    height: 100px;
-    background: #f5f5f5;
-    border-radius: 10px;
-  }
+.dateContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100px;
+  height: 100px;
+  padding-top: 5px;
+  background: var(--col-light-grey);
+  border-radius: 10px;
+}
 
-  .dayOfTheWeek {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #222;
-  }
+.dayOfTheWeek {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--col-black);
+}
 
-  .dayOfTheWeekNum {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #222;
-  }
-
+.dayOfTheWeekNum {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--col-black);
 }
 
 .userInfoContainer {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
+}
 
-  .infoTitle {
-    font-size: var(--font-size-small);
-    font-weight: var(--font-weight-medium);
-    color: var(--col-grey);
-    height: 25px;
-  }
+.infoTitle {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+}
 
-  .infoValue {
-    font-size: var(--font-size-small);
-    font-weight: var(--font-weight-bold);
-    color: var(--col-black);
-    height: 25px;
-  }
-
+.infoValue {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
 }
 
 .projectContainer {
@@ -421,57 +403,67 @@ export default {
   padding: 1rem 0.15rem;
   overflow-x: auto;
   margin-top: 1rem;
+}
 
-  .projectContainer::-webkit-scrollbar {
-    width: 5px;
-  }
+.noProjectsMessage {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  margin-top: 2rem;
+}
 
-  .projectContainer::-webkit-scrollbar-thumb {
-    background-color: var(--col-border);
-    border-radius: 10px;
-  }
+.projectContainer::-webkit-scrollbar {
+  width: 5px;
+}
 
-  .projectContainer::-webkit-scrollbar-track {
-    background-color: var(--col-light-grey);
-    border-radius: 10px;
-  }
+.projectContainer::-webkit-scrollbar-thumb {
+  background-color: var(--col-border);
+  border-radius: 10px;
+}
 
-  .projectWrapper {
-    min-width: 500px;
-    width: auto;
-    flex: 0 0 auto;
-    background: var(--col-white);
-    border: 2px solid var(--col-black);
-    border-radius: 5px;
-    padding: 1rem;
-  }
+.projectContainer::-webkit-scrollbar-track {
+  background-color: var(--col-light-grey);
+  border-radius: 10px;
+}
 
-  .projectHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
+.projectWrapper {
+  min-width: 400px;
+  height: auto;
+  background: var(--col-white);
+  border: 2px solid var(--col-black);
+  border-radius: 5px;
+  padding: 1rem;
+}
 
-  .projectTitle {
-    font-size: 1.2rem;
-    font-weight: var(--font-weight-bold);
-    color: var(--col-black);
-  }
+.projectHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
 
-  .projectDescription {
-    display: flex;
-    gap: 2rem;
-  }
+.projectTitle {
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
+}
 
-  .descriptionTitle {
-    font-weight: var(--font-weight-bold);
-  }
+.projectDescription {
+  display: flex;
+  gap: 2rem;
+}
 
-  .descriptionValue {
-    font-weight: var(--font-weight-small);
-  }
+.descriptionTitle {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
+  height: 25px;
+}
 
+.descriptionValue {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--col-black);
+  height: 25px;
 }
 
 .reportsContainerWrapper {
@@ -480,168 +472,198 @@ export default {
   gap: 1rem;
   width: 100%;
   margin-top: 2rem;
+}
 
-  .inboxReportsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 2rem;
-    height: 500px;
-    width: 100%;
-    background: #f5f5f5;
-    border-radius: 10px;
-  }
+.inboxReportsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  height: 500px;
+  width: 100%;
+  background: #f5f5f5;
+  border-radius: 10px;
+}
 
-  .selected {
-    outline: 2px solid var(--col-black);
-  }
+.reportContainerTitle {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+}
 
-  .sendReportsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 2rem;
-    height: 500px;
-    width: 100%;
-    background: var(--col-light-grey);
-    border-radius: 10px;
-  }
+.selected {
+  outline: 2px solid var(--col-black);
+}
 
-  .sendReportInputWrapper {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    height: 40px;
-  }
+.sendReportsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  height: 500px;
+  width: 100%;
+  background: var(--col-light-grey);
+  border-radius: 10px;
+}
 
-  .sendReportInput {
-    font-size: var(--font-size-small);
-    font-weight: var(--font-weight-bold);
-    color: var(--col-black);
-    width: 200px;
-  }
+.sendReportInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: auto;
+}
 
-  .reportReceiverSelect {
-    width: 100%;
-    border-radius: 5px;
-    padding: 10px;
-  }
+.sendReportInput {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
+  width: 200px;
+}
 
-  .reportInput {
-    height: 50%;
-    padding: 0.5rem;
-    border-radius: 5px;
-    resize: vertical;
-    min-height: 20%;
-    max-height: 75%;
-  }
+.selectDropdown {
+  position: relative;
+  height: 50px;
+  width: 100%;
+  border-radius: 5px;
+  padding: 10px;
+}
 
-  .sendReportButton {
-    width: 150px;
-    height: 50px;
-    background: var(--col-solar);
-    color: var(--col-white);
-    font-size: var(--font-size-small);
-    font-weight: var(--font-weight-bold);
-    border-radius: 5px;
-    outline: none;
-    cursor: pointer;
-  }
+.material-symbols-outlined.arrow {
+  position: absolute;
+  top: 28%;
+  right: 25px;
+  color: var(--col-black);
+  font-variation-settings:
+      'FILL' 0,
+      'wght' 500,
+      'GRAD' 0,
+      'opsz' 40
+}
 
-  .inboxHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 10px;
-    padding: 0 1rem;
-    background: var(--col-white);
-  }
+.reportReceiverSelect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  padding-left: 15px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
 
-  .actualReports {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    height: 500px;
-    width: 100%;
-    border-radius: 10px;
-    overflow-y: scroll;
-  }
+.reportInput {
+  height: 50%;
+  padding: 0.5rem;
+  border-radius: 5px;
+  resize: vertical;
+  min-height: 20%;
+  max-height: 70%;
+}
 
-  .actualReports::-webkit-scrollbar {
-    width: 10px;
-  }
+.sendReportButton {
+  width: 150px;
+  height: 50px;
+  background: var(--col-solar);
+  color: var(--col-white);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
 
-  .actualReports::-webkit-scrollbar-thumb {
-    background-color: #e5e5e5;
-    border-radius: 10px;
-  }
+.inboxHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px;
+  padding: 0 1rem;
+  background: var(--col-white);
+}
 
-  .actualReports::-webkit-scrollbar-track {
-    background-color: #f5f5f5;
-    border-radius: 10px;
-  }
+.actualReports {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  height: 500px;
+  width: 100%;
+  border-radius: 10px;
+  overflow-y: scroll;
+}
 
-  .reportWrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    width: 100%;
-    min-height: 150px;
-    height: auto;
-    flex: 0 0 auto;
-    background: var(--col-white);
-    padding: 1rem;
-    border-radius: 5px;
-    border: 1px solid var(--col-border);
-    cursor: pointer;
-  }
+.actualReports::-webkit-scrollbar {
+  width: 10px;
+}
 
-  .reportHeader {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--col-border);
-    width: 100%;
-  }
+.actualReports::-webkit-scrollbar-thumb {
+  background-color: #e5e5e5;
+  border-radius: 10px;
+}
 
-  .reportSender {
-    font-weight: var(--font-weight-bold);
-    color: var(--col-black);
-  }
+.actualReports::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
 
-  .reportDate {
-    font-weight: var(--font-weight-medium);
-    color: var(--col-grey);
-  }
+.reportWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  min-height: 150px;
+  height: auto;
+  flex: 0 0 auto;
+  background: var(--col-white);
+  padding: 1rem;
+  border-radius: 5px;
+  border: 1px solid var(--col-border);
+  cursor: pointer;
+}
 
-  .reportBody {
-    font-weight: var(--font-weight-medium);
-    color: var(--col-black);
-  }
+.reportHeader {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--col-border);
+  width: 100%;
+}
 
-  .buttonWrapper {
-    display: flex;
-    gap: 1rem;
-  }
+.reportSender {
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
+}
 
-  .replyReport,
-  .deleteReport {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 50px;
-    width: 50px;
-    background: none;
-    outline: none;
-    cursor: pointer;
-  }
+.reportDate {
+  font-weight: var(--font-weight-medium);
+  color: var(--col-grey);
+}
 
-  .replyReport:hover,
-  .deleteReport:hover {
-    background: var(--col-solar);
-    color: var(--col-white);
-  }
+.reportBody {
+  font-weight: var(--font-weight-medium);
+  color: var(--col-black);
+}
 
+.buttonWrapper {
+  display: flex;
+  gap: 1rem;
+}
+
+.replyReport,
+.deleteReport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
+  background: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.replyReport:hover,
+.deleteReport:hover {
+  background: var(--col-solar);
+  color: var(--col-white);
 }
 
 .material-symbols-outlined {

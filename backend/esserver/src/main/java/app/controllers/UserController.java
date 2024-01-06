@@ -9,7 +9,6 @@ import app.repositories.UserJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -35,6 +34,14 @@ public class UserController {
         // Check if the user is admin
 //        if (!jwtInfo.isAdmin()) {return List.of(userRepo.findById(jwtInfo.getId()));} // destroys report system
         return userRepo.findAll();
+    }
+
+    @GetMapping("/{id}")
+    private User getUserById(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
+
+        if (jwtInfo == null) throw new ForbiddenException("No token provided");
+        if (id == null) throw new BadRequestException("No valid ID provided for user");
+        return userRepo.findById(id);
     }
 
     /**
