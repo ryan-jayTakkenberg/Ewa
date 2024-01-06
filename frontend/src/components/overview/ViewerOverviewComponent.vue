@@ -8,7 +8,7 @@
   />
 
   <!--- user ---------------------------------------------------------------------------------->
-  <div class="container">
+  <div class="sectionContainer">
 
     <div class="header">
       <h1 class="hiText">Hi, {{ capitalizeFirstLetter(username) }}</h1>
@@ -38,9 +38,10 @@
   </div>
 
   <!--- projects ---------------------------------------------------------------------------------->
-  <div class="container">
+  <div class="sectionContainer">
 
     <h1 class="sectionTitle">Ongoing Projects for: {{capitalizeFirstLetter(username)}}</h1>
+
     <div class="projectContainer" v-if="userProjects?.length > 0">
 
       <div class="projectWrapper" v-for="(project, index) in userProjects" :key="index">
@@ -69,7 +70,7 @@
   </div>
 
   <!--- reports ---------------------------------------------------------------------------------->
-  <div class="container">
+  <div class="sectionContainer">
 
     <h1 class="sectionTitle">Reports</h1>
 
@@ -133,16 +134,12 @@
 
   </div>
 
-
 </template>
 
 <script>
 
 import {getId, getUsername} from "@/data";
-import Project from "@/models/project";
 import OverviewModal from "@/components/overview/OverviewModal.vue";
-import Team from "../../models/team";
-import User from "@/models/user";
 
 export default {
 
@@ -332,7 +329,7 @@ export default {
 
 <style scoped>
 
-.container {
+.sectionContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -430,7 +427,7 @@ export default {
 }
 
 .projectWrapper {
-  width: 500px;
+  min-width: 400px;
   height: auto;
   background: var(--col-white);
   border: 2px solid var(--col-black);
