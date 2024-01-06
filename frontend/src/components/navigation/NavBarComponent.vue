@@ -77,15 +77,15 @@ export default {
           <p class="nav-text">Warehouse</p>
         </router-link>
 
-        <router-link
-            v-if="(permissionLevel === 'viewer')"
-            to="/productViewer"
-            class="nav-button"
-            :class="{ active: isPageActive('productViewer') }"
-            @click="handleNavClick('productViewer')">
-          <span class="material-symbols-outlined nav-icon">inventory_2</span>
-          <p class="nav-text">Product</p>
-        </router-link>
+<!--        <router-link-->
+<!--            v-if="(permissionLevel === 'viewer')"-->
+<!--            to="/productViewer"-->
+<!--            class="nav-button"-->
+<!--            :class="{ active: isPageActive('productViewer') }"-->
+<!--            @click="handleNavClick('productViewer')">-->
+<!--          <span class="material-symbols-outlined nav-icon">inventory_2</span>-->
+<!--          <p class="nav-text">Product</p>-->
+<!--        </router-link>-->
 
 <!--        <router-link-->
 <!--            v-if="(permissionLevel === 'viewer')"-->
@@ -107,7 +107,7 @@ export default {
             @click="handleNavClick('overview-admin')">
           <span class="material-symbols-outlined nav-icon">overview_key</span>
           <p class="nav-text">Overview</p>
-          <span class="notification-indicator bg-danger-subtle text-danger">3</span>
+<!--          <span class="notification-indicator bg-danger-subtle text-danger">3</span>-->
         </router-link>
 
         <router-link
@@ -118,7 +118,7 @@ export default {
             @click="handleNavClick('orders')">
           <span class="material-symbols-outlined nav-icon">orders</span>
           <p class="nav-text">Orders</p>
-          <span class="notification-indicator bg-danger-subtle text-danger">3</span>
+<!--          <span class="notification-indicator bg-danger-subtle text-danger">3</span>-->
         </router-link>
 
         <router-link
@@ -192,7 +192,7 @@ export default {
   display: flex;
   flex-direction: column;
   z-index: 1;
-  width: 240px;
+  width: 280px;
   height: 100vh;
   background-color: #fff;
   border-right: 1px solid #e5e5e5;
@@ -325,10 +325,10 @@ export default {
   top: -22px;
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: 600px) {
   .navbar {
     position: absolute;
-    width: 60vw;
+    width: 100vw;
     display: flex;
   }
 }

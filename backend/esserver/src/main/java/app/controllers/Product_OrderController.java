@@ -23,6 +23,7 @@ public class Product_OrderController {
     private final Product_OrderJPARepository productOrderRepo;
     private final ProductJPARepository productRepo;
     private final OrderJPARepository orderRepo;
+
     public Product_OrderController(Product_OrderJPARepository productRepo, ProductJPARepository productRepo1, OrderJPARepository orderRepo) {
         this.productOrderRepo = productRepo;
         this.productRepo = productRepo1;
@@ -56,8 +57,8 @@ public class Product_OrderController {
     /**
      * Add a product_order relation to the database
      *
-     * @param jwtInfo      the json web token
-     * @param productOrder the productOrder to add
+     * @param jwtInfo the json web token
+     * @param json    the productOrder to add
      * @return the product_order if it was added successfully
      * @apiNote requires admin permission
      */
@@ -72,16 +73,15 @@ public class Product_OrderController {
         long amount = jsonBuilder.getLongFromField("amount");
 
         Product product = productRepo.findById(productId);
-        if (product == null) {
-            throw new NotFoundException("No product found for id: " + productId);
-        }
+        if (product == null) throw new NotFoundException("No product found for id: " + productId);
 
         Order order = orderRepo.findById(orderId);
-        if (order == null) {
-            throw new NotFoundException("No order found for id: " + orderId);
-        }
-
+        if (order == null) throw new NotFoundException("No order found for id: " + orderId);
         Product_Order product_order = new Product_Order(amount, product, order);
+
+        // Update order with the new ordered product
+        order.addOrderedProduct(product_order);
+        orderRepo.save(order);
 
         return productOrderRepo.save(product_order);
     }

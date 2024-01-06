@@ -7,7 +7,8 @@ export default {
   inject: ["teamsService"],
   props: {
     teams: {
-      type: Object,  // Use the UserModel as the prop type
+      type: Object,  // Use the
+      // UserModel as the prop type
       required: true,
     },
     isChecked: {

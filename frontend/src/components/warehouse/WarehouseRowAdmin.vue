@@ -29,6 +29,7 @@
 </template>
 
 <script>
+
 import Warehouse from "@/models/warehouse";
 import SolarTable from "@/components/general/SolarTable";
 

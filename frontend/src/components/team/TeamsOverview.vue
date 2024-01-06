@@ -33,6 +33,7 @@ export default {
       teams: [...Team.teams],
       selectedTeam: null,  // Track the selected user for editing
       isEditTeamModalOpen: false,
+
       isAddTeamsOpen: false,
       checkedTeams: [],
       isDeleteTeamModalOpen: false,

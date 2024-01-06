@@ -32,11 +32,9 @@ public class WarehouseController {
 
     @GetMapping
     private List<Warehouse> getWarehouses(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo){
-        if (jwtInfo.isAdmin()){
-            return warehouseRepository.findAll();
-        }
 
-        return List.of(warehouseRepository.findById(jwtInfo.getId()));
+        if (jwtInfo == null) throw new ForbiddenException("No token provided");
+        return warehouseRepository.findAll();
     }
 
     @PostMapping

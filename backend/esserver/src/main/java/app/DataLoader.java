@@ -118,6 +118,7 @@ public class DataLoader implements CommandLineRunner {
         order1.setEstimatedDeliveryDate(LocalDate.now().plusDays(7));
         order1.setTeam(team1);
         order1.setStatus(Order.OrderStatus.PENDING);
+        orderRepo.save(order1);
 
         // Add sample products to the order (assuming productRepo is a repository for Product)
         Product product1 = new Product("Product 1", 10.0, "Description 1");
@@ -130,11 +131,10 @@ public class DataLoader implements CommandLineRunner {
         Product_Order productOrder1 = new Product_Order(2, product1, order1);
         Product_Order productOrder2 = new Product_Order(3, product2, order1);
 
-        // Associate ordered products with the order
+        product_OrderRepo.save(productOrder1);
+        product_OrderRepo.save(productOrder2);
         order1.addOrderedProduct(productOrder1);
         order1.addOrderedProduct(productOrder2);
-
-        // Save the order along with associated product orders
         orderRepo.save(order1);
     }
 }

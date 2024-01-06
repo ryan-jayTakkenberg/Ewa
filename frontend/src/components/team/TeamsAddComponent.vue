@@ -26,6 +26,7 @@ export default {
   methods: {
     saveTeam() {
       const newTeam = {
+
         name: this.team.name,
         warehouse: this.team.warehouse,
       };

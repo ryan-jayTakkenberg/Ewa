@@ -6,6 +6,7 @@ import Product from "@/models/product";
 import SolarModal from "@/components/general/SolarModal.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
+import Product_Order from "@/models/product_order";
 
 export default {
   name: "CreateOrderModal",
@@ -19,18 +20,14 @@ export default {
         orderDate: '',
         estimatedDeliveryDate: '',
         team: '',
-        orderedProducts: [],
         status: '',
       },
       OrderStatusOptions: Order.Status,
       teamOptions: Team.teams,
-      productOrder:{
-        product: null,
-        amount: null,
-      },
-      selectedProduct: null,
       productOptions: [...Product.products],
-
+      productOrders: [], // Used for Product_Orders creation containing amount, productId and orderId
+      orderedProducts:[], // Used for keeping track of products for creating product orders and setting amount
+      selectedProduct: null,
     }
   },
   props: {
@@ -41,32 +38,34 @@ export default {
   },
   methods: {
     createOrder() {
+
+      const productOrders = this.orderedProducts.map((orderedProduct) => {
+        return new Product_Order(orderedProduct.amount, orderedProduct.product.id, null);
+      });
+      this.productOrders.push(...productOrders); // Merge arrays
+      console.log(this.productOrders);
+      console.log(this.orderedProducts);
       let newOrder = Order.createNewOrder();
       newOrder.injectAttributes(this.order);
-      this.$emit('create', newOrder);
+      this.$emit('create', newOrder, this.productOrders);
       console.log(newOrder);
     },
-    addProductsToOrder() {
-      let product = this.selectedProduct;
-      let amount = product.amount;
+    addProductToOrder() {
+      if (this.selectedProduct) {
+        // Create a new Product_Order instance and add it to the orderedProducts array
+        this.orderedProducts.unshift({ product: this.selectedProduct, amount: null });
 
-      // Create a plain object for the frontend product order
-      let productOrder = { product: product, amount: amount };
+        // Remove the selected product from the product options
+        const selectedIndex = this.productOptions.findIndex((product) => product.id === this.selectedProduct.id);
+        if (selectedIndex !== -1) this.productOptions.splice(selectedIndex, 1);
 
-      // Add selected product to the selected products array
-      this.order.orderedProducts.unshift(productOrder);
-
-      // Remove the selected product from the product options
-      const selectedIndex = this.productOptions.findIndex((product) => product.id === this.selectedProduct.id);
-      if (selectedIndex !== -1) this.productOptions.splice(selectedIndex, 1);
-
-      // Reset selectedProduct to null after adding it to selectedProducts
-      this.selectedProduct = null;
-
+        // Reset selectedProduct and selectedProductAmount after adding to orderedProducts
+        this.selectedProduct = null;
+      }
     },
     removeProduct(index) {
-      this.order.orderedProducts.splice(index, 1);
-    }
+      this.productOrders.splice(index, 1);
+    },
 
   }
 }
@@ -146,20 +145,20 @@ export default {
             <select id="products" v-model="selectedProduct" class="product-select">
               <option v-for="product in productOptions" :key="product.id" :value="product">{{ product.name }}</option>
             </select>
-            <SolarButton class="ml-2 add-productInfo-btn" button-text="Add" @click="addProductsToOrder"
-                         :disabled="!this.selectedProduct"
+            <SolarButton class="ml-2 add-productInfo-btn" button-text="Add" @click="addProductToOrder"
+                         :disabled="!selectedProduct"
             ></SolarButton>
           </div>
         </div>
       </div>
 
       <!-- Display ordered products -->
-      <div class="order-list" v-if="this.order.orderedProducts.length > 0">
+      <div class="order-list" v-if="orderedProducts.length > 0">
         <h2>Ordered Products:</h2>
         <SolarTable :columns="['Name', 'Price', 'Quantity', 'Action']">
-          <tr class="table-row" v-for="(orderedProduct, index) in this.order.orderedProducts" :key="index">
-            <td class="px-6 py-4 font-semibold text-base">{{ orderedProduct.product.name }}</td>
-            <td class="px-6 py-4">€ {{ orderedProduct.product.price }}</td>
+          <tr class="table-row" v-for="(orderedProduct, index) in orderedProducts" :key="index">
+            <td class="px-6 py-4 font-semibold text-base">{{ orderedProduct.product.name}}</td>
+            <td class="px-6 py-4">€ {{ orderedProduct.product.price}}</td>
             <td class="px-6 py-4">
               <input v-model="orderedProduct.amount"
                      type="number"
@@ -169,7 +168,7 @@ export default {
                      required>
             </td>
             <td class="px-6 py-4">
-              <div @click="removeProduct" class="remove-order-btn">Remove product</div>
+              <div @click="removeProduct(index)" class="remove-order-btn">Remove product</div>
             </td>
           </tr>
         </SolarTable>
