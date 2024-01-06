@@ -204,10 +204,7 @@ export default {
   <div class="body">
     <div class="body-container">
       <div class="action-row">
-        <SolarDropdownMenuButton text-button="Action" ref="dropdownButton" :disabled="isActionButtonDisabled">
-          <SolarDropdownMenuItem text-menu-item="Confirm Orders" @click="openConfirmMultipleOrdersModal"/>
-        </SolarDropdownMenuButton>
-        <SolarSearchbar place-holder="Search For Orders" @search="handleFilterValueChange"></SolarSearchbar>
+        <SolarSearchbar class="ml-2" place-holder="Search For Orders" @search="handleFilterValueChange"></SolarSearchbar>
         <SolarButton class="create-btn" button-text="Create Order" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable
