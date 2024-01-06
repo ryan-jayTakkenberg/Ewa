@@ -32,12 +32,12 @@
 
       <div class="dataContainer">
         <p class="title">Total Ongoing Projects:</p>
-        <p class="value">{{ projectsCount }}</p>
+        <p class="value">{{ allProjects.length }}</p>
       </div>
 
       <div class="dataContainer">
         <p class="title">Reports:</p>
-        <p class="value">{{ unresolvedReports }}</p>
+        <p class="value">{{ reports.length }}</p>
       </div>
 
       <div class="dataContainer">
@@ -197,7 +197,6 @@ export default {
       globalTotalStock: '350',
       username: getUsername(),
       allProjects: [],
-      projectsCount: Project.projects.length,
       reports: [],
       selectedReports: [],
       reportBody: "",
