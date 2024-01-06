@@ -11,7 +11,7 @@
       <div class="font-normal text-gray-500">{{ warehouse.postalCode }}</div>
     </td>
 
-    <td class="px-6 py-4 teams">
+    <td class="px-6 py-4">
       <div v-if="warehouse.teams && warehouse.teams.length > 0">
         <div v-for="team in warehouse.teams" :key="team.id">{{ team.name }}</div>
       </div>
@@ -58,11 +58,6 @@ export default {
   background-color: white;
   border-bottom-width: 1px;
   cursor: pointer;
-}
-
-.teams {
-  display: flex;
-  flex-direction: column;
 }
 
 </style>
