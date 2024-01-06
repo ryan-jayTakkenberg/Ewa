@@ -1,7 +1,7 @@
 <template>
   <tr class="table-row" @click="selectWarehouse">
     <th scope="row" class="d-flex align-items-center px-6 py-4 text-gray-900 whitespace-nowrap">
-      <div class="pl-3">
+      <div class="py-4">
         <div class="text-base font-semibold">{{ warehouse.name }}</div>
       </div>
     </th>
