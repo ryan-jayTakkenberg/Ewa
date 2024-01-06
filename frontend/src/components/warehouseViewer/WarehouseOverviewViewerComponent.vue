@@ -48,11 +48,11 @@ export default {
 
     async getWarehouse() {
       this.allWarehouses = await this.warehouseService.asyncFindAll();
-      console.log("all warehouses: ", this.allWarehouses);
+      // console.log("all warehouses: ", this.allWarehouses);
       this.userWarehouses = this.allWarehouses.filter(warehouse => {
         return warehouse.teams && warehouse.teams.some(team => team.id === this.currentTeam.id);
       });
-      console.log("user warehouses: ", this.userWarehouses);
+      // console.log("user warehouses: ", this.userWarehouses);
     },
 
     // TODO doesn't work
