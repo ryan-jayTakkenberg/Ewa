@@ -11,8 +11,8 @@ import ViewerOverviewComponent from "@/components/overview/ViewerOverviewCompone
 import AdminOverviewComponent from "@/components/overview/AdminOverviewComponent";
 import OrdersOverview from "@/components/order/OrdersOverview.vue";
 import ProjectOverview from "@/components/project/ProjectOverview.vue";
-import WarehouseOverview from "@/components/warehouse/WarehouseOverview.vue";
-import WarehouseOverviewComponent from "@/components/warehouseView/WarehouseOverviewComponent.vue";
+import WarehouseOverviewAdminOverview from "@/components/warehouse/WarehouseOverview.vue";
+import WarehouseOverviewViewerComponent from "@/components/warehouseViewer/WarehouseOverviewViewerComponent.vue";
 
 const routes = [
     {path: '/', redirect: '/login'},
@@ -20,8 +20,8 @@ const routes = [
     {path: '/viewer-overview', name: 'VIEWER-OVERVIEW', component: ViewerOverviewComponent},
     {path: '/admin-overview', name: 'ADMIN-OVERVIEW', component: AdminOverviewComponent},
     {path: '/orders', name: 'ORDERS', component: OrdersOverview},
-    {path: '/warehouses', name: 'WAREHOUSES-ADMIN', component: WarehouseOverview},
-    {path: '/warehouseViewer', name: 'WAREHOUSES-VIEWER', component: WarehouseOverviewComponent},
+    {path: '/warehouses', name: 'WAREHOUSES-ADMIN', component: WarehouseOverviewAdminOverview},
+    {path: '/warehouseViewer', name: 'WAREHOUSES-VIEWER', component: WarehouseOverviewViewerComponent},
     {path: '/projects', name: 'PROJECTS', component: ProjectOverview},
     {path: '/teams', name: 'TEAMS', component: TeamsOverview},
     {path: '/products', name: 'PRODUCTS-ADMIN', component: ProductOverview},

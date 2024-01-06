@@ -32,7 +32,7 @@
 
 <script>
 import Warehouse from "@/models/warehouse";
-import ShowDetailWarehouseComponent from "@/components/warehouseView/ShowDetailWarehouseComponent.vue";
+import ShowDetailWarehouseComponent from "@/components/warehouseViewer/WarehouseDetailViewerComponent.vue";
 
 
 export default {

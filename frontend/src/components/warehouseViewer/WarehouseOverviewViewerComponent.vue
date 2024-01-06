@@ -3,7 +3,7 @@
 import TitleComponent from "@/components/general/SolarTitle.vue";
 import SearchBarComponent from "@/components/general/SolarSearchbar.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
-import WarehouseRowComponent from "@/components/warehouseView/WarehouseRowComponent.vue";
+import WarehouseRowComponent from "@/components/warehouseViewer/WarehouseRowViewerComponent.vue";
 import {getId} from "@/data";
 
 export default {
