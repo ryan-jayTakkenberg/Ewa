@@ -1,5 +1,5 @@
 <template>
-  <tr class="table-row">
+  <tr class="table-row" @click="selectWarehouse">
     <th scope="row" class="d-flex align-items-center px-6 py-4 text-gray-900 whitespace-nowrap">
       <div class="pl-3">
         <div class="text-base font-semibold">{{ warehouse.name }}</div>
@@ -21,9 +21,8 @@
 </template>
 
 <script>
-import Warehouse from "@/models/warehouse";
-import ShowDetailWarehouseComponent from "@/components/warehouseViewer/WarehouseDetailViewerComponent.vue";
 
+import Warehouse from "@/models/warehouse";
 
 export default {
   name: "warehouseRowComponent",
@@ -32,21 +31,22 @@ export default {
       type: Warehouse,
       required: true,
     },
-    isChecked: {
-      type: Boolean,
-      default: false,
-      required: true,
-    },
   },
 
   data() {
     return {
       checked: this.isChecked,
-      // showedit: false,
+      showProducts: false,
     };
   },
 
-  methods: {},
+  methods: {
+
+    selectWarehouse() {
+      this.$emit("select-warehouse", this.warehouse);
+    },
+
+  },
 
 }
 
@@ -57,6 +57,7 @@ export default {
 .table-row {
   background-color: white;
   border-bottom-width: 1px;
+  cursor: pointer;
 }
 
 .teams {
