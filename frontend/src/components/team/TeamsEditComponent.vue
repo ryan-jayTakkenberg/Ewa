@@ -7,13 +7,11 @@ export default {
   data() {
     return {
       editedTeam: null,
-
-
     };
   },
   props: {
     team: {
-      type: Team, // Wijzig het type van de prop naar Object
+      type: Object, // Wijzig het type van de prop naar Object
       required: true
     },
     onClose: {
