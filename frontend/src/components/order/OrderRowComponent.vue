@@ -125,7 +125,8 @@ export default {
       <td class="px-6 py-4 whitespace-nowrap">€ {{ orderedProduct.product.price }}</td>
       <td class="px-6 py-4 whitespace-nowrap">{{ orderedProduct.amount }} x</td>
       <td class="px-6 py-4 whitespace-nowrap">
-        € {{ parseFloat(orderedProduct.product.price) * orderedProduct.amount }}
+        € {{(parseFloat(orderedProduct.product.price) * orderedProduct.amount).toFixed(2)}}
+
       </td>
     </tr>
     <tr>
@@ -133,7 +134,7 @@ export default {
       <td class="px-6 py-4 font-semibold">Total price</td>
       <td class="px-6 py-4"></td>
       <td class="px-6 py-4"></td>
-      <td class="px-6 py-4 font-semibold underline">€ {{ order.totalPrice }}</td>
+      <td class="px-6 py-4 font-semibold underline">€ {{ (order.totalPrice).toFixed(2) }}</td>
     </tr>
   </SolarTable>
 

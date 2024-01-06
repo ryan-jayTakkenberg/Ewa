@@ -74,7 +74,7 @@ public class OrderController {
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create an order");
         // Check if order is found
         Order existingOrder = orderRepo.findById(order.getId());
-        if (existingOrder == null) throw new BadRequestException("No order found for ID" + order.getId());
+        if (existingOrder == null) throw new NotFoundException("No order found for ID" + order.getId());
 
         return orderRepo.save(order);
     }
@@ -99,16 +99,6 @@ public class OrderController {
         // Check if order is a new order
         if (orderRepo.findById(order.getId()) != null)
             throw new BadRequestException("Order already exists for id: " + order.getId());
-        // Process the orderedProducts in the order
-        Set<Product_Order> productOrders = order.getOrderedProducts();
-        if (productOrders != null && !productOrders.isEmpty()) {
-            for (Product_Order productOrder : productOrders) {
-                // Find the product
-                Product product = productRepo.findById(productOrder.getProduct().getId());
-                if (product == null)
-                    throw new NotFoundException("Cannot find product with id: " + productOrder.getProduct().getId());
-            }
-        }
         return orderRepo.save(order);
     }
 
