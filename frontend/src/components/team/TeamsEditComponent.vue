@@ -45,7 +45,7 @@ export default {
       return {
         id: team.id,
         name: team.name,
-        warehouseId: this.warehouseId
+        warehouseId: this.team.warehouse.id
       };
     }
   },
@@ -86,7 +86,7 @@ export default {
 
             <div class="col-span-6 sm:col-span-3">
               <label for="warehouse" class="modal-label">Warehouse</label>
-              <select v-model="editedTeam.warehouseId" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+              <select v-model="this.editedTeam.warehouseId" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
                 <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">
                   {{ warehouse.name }}
                 </option>
