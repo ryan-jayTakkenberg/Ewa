@@ -104,7 +104,7 @@ export default {
 
 .warehouses-action-row {
   display: flex;
-  margin-bottom: 1rem /* 16px */;
+  margin-bottom: 1rem;
 }
 
 .warehouses-body {
@@ -116,7 +116,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 1rem /* 16px */;
+  padding-bottom: 1rem;
   background-color: white;
 }
 
