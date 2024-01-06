@@ -116,10 +116,10 @@ public class UserController {
         // Check if id is not null
         if (id == null) throw new BadRequestException("No valid ID provided for user");
         // Check if user is found
-        User exisitingUser = userRepo.findById(id);
-        if (exisitingUser == null) throw new BadRequestException("No user found for id");
+        User existingUser = userRepo.findById(id);
+        if (existingUser == null) throw new BadRequestException("No user found for id");
         // Delete user
-        return userRepo.delete(exisitingUser);
+        return userRepo.delete(existingUser);
     }
 
 }
