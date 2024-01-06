@@ -11,7 +11,7 @@ export default {
   },
   props: {
     team: {
-      type: Object, // Wijzig het type van de prop naar Object
+      type: Team, // Wijzig het type van de prop naar Object
       required: true
     },
     onClose: {
@@ -45,7 +45,7 @@ export default {
       return {
         id: team.id,
         name: team.name,
-        warehouseId: this.team.warehouse.id
+        warehouseId: this.warehouseId
       };
     }
   },
