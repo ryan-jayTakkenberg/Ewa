@@ -24,7 +24,7 @@ public class Team {
     @JsonBackReference
     private Warehouse warehouse;
 
-    @OneToOne(mappedBy = "team", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "team", cascade = {CascadeType.REMOVE, CascadeType.DETACH})
     @JsonIgnoreProperties({"team"})
     private User user;
 

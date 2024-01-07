@@ -24,7 +24,7 @@ public class User {
     private String password;
     private String resetToken;
     private LocalDateTime resetTokenExpiry;
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH})
+    @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.DETACH})
     @JsonIncludeProperties({"id", "name"})
     private Team team;
 

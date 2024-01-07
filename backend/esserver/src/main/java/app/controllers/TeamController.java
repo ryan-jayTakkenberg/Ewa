@@ -1,11 +1,8 @@
 package app.controllers;
 
-import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
-import app.models.Order;
-import app.models.Product;
 import app.models.Team;
 import app.models.Warehouse;
 import app.repositories.TeamJPARepository;
@@ -15,9 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 //@CrossOrigin(origins = EsserverApplication.CROSS_ORIGIN)
