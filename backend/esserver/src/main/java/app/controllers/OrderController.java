@@ -66,7 +66,7 @@ public class OrderController {
      * Update an existing order in the database
      *
      * @param jwtInfo the json web token
-     * @param order   the order to add
+     * @param json    the order to add
      * @return the order if it was updated successfully
      * @apiNote requires admin permission
      */
@@ -139,36 +139,65 @@ public class OrderController {
      * create a new order in the database with products
      *
      * @param jwtInfo the json web token
-     * @param order   the new order to add
+     * @param json    the new order to add
      * @return the new order if it was added successfully
      * @apiNote requires admin permission
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    private Order createOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
-                              @RequestBody JsonNode json) {
+    private Order postOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
+                            @RequestBody JsonNode json) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create an order");
-        // Check if order is a new order
 
         JsonBuilder jsonBuilder = JsonBuilder.parse(json);
-
         String name = jsonBuilder.getStringFromField("name");
         String orderedFrom = jsonBuilder.getStringFromField("orderedFrom");
         Order.OrderStatus status = Order.OrderStatus.valueOf(jsonBuilder.getStringFromField("status").toUpperCase());
         LocalDate orderDate = jsonBuilder.getDateFromField("orderDate");
         LocalDate estimatedDeliveryDate = jsonBuilder.getDateFromField("estimatedDeliveryDate");
         long teamId = jsonBuilder.getLongFromField("teamId");
+        List<JsonBuilder> productJsonBuilders = jsonBuilder.getArrayFromField("products");
 
         Team team = teamRepo.findById(teamId);
-        if (team == null) {
-            throw new NotFoundException("Team not found for id: " + teamId);
+        if (team == null) throw new NotFoundException("Team not found for id: " + teamId);
+
+        // Extract ordered products information from the JSON
+        Set<Product_Order> ordered_products = new HashSet<>();
+        for (JsonBuilder productJsonBuilder : productJsonBuilders) {
+            long amount = productJsonBuilder.getLongFromField("amount");
+            long productId = productJsonBuilder.getLongFromField("productId");
+
+            Product product = productRepo.findById(productId);
+            if (product == null) {
+                System.err.println("Product not found for id: " + productId);
+                throw new NotFoundException("Product not found for id: " + productId);
+            }
+
+            Product_Order product_order = new Product_Order(amount, product, null);
+            ordered_products.add(product_order);
         }
 
-        Order order = new Order(name, orderedFrom, orderDate, estimatedDeliveryDate, team, new HashSet<>(), status);
-        return orderRepo.save(order);
+        // Create the new order with associated products
+        Order order = new Order();
+        order.setName(name);
+        order.setOrderedFrom(orderedFrom);
+        order.setOrderDate(orderDate);
+        order.setEstimatedDeliveryDate(estimatedDeliveryDate);
+        order.setTeam(team);
+        order.setStatus(status);
+
+        // Save the new order to obtain an ID
+        Order newOrder = orderRepo.save(order);
+
+        // Associate the ordered products with the new order
+        ordered_products.forEach(productOrder -> productOrder.setOrder(newOrder));
+        ordered_products.forEach(newOrder::addOrderedProduct);
+
+        return orderRepo.save(newOrder);
+
     }
 
 

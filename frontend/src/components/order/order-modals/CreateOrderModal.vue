@@ -6,7 +6,6 @@ import Product from "@/models/product";
 import SolarModal from "@/components/general/SolarModal.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
-import Product_Order from "@/models/product_order";
 
 export default {
   name: "CreateOrderModal",
@@ -25,7 +24,6 @@ export default {
       OrderStatusOptions: Order.Status,
       teamOptions: Team.teams,
       productOptions: [...Product.products],
-      productOrders: [], // Used for Product_Orders creation containing amount, productId and orderId
       orderedProducts:[], // Used for keeping track of products for creating product orders and setting amount
       selectedProduct: null,
     }
@@ -38,12 +36,6 @@ export default {
   },
   methods: {
     createOrder() {
-
-      const productOrders = this.orderedProducts.map((orderedProduct) => {
-        return new Product_Order(orderedProduct.amount, orderedProduct.product.id, null);
-      });
-      this.productOrders.push(...productOrders); // Merge arrays
-
       let newOrder = Order.createNewOrder();
       newOrder.injectAttributes(this.order);
       const json = {
@@ -53,9 +45,17 @@ export default {
         orderDate: newOrder.orderDate,
         estimatedDeliveryDate: newOrder.estimatedDeliveryDate,
         teamId: newOrder.team.id,
+        products: [],
       };
-      this.$emit('create', json, this.productOrders);
-      console.log(newOrder);
+
+      this.orderedProducts.forEach(orderedProduct => {
+        json.products.push({
+          amount: orderedProduct.amount,
+          productId: orderedProduct.product.id,
+        });
+      });
+
+      this.$emit('create', json);
     },
     addProductToOrder() {
       if (this.selectedProduct) {
@@ -71,7 +71,9 @@ export default {
       }
     },
     removeProduct(index) {
-      this.productOrders.splice(index, 1);
+      // add the removed product back to productOptions
+      this.productOptions.push(this.orderedProducts[index].product);
+      this.orderedProducts.splice(index, 1);
     },
 
   }

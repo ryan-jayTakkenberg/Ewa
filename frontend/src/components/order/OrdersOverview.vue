@@ -85,29 +85,18 @@ export default {
         this.currentPage++;
       }
     },
-    async createOrder(createdOrder, orderedProducts) {
+
+    async createOrder(createdJson) {
+      console.log(createdJson)
       this.closeModal();
-
-
-      createdOrder = await this.orderService.asyncCreate(createdOrder);
-      for (let orderedProduct of orderedProducts) {
-        // Set orderId for each orderedProduct in orderedProducts
-        orderedProduct.orderId = createdOrder.id;
-        // Convert object to json and
-        const orderedProductJson = JSON.stringify(orderedProduct);
-        // Create orderedProduct
-        await this.product_OrderService.asyncCreate(orderedProductJson);
-      }
+      let createdOrder = await this.orderService.asyncCreate(createdJson)
+      console.log(createdOrder)
       this.updateTable();
     },
 
-    // edit order
     async editOrder(updateJson) {
       this.closeModal();
-
-      console.log(updateJson);
       let updatedOrder = await this.orderService.asyncUpdate(updateJson);
-
       this.updateTable();
     },
 
@@ -200,7 +189,8 @@ export default {
   <div class="body">
     <div class="body-container">
       <div class="action-row">
-        <SolarSearchbar class="ml-2" place-holder="Search For Orders" @search="handleFilterValueChange"></SolarSearchbar>
+        <SolarSearchbar class="ml-2" place-holder="Search For Orders"
+                        @search="handleFilterValueChange"></SolarSearchbar>
         <SolarButton class="create-btn" button-text="Create Order" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable

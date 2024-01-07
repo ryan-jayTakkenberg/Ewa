@@ -6,7 +6,6 @@ import Product from "@/models/product";
 import SolarModal from "@/components/general/SolarModal.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
-import Product_Order from "@/models/product_order";
 
 export default {
   name: "EditOrderModal",
@@ -18,7 +17,6 @@ export default {
       clonedOrder: null,
       teamOptions: Team.teams,
       productOptions: [...Product.products],
-      productOrders: [], // Used for Product_Orders creation containing amount, productId and orderId
       orderedProducts:[], // Used for keeping track of products for creating product orders and setting amount
       selectedProduct: null,
     }
