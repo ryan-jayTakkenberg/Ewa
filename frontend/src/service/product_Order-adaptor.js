@@ -1,6 +1,6 @@
-import {deleteAPI, getAPI, postAPI, putAPI, responseOk} from "@/backend";
+import {getAPI, postAPI, putAPI, responseOk} from "@/backend";
 import Order from "@/models/order";
-import User from "@/models/user";
+
 export class Product_OrderAdaptor {
 
     static ENDPOINT = "/api/product_order";

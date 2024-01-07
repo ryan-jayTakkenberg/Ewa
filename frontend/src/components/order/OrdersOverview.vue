@@ -69,8 +69,9 @@ export default {
   },
   methods: {
     updateTable() {
-      this.filterValue += ' ';
-      this.filterValue = this.filterValue.trim();
+      const oldFilterValue = this.filterValue;
+      this.filterValue += Math.random().toString();
+      setTimeout(() => this.filterValue = oldFilterValue, 0);
     },
 
     prevPage() {
@@ -127,17 +128,20 @@ export default {
       this.closeModal();
       const confirmedOrder = this.selectedOrder;
       await this.orderService.asyncConfirmById(confirmedOrder.id);
+      // Update status display by refreshing the order rendering
+      this.updateTable();
     },
 
     async cancelOrder() {
       this.closeModal();
       const canceledOrder = this.selectedOrder;
       await this.orderService.asyncCancelById(canceledOrder.id);
+      // Update status display by refreshing the order rendering
+      this.updateTable();
     },
 
 
     handleFilterValueChange(value) {
-      console.log(value);
       this.filterValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
     },
     openCreateModal() {

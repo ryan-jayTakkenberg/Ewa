@@ -81,6 +81,7 @@ export class OrderAdaptor {
                 console.error(data);
                 return {};
             }
+
             // Update the clientside order list
             let index = Order.orders.findIndex(o => o.id === id);
             let orderClass = Order.orders[index];
