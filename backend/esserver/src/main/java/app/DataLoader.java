@@ -95,11 +95,11 @@ public class DataLoader implements CommandLineRunner {
 
     private void createInitialUsers() {
         // Create Admin account
-        User userAdmin = new User(PermissionLevel.ADMIN, "admin", "admin@solar.nl", LocalDate.now(), "admin", null);
+        User userAdmin = new User(PermissionLevel.ADMIN, "admin", "admin@solar.nl", LocalDate.now().minusDays(10), "admin", null);
         this.userRepo.save(userAdmin);
 
         // Create User account
-        User userViewer = new User(PermissionLevel.VIEWER, "viewer", "viewer@solar.nl", LocalDate.now(), "viewer", teamsRepo.findById(1));
+        User userViewer = new User(PermissionLevel.VIEWER, "viewer", "viewer@solar.nl", LocalDate.now().minusDays(10), "viewer", teamsRepo.findById(1));
         this.userRepo.save(userViewer);
     }
 

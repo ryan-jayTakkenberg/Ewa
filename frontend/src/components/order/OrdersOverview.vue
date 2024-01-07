@@ -12,6 +12,7 @@ import CancelOrderModal from "@/components/order/order-modals/CancelOrderModal.v
 import ConfirmOrderModal from "@/components/order/order-modals/ConfirmOrderModal.vue";
 import ReportComponent from "@/components/manage/ReportComponent.vue";
 import Order from "@/models/order";
+import {isAdmin} from "@/data";
 
 
 export default {
@@ -68,6 +69,7 @@ export default {
     },
   },
   methods: {
+    isAdmin,
     updateTable() {
       const oldFilterValue = this.filterValue;
       this.filterValue += Math.random().toString();
@@ -191,7 +193,7 @@ export default {
       <div class="action-row">
         <SolarSearchbar class="ml-2" place-holder="Search For Orders"
                         @search="handleFilterValueChange"></SolarSearchbar>
-        <SolarButton class="create-btn" button-text="Create Order" @click="openCreateModal"></SolarButton>
+        <SolarButton v-if="isAdmin()" class="create-btn" button-text="Create Order" @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable
           :columns="['', 'order','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'products', 'status', 'action']">
