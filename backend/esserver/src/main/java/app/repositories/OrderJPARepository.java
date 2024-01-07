@@ -21,9 +21,9 @@ public class OrderJPARepository implements EntityRepositoryJPA<Order> {
         return query.getResultList();
     }
 
-    public List<Order> findAllByWarehouseId(long warehouseId) {
-        TypedQuery<Order> query = this.em.createQuery("SELECT o FROM Order o WHERE o.team.warehouse.id = :warehouseId", Order.class);
-        query.setParameter("warehouseId", warehouseId);
+    public List<Order> findAllForWarehouseByTeamId(long teamId) {
+        TypedQuery<Order> query = this.em.createQuery("SELECT o FROM Order o WHERE o.team.id = :teamId", Order.class);
+        query.setParameter("teamId", teamId);
         return query.getResultList();
     }
 

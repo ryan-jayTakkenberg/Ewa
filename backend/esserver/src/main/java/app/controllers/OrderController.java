@@ -50,7 +50,7 @@ public class OrderController {
             User user = userRepo.findById(userId);
             if (user == null) throw new ForbiddenException("Viewer user not found");
             final long teamId = user.getTeam().getId();
-            return orderRepo.findAllByWarehouseId(teamId);
+            return orderRepo.findAllForWarehouseByTeamId(teamId);
         }
         throw new ForbiddenException("Invalid user permission level");
     }
