@@ -203,7 +203,7 @@ export default {
       receiverId: "",
       userId: getId(),
       senderId: getId(),
-      senderUsername: getUsername(),
+      senderName: getUsername(),
       allUsers: [],
       availableUsers: [],
       modal: false,
@@ -506,17 +506,17 @@ export default {
 
 .dataContainer {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
   flex-direction: column;
 }
 
 .title {
-  font-size: 20px;
+  font-size: 1rem;
   font-weight: 400;
 }
 
 .value {
-  font-size: 40px;
+  font-size: 3rem;
   font-weight: 600;
 }
 
@@ -805,6 +805,46 @@ export default {
       'wght' 500,
       'GRAD' 0,
       'opsz' 40
+}
+
+@media only screen and (max-width: 1400px) {
+
+  .dataContainer {
+    justify-content: space-between;
+    width: 15%;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .value {
+    font-size: 2rem;
+  }
+}
+
+@media only screen and (max-width: 950px) {
+
+  .dataContainer {
+    justify-content: space-between;
+    width: 15%;
+  }
+
+  .title {
+    font-size: 0.8rem;
+  }
+
+  .value {
+    font-size: 2rem;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+
+  .dataContainer {
+    justify-content: space-between;
+    width: 10%;
+  }
 }
 
 </style>
