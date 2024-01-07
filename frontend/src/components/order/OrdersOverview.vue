@@ -1,7 +1,5 @@
 <script>
 import TitleComponent from "@/components/general/SolarTitle.vue";
-import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
-import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
 import SolarSearchbar from "@/components/general/SolarSearchbar.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
@@ -24,10 +22,8 @@ export default {
     CreateOrderModal,
     EditOrderModal,
     CancelOrderModal,
-    SolarDropdownMenuItem,
     TitleComponent,
     OrderRowComponent,
-    SolarDropdownMenuButton,
     SolarSearchbar,
     SolarButton,
     SolarTable,
@@ -90,6 +86,7 @@ export default {
     },
     async createOrder(createdOrder, orderedProducts) {
       this.closeModal();
+
       createdOrder = await this.orderService.asyncCreate(createdOrder);
       for (const orderedProduct of orderedProducts) {
         // Set orderId for each orderedProduct in orderedProducts

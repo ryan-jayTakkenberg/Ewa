@@ -47,8 +47,8 @@ function handleAPIError(error) {
 }
 
 function handleAPIRequest(response) {
-    if (response?.status && response.status >= 200 && response.status < 300) {
-        if (response.config?.method === 'post') {
+    if (response?.config && response.status >= 200 && response.status < 300) {
+        if (response.config.method === 'post') {
             if (response.config.url.includes('/login')) {
                 // Handle login success differently
                 showSuccessfulNotification('Login successful');
@@ -56,9 +56,9 @@ function handleAPIRequest(response) {
                 // Handle other successful requests
                 showSuccessfulNotification('Create successful');
             }
-        } else if (response.config?.method === 'put') {
+        } else if (response.config.method === 'put') {
             showSuccessfulNotification('Update successful');
-        } else if (response.config?.method === 'delete') {
+        } else if (response.config.method === 'delete') {
             showSuccessfulNotification('Delete successful');
         }
     }

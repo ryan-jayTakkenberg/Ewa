@@ -4,9 +4,9 @@ import User from "@/models/user";
 export class Product_OrderAdaptor {
 
     static ENDPOINT = "/api/product_order";
+
     async asyncCreate(product_order) {
         try {
-            console.log(product_order);
             const response = await postAPI(Product_OrderAdaptor.ENDPOINT, product_order);
             if (!responseOk(response)) return response;
 
