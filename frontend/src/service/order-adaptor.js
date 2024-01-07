@@ -20,9 +20,9 @@ export class OrderAdaptor {
             return [];
         }
     }
-    async asyncCreate(order) {
+    async asyncCreate(orderJson) {
         try {
-            const response = await postAPI(OrderAdaptor.ENDPOINT, classToObject(order));
+            const response = await postAPI(OrderAdaptor.ENDPOINT, orderJson);
 
             if (!responseOk(response)) {
                 console.error(response.data);
@@ -30,8 +30,9 @@ export class OrderAdaptor {
             }
 
             // Update the clientside order list
-            order.injectAttributes(response.data);
-            Order.orders.push(order);
+            let orderClass = new Order();
+            orderClass.injectAttributes(response.data);
+            Order.orders.push(orderClass);
 
             return response.data;
         } catch (error) {
@@ -39,22 +40,23 @@ export class OrderAdaptor {
             return {};
         }
     }
-    async asyncUpdate(order) {
-        console.log(order);
+    async asyncUpdate(orderJson) {
         try {
-            const response = await putAPI(OrderAdaptor.ENDPOINT, order);
+            const response = await putAPI(OrderAdaptor.ENDPOINT, orderJson);
             if (!responseOk(response)) {
                 console.error(response.data);
                 return {};
             }
-            const data = response.data;
+
+            let index = Order.orders.findIndex(o => o.id === orderJson.orderId);
+            let order = Order.orders[index];
+
             // Update the clientside order list
-            order.injectAttributes(data);
-            Order.orders[Order.orders.findIndex(o => o.id === order.id)] = order;
+            order.injectAttributes(response.data);
 
-            return new Order(data.id,  data.name, data.orderedFrom, data.orderDate, data.estimatedDeliveryDate,
-                data.team, data.orderedProducts, data.status, data.totalPrice);
+            Order.orders[index] = order;
 
+            return response.data;
         } catch (error) {
             return {};
         }

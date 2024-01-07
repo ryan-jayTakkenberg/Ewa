@@ -49,32 +49,25 @@ export default {
   },
   methods: {
     editOrder() {
-      this.productOrders.forEach((existingProductOrder) => {
-        const matchingOrderedProduct = this.orderedProducts.find((orderedProduct) => {
-          return (
-              existingProductOrder.product.id === orderedProduct.product.id &&
-              existingProductOrder.amount !== orderedProduct.amount
-          );
-        });
+      const json = {
+        name: this.clonedOrder.name,
+        orderedFrom: this.clonedOrder.orderedFrom,
+        status: this.clonedOrder.status,
+        orderDate: this.clonedOrder.orderDate,
+        estimatedDeliveryDate: this.clonedOrder.estimatedDeliveryDate,
+        orderId: this.clonedOrder.id,
+        teamId: this.clonedOrder.team.id,
+        products: [],
+      };
 
-        if (matchingOrderedProduct) {
-          // Update the existing Product_Order with the new amount
-          existingProductOrder.amount = matchingOrderedProduct.amount;
-        }
+      this.orderedProducts.forEach(orderedProduct => {
+        json.products.push({
+          amount: orderedProduct.amount,
+          productId: orderedProduct.product.id,
+        });
       });
 
-      // Add new Product_Order instances for products not found in existing productOrders
-      const newProductOrders = this.orderedProducts
-          .filter((orderedProduct) => {
-            return !this.productOrders.some((existingProductOrder) => {
-              return existingProductOrder.product.id === orderedProduct.product.id;
-            });
-          })
-          .map((orderedProduct) => {
-            return new Product_Order(orderedProduct.amount, orderedProduct.product.id, null);
-          });
-
-      this.productOrders.push(...newProductOrders);
+      this.$emit('edit', json);
     },
     addProductToOrder() {
       if (this.selectedProduct) {

@@ -6,19 +6,18 @@ import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
 import app.models.Order;
 import app.models.Product;
+import app.models.Team;
 import app.models.User;
 import app.models.relations.Product_Order;
-import app.repositories.OrderJPARepository;
-import app.repositories.ProductJPARepository;
-import app.repositories.UserJPARepository;
+import app.repositories.*;
 import app.util.JsonBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 @RestController
 @RequestMapping("/orders")
@@ -31,7 +30,13 @@ public class OrderController {
     private ProductJPARepository productRepo;
 
     @Autowired
+    private TeamJPARepository teamRepo;
+
+    @Autowired
     private UserJPARepository userRepo;
+
+    @Autowired
+    private Product_OrderJPARepository product_orderJPARepository;
 
     /**
      * Getting all the orders, if viewer will only return for assigned team warehouse
@@ -67,14 +72,64 @@ public class OrderController {
      */
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    private Order putOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Order order) {
-        // Check if the jwt is provided
-        if (jwtInfo == null) throw new ForbiddenException("No token provided");
+    private Order putOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody JsonNode json) {
         // Check if the user is admin
-        if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create an order");
-        // Check if order is found
-        Order existingOrder = orderRepo.findById(order.getId());
-        if (existingOrder == null) throw new NotFoundException("No order found for ID" + order.getId());
+        if (!jwtInfo.isAdmin()) {
+            throw new ForbiddenException("Admin role is required to edit an order");
+        }
+
+        JsonBuilder jsonBuilder = JsonBuilder.parse(json);
+
+        String name = jsonBuilder.getStringFromField("name");
+        String orderedFrom = jsonBuilder.getStringFromField("orderedFrom");
+        Order.OrderStatus status = Order.OrderStatus.valueOf(jsonBuilder.getStringFromField("status").toUpperCase());
+        LocalDate orderDate = jsonBuilder.getDateFromField("orderDate");
+        LocalDate estimatedDeliveryDate = jsonBuilder.getDateFromField("estimatedDeliveryDate");
+        long orderId = jsonBuilder.getLongFromField("orderId");
+        long teamId = jsonBuilder.getLongFromField("teamId");
+        List<JsonBuilder> productJsonBuilders = jsonBuilder.getArrayFromField("products");
+
+        Order order = orderRepo.findById(orderId);
+        if (order == null) {
+            System.err.println("Order not found for id: " + orderId);
+            throw new NotFoundException("Order not found for id: " + orderId);
+        }
+
+        Team team = teamRepo.findById(teamId);
+        if (team == null) {
+            System.err.println("Team not found for id: " + teamId);
+            throw new NotFoundException("Team not found for id: " + teamId);
+        }
+
+        Set<Product_Order> ordered_products = new HashSet<>();
+        for (JsonBuilder productJsonBuilder : productJsonBuilders) {
+
+            long amount = productJsonBuilder.getLongFromField("amount");
+            long productId = productJsonBuilder.getLongFromField("productId");
+
+            Product product = productRepo.findById(productId);
+            if (product == null) {
+                System.err.println("Product not found for id: " + productId);
+                throw new NotFoundException("Product not found for id: " + productId);
+            }
+
+            Product_Order product_order = new Product_Order(amount, product, order);
+            ordered_products.add(product_order);
+        }
+
+        order.setName(name);
+        order.setOrderedFrom(orderedFrom);
+        order.setStatus(status);
+        order.setOrderDate(orderDate);
+        order.setEstimatedDeliveryDate(estimatedDeliveryDate);
+        order.setTeam(team);
+
+        new HashSet<>(order.getOrderedProducts()).forEach(product_order -> {
+            order.removeOrderedProduct(product_order);
+            product_orderJPARepository.delete(product_order);
+        });
+
+        ordered_products.forEach(order::addOrderedProduct);
 
         return orderRepo.save(order);
     }
@@ -91,14 +146,28 @@ public class OrderController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     private Order createOrder(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,
-                              @RequestBody Order order) {
+                              @RequestBody JsonNode json) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create an order");
         // Check if order is a new order
-        if (orderRepo.findById(order.getId()) != null)
-            throw new BadRequestException("Order already exists for id: " + order.getId());
+
+        JsonBuilder jsonBuilder = JsonBuilder.parse(json);
+
+        String name = jsonBuilder.getStringFromField("name");
+        String orderedFrom = jsonBuilder.getStringFromField("orderedFrom");
+        Order.OrderStatus status = Order.OrderStatus.valueOf(jsonBuilder.getStringFromField("status").toUpperCase());
+        LocalDate orderDate = jsonBuilder.getDateFromField("orderDate");
+        LocalDate estimatedDeliveryDate = jsonBuilder.getDateFromField("estimatedDeliveryDate");
+        long teamId = jsonBuilder.getLongFromField("teamId");
+
+        Team team = teamRepo.findById(teamId);
+        if (team == null) {
+            throw new NotFoundException("Team not found for id: " + teamId);
+        }
+
+        Order order = new Order(name, orderedFrom, orderDate, estimatedDeliveryDate, team, new HashSet<>(), status);
         return orderRepo.save(order);
     }
 

@@ -32,7 +32,10 @@ export class Product_OrderAdaptor {
     async asyncUpdate(product_order) {
         try {
             const response = await putAPI(`${Product_OrderAdaptor.ENDPOINT}`, product_order);
-            if (!responseOk(response)) return response;
+            if (!responseOk(response)) {
+                console.error(response);
+                return response;
+            }
 
             // Update the clientside order list
             const orderId = response.data.order.id;

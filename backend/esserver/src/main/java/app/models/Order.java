@@ -123,7 +123,6 @@ public class Order {
 
     public void removeOrderedProduct(Product_Order productOrder) {
         this.orderedProducts.remove(productOrder);
-        productOrder.setOrder(null);
         updateTotalPrice();
     }
 

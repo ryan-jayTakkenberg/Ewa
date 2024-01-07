@@ -43,11 +43,18 @@ export default {
         return new Product_Order(orderedProduct.amount, orderedProduct.product.id, null);
       });
       this.productOrders.push(...productOrders); // Merge arrays
-      console.log(this.productOrders);
-      console.log(this.orderedProducts);
+
       let newOrder = Order.createNewOrder();
       newOrder.injectAttributes(this.order);
-      this.$emit('create', newOrder, this.productOrders);
+      const json = {
+        name: newOrder.name,
+        orderedFrom: newOrder.orderedFrom,
+        status: newOrder.status,
+        orderDate: newOrder.orderDate,
+        estimatedDeliveryDate: newOrder.estimatedDeliveryDate,
+        teamId: newOrder.team.id,
+      };
+      this.$emit('create', json, this.productOrders);
       console.log(newOrder);
     },
     addProductToOrder() {

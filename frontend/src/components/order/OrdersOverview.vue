@@ -88,8 +88,9 @@ export default {
     async createOrder(createdOrder, orderedProducts) {
       this.closeModal();
 
+
       createdOrder = await this.orderService.asyncCreate(createdOrder);
-      for (const orderedProduct of orderedProducts) {
+      for (let orderedProduct of orderedProducts) {
         // Set orderId for each orderedProduct in orderedProducts
         orderedProduct.orderId = createdOrder.id;
         // Convert object to json and
@@ -100,18 +101,12 @@ export default {
       this.updateTable();
     },
 
-    // todo edit order
-    async editOrder(updatedOrder, updatedOrderedProducts) {
-      updatedOrder = await this.orderService.asyncUpdate(updatedOrder);
+    // edit order
+    async editOrder(updateJson) {
       this.closeModal();
-      for (const updatedOrderedProduct of updatedOrderedProducts) {
-        // Set orderId for each orderedProduct in orderedProducts
-        updatedOrderedProduct.orderId = updatedOrder.id;
-        // Convert object to json and
-        const orderedProductJson = JSON.stringify(updatedOrderedProduct);
-        // Create orderedProduct
-        await this.product_OrderService.asyncUpdate(orderedProductJson);
-      }
+
+      console.log(updateJson);
+      let updatedOrder = await this.orderService.asyncUpdate(updateJson);
 
       this.updateTable();
     },
