@@ -29,6 +29,15 @@
           </option>
         </select>
       </div>
+      <div class="col-span-6 sm:col-span-3">
+        <label class="modal-label">Select Product</label>
+        <select v-model="projectClone.product" class="modal-input shadow-sm">
+          <option v-for="product in productList" :key="product.id" :value="product">
+            {{ product.name }} - {{ product.amount }}
+          </option>
+        </select>
+      </div>
+
     </div>
     <!-- Modal footer -->
     <template v-slot:footer>
@@ -92,7 +101,9 @@ export default {
     closePopUp(){
       this.$emit("close-pop-up")
     }
-  }
+  },
+
+
 }
 </script>
 

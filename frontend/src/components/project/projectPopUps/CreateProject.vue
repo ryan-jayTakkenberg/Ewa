@@ -26,6 +26,15 @@
         </option>
       </select>
     </div>
+    <div class="col-span-6 sm:col-span-3">
+      <label class="modal-label">Select Product</label>
+      <select v-model="project.product" class="modal-input shadow-sm">
+        <option v-for="product in productList" :key="product.id" :value="product">
+          {{ product.name }} - {{ product.amount }}
+        </option>
+      </select>
+    </div>
+
     <template v-slot:footer>
       <button @click="closePopUp" class="cancel-button">Cancel</button>
       <button @click="createProject" type="submit" :disabled="isAnyFieldEmpty" class="ml-auto submit-button">Create Project</button>
@@ -53,6 +62,7 @@ export default {
         notes: '',
       },
       teamList: [],
+      productList: [],
     }
   },
   async created(){
@@ -77,15 +87,39 @@ export default {
         clientName: this.project.clientName,
         installDate: this.project.installDate,
         notes: this.project.notes,
-        teamId: this.project.team.id
+        teamId: this.project.team.id,
+        productId: this.project.product.id
       }
       this.$emit("create-project", json);
       this.closePopUp();
     },
     closePopUp(){
       this.$emit("close-pop-up")
+    },
+    getProductsFromTeamId(){
+
+
     }
-  }
+  },
+  watch: {
+    'project.team': {
+      immediate: false,
+      async handler(newVal) {
+        if (newVal && newVal.id) {
+          try {
+            console.log(newVal)
+            const response = await this.teamsService.asyncFindAll(newVal.id);
+            this.productList = response.data;
+            console.log(this.productList)
+          } catch (error) {
+            console.error("Error fetching products:", error);
+            this.productList = [];
+          }
+        }
+      }
+    }
+  },
+
 }
 </script>
 
