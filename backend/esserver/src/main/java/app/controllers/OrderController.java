@@ -4,11 +4,9 @@ import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.exceptions.NotFoundException;
 import app.jwt.JWToken;
-import app.models.Order;
-import app.models.Product;
-import app.models.Team;
-import app.models.User;
+import app.models.*;
 import app.models.relations.Product_Order;
+import app.models.relations.Product_Warehouse;
 import app.repositories.*;
 import app.util.JsonBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -200,9 +198,6 @@ public class OrderController {
 
     }
 
-
-// todo order confirmation
-
     /**
      * Confirms an order in the database
      *
@@ -222,10 +217,37 @@ public class OrderController {
         // Check if the order status is suitable for confirmation
         if (!order.getStatus().equals(Order.OrderStatus.PENDING))
             throw new ForbiddenException("Order cannot be confirmed. Invalid status.");
+
         // Update the order status to "DELIVERED"
         order.setStatus(Order.OrderStatus.DELIVERED);
 
-        return orderRepo.save(order);
+        // Save the order to persist the status change
+        order = orderRepo.save(order);
+
+//        // Add products to Product_Warehouse
+        // todo
+//        Set<Product_Order> orderedProducts = order.getOrderedProducts();
+//        for (Product_Order productOrder : orderedProducts) {
+//            Product product = productOrder.getProduct();
+//            Warehouse warehouse = order.getTeam().getWarehouse();
+//
+//            Product_Warehouse product_warehouse = new Product_Warehouse(productOrder.getAmount(), product, warehouse);
+//            warehouse.addProduct(product_warehouse);
+//
+//            // Check if a product already exists for this product and warehouse
+//            Product_Warehouse existingRecord = productWarehouseRepo.findByProductAndWarehouse(product, warehouse);
+//            if (existingRecord != null) {
+//                // Update the existing product with the new quantity
+//                existingRecord.setAmount(existingRecord.getAmount() + productOrder.getAmount());
+//                productWarehouseRepo.save(existingRecord);
+//            } else {
+//                // Create a new product_warehouse if it doesn't exist
+//                Product_Warehouse newRecord = new Product_Warehouse(productOrder.getAmount(), product, warehouse);
+//                productWarehouseRepo.save(newRecord);
+//            }
+//        }
+
+        return order;
     }
 
     /**
