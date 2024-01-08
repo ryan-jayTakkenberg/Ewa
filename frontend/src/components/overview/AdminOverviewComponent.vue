@@ -187,12 +187,11 @@ export default {
     OverviewModal,
     SolarTable,
   },
-  inject: ['reportService', 'userService', 'projectService'],
+  inject: ['reportService', 'userService', 'projectService', 'warehouseService'],
 
   data() {
     return {
       productsSold: '75',
-      unresolvedReports: '0',
       warehousesLowStock: '3',
       globalTotalStock: '350',
       username: getUsername(),
@@ -207,7 +206,6 @@ export default {
       allUsers: [],
       availableUsers: [],
       modal: false,
-      ongoingProjects: "",
       warehouses: Warehouse.warehouses,
       orders: Order.orders,
     }
@@ -217,11 +215,29 @@ export default {
     this.fetchAllUsers()
     this.fetchUserReports()
     this.fetchAllProjects()
-    this.calculateTotalStock()
-    this.calculateLowStockWarehouses()
+    this.fetchAndUpdateWarehouseData()
   },
 
   methods: {
+
+    async fetchAndUpdateWarehouseData() {
+      try {
+        const warehousesData = await this.warehouseService.asyncFindAll();
+        console.log('Fetched warehouses data:', warehousesData);
+
+        // Ensure the data is an array before setting it to this.warehouses
+        if (Array.isArray(warehousesData)) {
+          this.warehouses = warehousesData;
+          this.calculateTotalStock();
+          this.calculateLowStockWarehouses();
+        } else {
+          console.error('Expected warehouses data to be an array, received:', warehousesData);
+        }
+      } catch (error) {
+        console.error('Error fetching warehouses data:', error);
+      }
+    },
+
 
     calculateTotalStock() {
       let totalStock = 0;
@@ -299,6 +315,7 @@ export default {
 
       this.reportBody = '';
     },
+
 
     replyReport() {
 
@@ -433,14 +450,7 @@ export default {
 
   },
 
-  watch: {
-    '$route'(to, from) {
-      // Check if the route has changed to the Overview page
-      if (to.path === '/admin-overview' || to.path === '/viewer-overview') {
-        this.reloadData();
-      }
-    }
-  },
+
 
 }
 
