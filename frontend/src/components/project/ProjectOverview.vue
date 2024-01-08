@@ -17,7 +17,7 @@
           </th>
           <td class="px-6 py-4">{{project.installDate}}</td>
           <td class="px-6 py-4">{{project.notes}}</td>
-          <td class="px-6 py-4">{{project.team ? project.team.name : 'Nog geen team'}}</td>
+          <td class="px-6 py-4">{{project.team ? project.team.name : 'No team assigned'}}</td>
           <td>
             <div class="editProjectButton" @click="openUpdateProject(project)" >Edit Project</div>
             <div class="deleteProjectButton" @click="deleteProject(project)">Delete Project</div>
