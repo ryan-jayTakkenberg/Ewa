@@ -73,8 +73,9 @@ export default {
       return User.users.filter(p => this.checkedUsers.includes(p.id));
     },
     updateTable() {
-      this.filterValue += ' ';
-      this.filterValue = this.filterValue.trim();
+      const oldFilterValue = this.filterValue;
+      this.filterValue = Math.random().toString();
+      setTimeout(() => this.filterValue = oldFilterValue, 0);
     },
     async createUser(createdUser) {
       this.closeModal();

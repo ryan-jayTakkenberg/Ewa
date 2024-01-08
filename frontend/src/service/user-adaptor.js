@@ -29,8 +29,9 @@ export class UserAdaptor {
             if (!responseOk(response)) return response;
 
             // Update the clientside user list
-            user.injectAttributes(response.data);
-            User.users.push(user);
+            let userClass = new User();
+            userClass.injectAttributes(response.data);
+            User.users.push(userClass);
 
             return response.data;
         } catch (error) {

@@ -1,14 +1,22 @@
 package app.controllers;
 
+import app.enums.PermissionLevel;
+import app.models.Team;
+import app.repositories.TeamJPARepository;
 import app.util.HashUtil;
 import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
 import app.models.User;
 import app.repositories.UserJPARepository;
+import app.util.JsonBuilder;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +26,9 @@ public class UserController {
 
     @Autowired
     private UserJPARepository userRepo;
+
+    @Autowired
+    private TeamJPARepository teamRepo;
 
     /**
      * Get a list of users based on the provided JWT token.
@@ -63,18 +74,24 @@ public class UserController {
      * @throws BadRequestException if already existing user found for id
      * @apiNote requires admin permission
      */
-    @PostMapping
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    private User postUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody User user) {
+    private User postUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody JsonNode json) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to create or edit a user");
-        // Check if it is a new user
-        if (user.getId() != 0 ) throw new BadRequestException("Cannot create new user with id: " + user.getId());
-        // Hash given password
-        if (user.getPassword() != null) user.setPassword(HashUtil.hash(user.getPassword()));
+
+        JsonBuilder jsonBuilder = JsonBuilder.parse(json);
+        PermissionLevel permissionLevel = PermissionLevel.valueOf(jsonBuilder.getStringFromField("permissionLevel"));
+        String name = jsonBuilder.getStringFromField("name");
+        String email = jsonBuilder.getStringFromField("email");
+        String password = jsonBuilder.getStringFromField("password");
+        long teamId = jsonBuilder.getLongFromField("teamId");
+        Team team = teamRepo.findById(teamId);
+
         // Save user
+        User user = new User(permissionLevel, name, email, null, password, team);
         return userRepo.save(user);
     }
 

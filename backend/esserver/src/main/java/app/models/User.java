@@ -2,6 +2,8 @@ package app.models;
 
 import app.util.HashUtil;
 import app.enums.PermissionLevel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 
@@ -25,10 +27,11 @@ public class User {
     private String resetToken;
     private LocalDateTime resetTokenExpiry;
     @OneToOne(cascade = CascadeType.MERGE)
-    @JsonIncludeProperties({"id", "name"})
+    @JsonIgnoreProperties({"user", "warehouse"})
     private Team team;
 
     @OneToMany(mappedBy = "app_user")
+    @JsonIgnore
     private Set<Report> reports;  //todo implement reports user
 
     public User(PermissionLevel permissionLevel, String name, String email, LocalDate lastLogin, String password, Team team) {
