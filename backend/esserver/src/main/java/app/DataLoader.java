@@ -168,5 +168,4 @@ public class DataLoader implements CommandLineRunner {
         order2.addOrderedProduct(productOrder4);
         orderRepo.save(order2);
     }
-
 }
