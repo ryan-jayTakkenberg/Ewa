@@ -53,7 +53,7 @@
   <!--- Warehouses with Low Stock ---------------------------------------------------------------------------------->
   <div class="sectionContainer">
 
-    <h1 class="inventoryTitle">Warehouses with Low Stock</h1>
+    <h1 class="inventoryTitle">Warehouses with low stock</h1>
       <div v-if="warehousesLowStock > 0">
 
       <SolarTable :columns="['Warehouse Name', 'Current Stock', 'Minimum Required Stock']">
@@ -94,7 +94,7 @@
   <!--- projects ---------------------------------------------------------------------------------->
   <div class="sectionContainer">
 
-    <h1 class="sectionTitle">All ongoing projects:</h1>
+    <h1 class="sectionTitle">All ongoing projects</h1>
 
     <div class="projectContainer" v-if="allProjects?.length > 0">
 
@@ -168,7 +168,7 @@
       <div class="sendReportsContainer">
 
         <div class="sendReportInputWrapper">
-          <div class="sendReportInput">Send a report to:</div>
+          <div class="sendReportInput">Send a report to</div>
 
           <div class="selectDropdown">
             <select v-model="receiverId" class="reportReceiverSelect" ref="selectUser">

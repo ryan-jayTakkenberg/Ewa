@@ -40,7 +40,7 @@
   <!--- projects ---------------------------------------------------------------------------------->
   <div class="sectionContainer">
 
-    <h1 class="sectionTitle">Ongoing Projects for: {{capitalizeFirstLetter(username)}}</h1>
+    <h1 class="sectionTitle">Ongoing projects for {{capitalizeFirstLetter(username)}}</h1>
 
     <div class="projectContainer" v-if="userProjects?.length > 0">
 
@@ -114,7 +114,7 @@
       <div class="sendReportsContainer">
 
         <div class="sendReportInputWrapper">
-          <div class="sendReportInput">Send a report to:</div>
+          <div class="sendReportInput">Send a report to</div>
 
           <div class="selectDropdown">
             <select v-model="receiverId" class="reportReceiverSelect" ref="selectUser">
