@@ -179,6 +179,7 @@ import {getAPI, responseOk} from "@/backend";
 import Warehouse from "@/models/warehouse";
 import SolarTable from "@/components/general/SolarTable";
 import Order from "@/models/order";
+import Product from "@/models/product";
 
 export default {
 
@@ -209,6 +210,10 @@ export default {
       warehouses: Warehouse.warehouses,
       orders: Order.orders,
     }
+  },
+
+  created() {
+    (async () => Warehouse.warehouses = await Warehouse.getDatabase())();
   },
 
   mounted() {
@@ -410,40 +415,27 @@ export default {
     productTotals() {
       const totals = {};
 
+      Product.products.forEach(product => {
+        totals[product.id] = {
+          name: product.name,
+          inWarehouse: 0,
+          inOrders: 0,
+        };
+      });
+
       this.warehouses.forEach(warehouse => {
         warehouse.products.forEach(product => {
           const id = product['product']['id'];
-          console.log(product['product']);
-
-          if (!totals[id]) {
-            totals[id] = {
-              name: product['product']['name'],
-              inWarehouse: 0,
-              inOrders: 0,
-            };
-          }
-
           totals[id].inWarehouse += product.amount;
         });
       });
 
-      // TODO geeft error
-      // this.orders.forEach(order => {
-      //   order.products.forEach(product => {
-      //     const id = product['product']['id'];
-      //     console.log(product['product']);
-      //
-      //     if (!totals[id]) {
-      //       totals[id] = {
-      //         name: product['product']['name'],
-      //         inWarehouse: 0,
-      //         inOrders: 0,
-      //       };
-      //     }
-      //
-      //     totals[id].inOrders += product.amount;
-      //   });
-      // });
+      this.orders.filter(order => order.status === Order.Status.PENDING).forEach(order => {
+        order.orderedProducts.forEach(product => {
+          const id = product['product']['id'];
+          totals[id].inOrders += product.amount;
+        });
+      });
 
       return totals;
     },
