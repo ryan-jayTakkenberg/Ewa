@@ -27,7 +27,7 @@
       </div>
 
       <!-- Select products -->
-      <div class="col-span-6 sm:col-span-6">
+      <div v-if="project.team" class="col-span-6 sm:col-span-6">
         <label for="products" class="modal-label">Add Product</label>
         <div class="w-full flex">
           <select id="products" v-model="selectedProduct" class="product-select">
