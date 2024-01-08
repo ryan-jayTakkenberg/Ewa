@@ -179,6 +179,7 @@ import {getAPI, responseOk} from "@/backend";
 import Warehouse from "@/models/warehouse";
 import SolarTable from "@/components/general/SolarTable";
 import Order from "@/models/order";
+import Product from "@/models/product";
 
 export default {
 
@@ -187,12 +188,11 @@ export default {
     OverviewModal,
     SolarTable,
   },
-  inject: ['reportService', 'userService', 'projectService'],
+  inject: ['reportService', 'userService', 'projectService', 'warehouseService'],
 
   data() {
     return {
       productsSold: '75',
-      unresolvedReports: '0',
       warehousesLowStock: '3',
       globalTotalStock: '350',
       username: getUsername(),
@@ -203,25 +203,46 @@ export default {
       receiverId: "",
       userId: getId(),
       senderId: getId(),
-      senderUsername: getUsername(),
+      senderName: getUsername(),
       allUsers: [],
       availableUsers: [],
       modal: false,
-      ongoingProjects: "",
       warehouses: Warehouse.warehouses,
       orders: Order.orders,
     }
+  },
+
+  created() {
+    (async () => Warehouse.warehouses = await Warehouse.getDatabase())();
   },
 
   mounted() {
     this.fetchAllUsers()
     this.fetchUserReports()
     this.fetchAllProjects()
-    this.calculateTotalStock()
-    this.calculateLowStockWarehouses()
+    this.fetchAndUpdateWarehouseData()
   },
 
   methods: {
+
+    async fetchAndUpdateWarehouseData() {
+      try {
+        const warehousesData = await this.warehouseService.asyncFindAll();
+        console.log('Fetched warehouses data:', warehousesData);
+
+        // Ensure the data is an array before setting it to this.warehouses
+        if (Array.isArray(warehousesData)) {
+          this.warehouses = warehousesData;
+          this.calculateTotalStock();
+          this.calculateLowStockWarehouses();
+        } else {
+          console.error('Expected warehouses data to be an array, received:', warehousesData);
+        }
+      } catch (error) {
+        console.error('Error fetching warehouses data:', error);
+      }
+    },
+
 
     calculateTotalStock() {
       let totalStock = 0;
@@ -299,6 +320,7 @@ export default {
 
       this.reportBody = '';
     },
+
 
     replyReport() {
 
@@ -393,54 +415,34 @@ export default {
     productTotals() {
       const totals = {};
 
+      Product.products.forEach(product => {
+        totals[product.id] = {
+          name: product.name,
+          inWarehouse: 0,
+          inOrders: 0,
+        };
+      });
+
       this.warehouses.forEach(warehouse => {
         warehouse.products.forEach(product => {
           const id = product['product']['id'];
-          console.log(product['product']);
-
-          if (!totals[id]) {
-            totals[id] = {
-              name: product['product']['name'],
-              inWarehouse: 0,
-              inOrders: 0,
-            };
-          }
-
           totals[id].inWarehouse += product.amount;
         });
       });
 
-      // TODO geeft error
-      // this.orders.forEach(order => {
-      //   order.products.forEach(product => {
-      //     const id = product['product']['id'];
-      //     console.log(product['product']);
-      //
-      //     if (!totals[id]) {
-      //       totals[id] = {
-      //         name: product['product']['name'],
-      //         inWarehouse: 0,
-      //         inOrders: 0,
-      //       };
-      //     }
-      //
-      //     totals[id].inOrders += product.amount;
-      //   });
-      // });
+      this.orders.filter(order => order.status === Order.Status.PENDING).forEach(order => {
+        order.orderedProducts.forEach(product => {
+          const id = product['product']['id'];
+          totals[id].inOrders += product.amount;
+        });
+      });
 
       return totals;
     },
 
   },
 
-  watch: {
-    '$route'(to, from) {
-      // Check if the route has changed to the Overview page
-      if (to.path === '/admin-overview' || to.path === '/viewer-overview') {
-        this.reloadData();
-      }
-    }
-  },
+
 
 }
 
@@ -506,17 +508,17 @@ export default {
 
 .dataContainer {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
   flex-direction: column;
 }
 
 .title {
-  font-size: 20px;
+  font-size: 1rem;
   font-weight: 400;
 }
 
 .value {
-  font-size: 40px;
+  font-size: 3rem;
   font-weight: 600;
 }
 
@@ -805,6 +807,46 @@ export default {
       'wght' 500,
       'GRAD' 0,
       'opsz' 40
+}
+
+@media only screen and (max-width: 1400px) {
+
+  .dataContainer {
+    justify-content: space-between;
+    width: 15%;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .value {
+    font-size: 2rem;
+  }
+}
+
+@media only screen and (max-width: 950px) {
+
+  .dataContainer {
+    justify-content: space-between;
+    width: 15%;
+  }
+
+  .title {
+    font-size: 0.8rem;
+  }
+
+  .value {
+    font-size: 2rem;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+
+  .dataContainer {
+    justify-content: space-between;
+    width: 10%;
+  }
 }
 
 </style>

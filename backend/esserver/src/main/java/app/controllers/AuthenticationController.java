@@ -44,6 +44,7 @@ public class AuthenticationController {
             if (user.getEmail().equals(email) && user.getPassword().equals(hashedPassword)) {
                 user.setLastLogin(LocalDate.now());
                 account = user;
+                userRepo.save(user); // Save the updated user entity
                 break;
             }
         }

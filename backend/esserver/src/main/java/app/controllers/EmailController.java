@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @RestController
 public class EmailController {
 
-    @Autowired
     private JavaMailSender mailSender;
     @Autowired
     private UserJPARepository userJPARepository;

@@ -1,22 +1,29 @@
-# setting the database
-# note: dialects are auto detected by hibernate
+# Email server setup
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=solarsedumtest@gmail.com
+spring.mail.password=typu oeqt tmty viyj
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+# DEPLOYMENT
 
 server.port=8085
 server.servlet.context-path=/api
 
-spring.datasource.url=jdbc:mysql://oege.ie.hva.nl:3306/zkoktj?createDatabaseIfNotExist=true
+# setting the database
+# note: dialects are auto detected by hibernate
+spring.datasource.url=jdbc:mysql://oege.hva.nl:3306/zkoktj
 spring.datasource.username=koktj
 spring.datasource.password=Gse1qSX.FUm$NJ+F
 
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
-
 # drop and create table again, good for testing, comment this in production
-spring.jpa.hibernate.ddl-auto=create
+spring.jpa.hibernate.ddl-auto=create-drop
 
 # used to initialise the db with data
 spring.sql.init.mode=always
 spring.jpa.defer-datasource-initialization=true
-#spring.sql.init.data-locations=classpath:/data.sql
+spring.sql.init.data-locations=classpath:/data.sql
 
 # turn statistics on
 spring.jpa.properties.hibernate.generate_statistics=true

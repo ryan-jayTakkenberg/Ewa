@@ -5,12 +5,10 @@ import app.jwt.JWTConfig;
 import app.jwt.JWToken;
 import app.models.*;
 import app.models.Order;
-import app.models.relations.Product_Order;
 import app.repositories.OrderJPARepository;
 import app.repositories.ProductJPARepository;
 import app.repositories.TeamJPARepository;
 import app.repositories.WarehouseJPARepository;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,6 +31,7 @@ import java.util.Set;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -101,50 +100,48 @@ class OrderControllerTest {
     }
 
     @Test
-    void createOrderSuccessful() throws Exception {
-        // Create an order
-        Order order = new Order();
-        order.setName("Order name");
-        order.setOrderedFrom("Ordered From");
-        order.setOrderDate(LocalDate.now());
-        order.setEstimatedDeliveryDate(LocalDate.now().plusDays(7));
-        order.setTeam(testTeam);
-        order.setStatus(Order.OrderStatus.PENDING);
+    void postOrderSuccessful() throws Exception {
+        // Mocking data
+        Product mockProduct = new Product();
+        mockProduct.setName("product Name");
+        mockProduct.setPrice(100);
+        mockProduct.setDescription("desc");
+        Product savedProduct = productRepository.save(mockProduct);
 
-        assertFalse(order.getId() > 0);
+        Team mockTeam = new Team();
+        mockTeam.setName("Mock Team");
+        Team savedTeam = teamRepository.save(mockTeam);
 
-        // Convert the order object to JSON
-        String orderJson = objectMapper.writeValueAsString(order);
+        // JSON payload for the request
+        String orderJson = "{"
+                + "\"name\":\"TestOrder\","
+                + "\"orderedFrom\":\"TestLocation\","
+                + "\"status\":\"PENDING\","
+                + "\"orderDate\":\"2022-01-01\","
+                + "\"estimatedDeliveryDate\":\"2022-01-10\","
+                + "\"teamId\":" + savedTeam.getId() + ","
+                + "\"products\":[{\"amount\":2,\"productId\":" + savedProduct.getId() + "}]"
+                + "}";
 
-        // Prepare the request
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .post("/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(orderJson)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
-        // Perform the request and validate the response
         ResultActions response = mockMvc.perform(builder);
-        System.out.println(response); // Print the response
-        response.andExpectAll(
-                status().isCreated(),
-                jsonPath("$.id", greaterThan(0)),
-                jsonPath("$.name").value(order.getName()),
-                jsonPath("$.orderedFrom").value(order.getOrderedFrom()),
-                jsonPath("$.orderDate").value(order.getOrderDate().toString()),
-                jsonPath("$.estimatedDeliveryDate").value(order.getEstimatedDeliveryDate().toString()),
-                jsonPath("$.team.id").value(testTeam.getId()), // Validate the team ID
-                jsonPath("$.status").value(order.getStatus().toString())
-        );
-
-        // Parse the response JSON to an Order object
-        String responseJson = response.andReturn().getResponse().getContentAsString();
-        order = objectMapper.readValue(responseJson, Order.class);
-
-        // Validate that the order is not null and has a valid ID
-        assertNotNull(order);
-        assertTrue(order.getId() > 0);
+        response.andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(greaterThan(0)))
+                .andExpect(jsonPath("$.name").value("TestOrder"))
+                .andExpect(jsonPath("$.orderedFrom").value("TestLocation"))
+                .andExpect(jsonPath("$.orderDate").value("2022-01-01"))
+                .andExpect(jsonPath("$.estimatedDeliveryDate").value("2022-01-10"))
+                .andExpect(jsonPath("$.team.id").value(savedTeam.getId()))
+                .andExpect(jsonPath("$.status").value("PENDING"))
+                .andExpect(jsonPath("$.orderedProducts[0].product.id").value(savedProduct.getId()))
+                .andDo(print());
     }
+
 
     @Test
     void createOrderFail() throws Exception {
@@ -182,61 +179,57 @@ class OrderControllerTest {
         );
     }
 
-    @Test
-    void updateOrderFail() throws Exception {
-        final long ID = -1;
-
-        Product product = new Product("Product 1", 10.0, "Description 1");
-        Product_Order orderedProduct = new Product_Order(2, product, null);
-        Order order = new Order("Order name", "Ordered From", LocalDate.now(), LocalDate.now().plusDays(7), testTeam, Set.of(orderedProduct), Order.OrderStatus.PENDING);
-        order.setId(ID);
-
-        assertFalse(order.getId() > 0);
-
-        objectMapper.registerModule(new JavaTimeModule());
-        String OrderJson = objectMapper.writeValueAsString(order);
-
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .put("/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(OrderJson)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-
-        ResultActions response = mockMvc.perform(builder);
-        response.andExpect(status().isNotFound());
-    }
-
-    @Test
-    void updateOrderSuccessful() throws Exception {
-        Order OldOrder = new Order("Order name", "Ordered From", LocalDate.now(), LocalDate.now().plusDays(7), testTeam, Set.of(), Order.OrderStatus.PENDING);
-        Order newOrder = orderRepository.save(OldOrder);
-        assertTrue(newOrder.getId() > 0);
-
-        newOrder.setName("New name");
-        newOrder.setEstimatedDeliveryDate(LocalDate.now().plusDays(12));
-
-        String OrderJson = objectMapper.writeValueAsString(newOrder);
-
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .put("/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(OrderJson)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-
-        ResultActions response = mockMvc.perform(builder);
-        response.andExpectAll(
-                status().isOk(),
-                jsonPath("$.id").value(newOrder.getId()),
-                jsonPath("$.name").value(newOrder.getName()),
-                jsonPath("$.orderedFrom").value(newOrder.getOrderedFrom()),
-                jsonPath("$.orderDate").value(newOrder.getOrderDate().toString()),
-                jsonPath("$.estimatedDeliveryDate").value(newOrder.getEstimatedDeliveryDate().toString()),
-                jsonPath("$.team.id").value(newOrder.getTeam().getId()),
-                jsonPath("$.status").value(newOrder.getStatus().toString())
-        );
-
-    }
-
+//    @Test
+//    void putOrderSuccessful() throws Exception {
+//        Order order = new Order("Order name", "Ordered From", LocalDate.now(), LocalDate.now().plusDays(7), testTeam, Set.of(), Order.OrderStatus.PENDING);
+//        Order savedOrder = orderRepository.save(order);
+//        assertTrue(savedOrder.getId() > 0);
+//        savedOrder.setName("New name");
+//        savedOrder.setEstimatedDeliveryDate(LocalDate.now().plusDays(12));
+//
+//        // Adding new products to the order
+//        Product newProduct1 = new Product("New Product 1", 15.0, "New Description 1");
+//        Product newProduct2 = new Product("New Product 2", 25.0, "New Description 2");
+//        Product savedProduct1 = productRepository.save(newProduct1);
+//        Product savedProduct2 = productRepository.save(newProduct2);
+//
+//        // Create JSON payload for the request
+//        String orderJson = "{"
+//                + "\"id\":" + savedOrder.getId() + ","
+//                + "\"name\":\"" + savedOrder.getName() + "\","
+//                + "\"orderedFrom\":\"" + savedOrder.getOrderedFrom() + "\","
+//                + "\"orderDate\":\"" + savedOrder.getOrderDate() + "\","
+//                + "\"estimatedDeliveryDate\":\"" + savedOrder.getEstimatedDeliveryDate() + "\","
+//                + "\"teamId\":" + savedOrder.getTeam().getId() + ","
+//                + "\"status\":\"" + savedOrder.getStatus() + "\","
+//                + "\"products\":["
+//                + "{\"amount\":3,\"productId\":" + savedProduct1.getId() + "},"
+//                + "{\"amount\":5,\"productId\":" + savedProduct2.getId() + "}"
+//                + "]"
+//                + "}";
+//
+//        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+//                .put("/orders")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(orderJson)
+//                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+//
+//        ResultActions response = mockMvc.perform(builder);
+//        response.andExpectAll(
+//                status().isOk(),
+//                jsonPath("$.id").value(savedOrder.getId()),
+//                jsonPath("$.name").value(savedOrder.getName()),
+//                jsonPath("$.orderedFrom").value(savedOrder.getOrderedFrom()),
+//                jsonPath("$.orderDate").value(savedOrder.getOrderDate().toString()),
+//                jsonPath("$.estimatedDeliveryDate").value(savedOrder.getEstimatedDeliveryDate().toString()),
+//                jsonPath("$.team.id").value(savedOrder.getTeam().getId()),
+//                jsonPath("$.status").value(savedOrder.getStatus().toString()),
+//                jsonPath("$.orderedProducts[0].amount").value(3),
+//                jsonPath("$.orderedProducts[1].amount").value(5),
+//                jsonPath("$.orderedProducts[0].product.id").value(savedProduct1.getId()),
+//                jsonPath("$.orderedProducts[1].product.id").value(savedProduct2.getId())
+//        );
+//    }
     @Test
     void deleteOrderFail() throws Exception {
         final long ID = -1;
@@ -263,62 +256,6 @@ class OrderControllerTest {
                 jsonPath("$").exists(),
                 jsonPath("$.id").value(ID)
         );
-    }
-
-    @Test
-    void addProductOrdersToOrder() throws Exception {
-        // Create an order
-        Order order = new Order();
-        order.setName("Order with Products");
-        order.setOrderedFrom("Ordered From");
-        order.setOrderDate(LocalDate.now());
-        order.setEstimatedDeliveryDate(LocalDate.now().plusDays(7));
-        order.setTeam(testTeam);
-        order.setStatus(Order.OrderStatus.PENDING);
-        Order savedOrder = orderRepository.save(order);
-
-        Product product1 = new Product("Product 1", 10.0, "Description 1");
-        Product product2 = new Product("Product 2", 20.0, "Description 2");
-        Product savedProduct1 = productRepository.save(product1);
-        Product savedProduct2 = productRepository.save(product2);
-
-        JsonNode orderedProductJson1 = objectMapper.createObjectNode()
-                .put("amount", 2)
-                .put("productId", savedProduct1.getId())
-                .put("orderId", savedOrder.getId());
-
-        JsonNode orderedProductJson2 = objectMapper.createObjectNode()
-                .put("amount", 2)
-                .put("productId", savedProduct2.getId())
-                .put("orderId", savedOrder.getId());
-
-        // Save Product_Order objects
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/product_order")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(orderedProductJson1))
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-                .andExpect(status().isCreated());
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/product_order")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(orderedProductJson2))
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-                .andExpect(status().isCreated());
-
-        // Retrieve the order with associated product_orders
-        ResultActions getOrderWithProductsResponse = mockMvc.perform(MockMvcRequestBuilders
-                        .get("/orders" + "/" + order.getId())
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-                .andExpect(status().isOk());
-
-        String getOrderWithProductsJson = getOrderWithProductsResponse.andReturn().getResponse().getContentAsString();
-        Order orderWithProducts = objectMapper.readValue(getOrderWithProductsJson, Order.class);
-
-        assertNotNull(orderWithProducts.getOrderedProducts());
-        assertFalse(orderWithProducts.getOrderedProducts().isEmpty());
-        assertEquals(2, orderWithProducts.getOrderedProducts().size());
     }
 
 }

@@ -8,8 +8,7 @@
       </svg>
       <p>Are you sure you want to confirm the following order? :</p>
     </div>
-    <p><br/><br/><strong>{{ order.orderNumber }}</strong><br/>{{ order.orderedFrom }}
-      <br> {{ order.products }}</p>
+    <p><br><strong>{{ order.id }}</strong> {{ order.name}}</p>
     <!-- Modal footer -->
     <template v-slot:footer>
       <button @click="onClose" class="cancel-button">Cancel</button>

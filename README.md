@@ -7,10 +7,9 @@ Green Left is a website that manages the inventory, orders, warehouses, projects
 ## Color Reference
 **TODO:** UPDATE THIS TO THE CORRECT COLORS !!!! <!> <!>
 
-| Color            | Hex                                                                  |
-|------------------|----------------------------------------------------------------------|
-| Primary Color    | ![primary](https://via.placeholder.com/10/d1dee7?text=+) #d1dee7     |
-| Secondary Color  | ![#secondary](https://via.placeholder.com/10/bbea00?text=+) #bbea00  |
+| Color            | Hex                                                              |
+|------------------|------------------------------------------------------------------|
+| Primary Color    | ![primary](https://via.placeholder.com/10/c5ce2c?text=+) #C5CE2C |
 
 
 

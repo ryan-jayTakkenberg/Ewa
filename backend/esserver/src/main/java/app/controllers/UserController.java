@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -33,7 +34,14 @@ public class UserController {
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
 //        if (!jwtInfo.isAdmin()) {return List.of(userRepo.findById(jwtInfo.getId()));} // destroys report system
-        return userRepo.findAll();
+
+        // filter out the user where jwtInfo.getId() == user.id
+        Long currentUserId = jwtInfo.getId();
+
+        // Filter out the user where jwtInfo.getId() equals user.id
+        return userRepo.findAll().stream()
+                .filter(user -> !currentUserId.equals(user.getId()))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

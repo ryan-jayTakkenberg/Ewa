@@ -24,6 +24,8 @@ export class OrderAdaptor {
         try {
             const response = await postAPI(OrderAdaptor.ENDPOINT, orderJson);
 
+            console.log('Response Data:', response.data);
+
             if (!responseOk(response)) {
                 console.error(response.data);
                 return {};
@@ -53,7 +55,6 @@ export class OrderAdaptor {
 
             // Update the clientside order list
             order.injectAttributes(response.data);
-
             Order.orders[index] = order;
 
             return response.data;

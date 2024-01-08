@@ -111,7 +111,6 @@ export default {
         </router-link>
 
         <router-link
-            v-if="(permissionLevel === 'admin')"
             to="/orders"
             class="nav-button relative"
             :class="{ active: isPageActive('orders') }"

@@ -83,4 +83,18 @@ export class WarehouseAdaptor {
         // Return the response data
         return response.data;
     }
+
+    async asyncUpdateProductQuantities(warehouseId, products) {
+        const response = await postAPI(`/api/warehouses/updateProducts`, {
+            warehouseId: warehouseId,
+            products: products
+        });
+
+        if (!responseOk(response)) {
+            console.error(response.data);
+            return {};
+        }
+
+        return response.data;
+    }
 }

@@ -34,7 +34,6 @@ import {ReportAdaptor} from "@/service/report-adaptor";
 import {WarehouseAdaptor} from "@/service/warehouse-adaptor";
 import {TeamsAdaptor} from "@/service/teams-adaptor";
 import {UserAdaptor} from "@/service/user-adaptor";
-import {Product_OrderAdaptor} from "@/service/product_Order-adaptor";
 
 export default {
   name: 'App',
@@ -53,7 +52,6 @@ export default {
       teamsService: new TeamsAdaptor(),
       reportService: new ReportAdaptor(),
       productService: new ProductAdaptor(),
-      productOrderService: new Product_OrderAdaptor(),
       userService: new UserAdaptor(),
       orderService: new OrderAdaptor(),
     }
@@ -69,7 +67,7 @@ export default {
       reportService: this.reportService,
       userService: this.userService,
       productService: this.productService,
-      product_OrderService: this.productOrderService,
+
     }
   },
 

@@ -26,6 +26,23 @@
         </option>
       </select>
     </div>
+    <!-- Loop over warehouse products to show Add buttons -->
+    <div v-for="productWrapper in warehouseProducts" :key="productWrapper.product.id" class="product-item">
+      {{ productWrapper.product.name }}, Stock: {{ productWrapper.amount }}
+      <button @click="addProduct(productWrapper)">Add</button>
+    </div>
+
+
+    <!-- Loop over added products to show amount dropdowns -->
+    <div v-for="addedProduct in projectProducts" :key="addedProduct.productId" class="selected-product-item">
+      <label>{{ addedProduct.productName }}</label>
+      <select v-model="addedProduct.selectedAmount" class="modal-input">
+        <option v-for="amount in addedProduct.amountOptions" :key="amount" :value="amount">
+          {{ amount }}
+        </option>
+      </select>
+    </div>
+
     <template v-slot:footer>
       <button @click="closePopUp" class="cancel-button">Cancel</button>
       <button @click="createProject" type="submit" :disabled="isAnyFieldEmpty" class="ml-auto submit-button">Create Project</button>
@@ -35,11 +52,10 @@
 
 <script>
 import SolarModal from "@/components/general/SolarModal";
-import Project from "@/models/project";
 
 export default {
   name: "CreateProject",
-  inject: ['teamsService'],
+  inject: ['teamsService','warehouseService'],
   components: {
     SolarModal
   },
@@ -53,6 +69,9 @@ export default {
         notes: '',
       },
       teamList: [],
+      selectedTeam: null,
+      warehouseProducts:[],
+      projectProducts: []
     }
   },
   async created(){
@@ -70,22 +89,81 @@ export default {
     },
   },
   methods: {
-    createProject(){
+    async createProject() {
+      const productsUsed = this.projectProducts.map(p => ({
+        productId: p.productId,
+        amountUsed: p.selectedAmount
+      }));
       const json = {
         projectId: this.project.projectId,
         projectName: this.project.projectName,
         clientName: this.project.clientName,
         installDate: this.project.installDate,
         notes: this.project.notes,
-        teamId: this.project.team.id
+        teamId: this.project.team.id,
+        products: this.projectProducts
       }
+      console.log(this.projectProducts)
       this.$emit("create-project", json);
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      try {
+        await this.warehouseService.asyncUpdateProductQuantities(this.project.team.warehouse.id, productsUsed);
+        console.log("Warehouse product quantities updated successfully");
+      } catch (error) {
+        console.error("Error updating warehouse product quantities:", error);
+      }
+
       this.closePopUp();
     },
-    closePopUp(){
+    closePopUp() {
       this.$emit("close-pop-up")
+    },
+    addProduct(productWrapper) {
+      const product = productWrapper.product;
+      const stockAmount = productWrapper.amount; // The stock amount of the product
+
+      if (this.projectProducts.find(p => p.productId === product.id)) {
+        alert('This product has already been added.');
+        return;
+      }
+
+      const amountOptions = Array.from({ length: stockAmount }, (_, i) => i + 1);
+
+      this.projectProducts.push({
+        productId: product.id,
+        productName: product.name,
+        amountOptions: amountOptions,
+        selectedAmount: 1
+      });
+    },
+  },
+
+    watch: {
+    'project.team': {
+      immediate: true,
+      async handler(newVal) {
+        if (newVal && newVal.warehouse) {
+          try {
+            this.selectedTeam = newVal.warehouse.id;
+            const warehouse = await this.warehouseService.asyncFindById(this.selectedTeam);
+            if (warehouse && warehouse.products) {
+              this.warehouseProducts = warehouse.products;
+            } else {
+              this.warehouseProducts = [];
+              console.log("No products found in the warehouse.");
+            }
+          } catch (error) {
+            console.error("Error fetching warehouse:", error);
+            this.warehouseProducts = [];
+          }
+        } else {
+          console.log("No team or warehouse selected");
+          this.warehouseProducts = [];
+        }
+      }
     }
-  }
+  },
 }
 </script>
 
