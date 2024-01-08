@@ -65,7 +65,7 @@ export class OrderAdaptor {
 
     async asyncDeleteById(id) {
         try {
-            const response = await deleteAPI(`${OrderAdaptor.ENDPOINT}/${id}/cancel`);
+            const response = await deleteAPI(`${OrderAdaptor.ENDPOINT}/${id}`);
             if (!responseOk(response)) return response;
 
             // Update the clientside order list
