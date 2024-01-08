@@ -27,6 +27,7 @@ export default {
       selectedWarehouse: null,
       checkedTeams: [],
       currentTeam: null,
+      filterValue: '',
     };
   },
 
@@ -36,11 +37,6 @@ export default {
   },
 
   methods: {
-
-    handleInputValueChange(value) {
-      console.log(value);
-      this.inputValue = value;
-    },
 
     async fetchCurrentUserTeam() {
       this.currentUser = await this.userService.getById(this.userId);
@@ -65,6 +61,23 @@ export default {
       }
     },
 
+    handleSearchChange(value) {
+      this.filterValue = value.trim().toLowerCase();
+    },
+
+  },
+
+  computed: {
+    filteredWarehouses() {
+      return this.userWarehouses.filter(p => {
+        for (let key of Object.keys(p)) {
+          if (`${p[key]}`.toLowerCase().includes(this.filterValue)) {
+            return true;
+          }
+        }
+        return false;
+      });
+    },
   },
 
 }
@@ -79,11 +92,11 @@ export default {
       <div class="warehouses-action-row">
 
       <!-- Searchbar -->
-      <SearchBarComponent class="mx-4" place-holder="Search For Warehouses" @input="handleInputValueChange"></SearchBarComponent></div>
+      <SearchBarComponent class="mx-4" place-holder="Search For Warehouses" @search="handleSearchChange"></SearchBarComponent></div>
 
       <SolarTable :columns="['Warehouse', 'Location', 'Address', 'Team(s)']">
         <WarehouseRowComponent
-            v-for="(warehouse) in userWarehouses"
+            v-for="(warehouse) in filteredWarehouses"
             :key="warehouse.id"
             :warehouse="warehouse"
             :isChecked="warehouse.isChecked"

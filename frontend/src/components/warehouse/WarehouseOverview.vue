@@ -4,13 +4,13 @@
   <div class="body">
     <div class="body-container">
       <div class="action-row">
-        <SolarSearchbar class="ml-2" place-holder="Search For Warehouses" @input="handleInputValueChange"></SolarSearchbar>
+        <SolarSearchbar class="ml-2" place-holder="Search For Warehouses" @search="handleSearchChange"></SolarSearchbar>
         <SolarButton class="ml-auto mr-2" button-text="Add Warehouse" @click="showCreateWarehouse = true"></SolarButton>
       </div>
 
       <SolarTable :columns="['Name', 'Address', 'Postal code','Max Storage','Min Storage', 'Action']">
         <WarehouseRowAdmin
-            v-for="(warehouse, index) in warehouses"
+            v-for="(warehouse, index) in filteredWarehouses"
             :key="index"
             :warehouse="warehouse"
             @openUpdateWarehouse="openUpdateWarehouse"
@@ -42,6 +42,8 @@ import CreateWarehouse from "@/components/warehouse/warehousePopUps/CreateWareho
 import UpdateWarehouse from "@/components/warehouse/warehousePopUps/UpdateWarehouse";
 import NotificationComponent from "@/components/general/NotificationComponent.vue";
 import WarehouseRowAdmin from "@/components/warehouse/WarehouseRowAdmin";
+import Product from "@/models/product";
+import Warehouse from "@/models/warehouse";
 
 export default {
   name: "WarehouseOverview",
@@ -61,6 +63,7 @@ export default {
       selectedWarehouse: null,
       showCreateWarehouse: false,
       showUpdateWarehouse: false,
+      filterValue: '',
     };
   },
   async created() {
@@ -71,8 +74,13 @@ export default {
   computed: {
     filteredWarehouses() {
       return this.warehouses.filter(p => {
-        return Object.keys(p).some(key => `${p[key]}`.toLowerCase().includes(this.inputValue));
-      })
+        for (let key of Object.keys(p)) {
+          if (`${p[key]}`.toLowerCase().includes(this.filterValue)) {
+            return true;
+          }
+        }
+        return false;
+      });
     },
   },
   methods: {
@@ -127,10 +135,8 @@ export default {
       this.showCreateWarehouse = false;
       this.showUpdateWarehouse = false;
     },
-    handleInputValueChange(value) {
-      console.log(value);
-      this.inputValue = value;
-      // Use this.filterValue to search in the table
+    handleSearchChange(value) {
+      this.filterValue = value.trim().toLowerCase();
     },
   }
 }
