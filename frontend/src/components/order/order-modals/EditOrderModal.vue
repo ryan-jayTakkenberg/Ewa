@@ -125,13 +125,13 @@ export default {
           </select>
         </div>
 
-        <!-- Order Status-->
-        <div class="col-span-6 sm:col-span-3">
-          <label for="order-status" class="modal-label">Order status</label>
-          <select id="order-status" v-model="clonedOrder.status" class="status-select" required>
-            <option v-for="status in OrderStatusOptions" :key="status" :value="status">{{ status }}</option>
-          </select>
-        </div>
+<!--        &lt;!&ndash; Order Status&ndash;&gt;-->
+<!--        <div class="col-span-6 sm:col-span-3">-->
+<!--          <label for="order-status" class="modal-label">Order status</label>-->
+<!--          <select id="order-status" v-model="clonedOrder.status" class="status-select" required>-->
+<!--            <option v-for="status in OrderStatusOptions" :key="status" :value="status">{{ status }}</option>-->
+<!--          </select>-->
+<!--        </div>-->
 
         <!-- Order date-->
         <div class="col-span-6 sm:col-span-6">
