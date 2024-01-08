@@ -25,10 +25,7 @@
   <div class="sectionContainer">
 
     <div class="forecastingWrapper">
-      <div class="dataContainer">
-        <p class="title">Products to be installed:</p>
-        <p class="value">{{ productsSold }}</p>
-      </div>
+
 
       <div class="dataContainer">
         <p class="title">Total Ongoing Projects:</p>
@@ -52,6 +49,29 @@
     </div>
 
   </div>
+
+  <!--- Warehouses with Low Stock ---------------------------------------------------------------------------------->
+  <div class="sectionContainer">
+
+    <h1 class="sectionTitle">Warehouses with Low Stock</h1>
+      <div v-if="warehousesLowStock > 0">
+
+      <SolarTable :columns="['Warehouse Name', 'Current Stock', 'Minimum Required Stock']">
+        <tr class="border-gray-100 border-b text-base font-medium" v-for="(warehouse, index) in filteredLowStockWarehouses" :key="index">
+          <td class="pl-6 text-gray-900 whitespace-nowrap">{{ warehouse.name }}</td>
+          <td class="px-6 py-4">{{ calculateCurrentStock(warehouse) }}</td>
+          <td class="px-6 py-4">{{ warehouse.minStorage }}</td>
+        </tr>
+      </SolarTable>
+    </div>
+
+    <div v-else class="noLowStockMessage">
+      There are currently no warehouses with low stock levels.
+    </div>
+
+  </div>
+
+
 
   <!--- inventory ---------------------------------------------------------------------------------->
   <div class="sectionContainer">
@@ -243,6 +263,9 @@ export default {
       }
     },
 
+    calculateCurrentStock(warehouse) {
+      return warehouse.products.reduce((total, product) => total + product.amount, 0);
+    },
 
     calculateTotalStock() {
       let totalStock = 0;
@@ -394,6 +417,16 @@ export default {
   },
 
   computed: {
+
+    filteredLowStockWarehouses() {
+      return this.warehouses.filter(warehouse => {
+        let currentStorage = 0;
+        warehouse.products.forEach(product => {
+          currentStorage += product.amount;
+        });
+        return currentStorage < warehouse.minStorage;
+      });
+    },
     dayOfTheWeek() {
       const today = new Date();
       today.setDate(today.getDate());
