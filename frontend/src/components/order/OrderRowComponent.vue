@@ -7,7 +7,7 @@ import SolarTable from "@/components/general/SolarTable.vue";
 export default {
   name: "OrderRowComponent",
   components: {SolarTable},
-  emits: ['toggle', 'edit', 'cancel', 'confirm', 'report'],
+  emits: ['toggle', 'edit', 'cancel', 'confirm', 'delete'],
   props: {
     order: {
       type: Order,
@@ -39,11 +39,11 @@ export default {
     emitCancel() {
       this.$emit("cancel", this.order);
     },
+    emitDelete() {
+      this.$emit("delete", this.order);
+    },
     emitConfirm() {
       this.$emit("confirm", this.order);
-    },
-    emitReport() {
-      this.$emit("report", this.order);
     },
     toggleProducts() {
       this.productsVisible = !this.productsVisible;
@@ -82,10 +82,6 @@ export default {
         <div class="font-normal text-gray-500">{{ order.name }}</div>
       </div>
     </td>
-    <!--          <div class="pl-3">-->
-    <!--            <div class="text-base font-semibold">{{ order.id }}</div>-->
-    <!--            <div class="font-normal text-gray-500">{{ order.name }}</div>-->
-    <!--          </div>-->
     <!-- Order from  -->
     <td class="px-6 py-4">{{ order.orderedFrom }}</td>
     <!-- Order date  -->
@@ -112,7 +108,8 @@ export default {
     <td class="px-4 py-4">
       <div v-if="order.status === Order.Status.PENDING" @click="emitConfirm" class="complete-btn">Confirm order</div>
       <div v-if="order.status === Order.Status.PENDING && isAdmin()" @click="emitCancel" class="cancel-btn">Cancel order</div>
-<!--      <div v-if="!isAdmin()" @click="emitReport" class="report-btn">Report order</div>-->
+      <div v-if="order.status === Order.Status.PENDING && isAdmin()" @click="emitDelete" class="delete-btn">Delete order</div>
+
       <div v-if="order.status ===  Order.Status.PENDING && isAdmin()" @click="emitEdit" class="edit-btn">Edit order</div>
     </td>
   </tr>
@@ -184,7 +181,7 @@ export default {
 }
 
 .cancel-btn:hover,
-.report-btn:hover,
+.delete-btn:hover,
 .complete-btn:hover,
 .edit-btn:hover,
 .toggle-product-btn:hover {
@@ -199,19 +196,13 @@ export default {
 
 }
 
-.report-btn {
-  font-weight: 500;
-  color: #333333;
-  white-space: nowrap;
-}
-
-.cancel-btn {
+.delete-btn {
   font-weight: 500;
   color: red;
   white-space: nowrap;
 }
 
-.report-btn {
+.cancel-btn {
   font-weight: 500;
   color: #333333;
   white-space: nowrap;

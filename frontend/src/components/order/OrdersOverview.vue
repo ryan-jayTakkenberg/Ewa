@@ -13,11 +13,18 @@ import ConfirmOrderModal from "@/components/order/order-modals/ConfirmOrderModal
 import ReportComponent from "@/components/manage/ReportComponent.vue";
 import Order from "@/models/order";
 import {isAdmin} from "@/data";
+import DeleteOrderModal from "@/components/order/order-modals/DeleteOrderModal.vue";
+import DeleteMultipleUsersModal from "@/components/order/order-modals/DeleteMultipleOrdersModal.vue";
+import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
+import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 
 
 export default {
   name: "OrdersOverview",
   components: {
+    SolarDropdownMenuButton, SolarDropdownMenuItem,
+    DeleteMultipleUsersModal,
+    DeleteOrderModal,
     ReportComponent,
     ConfirmOrderModal,
     CreateOrderModal,
@@ -38,8 +45,10 @@ export default {
       checkedOrders: [], // A list of the selected orders for editing multiple orders at once
       showCreateModal: false,
       showEditModal: false,
+      showDeleteModal: false,
       showCancelModal: false,
       showConfirmModal: false,
+      showDeleteMultipleModal: false,
       showReportModal: false,
       currentPage: 1,
       itemsPerPage: 10,
@@ -102,13 +111,26 @@ export default {
       this.updateTable();
     },
 
-    // todo Deletion possible or not ?
-    // async deleteOrder() {
-    //   this.closeModal();
-    //   const deletedOrder = this.selectedOrder;
-    //   await this.orderService.asyncDeleteById(deletedOrder.id);
-    //   this.updateTable();
-    // },
+    async deleteOrder() {
+      this.closeModal();
+      const deletedOrder = this.selectedOrder;
+      await this.orderService.asyncDeleteById(deletedOrder.id);
+      this.updateTable();
+    },
+
+    async deleteCheckedOrders() {
+      this.closeModal();
+      for (const order of this.checkedOrders) {
+      order.isChecked = false;
+        try {
+          await this.orderService.asyncDeleteById(order.id);
+        } catch (error) {
+          console.error(`Error deleting user with ID ${order.id}:`, error);
+        }
+      }
+      this.checkedOrders = [];
+      this.updateTable();
+    },
 
     async confirmOrder() {
       this.closeModal();
@@ -126,7 +148,6 @@ export default {
       this.updateTable();
     },
 
-
     handleFilterValueChange(value) {
       this.filterValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
     },
@@ -137,6 +158,14 @@ export default {
       this.selectedOrder = order;
       this.showEditModal = true;
     },
+    openDeleteModal(order){
+      this.selectedOrder = order;
+      this.showDeleteModal = true;
+    },
+    openDeleteMultipleModal(order){
+      this.selectedOrder = order;
+      this.showDeleteMultipleModal = true;
+    },
     openCancelModal(order) {
       this.selectedOrder = order;
       this.showCancelModal = true;
@@ -145,14 +174,12 @@ export default {
       this.selectedOrder = order;
       this.showConfirmModal = true;
     },
-    openReportModal() {
-      this.showReportModal = true;
-    },
     closeModal() {
       this.showCreateModal = false;
       this.showEditModal = false;
       this.showCancelModal = false;
       this.showConfirmModal = false;
+      this.showDeleteModal = false;
       this.showDeleteMultipleModal = false;
     },
     toggleCheckbox(order) {
@@ -191,9 +218,13 @@ export default {
   <div class="body">
     <div class="body-container">
       <div class="action-row">
+        <SolarDropdownMenuButton text-button="Action" ref="dropdownButton" :disabled="isActionButtonDisabled">
+          <SolarDropdownMenuItem text-menu-item="Delete Orders" @click="openDeleteMultipleModal"/>
+        </SolarDropdownMenuButton>
         <SolarSearchbar class="ml-2" place-holder="Search For Orders"
                         @search="handleFilterValueChange"></SolarSearchbar>
-        <SolarButton v-if="isAdmin()" class="create-btn" button-text="Create Order" @click="openCreateModal"></SolarButton>
+        <SolarButton v-if="isAdmin()" class="create-btn" button-text="Create Order"
+                     @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable
           :columns="['', 'order','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'products', 'status', 'action']">
@@ -203,7 +234,7 @@ export default {
             @edit="openEditModal"
             @cancel="openCancelModal"
             @confirm="openConfirmModal"
-            @report="openReportModal"
+            @delete="openDeleteModal"
         >
         </OrderRowComponent>
       </SolarTable>
@@ -236,12 +267,26 @@ export default {
       @confirm="confirmOrder"
   />
 
+  <DeleteMultipleUsersModal
+      v-if="showDeleteMultipleModal" :orders-to-delete="checkedOrders"
+      on-close="closeModal"
+      @delete="deleteCheckedOrders"
+
+  />
+
+  <DeleteOrderModal
+      v-if="showDeleteModal" :order="selectedOrder"
+      :on-close="closeModal"
+      @delete="deleteOrder"
+  />
+
   <ReportComponent
       v-if="showReportModal"
   />
 </template>
 
 <style scoped>
+
 .create-btn {
   margin-left: auto;
   margin-right: 0.5rem;
