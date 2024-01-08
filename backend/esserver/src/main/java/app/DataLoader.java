@@ -47,6 +47,10 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createInitialProducts() {
+
+        List<Product> products = this.productsRepo.findAll();
+        if (!products.isEmpty()) return;
+
         this.productsRepo.save(new Product("Solar panel", 150.123, "Heeft een vermogen van 430 Wattpiek en beschikt over 108 cellen."));
         this.productsRepo.save(new Product("Motor", 32.54, "Heeft een vermogen van 1000 Watt, 72V"));
         this.productsRepo.save(new Product("Frame", 5423.23, "Sterk frame van goede metalen"));
@@ -55,6 +59,10 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createSampleReports() {
+
+        List<Report> reports = this.reportRepo.findAll();
+        if (!reports.isEmpty()) return;
+
         this.reportRepo.save(new Report(1, "Hello Jason, please notice that at the end of this week project 5 is due.", "19/11/2023", 1, "admin", 2));
         this.reportRepo.save(new Report(2, "Be me shall purse my ought times. Joy years doors all would again rooms these. Solicitude announcing as to sufficient my. No my reached suppose proceed pressed perhaps he. Eagerness it delighted pronounce repulsive furniture no.", "20/11/2023", 2, "Viewer", 1));
         this.reportRepo.save(new Report(3, "Travelling alteration impression six all uncommonly. Chamber hearing inhabit joy highest private ask him our believe. Up nature valley do warmly. Entered of cordial do on no hearted.", "21/11/2023", 1, "admin", 2));
@@ -62,6 +70,10 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createSampleWarehouses() {
+
+        List<Warehouse> warehouses1 = this.warehouseRepo.findAll();
+        if (!warehouses1.isEmpty()) return;
+
         Warehouse[] warehouses = {
                 new Warehouse(0, "Solar Sedum", "Amsterdam", "Straat 111", "1234 AB", 100, 20, 0),
                 new Warehouse(0, "HvA Warehouse", "Amsterdam", "Straat 222", "1234 CD", 100, 20, 0),
@@ -84,6 +96,11 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createSampleTeamAndProjects() {
+
+        List<Team> teams = this.teamsRepo.findAll();
+        List<Project> projects = this.projectsRepo.findAll();
+        if (!teams.isEmpty() && !projects.isEmpty()) return;
+
         Team team1 = this.teamsRepo.save(new Team("Team Bijlmer", warehouseRepo.findById(1)));
         Team team2 = this.teamsRepo.save(new Team( "Team Aalsmeer", warehouseRepo.findById(2)));
         Team team3 = this.teamsRepo.save(new Team("Team Purmerend", warehouseRepo.findById(3)));
@@ -96,6 +113,10 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createInitialUsers() {
+
+        List<User> users = this.userRepo.findAll();
+        if (!users.isEmpty()) return;
+
         // Create Admin account
         User userAdmin = new User(PermissionLevel.ADMIN, "admin", "admin@solar.nl", LocalDate.now().minusDays(10), "admin", null);
         this.userRepo.save(userAdmin);
@@ -106,6 +127,10 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createSampleOrders() {
+
+        List<Order> orders = this.orderRepo.findAll();
+        if (!orders.isEmpty()) return;
+
         Warehouse warehouse1 = new Warehouse(1, "Warehouse solar", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA", 100, 20, 0);
         warehouseRepo.save(warehouse1);
 
