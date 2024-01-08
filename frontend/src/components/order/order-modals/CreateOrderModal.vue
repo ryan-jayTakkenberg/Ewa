@@ -76,6 +76,23 @@ export default {
       this.orderedProducts.splice(index, 1);
     },
 
+
+
+
+
+
+    validateDates() {
+      if (this.order.orderDate && this.order.estimatedDeliveryDate) {
+        const orderDate = new Date(this.order.orderDate);
+        const estimatedDeliveryDate = new Date(this.order.estimatedDeliveryDate);
+
+        if (orderDate > estimatedDeliveryDate) {
+          this.order.orderDate = '';
+          this.order.estimatedDeliveryDate = '';
+        }
+      }
+    },
+
   }
 }
 </script>
@@ -117,28 +134,29 @@ export default {
 
         <!-- Order date-->
         <div class="col-span-6 sm:col-span-6">
-          <label for="date" class="modal-label">Order date</label>
+          <label for="orderDate" class="modal-label">Order date</label>
           <input
-              id="date"
+              id="orderDate"
               type="date"
               v-model="order.orderDate"
               class="modal-input shadow-sm"
               placeholder="Order date"
+              @input="validateDates"
               required>
         </div>
 
         <!-- Estimated delivery date -->
         <div class="col-span-6 sm:col-span-6">
-          <label for="date" class="modal-label">Estimated delivery date</label>
+          <label for="estimatedDeliveryDate" class="modal-label">Estimated delivery date</label>
           <input
-              id="date"
+              id="estimatedDeliveryDate"
               type="date"
               v-model="order.estimatedDeliveryDate"
               class="modal-input shadow-sm"
-              placeholder="Order date"
+              placeholder="Estimated delivery date"
+              @input="validateDates"
               required>
         </div>
-
         <!-- Select products -->
         <div class="col-span-6 sm:col-span-6">
           <label for="products" class="modal-label">Add Product</label>

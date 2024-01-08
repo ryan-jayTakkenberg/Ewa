@@ -85,6 +85,17 @@ export default {
       this.productOptions.push(this.orderedProducts[index].product);
       this.orderedProducts.splice(index, 1);
     },
+    validateDates() {
+      if (this.clonedOrder.orderDate && this.clonedOrder.estimatedDeliveryDate) {
+        const orderDate = new Date(this.clonedOrder.orderDate);
+        const estimatedDeliveryDate = new Date(this.clonedOrder.estimatedDeliveryDate);
+
+        if (orderDate > estimatedDeliveryDate) {
+          this.clonedOrder.orderDate = '';
+          this.clonedOrder.estimatedDeliveryDate = '';
+        }
+      }
+    },
 
   }
 }
@@ -142,6 +153,7 @@ export default {
               v-model="clonedOrder.orderDate"
               class="modal-input shadow-sm"
               placeholder="Order date"
+              @input="validateDates"
               required>
         </div>
 
@@ -153,7 +165,8 @@ export default {
               type="date"
               v-model="clonedOrder.estimatedDeliveryDate"
               class="modal-input shadow-sm"
-              placeholder="Order date"
+              placeholder="Estimated delivery date"
+              @input="validateDates"
               required>
         </div>
 
