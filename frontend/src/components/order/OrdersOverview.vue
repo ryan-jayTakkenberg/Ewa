@@ -14,11 +14,16 @@ import ReportComponent from "@/components/manage/ReportComponent.vue";
 import Order from "@/models/order";
 import {isAdmin} from "@/data";
 import DeleteOrderModal from "@/components/order/order-modals/DeleteOrderModal.vue";
+import DeleteMultipleUsersModal from "@/components/order/order-modals/DeleteMultipleOrdersModal.vue";
+import SolarDropdownMenuItem from "@/components/general/SolarDropdownMenuItem.vue";
+import SolarDropdownMenuButton from "@/components/general/SolarDropdownMenuButton.vue";
 
 
 export default {
   name: "OrdersOverview",
   components: {
+    SolarDropdownMenuButton, SolarDropdownMenuItem,
+    DeleteMultipleUsersModal,
     DeleteOrderModal,
     ReportComponent,
     ConfirmOrderModal,
@@ -43,6 +48,7 @@ export default {
       showDeleteModal: false,
       showCancelModal: false,
       showConfirmModal: false,
+      showDeleteMultipleModal: false,
       showReportModal: false,
       currentPage: 1,
       itemsPerPage: 10,
@@ -112,6 +118,20 @@ export default {
       this.updateTable();
     },
 
+    async deleteCheckedOrders() {
+      this.closeModal();
+      for (const order of this.checkedOrders) {
+      order.isChecked = false;
+        try {
+          await this.orderService.asyncDeleteById(order.id);
+        } catch (error) {
+          console.error(`Error deleting user with ID ${order.id}:`, error);
+        }
+      }
+      this.checkedOrders = [];
+      this.updateTable();
+    },
+
     async confirmOrder() {
       this.closeModal();
       const confirmedOrder = this.selectedOrder;
@@ -141,6 +161,10 @@ export default {
     openDeleteModal(order){
       this.selectedOrder = order;
       this.showDeleteModal = true;
+    },
+    openDeleteMultipleModal(order){
+      this.selectedOrder = order;
+      this.showDeleteMultipleModal = true;
     },
     openCancelModal(order) {
       this.selectedOrder = order;
@@ -194,6 +218,9 @@ export default {
   <div class="body">
     <div class="body-container">
       <div class="action-row">
+        <SolarDropdownMenuButton text-button="Action" ref="dropdownButton" :disabled="isActionButtonDisabled">
+          <SolarDropdownMenuItem text-menu-item="Delete Orders" @click="openDeleteMultipleModal"/>
+        </SolarDropdownMenuButton>
         <SolarSearchbar class="ml-2" place-holder="Search For Orders"
                         @search="handleFilterValueChange"></SolarSearchbar>
         <SolarButton v-if="isAdmin()" class="create-btn" button-text="Create Order"
@@ -238,6 +265,13 @@ export default {
       v-if="showConfirmModal" :order="selectedOrder"
       :on-close="closeModal"
       @confirm="confirmOrder"
+  />
+
+  <DeleteMultipleUsersModal
+      v-if="showDeleteMultipleModal" :orders-to-delete="checkedOrders"
+      on-close="closeModal"
+      @delete="deleteCheckedOrders"
+
   />
 
   <DeleteOrderModal
