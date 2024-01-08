@@ -79,6 +79,7 @@ export default {
   //border: 1px solid #222;
   right: 5%;
   bottom: 5%;
+  pointer-events: none;
 }
 
 .notification {
