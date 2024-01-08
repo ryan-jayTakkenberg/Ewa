@@ -13,11 +13,13 @@ import ConfirmOrderModal from "@/components/order/order-modals/ConfirmOrderModal
 import ReportComponent from "@/components/manage/ReportComponent.vue";
 import Order from "@/models/order";
 import {isAdmin} from "@/data";
+import DeleteOrderModal from "@/components/order/order-modals/DeleteOrderModal.vue";
 
 
 export default {
   name: "OrdersOverview",
   components: {
+    DeleteOrderModal,
     ReportComponent,
     ConfirmOrderModal,
     CreateOrderModal,
@@ -38,6 +40,7 @@ export default {
       checkedOrders: [], // A list of the selected orders for editing multiple orders at once
       showCreateModal: false,
       showEditModal: false,
+      showDeleteModal: false,
       showCancelModal: false,
       showConfirmModal: false,
       showReportModal: false,
@@ -102,13 +105,12 @@ export default {
       this.updateTable();
     },
 
-    // todo Deletion possible or not ?
-    // async deleteOrder() {
-    //   this.closeModal();
-    //   const deletedOrder = this.selectedOrder;
-    //   await this.orderService.asyncDeleteById(deletedOrder.id);
-    //   this.updateTable();
-    // },
+    async deleteOrder() {
+      this.closeModal();
+      const deletedOrder = this.selectedOrder;
+      await this.orderService.asyncDeleteById(deletedOrder.id);
+      this.updateTable();
+    },
 
     async confirmOrder() {
       this.closeModal();
@@ -126,7 +128,6 @@ export default {
       this.updateTable();
     },
 
-
     handleFilterValueChange(value) {
       this.filterValue = value.trim().toLowerCase();  // Use this.filterValue to search in the table
     },
@@ -137,6 +138,10 @@ export default {
       this.selectedOrder = order;
       this.showEditModal = true;
     },
+    openDeleteModal(order){
+      this.selectedOrder = order;
+      this.showDeleteModal = true;
+    },
     openCancelModal(order) {
       this.selectedOrder = order;
       this.showCancelModal = true;
@@ -145,14 +150,12 @@ export default {
       this.selectedOrder = order;
       this.showConfirmModal = true;
     },
-    openReportModal() {
-      this.showReportModal = true;
-    },
     closeModal() {
       this.showCreateModal = false;
       this.showEditModal = false;
       this.showCancelModal = false;
       this.showConfirmModal = false;
+      this.showDeleteModal = false;
       this.showDeleteMultipleModal = false;
     },
     toggleCheckbox(order) {
@@ -193,7 +196,8 @@ export default {
       <div class="action-row">
         <SolarSearchbar class="ml-2" place-holder="Search For Orders"
                         @search="handleFilterValueChange"></SolarSearchbar>
-        <SolarButton v-if="isAdmin()" class="create-btn" button-text="Create Order" @click="openCreateModal"></SolarButton>
+        <SolarButton v-if="isAdmin()" class="create-btn" button-text="Create Order"
+                     @click="openCreateModal"></SolarButton>
       </div>
       <SolarTable
           :columns="['', 'order','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'products', 'status', 'action']">
@@ -203,7 +207,7 @@ export default {
             @edit="openEditModal"
             @cancel="openCancelModal"
             @confirm="openConfirmModal"
-            @report="openReportModal"
+            @delete="openDeleteModal"
         >
         </OrderRowComponent>
       </SolarTable>
@@ -236,12 +240,19 @@ export default {
       @confirm="confirmOrder"
   />
 
+  <DeleteOrderModal
+      v-if="showDeleteModal" :order="selectedOrder"
+      :on-close="closeModal"
+      @delete="deleteOrder"
+  />
+
   <ReportComponent
       v-if="showReportModal"
   />
 </template>
 
 <style scoped>
+
 .create-btn {
   margin-left: auto;
   margin-right: 0.5rem;
