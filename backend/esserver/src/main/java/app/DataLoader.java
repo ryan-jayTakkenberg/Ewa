@@ -107,12 +107,12 @@ public class DataLoader implements CommandLineRunner {
         Warehouse warehouse1 = new Warehouse(1, "Warehouse solar", "Amsterdam", "Hoge Solarstraat 3", "5G5GHA", 100, 20, 0);
         warehouseRepo.save(warehouse1);
 
-        Team team1 = new Team(  "Team 1", warehouse1);
+        Team team1 = new Team("Team 1", warehouse1);
         teamsRepo.save(team1);
 
         // Create Order and associate with Team
         Order order1 = new Order();
-        order1.setName("Test Order");
+        order1.setName("Test Order 1");
         order1.setOrderedFrom("Solar City");
         order1.setOrderDate(LocalDate.now());
         order1.setEstimatedDeliveryDate(LocalDate.now().plusDays(7));
@@ -136,5 +136,37 @@ public class DataLoader implements CommandLineRunner {
         order1.addOrderedProduct(productOrder1);
         order1.addOrderedProduct(productOrder2);
         orderRepo.save(order1);
+
+        // Create Team 2
+        Team team2 = new Team("Team 2", warehouse1);
+        teamsRepo.save(team2);
+
+        // Create Order and associate with Team 2
+        Order order2 = new Order();
+        order2.setName("Test Order 2");
+        order2.setOrderedFrom("Solar City");
+        order2.setOrderDate(LocalDate.now());
+        order2.setEstimatedDeliveryDate(LocalDate.now().plusDays(7));
+        order2.setTeam(team2);
+        order2.setStatus(Order.OrderStatus.PENDING);
+        orderRepo.save(order2);
+
+        // Add sample products to the order
+        Product product3 = new Product("Product 3", 15.0, "Description 3");
+        productsRepo.save(product3);
+
+        Product product4 = new Product("Product 4", 25.0, "Description 4");
+        productsRepo.save(product4);
+
+        // Create and associate Product_Order entities for Order 2
+        Product_Order productOrder3 = new Product_Order(4, product3, order2);
+        Product_Order productOrder4 = new Product_Order(5, product4, order2);
+
+        product_OrderRepo.save(productOrder3);
+        product_OrderRepo.save(productOrder4);
+        order2.addOrderedProduct(productOrder3);
+        order2.addOrderedProduct(productOrder4);
+        orderRepo.save(order2);
     }
+
 }
