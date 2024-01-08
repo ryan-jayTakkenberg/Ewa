@@ -61,7 +61,6 @@ public class DataLoader implements CommandLineRunner {
         this.reportRepo.save(new Report(4, "Be me shall purse my ought times. Joy years doors all would again rooms these. Solicitude announcing as to sufficient my. No my reached suppose proceed pressed perhaps he. Eagerness it delighted pronounce repulsive furniture no.", "21/11/2023", 1, "admin", 2));
     }
 
-
     private void createSampleWarehouses() {
         Warehouse[] warehouses = {
                 new Warehouse(0, "Solar Sedum", "Amsterdam", "Straat 111", "1234 AB", 100, 20, 0),
@@ -83,7 +82,6 @@ public class DataLoader implements CommandLineRunner {
 
 
     }
-
 
     private void createSampleTeamAndProjects() {
         Team team1 = this.teamsRepo.save(new Team("Team Bijlmer", warehouseRepo.findById(1)));
