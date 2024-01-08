@@ -115,14 +115,6 @@ export default {
           </select>
         </div>
 
-<!--        &lt;!&ndash; Order Status&ndash;&gt;-->
-<!--        <div class="col-span-6 sm:col-span-3">-->
-<!--          <label for="order-status" class="modal-label">Order status</label>-->
-<!--          <select id="order-status" v-model="order.status" class="status-select" required>-->
-<!--            <option v-for="status in OrderStatusOptions" :key="status" :value="status">{{ status }}</option>-->
-<!--          </select>-->
-<!--        </div>-->
-
         <!-- Order date-->
         <div class="col-span-6 sm:col-span-6">
           <label for="date" class="modal-label">Order date</label>

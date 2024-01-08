@@ -17,49 +17,76 @@
         <label class="modal-label">Notes</label>
         <input v-model="project.notes" type="text" placeholder="...." class="modal-input shadow-sm">
       </div>
-    </div>
-    <div class="col-span-6 sm:col-span-3">
-      <label class="modal-label">Assigned Team</label>
-      <select v-model="project.team" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
-        <option v-for="team in teamList" :key="team.id" :value="team">
-          {{ team.name }}
-        </option>
-      </select>
-    </div>
-    <!-- Loop over warehouse products to show Add buttons -->
-    <div v-for="productWrapper in warehouseProducts" :key="productWrapper.product.id" class="product-item">
-      {{ productWrapper.product.name }}, Stock: {{ productWrapper.amount }}
-      <button @click="addProduct(productWrapper)">Add</button>
+
+      <!-- Assigned Team -->
+      <div class="col-span-6 sm:col-span-3">
+        <label class="modal-label">Assigned Team</label>
+        <select v-model="project.team" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+          <option v-for="team in teamList" :key="team.id" :value="team">{{ team.name }}</option>
+        </select>
+      </div>
+
+      <!-- Select products -->
+      <div class="col-span-6 sm:col-span-6">
+        <label for="products" class="modal-label">Add Product</label>
+        <div class="w-full flex">
+          <select id="products" v-model="selectedProduct" class="product-select">
+            <option v-for="warehouseProduct in warehouseProducts" :key="warehouseProduct.id"
+                    :value="warehouseProduct">{{ warehouseProduct.product.name }}, In stock: {{
+                warehouseProduct.amount
+              }}
+            </option>
+          </select>
+          <SolarButton class="ml-2 add-productInfo-btn" button-text="Add" @click="addProductProject"
+                       :disabled="!selectedProduct"
+          ></SolarButton>
+        </div>
+      </div>
     </div>
 
-
-    <!-- Loop over added products to show amount dropdowns -->
-    <div v-for="addedProduct in projectProducts" :key="addedProduct.productId" class="selected-product-item">
-      <label>{{ addedProduct.productName }}</label>
-      <select v-model="addedProduct.selectedAmount" class="modal-input">
-        <option v-for="amount in addedProduct.amountOptions" :key="amount" :value="amount">
-          {{ amount }}
-        </option>
-      </select>
+    <!-- Display ordered products -->
+    <div class="order-list">
+      <h2>Ordered Products:</h2>
+      <SolarTable :columns="['Name', 'In Stock', 'Used Quantity', 'Action']">
+        <tr class="table-row" v-for="(projectProduct, index) in projectProducts" :key="projectProduct.productId">
+          <td class="px-6 py-4 font-semibold text-base">{{ projectProduct.productName }}</td>
+          <td class="px-6 py-4">{{ projectProduct.stockAmount }}</td>
+          <td class="px-6 py-4">
+            <select v-model="projectProduct.selectedAmount" class="modal-input">
+              <option v-for="option in projectProduct.amountOptions" :key="option" :value="option">{{ option }}</option>
+            </select>
+          </td>
+          <td class="px-6 py-4">
+            <div @click="removeProduct(index)" class="remove-order-btn">Remove product</div>
+          </td>
+        </tr>
+      </SolarTable>
     </div>
 
+    <!-- Modal footer -->
     <template v-slot:footer>
       <button @click="closePopUp" class="cancel-button">Cancel</button>
-      <button @click="createProject" type="submit" :disabled="isAnyFieldEmpty" class="ml-auto submit-button">Create Project</button>
+      <button @click="createProject" type="submit" :disabled="isAnyFieldEmpty" class="ml-auto submit-button">Create
+        Project
+      </button>
     </template>
   </SolarModal>
 </template>
 
 <script>
 import SolarModal from "@/components/general/SolarModal";
+import SolarTable from "@/components/general/SolarTable.vue";
+import SolarButton from "@/components/general/SolarButton.vue";
 
 export default {
   name: "CreateProject",
-  inject: ['teamsService','warehouseService'],
+  inject: ['teamsService', 'warehouseService'],
   components: {
+    SolarButton,
+    SolarTable,
     SolarModal
   },
-  data(){
+  data() {
     return {
       project: {
         projectId: 0,
@@ -70,11 +97,12 @@ export default {
       },
       teamList: [],
       selectedTeam: null,
-      warehouseProducts:[],
-      projectProducts: []
+      selectedProduct: null,
+      warehouseProducts: [], // Products stored in warehouse
+      projectProducts: [] // Products needed for the project
     }
   },
-  async created(){
+  async created() {
     this.teamList = await this.teamsService.asyncFindAll();
   },
   computed: {
@@ -119,27 +147,41 @@ export default {
     closePopUp() {
       this.$emit("close-pop-up")
     },
-    addProduct(productWrapper) {
-      const product = productWrapper.product;
-      const stockAmount = productWrapper.amount; // The stock amount of the product
+    addProductProject() {
+      if (this.selectedProduct) {
+        const product = this.selectedProduct.product;
+        const stockAmount = this.selectedProduct.amount; // The stock amount of the product
 
-      if (this.projectProducts.find(p => p.productId === product.id)) {
-        alert('This product has already been added.');
-        return;
+        if (this.projectProducts.find(p => p.productId === product.id)) {
+          alert('This product has already been added.');
+          return;
+        }
+
+        const amountOptions = Array.from({length: stockAmount}, (_, i) => i + 1);
+
+        this.projectProducts.unshift({
+          productId: product.id,
+          productName: product.name,
+          stockAmount: stockAmount,
+          amountOptions: amountOptions,
+          selectedAmount: 1
+        });
+
+        // Remove the selected product from the warehouse product options
+        const selectedIndex = this.warehouseProducts.findIndex((product) => product.id === this.selectedProduct.id);
+        if (selectedIndex !== -1) this.warehouseProducts.splice(selectedIndex, 1);
+
+        // Reset selectedProduct and selectedProductAmount after adding to orderedProducts
+        this.selectedProduct = null;
       }
-
-      const amountOptions = Array.from({ length: stockAmount }, (_, i) => i + 1);
-
-      this.projectProducts.push({
-        productId: product.id,
-        productName: product.name,
-        amountOptions: amountOptions,
-        selectedAmount: 1
-      });
+    },
+    removeProduct(index) {
+      // add the removed product back to productOptions
+      this.warehouseProducts.push(this.projectProducts[index].product);
+      this.projectProducts.splice(index, 1);
     },
   },
-
-    watch: {
+  watch: {
     'project.team': {
       immediate: true,
       async handler(newVal) {
@@ -198,7 +240,7 @@ export default {
 
 .submit-button {
   color: white;
-  background-color: rgb(29 78 216);
+  background-color: #C7D02C;
   font-weight: 500;
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -208,7 +250,7 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: rgb(30 64 175);
+  background-color: #a3b825;
 }
 
 .submit-button:disabled, .submit-button:disabled:hover {
