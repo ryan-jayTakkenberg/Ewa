@@ -53,7 +53,7 @@
   <!--- Warehouses with Low Stock ---------------------------------------------------------------------------------->
   <div class="sectionContainer">
 
-    <h1 class="sectionTitle">Warehouses with Low Stock</h1>
+    <h1 class="inventoryTitle">Warehouses with Low Stock</h1>
       <div v-if="warehousesLowStock > 0">
 
       <SolarTable :columns="['Warehouse Name', 'Current Stock', 'Minimum Required Stock']">
@@ -66,7 +66,7 @@
     </div>
 
     <div v-else class="noLowStockMessage">
-      There are currently no warehouses with low stock levels.
+      There are currently no warehouses with low stock levels
     </div>
 
   </div>
