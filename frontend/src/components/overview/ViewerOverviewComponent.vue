@@ -57,7 +57,7 @@
           </div>
           <div class="infoValueProjects">
             <div class="descriptionValue">{{ project.clientName }}</div>
-            <div class="descriptionValue">{{ project.team.name }}</div>
+            <div class="descriptionValue">{{ project.team?.name ?? "No team" }}</div>
             <div class="descriptionValue">{{ project.installDate }}</div>
           </div>
         </div>
