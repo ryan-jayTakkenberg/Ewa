@@ -198,7 +198,7 @@ export default {
       // console.log('all projects: ', [...this.allProjects]);
 
       if (this.currentTeam) {
-        this.userProjects = this.allProjects.filter(project => project.team.id === this.currentTeam.id);
+        this.userProjects = this.allProjects.filter(project => project.team?.id === this.currentTeam.id);
         // console.log('filtered projects: ', [...this.userProjects]);
       } else {
         this.userProjects = [];
