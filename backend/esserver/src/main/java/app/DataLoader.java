@@ -70,14 +70,18 @@ public class DataLoader implements CommandLineRunner {
                 new Warehouse(0, "Green Left", "Amsterdam", "Straat 444", "1234 GH", 100, 20, 0)
         };
 
-        List<Product> products = productsRepo.findAll();
-        Random random = new Random();
 
-        for (Warehouse warehouse : warehouses) {
-            Product_Warehouse product_warehouse = new Product_Warehouse(random.nextInt(100) + 1, products.stream().skip(random.nextInt(products.size())).findFirst().orElse(null), warehouse);
-            warehouse.addProduct(product_warehouse);
+
+        for (int i = 0; i < warehouses.length; i++) {
+            Warehouse warehouse = warehouses[i];
+            for (Product product : productsRepo.findAll()) {
+                Product_Warehouse product_warehouse = new Product_Warehouse(i + 1, product, warehouse);
+                warehouse.addProduct(product_warehouse);
+            }
             warehouseRepo.save(warehouse);
         }
+
+
     }
 
 
