@@ -172,7 +172,7 @@
 
           <div class="selectDropdown">
             <select v-model="receiverId" class="reportReceiverSelect" ref="selectUser">
-              <option v-for="user in this.availableUsers" :value="user.id" :key="user.id">{{ capitalizeFirstLetter(user.name) }}</option>
+              <option v-for="user in this.allUsers" :value="user.id" :key="user.id">{{ capitalizeFirstLetter(user.name) }}</option>
             </select>
             <span class="material-symbols-outlined arrow">expand_more</span>
           </div>
@@ -225,7 +225,6 @@ export default {
       senderId: getId(),
       senderName: getUsername(),
       allUsers: [],
-      availableUsers: [],
       modal: false,
       warehouses: Warehouse.warehouses,
       orders: Order.orders,
@@ -302,8 +301,6 @@ export default {
     async fetchAllUsers() {
       this.allUsers = await this.userService.fetchAll();
       // console.log('all users: ', [...this.allUsers]);
-      this.availableUsers = this.allUsers.filter(user => user.id !== this.userId);
-      // console.log('available users: ', [...this.availableUsers]);
     },
 
     async fetchUserReports() {
