@@ -30,7 +30,7 @@ export default {
     SolarTable,
     SolarPagination,
   },
-  inject: ['orderService', 'product_OrderService'],
+  inject: ['orderService'],
   data() {
     return {
       filterValue: '', // Store the input value for searching orders
