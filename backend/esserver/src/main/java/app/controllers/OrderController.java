@@ -36,6 +36,9 @@ public class OrderController {
     @Autowired
     private Product_OrderJPARepository product_orderJPARepository;
 
+    @Autowired
+    private WarehouseJPARepository warehouseRepo;
+
     /**
      * Getting all the orders, if viewer will only return for assigned team warehouse
      *
@@ -226,26 +229,15 @@ public class OrderController {
 
 //        // Add products to Product_Warehouse
         // todo
-//        Set<Product_Order> orderedProducts = order.getOrderedProducts();
-//        for (Product_Order productOrder : orderedProducts) {
-//            Product product = productOrder.getProduct();
-//            Warehouse warehouse = order.getTeam().getWarehouse();
-//
-//            Product_Warehouse product_warehouse = new Product_Warehouse(productOrder.getAmount(), product, warehouse);
-//            warehouse.addProduct(product_warehouse);
-//
-//            // Check if a product already exists for this product and warehouse
-//            Product_Warehouse existingRecord = productWarehouseRepo.findByProductAndWarehouse(product, warehouse);
-//            if (existingRecord != null) {
-//                // Update the existing product with the new quantity
-//                existingRecord.setAmount(existingRecord.getAmount() + productOrder.getAmount());
-//                productWarehouseRepo.save(existingRecord);
-//            } else {
-//                // Create a new product_warehouse if it doesn't exist
-//                Product_Warehouse newRecord = new Product_Warehouse(productOrder.getAmount(), product, warehouse);
-//                productWarehouseRepo.save(newRecord);
-//            }
-//        }
+        Set<Product_Order> orderedProducts = order.getOrderedProducts();
+        Warehouse warehouse = order.getTeam().getWarehouse();
+
+        for (Product_Order productOrder : orderedProducts) {
+            Product_Warehouse product_warehouse = new Product_Warehouse(productOrder.getAmount(), productOrder.getProduct(), warehouse);
+            warehouse.addProduct(product_warehouse);
+        }
+
+        warehouseRepo.save(warehouse);
 
         return order;
     }

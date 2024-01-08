@@ -150,7 +150,12 @@ public class Warehouse {
     }
 
     public void addProduct(Product_Warehouse product) {
-        this.products.add(product);
+        Product_Warehouse existingProductInWarehouse = this.products.stream().filter(productWarehouse -> productWarehouse.getProduct().equals(product.getProduct())).findAny().orElse(null);
+        if (existingProductInWarehouse != null) {
+            existingProductInWarehouse.setAmount(existingProductInWarehouse.getAmount() + product.getAmount());
+        } else {
+            this.products.add(product);
+        }
     }
 
     public void removeProduct(Product_Warehouse product) {
