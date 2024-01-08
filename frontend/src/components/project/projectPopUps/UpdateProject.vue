@@ -23,17 +23,9 @@
       </div>
       <div class="col-span-6 sm:col-span-3">
         <label class="modal-label">Assigned Team</label>
-        <select v-model="this.projectClone.team" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+        <select v-model="projectClone.team" class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
           <option v-for="team in teamList" :key="team.id" :value="team">
             {{ team.name }}
-          </option>
-        </select>
-      </div>
-      <div class="col-span-6 sm:col-span-3">
-        <label class="modal-label">Select Product</label>
-        <select v-model="projectClone.product" class="modal-input shadow-sm">
-          <option v-for="product in productList" :key="product.id" :value="product">
-            {{ product.name }} - {{ product.amount }}
           </option>
         </select>
       </div>
@@ -52,7 +44,7 @@ import SolarModal from "@/components/general/SolarModal";
 
 export default {
   name: "UpdateProject",
-  inject: ['teamsService'],
+  inject: ['teamsService', 'warehouseService'],
   components: {
     SolarModal
   },
@@ -63,11 +55,17 @@ export default {
     return{
       projectClone: null,
       teamList: [],
+      selectedTeam: null,
+      warehouseProducts:[],
+      projectProducts: []
     }
   },
   async created() {
     this.projectClone = this.project.clone();
     this.teamList = await this.teamsService.asyncFindAll();
+    if (this.project.team) {
+      this.projectClone.team = this.teamList.find(team => team.id === this.project.team.id);
+    }
   },
   computed: {
     hasChanged() {
@@ -84,26 +82,46 @@ export default {
     },
   },
   methods: {
-    saveChanges(){
-
-        const json = {
-          projectId: this.projectClone.projectId,
-          projectName: this.projectClone.projectName,
-          clientName: this.projectClone.clientName,
-          installDate: this.projectClone.installDate,
-          notes: this.projectClone.notes,
-          teamId: this.projectClone.team.id
-        }
-
-      this.$emit("update-project", json)
-      this.closePopUp()
+    saveChanges() {
+      const updatedProjectData = {
+        products: this.projectProducts.map(p => ({
+          productId: p.productId,
+          amountUsed: p.selectedAmount
+        }))
+      }
+      this.$emit("update-project", updatedProjectData);
+      this.closePopUp();
     },
     closePopUp(){
       this.$emit("close-pop-up")
     }
   },
 
-
+  watch: {
+    'projectClone.team': {
+      immediate: true,
+      async handler(newVal) {
+        if (newVal && newVal.warehouse) {
+          try {
+            this.selectedTeam = newVal.warehouse.id;
+            const warehouse = await this.warehouseService.asyncFindById(this.selectedTeam);
+            if (warehouse && warehouse.products) {
+              this.warehouseProducts = warehouse.products;
+            } else {
+              this.warehouseProducts = [];
+              console.log("No products found in the warehouse.");
+            }
+          } catch (error) {
+            console.error("Error fetching warehouse:", error);
+            this.warehouseProducts = [];
+          }
+        } else {
+          console.log("No team or warehouse selected");
+          this.warehouseProducts = [];
+        }
+      }
+    }
+  },
 }
 </script>
 

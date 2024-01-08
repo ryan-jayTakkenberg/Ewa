@@ -29,6 +29,18 @@ public class WarehouseController {
         this.warehouseRepository = warehouseRepository;
         this.productRepository = productRepository;
     }
+    @GetMapping("/{id}")
+    public Warehouse getWarehouseById(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable long id) {
+
+        Warehouse warehouse = warehouseRepository.findById(id);
+
+
+        if (warehouse != null) {
+            return warehouse;
+        } else {
+            throw new NotFoundException("Team not found with ID: " + id);
+        }
+    }
 
     @GetMapping
     private List<Warehouse> getWarehouses(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo){
@@ -132,4 +144,43 @@ public class WarehouseController {
 
         return warehouseRepository.save(warehouse);
     }
+
+    @PostMapping("/updateProducts")
+    public ResponseEntity<?> updateProductQuantities(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody JsonNode json) {
+        if (!jwtInfo.isAdmin()) {
+            throw new ForbiddenException("Admin role is required to update product quantities in a warehouse");
+        }
+
+        JsonBuilder jsonBuilder = JsonBuilder.parse(json);
+        long warehouseId = jsonBuilder.getLongFromField("warehouseId");
+        JsonNode productsNode = json.get("products"); // An array of products and their used amounts
+
+        Warehouse warehouse = warehouseRepository.findById(warehouseId);
+        if (warehouse == null) {
+            throw new NotFoundException("No valid warehouse found for warehouseId: " + warehouseId);
+        }
+
+        if (productsNode.isArray()) {
+            for (JsonNode productNode : productsNode) {
+                long productId = productNode.get("productId").asLong();
+                long amountUsed = productNode.get("amountUsed").asLong();
+
+                // Find the product in the warehouse
+                Product_Warehouse productInWarehouse = warehouse.getProducts().stream()
+                        .filter(p -> p.getProduct().getId() == productId)
+                        .findFirst()
+                        .orElseThrow(() -> new NotFoundException("Product not found in warehouse: " + productId));
+
+                // Check if enough stock is available and reduce the stock
+                if (productInWarehouse.getAmount() < amountUsed) {
+                    throw new BadRequestException("Not enough stock for product: " + productId);
+                }
+                productInWarehouse.setAmount(productInWarehouse.getAmount() - amountUsed);
+            }
+        }
+
+        Warehouse updatedWarehouse = warehouseRepository.save(warehouse);
+        return ResponseEntity.ok(updatedWarehouse);
+    }
+
 }
