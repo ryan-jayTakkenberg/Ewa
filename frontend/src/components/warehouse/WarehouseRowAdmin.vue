@@ -10,7 +10,6 @@
     <td class="px-6 py-4">{{this.warehouse.postalCode}}</td>
     <td class="px-6 py-4">{{this.warehouse.maxStorage}}</td>
     <td class="px-6 py-4">{{this.warehouse.minStorage}}</td>
-    <td class="px-6 py-4">{{this.warehouse.currentStorage}}</td>
 
     <td>
       <div class="showInventoryButton" @click="this.showDetails = !this.showDetails" >{{ showDetails ? 'Hide Inventory' : 'Show Inventory' }}</div>

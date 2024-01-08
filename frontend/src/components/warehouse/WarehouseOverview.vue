@@ -8,7 +8,7 @@
         <SolarButton class="ml-auto mr-2" button-text="Add Warehouse" @click="showCreateWarehouse = true"></SolarButton>
       </div>
 
-      <SolarTable :columns="['Name', 'Address', 'Postal code','Max Storage','Min Storage','Current Storage', 'Action']">
+      <SolarTable :columns="['Name', 'Address', 'Postal code','Max Storage','Min Storage', 'Action']">
         <WarehouseRowAdmin
             v-for="(warehouse, index) in warehouses"
             :key="index"
