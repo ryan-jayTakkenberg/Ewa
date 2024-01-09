@@ -126,17 +126,13 @@ export default {
 
 .submit-button {
   color: white;
-  background-color: rgb(29 78 216);
+  background-color: #c5ce2c;
   font-weight: 500;
   border-radius: 0.5rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
   padding: 0.625rem 1.25rem;
   text-align: center;
-}
-
-.submit-button:hover {
-  background-color: rgb(30 64 175);
 }
 
 .submit-button:disabled, .submit-button:disabled:hover {
