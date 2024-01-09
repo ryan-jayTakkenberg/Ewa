@@ -36,11 +36,13 @@ export async function deleteAPI(endpoint) {
 
 function handleAPIError(error) {
     const response = error?.response;
-    console.log('error on: ', location.pathname);
     if (response?.status === 401 && location.pathname !== "/login") {
         location.assign("/login");
     }
     if (response?.status !== 401) {
+        if (location.pathname === '/users') {
+            return showUnsuccessfulNotification('This team already has an user!');
+        }
         showUnsuccessfulNotification('Something went wrong, please try again');
     }
     return response;

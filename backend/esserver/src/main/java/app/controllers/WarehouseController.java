@@ -11,6 +11,7 @@ import app.repositories.ProductJPARepository;
 import app.repositories.WarehouseJPARepository;
 import app.util.JsonBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -49,7 +50,7 @@ public class WarehouseController {
         return warehouseRepository.findAll();
     }
 
-    @PostMapping
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Warehouse> addNewWarehouse(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@RequestBody Warehouse warehouse){
         if (!jwtInfo.isAdmin()){
             throw new ForbiddenException("Admin role is required to create a warehouse");

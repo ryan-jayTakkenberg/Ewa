@@ -94,6 +94,10 @@ public class User {
         this.password = password;
     }
 
+    public void setPasswordAndHash(String password) {
+        setPassword(HashUtil.hash(password));
+    }
+
     public Team getTeam() {
         return team;
     }

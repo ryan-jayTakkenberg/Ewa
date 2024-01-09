@@ -41,7 +41,6 @@ export class UserAdaptor {
     }
 
     async asyncUpdate(user) {
-        console.log(user);
         try {
             const response = await putAPI(UserAdaptor.ENDPOINT, user);
             if (!responseOk(response)) return response;

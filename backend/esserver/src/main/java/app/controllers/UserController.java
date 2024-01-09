@@ -108,15 +108,38 @@ public class UserController {
      */
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    private User putUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody User user) {
+    private User putUser(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody JsonNode json) {
         // Check if the jwt is provided
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to edit a user");
+
+        JsonBuilder jsonBuilder = JsonBuilder.parse(json);
+        PermissionLevel permissionLevel = PermissionLevel.valueOf(jsonBuilder.getStringFromField("permissionLevel"));
+        String name = jsonBuilder.getStringFromField("name");
+        String email = jsonBuilder.getStringFromField("email");
+        String password = jsonBuilder.getStringFromField("password");
+        long userId = jsonBuilder.getLongFromField("userId");
+        long teamId = jsonBuilder.getLongFromField("teamId");
+        Team team = teamRepo.findById(teamId);
+
+        if (team != null && team.getUser() != null && team.getUser().getId() != userId) {
+            throw new BadRequestException("This team already has an user");
+        }
+
+
         // Check if user is found
-        User existingUser = userRepo.findById(user.getId());
-        if (existingUser == null) throw new BadRequestException("No user found for ID" + user.getId());
+        User user = userRepo.findById(userId);
+        if (user == null) {
+            throw new BadRequestException("No user found for ID" + userId);
+        }
+
         // Save user
+        user.setPermissionLevel(permissionLevel);
+        user.setName(name);
+        user.setEmail(email);
+        user.setPasswordAndHash(password);
+        user.setTeam(team);
         return userRepo.save(user);
     }
 
@@ -138,6 +161,9 @@ public class UserController {
         if (jwtInfo == null) throw new ForbiddenException("No token provided");
         // Check if the user is admin
         if (!jwtInfo.isAdmin()) throw new ForbiddenException("Admin role is required to delete an user");
+
+
+
         // Check if id is not null
         if (id == null) throw new BadRequestException("No valid ID provided for user");
         // Check if user is found

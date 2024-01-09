@@ -3,6 +3,7 @@
 import User from "@/models/user";
 import SolarModal from "@/components/general/SolarModal.vue";
 import Team from "@/models/team";
+import {classToObject} from "@/models/helper";
 
 export default {
   name: "EditUserModal",
@@ -48,7 +49,11 @@ export default {
 
   methods: {
     editUser() {
-      this.$emit('edit-user', this.clonedUser); // Emit the updated scooter
+      let json = classToObject(this.clonedUser);
+      json.userId = json.id;
+      json.teamId = json.team?.id ?? -1;
+
+      this.$emit('edit-user', json); // Emit the updated scooter
     },
   },
 }
