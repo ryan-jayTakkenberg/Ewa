@@ -204,7 +204,7 @@ export default {
 
 .cancel-btn {
   font-weight: 500;
-  color: #333333;
+  color: purple;
   white-space: nowrap;
 }
 
