@@ -2,7 +2,7 @@
   <SolarModal title="Edit Product" @close-modal="close">
     <!-- Modal body -->
     <div class="grid lg:grid-cols-2 gap-6">
-      <div class="grid-col">
+      <div class="grid-col" v-if="this.productInfos.length === 1">
         <label for="name">Name</label>
         <input
             type="text"
