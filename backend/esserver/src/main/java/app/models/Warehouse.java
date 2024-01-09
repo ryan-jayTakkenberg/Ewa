@@ -25,8 +25,7 @@ public class Warehouse {
 
 
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("warehouse")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"warehouse"})
     private final Set<Team> teams = new HashSet<>();
 
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
@@ -38,8 +37,7 @@ public class Warehouse {
     }
 
 
-    public Warehouse(int id, String name, String city, String address, String postalCode, int maxStorage, int minStorage
-    ,int currentStorage) {
+    public Warehouse(int id, String name, String city, String address, String postalCode, int maxStorage, int minStorage,int currentStorage) {
         this.id = id;
         this.name = name;
         this.city = city;

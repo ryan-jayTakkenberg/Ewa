@@ -50,25 +50,13 @@ public class WarehouseController {
         return warehouseRepository.findAll();
     }
 
-    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Warehouse> addNewWarehouse(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo,@RequestBody Warehouse warehouse){
+    @PostMapping
+    public Warehouse addNewWarehouse(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Warehouse warehouse) {
         if (!jwtInfo.isAdmin()){
             throw new ForbiddenException("Admin role is required to create a warehouse");
         }
 
-        if (warehouse == null){
-            return ResponseEntity.badRequest().build();
-        }
-
-        Warehouse addedWarehouse = warehouseRepository.save(warehouse);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(addedWarehouse.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(addedWarehouse);
+        return warehouseRepository.save(warehouse);
     }
 
     @PutMapping("/{id}")
