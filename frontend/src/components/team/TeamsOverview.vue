@@ -43,9 +43,12 @@ export default {
   },
   async created() {
     try {
-      this.teams = await this.teamsService.asyncFindAllWithProjectCount();
+
+      this.teams = await this.teamsService.asyncFindAll();
+      console.log("all teams: ", this.teams);
+
       this.warehouseList = await this.warehouseService.asyncFindAll();
-      console.log(this.teams);
+
     } catch (error) {
       console.error("Error occurred while getting the data from the backend", error);
     }
