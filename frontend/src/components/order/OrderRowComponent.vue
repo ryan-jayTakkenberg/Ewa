@@ -108,7 +108,7 @@ export default {
     <td class="px-4 py-4">
       <div v-if="order.status === Order.Status.PENDING" @click="emitConfirm" class="complete-btn">Confirm order</div>
       <div v-if="order.status === Order.Status.PENDING && isAdmin()" @click="emitCancel" class="cancel-btn">Cancel order</div>
-      <div v-if="order.status === Order.Status.PENDING && isAdmin()" @click="emitDelete" class="delete-btn">Delete order</div>
+      <div v-if="isAdmin()" @click="emitDelete" class="delete-btn">Delete order</div>
 
       <div v-if="order.status ===  Order.Status.PENDING && isAdmin()" @click="emitEdit" class="edit-btn">Edit order</div>
     </td>
