@@ -109,7 +109,6 @@ export default {
       <div v-if="order.status === Order.Status.PENDING" @click="emitConfirm" class="complete-btn">Confirm order</div>
       <div v-if="order.status === Order.Status.PENDING && isAdmin()" @click="emitCancel" class="cancel-btn">Cancel order</div>
       <div v-if="order.status === Order.Status.PENDING || order.status === Order.Status.CANCELED && isAdmin()" @click="emitDelete" class="delete-btn">Delete order</div>
-
       <div v-if="order.status ===  Order.Status.PENDING && isAdmin()" @click="emitEdit" class="edit-btn">Edit order</div>
     </td>
   </tr>
