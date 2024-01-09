@@ -21,6 +21,7 @@ public class Team {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
     @JsonIncludeProperties({"id", "name"})
+    @JsonBackReference
     private Warehouse warehouse;
 
     @OneToOne(mappedBy = "team", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
