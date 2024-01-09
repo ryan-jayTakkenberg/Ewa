@@ -1,5 +1,5 @@
 <template>
-  <SolarModal title="Edit Product" @close-modal="close">
+  <SolarModal :title="title" @close-modal="close">
     <!-- Modal body -->
     <div class="grid lg:grid-cols-2 gap-6">
       <div class="grid-col" v-if="this.productInfos.length === 1">
@@ -47,6 +47,7 @@ export default {
   data() {
     return {
       cloned: {},
+      title: "Edit Product",
     }
   },
   props: {
