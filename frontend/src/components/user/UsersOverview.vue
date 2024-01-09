@@ -8,7 +8,6 @@ import SolarSearchbar from "@/components/general/SolarSearchbar.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import UsersRowComponent from "@/components/user/UsersRowComponent.vue";
-import SolarPagination from "@/components/general/SolarPagination.vue";
 
 import CreateUserModal from "@/components/user/user-modals/CreateUserModal.vue";
 import EditUserModal from "@/components/user/user-modals/EditUserModal.vue";
@@ -18,7 +17,6 @@ import DeleteMultipleUsersModal from "@/components/user/user-modals/DeleteMultip
 export default {
   name: "UsersOverview",
   components: {
-    SolarPagination,
     TitleComponent,
     SolarDropdownMenuItem,
     SolarDropdownMenuButton,
@@ -51,11 +49,6 @@ export default {
     },
     isActionButtonDisabled() {
       return this.checkedUsers.length === 0;
-    },
-    paginatedUsers() {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      const endIndex = startIndex + this.itemsPerPage;
-      return this.filteredUsers.slice(startIndex, endIndex);
     },
     filteredUsers() {
       return User.users.filter(p => {
@@ -181,13 +174,13 @@ export default {
       </div>
       <SolarTable :columns="[' ', 'User', 'Function', 'Team', 'Last Logged In', 'Action']">
         <UsersRowComponent
-            v-for="(user) in paginatedUsers" :key="user.id" :user="user"
+            v-for="(user) in filteredUsers" :key="user.id" :user="user"
             @edit="openEditModal"
             @delete="openDeleteModal"
             @toggle="toggleCheckbox(user, $event)"> <!-- Pass user and checkbox state -->
         </UsersRowComponent>
       </SolarTable>
-      <SolarPagination @previous="prevPage" :current-page="currentPage" :total-pages="totalPages" @next="nextPage"/>
+<!--      <SolarPagination @previous="prevPage" :current-page="currentPage" :total-pages="totalPages" @next="nextPage"/>-->
     </div>
   </div>
   <!-- Conditionally render modals based on boolean modal states -->

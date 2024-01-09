@@ -4,7 +4,6 @@ import SolarSearchbar from "@/components/general/SolarSearchbar.vue";
 import SolarButton from "@/components/general/SolarButton.vue";
 import SolarTable from "@/components/general/SolarTable.vue";
 import OrderRowComponent from "@/components/order/OrderRowComponent.vue";
-import SolarPagination from "@/components/general/SolarPagination.vue";
 
 import CreateOrderModal from "@/components/order/order-modals/CreateOrderModal.vue";
 import EditOrderModal from "@/components/order/order-modals/EditOrderModal.vue";
@@ -35,7 +34,6 @@ export default {
     SolarSearchbar,
     SolarButton,
     SolarTable,
-    SolarPagination,
   },
   inject: ['orderService'],
   data() {
@@ -57,11 +55,6 @@ export default {
   computed: {
     totalPages() {
       return Math.ceil(this.filteredOrders.length / this.itemsPerPage);
-    },
-    paginatedOrders() {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      const endIndex = startIndex + this.itemsPerPage;
-      return this.filteredOrders.slice(startIndex, endIndex);
     },
     filteredOrders() {
       return Order.orders.filter(p => {
@@ -229,7 +222,7 @@ export default {
       <SolarTable
           :columns="['', 'order','ordered from', 'order date', 'estimated delivery date', 'ordered for team', 'products', 'status', 'action']">
         <OrderRowComponent
-            v-for="(order) in paginatedOrders" :key="order.id" :order="order"
+            v-for="(order) in filteredOrders" :key="order.id" :order="order"
             @toggle="toggleCheckbox(order, $event)"
             @edit="openEditModal"
             @cancel="openCancelModal"
@@ -238,7 +231,7 @@ export default {
         >
         </OrderRowComponent>
       </SolarTable>
-      <SolarPagination :current-page="currentPage" :total-pages="totalPages" @previous="prevPage" @next="nextPage"/>
+<!--      <SolarPagination :current-page="currentPage" :total-pages="totalPages" @previous="prevPage" @next="nextPage"/>-->
     </div>
   </div>
 
