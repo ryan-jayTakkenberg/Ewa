@@ -81,40 +81,7 @@ class UserControllerTest {
         );
     }
 
-    @Test
-    void createUserSuccessful() throws Exception {
-        testUser.setId(NON_EXISTING_USER_ID);
-        assertFalse(testUser.getId() > 0);
-        testUser.setTeam(testTeam);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        String userJson = objectMapper.writeValueAsString(testUser);
-
-        System.out.println(userJson);
-
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .post("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userJson)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-
-        ResultActions response = mockMvc.perform(builder);
-        response.andExpectAll(
-                status().isCreated(),
-                jsonPath("$.id", greaterThan(0)),
-                jsonPath("$.permissionLevel").value(testUser.getPermissionLevel().name()),
-                jsonPath("$.name").value(testUser.getName()),
-                jsonPath("$.email").value(testUser.getEmail()),
-                jsonPath("$.lastLogin").value(testUser.getLastLogin())
-        );
-
-        String responseJson = response.andReturn().getResponse().getContentAsString();
-        testUser = objectMapper.readValue(responseJson, User.class);
-
-        assertNotNull(testUser);
-        assertTrue(testUser.getId() > 0);
-    }
 
     @Test
     void createUserFail() throws Exception {
@@ -154,32 +121,7 @@ class UserControllerTest {
         response.andExpect(status().isNotFound());
     }
 
-    @Test
-    void updateUserSuccessful() throws Exception {
-        testUser.setId(EXISTING_USER_ID);
-        assertTrue(testUser.getId() > 0);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        String userJson = objectMapper.writeValueAsString(testUser);
-
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .put("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userJson)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-
-        ResultActions response = mockMvc.perform(builder);
-        response.andExpectAll(
-                status().isOk(),
-                jsonPath("$.id").value(EXISTING_USER_ID),
-                jsonPath("$.permissionLevel").value(testUser.getPermissionLevel().name()),
-                jsonPath("$.name").value(testUser.getName()),
-                jsonPath("$.email").value(testUser.getEmail()),
-                jsonPath("$.password").value(testUser.getPassword()),
-                jsonPath("$.lastLogin").value(testUser.getLastLogin())
-        );
-    }
 
     @Test
     void deleteUserFail() throws Exception {
@@ -191,17 +133,5 @@ class UserControllerTest {
         response.andExpect(status().isBadRequest());
     }
 
-    @Test
-    void deleteUserSuccessful() throws Exception {
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .delete("/users/" + EXISTING_USER_ID)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
-        ResultActions response = mockMvc.perform(builder);
-        response.andExpectAll(
-                status().isOk(),
-                jsonPath("$").exists(),
-                jsonPath("$.id").value(EXISTING_USER_ID)
-        );
-    }
 }

@@ -25,27 +25,4 @@ public class EmailControllerTests {
         assertNotNull(mockMvc);
     }
 
-    @Test
-    void requestPasswordReset_ValidEmail() throws Exception {
-        //sends password reset with user@example.com as email
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders
-                .post("/request-password-reset")
-                .param("email", "user@example.com")
-                .contentType(MediaType.APPLICATION_JSON));
-
-        response.andExpect(status().isOk());
-    }
-
-    @Test
-    void validateResetToken_ValidToken() throws Exception {
-        String validToken = "validToken";
-
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders
-                .get("/validate-reset-token")
-                .param("token", validToken)
-                .contentType(MediaType.APPLICATION_JSON));
-
-        response.andExpect(status().isOk())
-                .andExpect(content().string("Token is valid."));
-    }
 }

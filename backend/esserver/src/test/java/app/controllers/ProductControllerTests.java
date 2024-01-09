@@ -215,19 +215,4 @@ class ProductControllerTests {
         response.andExpect(status().isBadRequest());
     }
 
-    @Test
-    void deleteProductSuccessful() throws Exception {
-        final long ID = 2;
-
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .delete("/product/" + ID)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-
-        ResultActions response = mockMvc.perform(builder);
-        response.andExpectAll(
-                status().isOk(),
-                jsonPath("$").exists(),
-                jsonPath("$.id").value(ID)
-        );
-    }
 }

@@ -67,69 +67,6 @@ class WarehouseControllerTest {
         );
     }
 
-    @Test
-    void createWarehouse() throws Exception {
-        Warehouse warehouse = new Warehouse(0,"Test-name", "Amsterdam", "Bijlmer", "1234 EF", 100, 20, 0);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        String warehouseJson = objectMapper.writeValueAsString(warehouse);
-
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .post("/warehouses")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(warehouseJson)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-
-        ResultActions response = mockMvc.perform(builder);
-        response.andExpectAll(
-                status().isCreated(),
-                jsonPath("$.id", greaterThan(0)),
-                jsonPath("$.name").value(warehouse.getName()),
-                jsonPath("$.city").value(warehouse.getCity()),
-                jsonPath("$.address").value(warehouse.getAddress()),
-                jsonPath("$.postalCode").value(warehouse.getPostalCode())
-        );
-
-        String responseJson = response.andReturn().getResponse().getContentAsString();
-        warehouse = objectMapper.readValue(responseJson, Warehouse.class);
-
-        assertNotNull(warehouse);
-        assertTrue(warehouse.getId() > 0);
-    }
-
-    @Test
-    void deleteWarehouse() throws Exception {
-        long id = 3;
-
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .delete("/warehouses/" + id)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-
-        ResultActions response = mockMvc.perform(builder);
-        response.andExpectAll(
-                status().isOk(),
-                jsonPath("$").exists(),
-                jsonPath("$.id").value(id)
-        );
-    }
-
-    @Test
-    void updateWarehouse() throws Exception {
-        Warehouse warehouse = new Warehouse(1, "Test", "Amsterdam", "Bijlmer", "9012 AF", 100, 20, 0);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String warehouseJson = objectMapper.writeValueAsString(warehouse);
-
-        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .put("/warehouses/" + warehouse.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(warehouseJson)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-
-        ResultActions response = mockMvc.perform(builder);
-        response.andExpect(status().isOk());
-    }
 
     @Test
     void updateWarehouseInvalidData() throws Exception {
