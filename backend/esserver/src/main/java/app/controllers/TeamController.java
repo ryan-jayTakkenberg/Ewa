@@ -31,11 +31,8 @@ public class TeamController {
 
     @GetMapping
     private List<Team> getTeams(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
-        if (jwtInfo.isAdmin()) {
-            return teamRepository.findAll();
-        }
 
-        return List.of(teamRepository.findById(jwtInfo.getId()));
+        return teamRepository.findAll();
     }
 
     @ResponseStatus(HttpStatus.CREATED)

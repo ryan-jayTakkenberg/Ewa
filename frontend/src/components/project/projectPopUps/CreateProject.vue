@@ -48,7 +48,7 @@
     <div class="order-list">
       <h2>Ordered Products:</h2>
       <SolarTable :columns="['Name', 'In Stock', 'Used Quantity', 'Action']">
-        <tr class="table-row" v-for="(projectProduct, index) in projectProducts" :key="projectProduct.productId">
+        <tr class="table-row" v-for="(projectProduct) in projectProducts" :key="projectProduct.productId">
           <td class="px-6 py-4 font-semibold text-base">{{ projectProduct.productName }}</td>
           <td class="px-6 py-4">{{ projectProduct.stockAmount }}</td>
           <td class="px-6 py-4">
@@ -56,9 +56,9 @@
               <option v-for="option in projectProduct.amountOptions" :key="option" :value="option">{{ option }}</option>
             </select>
           </td>
-          <td class="px-6 py-4">
-            <div @click="removeProduct(index)" class="remove-order-btn">Remove product</div>
-          </td>
+<!--          <td class="px-6 py-4">-->
+<!--            <div @click="removeProduct(index)" class="remove-order-btn">Remove product</div>-->
+<!--          </td>-->
         </tr>
       </SolarTable>
     </div>
