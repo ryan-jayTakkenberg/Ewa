@@ -41,7 +41,7 @@ export default {
     <!--User Item-->
     <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
       <div class="pl-3">
-        <div class="text-base font-semibold">{{ teams.name }}</div>
+        <div class="text-base font-semibold py-4">{{ teams.name }}</div>
         <div class="font-normal text-gray-500">{{ teams.users }}</div>
       </div>
     </th>
