@@ -17,6 +17,18 @@
         <label class="modal-label">Postal Code</label>
         <input v-model="warehouse.postalCode" type="text" placeholder="Postal Code" class="modal-input shadow-sm">
       </div>
+
+      <div class="col-span-6 sm:col-span-3">
+        <label class="modal-label">Max Storage</label>
+        <input type="text" v-model="warehouse.maxStorage"
+               class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+      </div>
+      <div class="col-span-6 sm:col-span-3">
+        <label class="modal-label">Min Storage</label>
+        <input type="text" v-model="warehouse.minStorage"
+               class="modal-input shadow-sm focus:ring-blue-600 focus:border-blue-600">
+      </div>
+
     </div>
     <template v-slot:footer>
       <button @click="closePopUp" class="cancel-button">Cancel</button>
@@ -42,6 +54,8 @@ export default {
         city: '',
         address: '',
         postalCode: '',
+        maxStorage: 0,
+        minStorage: 0
       }
     }
   },
@@ -51,18 +65,25 @@ export default {
           this.warehouse.name.trim() === '' ||
           this.warehouse.city.trim() === '' ||
           this.warehouse.address.trim() === '' ||
-          this.warehouse.postalCode.trim() === ''
+          this.warehouse.postalCode.trim() === '' ||
+          this.warehouse.minStorage < 0 ||
+          this.warehouse.maxStorage <= this.warehouse.minStorage
       );
     },
   },
   methods: {
     createWarehouse(){
       const newWarehouse = new Warehouse(
-          this.warehouse.id,
+          0,
           this.warehouse.name,
           this.warehouse.address,
           this.warehouse.postalCode,
-          this.warehouse.city
+          this.warehouse.city,
+          undefined,
+          undefined,
+          Number(this.warehouse.maxStorage),
+          Number(this.warehouse.minStorage),
+          0,
       );
       this.$emit("create-warehouse", newWarehouse);
       this.closePopUp();
