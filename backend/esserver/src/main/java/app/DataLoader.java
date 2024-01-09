@@ -35,12 +35,12 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) {
         System.out.println("Running CommandLine Startup...");
 
-        this.createInitialProducts();
-        this.createSampleWarehouses();
-        this.createSampleReports();
-        this.createSampleOrders();
-        this.createSampleTeamAndProjects();
-        this.createInitialUsers();
+//        this.createInitialProducts();
+//        this.createSampleWarehouses();
+//        this.createSampleReports();
+//        this.createSampleOrders();
+//        this.createSampleTeamAndProjects();
+//        this.createInitialUsers();
 
         System.out.println("Done!");
     }
