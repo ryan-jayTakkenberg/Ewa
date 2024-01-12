@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.exceptions.BadRequestException;
+import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
 import app.models.Report;
 import app.repositories.ReportJPARepository;
@@ -32,12 +33,12 @@ public class ReportController {
      * - Throws BadRequestException for invalid or missing parameters.
      *
      * Dependencies:
-     * - Autowired 'ProductJPARepository' for database interaction.
+     * - Autowired 'ReportJPARepository' for database interaction.
      * - Utilizes 'JWToken' for extracting JWT information from the request attributes.
      *
      * Note:
      * - The controller assumes a REST structure and adheres to HTTP status codes.
-     * - Ensure that the 'ProductJPARepository' is properly configured for database operations.
+     * - Ensure that the 'ReportsJPARepository' is properly configured for database operations.
      * - POST can also be used to UPDATE (edit) the entity
      */
 
@@ -47,6 +48,10 @@ public class ReportController {
     @GetMapping
     private List<Report> getReports(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo) {
 
+        if (jwtInfo.getId() == 0){
+            throw new ForbiddenException("Need JWT to access this information");
+        }
+
         return reportRepo.findAll();
     }
 
@@ -54,7 +59,10 @@ public class ReportController {
     @ResponseStatus(HttpStatus.CREATED)
     private Report postReport(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @RequestBody Report report) {
 
-        // Check for invalid data (e.g., null/0 values)
+        if (jwtInfo.getId() == 0){
+            throw new ForbiddenException("Need JWT to access this information");
+        }
+
         if (report.getSenderId() == 0 || report.getReceiverId() == 0) {
             throw new BadRequestException("Invalid data in the report");
         }
@@ -66,6 +74,10 @@ public class ReportController {
     private ResponseEntity<Report> deleteReport(@RequestAttribute(name = JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtInfo, @PathVariable Long id) {
 
         Report reportToDelete = reportRepo.findById(id);
+
+        if (jwtInfo.getId() == 0){
+            throw new ForbiddenException("Need JWT to access this information");
+        }
 
         if (reportToDelete != null) {
             reportRepo.delete(reportToDelete);

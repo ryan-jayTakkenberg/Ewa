@@ -102,7 +102,7 @@ class ReportControllerTest {
      */
     @Test
     void createReport() throws Exception {
-        Report report = new Report(1, "Hello Jason, please notice that at the end of this week project 5 is due.", "23/12/2023", 1, "admin", 2);
+        Report report = new Report(0, "Test report body", "23/12/2023", 1, "Tobi", 2);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String productJson = objectMapper.writeValueAsString(report);
@@ -116,7 +116,6 @@ class ReportControllerTest {
         ResultActions response = mockMvc.perform(builder);
         response.andExpectAll(
                 status().isCreated(),
-                jsonPath("$.id").value(report.getId()),
                 jsonPath("$.body").value(report.getBody()),
                 jsonPath("$.date").value(report.getDate()),
                 jsonPath("$.senderId").value(report.getSenderId()),

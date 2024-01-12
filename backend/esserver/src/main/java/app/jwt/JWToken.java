@@ -13,9 +13,7 @@ public class JWToken {
     public static final String JWT_ATTRIBUTE_NAME = "jwt";
     private static final String JWT_ISSUER_CLAIM = "iss";
     private static final String JWT_IP_CLAIM = "ipa";
-
     private static final String JWT_ROLE_CLAIM = "rol";
-
     private final long accountId;
     private final PermissionLevel permissionLevel;
     private final String ip;

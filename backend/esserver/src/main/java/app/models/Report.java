@@ -1,7 +1,6 @@
 package app.models;
 
 import jakarta.persistence.*;
-import java.util.Set;
 
 @Entity
 public class Report {
@@ -16,7 +15,8 @@ public class Report {
      */
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name="report_ids", initialValue=101)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="report_ids")
     private long id;
     private String body;
     private String date;
@@ -36,9 +36,7 @@ public class Report {
         this.receiverId = receiverId;
     }
 
-    public Report() {
-
-    }
+    public Report() {}
 
     public long getId() {
         return id;
