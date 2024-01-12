@@ -138,7 +138,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding-bottom: 1rem;
-  background-color: white;
+  background-color: var(--col-white-100);
 }
 
 </style>

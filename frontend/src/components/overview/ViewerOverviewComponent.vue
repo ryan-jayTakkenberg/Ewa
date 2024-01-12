@@ -331,7 +331,7 @@ export default {
   flex-direction: column;
   width: 100%;
   padding: 2rem 3rem;
-  border-bottom: 2px solid var(--col-border);
+  border-bottom: 2px solid var(--col-white-200);
 }
 
 .sectionTitle {
@@ -360,21 +360,22 @@ export default {
   flex-direction: column;
   width: 100px;
   height: 100px;
-  padding-top: 5px;
-  background: var(--col-light-grey);
+  background: var(--col-white-150);
   border-radius: 10px;
 }
 
 .dayOfTheWeek {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-fat);
   color: var(--col-black);
+  line-height: 30px;
 }
 
 .dayOfTheWeekNum {
-  font-size: 2rem;
-  font-weight: 800;
+  font-size: var(--font-size-extralarge);
+  font-weight: var(--font-weight-fat);
   color: var(--col-black);
+  line-height: 35px;
 }
 
 .userInfoContainer {
@@ -386,11 +387,13 @@ export default {
 .infoTitle {
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
+  color: var(--col-black);
 }
 
 .infoValue {
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-medium);
+  color: var(--col-black);
 }
 
 .projectContainer {
@@ -414,19 +417,19 @@ export default {
 }
 
 .projectContainer::-webkit-scrollbar-thumb {
-  background-color: var(--col-border);
+  background-color: var(--col-white-200);
   border-radius: 10px;
 }
 
 .projectContainer::-webkit-scrollbar-track {
-  background-color: var(--col-light-grey);
+  background-color: var(--col-white-150);
   border-radius: 10px;
 }
 
 .projectWrapper {
   min-width: 400px;
   height: auto;
-  background: var(--col-white);
+  background: var(--col-white-100);
   border: 2px solid var(--col-black);
   border-radius: 5px;
   padding: 1rem;
@@ -479,7 +482,7 @@ export default {
   padding: 2rem;
   height: 500px;
   width: 100%;
-  background: #f5f5f5;
+  background: var(--col-white-150);
   border-radius: 10px;
 }
 
@@ -499,7 +502,7 @@ export default {
   padding: 2rem;
   height: 500px;
   width: 100%;
-  background: var(--col-light-grey);
+  background: var(--col-white-150);
   border-radius: 10px;
 }
 
@@ -561,13 +564,17 @@ export default {
 .sendReportButton {
   width: 150px;
   height: 50px;
-  background: var(--col-solar);
-  color: var(--col-white);
+  background: var(--col-solar-500);
+  color: var(--col-white-100);
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
   border-radius: 5px;
   outline: none;
   cursor: pointer;
+}
+
+.sendReportButton:hover {
+  background: var(--col-solar-550);
 }
 
 .inboxHeader {
@@ -576,7 +583,7 @@ export default {
   justify-content: space-between;
   border-radius: 10px;
   padding: 0 1rem;
-  background: var(--col-white);
+  background: var(--col-white-100);
 }
 
 .actualReports {
@@ -595,12 +602,12 @@ export default {
 }
 
 .actualReports::-webkit-scrollbar-thumb {
-  background-color: #e5e5e5;
+  background-color: var(--col-white-200);
   border-radius: 10px;
 }
 
 .actualReports::-webkit-scrollbar-track {
-  background-color: #f5f5f5;
+  background-color: var(--col-white-150);
   border-radius: 10px;
 }
 
@@ -612,17 +619,17 @@ export default {
   min-height: 150px;
   height: auto;
   flex: 0 0 auto;
-  background: var(--col-white);
+  background: var(--col-white-100);
   padding: 1rem;
   border-radius: 5px;
-  border: 1px solid var(--col-border);
+  border: 1px solid var(--col-white-200);
   cursor: pointer;
 }
 
 .reportHeader {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid var(--col-border);
+  border-bottom: 1px solid var(--col-white-150);
   width: 100%;
 }
 
@@ -633,7 +640,7 @@ export default {
 
 .reportDate {
   font-weight: var(--font-weight-medium);
-  color: var(--col-grey);
+  color: var(--col-white-400);
 }
 
 .reportBody {
@@ -660,8 +667,8 @@ export default {
 
 .replyReport:hover,
 .deleteReport:hover {
-  background: var(--col-solar);
-  color: var(--col-white);
+  background: var(--col-solar-500);
+  color: var(--col-white-100);
 }
 
 .material-symbols-outlined {

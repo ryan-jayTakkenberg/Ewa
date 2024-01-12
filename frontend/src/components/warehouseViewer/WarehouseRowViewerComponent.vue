@@ -55,7 +55,7 @@ export default {
 <style scoped>
 
 .table-row {
-  background-color: white;
+  background-color: var(--col-white-100);
   border-bottom-width: 1px;
   cursor: pointer;
 }

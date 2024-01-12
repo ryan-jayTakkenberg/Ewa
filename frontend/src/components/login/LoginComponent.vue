@@ -37,28 +37,29 @@
           <button type="submit" class="loginButton">Login</button>
         </form>
 
-      <!-- Password Reset Form -->
-      <div class="passwordResetContainer" v-show="showPasswordResetForm">
-        <div class="headerWrapper">
-          <div class="crossWrapper" v-on:click="togglePasswordResetForm"><span class="material-symbols-outlined">close</span></div>
-        </div>
+<!--      &lt;!&ndash; Password Reset Form &ndash;&gt;-->
+<!--      <div class="passwordResetContainer" v-show="showPasswordResetForm">-->
+<!--        <div class="headerWrapper">-->
+<!--          <div class="crossWrapper" v-on:click="togglePasswordResetForm"><span class="material-symbols-outlined">close</span></div>-->
+<!--        </div>-->
 
-        <form v-on:submit.prevent="submitPasswordReset">
-          <div class="inputWrapper">
-            <input type="email" name="email" v-model="emailInput" required>
-            <label for="email">Email</label>
-          </div>
+<!--        <form v-on:submit.prevent="submitPasswordReset">-->
+<!--          <div class="inputWrapper">-->
+<!--            <input type="email" name="email" v-model="emailInput" required>-->
+<!--            <label for="email">Email</label>-->
+<!--          </div>-->
 
-          <!-- Reset Password Button Container -->
-          <div class="resetPasswordButtonContainer">
-            <button class="loginButton">Reset Password</button>
-          </div>
-        </form>
-       </div><div class="linkWrapper" v-show="!showPasswordResetForm">
-      <a href="#" v-on:click.prevent="togglePasswordResetForm">Can't sign in?</a>
-        </div>
+<!--          &lt;!&ndash; Reset Password Button Container &ndash;&gt;-->
+<!--          <div class="resetPasswordButtonContainer">-->
+<!--            <button class="loginButton">Reset Password</button>-->
+<!--          </div>-->
+<!--        </form>-->
+<!--       </div><div class="linkWrapper" v-show="!showPasswordResetForm">-->
+<!--      <a href="#" v-on:click.prevent="togglePasswordResetForm">Can't sign in?</a>-->
+<!--        </div>-->
+<!--      &lt;!&ndash; Link to Toggle Password Reset Form &ndash;&gt;-->
+
       </div>
-      <!-- Link to Toggle Password Reset Form -->
 
     </div>
 
@@ -78,7 +79,6 @@ export default {
       emailInput: '',
       passwordInput: '',
       errorMessage: '',
-
       showPasswordResetForm: false,
       resetErrorMessage: '',
       newPasswordInput: '',
@@ -88,46 +88,44 @@ export default {
 
   methods: {
 
-
-    async submitNewPassword() {
-      try {
-        let response = await postAPI("/api/reset-password", {
-          token: this.resetToken,
-          newPassword: this.newPasswordInput
-        });
-
-        // Handle the response
-        console.log("Password reset successful", response);
-        this.newPasswordInput = '';
-        this.showNewPasswordForm = false;
-        // todo validation
-      } catch (error) {
-        console.error("Error in setting new password", error);
-        // todo validation
-      }
-    },
-
-    async submitPasswordReset() {
-
-      try {
-        let response = await postAPI("/api/request-password-reset?email=" + encodeURIComponent(this.emailInput));
-        console.log("Reset email sent", response);
-        this.emailInput = '';
-        this.togglePasswordResetForm();
-      } catch (error) {
-        console.error("Error sending reset email", error);
-        this.resetErrorMessage = 'Error sending reset email. Please try again.';
-      }
-    },
+    //TODO set in own component for M&T
+    // async submitNewPassword() {
+    //   try {
+    //     let response = await postAPI("/api/reset-password", {
+    //       token: this.resetToken,
+    //       newPassword: this.newPasswordInput
+    //     });
+    //
+    //     // Handle the response
+    //     console.log("Password reset successful", response);
+    //     this.newPasswordInput = '';
+    //     this.showNewPasswordForm = false;
+    //     // todo validation
+    //   } catch (error) {
+    //     console.error("Error in setting new password", error);
+    //     // todo validation
+    //   }
+    // },
+    //
+    // async submitPasswordReset() {
+    //
+    //   try {
+    //     let response = await postAPI("/api/request-password-reset?email=" + encodeURIComponent(this.emailInput));
+    //     console.log("Reset email sent", response);
+    //     this.emailInput = '';
+    //     this.togglePasswordResetForm();
+    //   } catch (error) {
+    //     console.error("Error sending reset email", error);
+    //     this.resetErrorMessage = 'Error sending reset email. Please try again.';
+    //   }
+    // },
 
     showLogin() {
-
       this.showLoginForm = true;
       this.showPasswordResetForm = false;
     },
 
     hideLogin() {
-
       this.errorMessage = '';
       this.emailInput = '';
       this.passwordInput = '';
@@ -135,7 +133,7 @@ export default {
     },
 
     async submitForm() {
-      let response = await postAPI("/api/authentication/login", {
+      let account = await postAPI("/api/authentication/login", {
         email: this.emailInput,
         password: this.passwordInput,
       }, {
@@ -144,19 +142,17 @@ export default {
         }
       }).catch(() => null);
 
-      let jwt = response?.headers?.authorization;
+      let jwt = account?.headers?.authorization;
       if (!jwt) {
         this.errorMessage = 'Invalid login, please try again';
         return;
       }
 
       setJWT(jwt);
-      setAdmin(response.data.permissionLevel === "ADMIN");
-      setId(response.data.id);
-      setUsername(response.data.name);
-      // setUserTeam(response.data.team);
-
-      // console.log('Logged in user`;', response.data);
+      setAdmin(account.data.permissionLevel === "ADMIN");
+      setId(account.data.id);
+      setUsername(account.data.name);
+      console.log('Logged in user: ', account.data);
 
       try {
         this.$router.push(isAdmin() ? '/admin-overview' : '/viewer-overview');
@@ -165,11 +161,11 @@ export default {
       }
     },
 
-    togglePasswordResetForm() {
-      this.showPasswordResetForm = !this.showPasswordResetForm;
-      this.showLoginForm = false;
-      this.errorMessage = '';
-    },
+    // togglePasswordResetForm() {
+    //   this.showPasswordResetForm = !this.showPasswordResetForm;
+    //   this.showLoginForm = false;
+    //   this.errorMessage = '';
+    // },
 
   },
 }
@@ -200,7 +196,7 @@ export default {
   height: 100svh;
   width: 25%;
   padding: 0 4rem;
-  background: #ffffff;
+  background: var(--col-white-100)
 }
 
 .logoContainer {
@@ -233,15 +229,15 @@ export default {
 
 .title {
   text-align: left;
-  font-size: 30px;
-  font-weight: 700;
-  color: #222;
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-fat);
+  color: var(--col-black);
 }
 
 .description {
-  font-size: 12px;
-  font-weight: 400;
-  color: #999;
+  font-size: var(--font-size-extrasmall);
+  font-weight: var(--font-weight-medium);
+  color: var(--col-white-500);
 }
 
 .showLoginFormButton {
@@ -249,10 +245,10 @@ export default {
   border-radius: 5px;
   text-transform: uppercase;
   font-size: 1em;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   background: transparent;
-  border: 2px solid #222;
-  color: #222;
+  border: 2px solid var(--col-black);;
+  color: var(--col-black);
   margin-top: 2rem;
   cursor: pointer;
   transition: 0.2s ease-in-out;
@@ -263,7 +259,7 @@ form {
   flex-direction: column;
   width: 100%;
   padding: 1rem;
-  border: 2px solid #222;
+  border: 2px solid var(--col-black);
   border-radius: 5px;
   animation: fadeForm 0.3s ease-in-out;
 }
@@ -305,19 +301,19 @@ form input {
   padding: 1.35em 0.65em 0 0.65em;
   border: none;
   outline: none;
-  background: #f5f5f5;
+  background: var(--col-white-150);
   border-radius: 3px;
   font-size: 0.85em;
-  font-weight: 700;
-  color: #222;
+  font-weight: var(--font-weight-fat);
+  color: var(--col-black);
   z-index: 1;
 }
 
 form label {
   position: absolute;
-  font-size: 0.75em;
-  font-weight: 700;
-  color: #747474;
+  font-size: var(--font-size-extrasmall);
+  font-weight: var(--font-weight-fat);
+  color: var(--col-white-700);
   text-transform: uppercase;
   padding-left: 1rem;
   z-index: 2;
@@ -329,7 +325,7 @@ form label {
 }
 
 form input:focus {
-  outline: 2px solid #222;
+  outline: 2px solid var(--col-black);
   background: none;
 }
 
@@ -341,37 +337,31 @@ form input:focus + label, form input:valid + label {
 }
 
 @keyframes labelIn {
-
   0% {
     opacity: 1;
     transform: translateY(0);
   }
-
   100% {
     opacity: 0;
     transform: translateY(-25%);
   }
-
 }
 
 @keyframes labelOut {
-
   0% {
-    font-size: 0.6em;
+    font-size: 10px;
     top: -0.25em;
     padding-left: 0.75em;
     transform: translateY(25%);
     opacity: 0;
   }
-
   100% {
-    font-size: 0.6em;
+    font-size: 10px;
     top: -0.25em;
     padding-left: 0.75em;
     transform: translateY(0);
     opacity: 1;
   }
-
 }
 
 .loginButton {
@@ -379,10 +369,10 @@ form input:focus + label, form input:valid + label {
   border-radius: 5px;
   text-transform: uppercase;
   font-size: 1em;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   background: transparent;
-  border: 2px solid #222;
-  color: #222;
+  border: 2px solid var(--col-black);
+  color: var(--col-black);
   margin-top: 2rem;
   cursor: pointer;
   transition: 0.2s ease-in-out;
@@ -390,8 +380,8 @@ form input:focus + label, form input:valid + label {
 
 .showLoginFormButton:hover,
 .loginButton:hover {
-  background: #222;
-  color: #fff;
+  background: var(--col-black);
+  color: var(--col-white-100);
 }
 
 .headerWrapper {
@@ -415,7 +405,7 @@ form input:focus + label, form input:valid + label {
 }
 
 .crossWrapper:hover {
-  background: #f5f5f5;
+  background: var(--col-white-150);
 }
 
 .errorMessageWrapper {
@@ -423,27 +413,20 @@ form input:focus + label, form input:valid + label {
   align-items: center;
   justify-content: space-between;
   border-radius: 5px;
-  border: 2px solid red;
+  border: 2px solid var(--col-error);
   padding: 0.5rem 1rem;
   margin-top: 1rem;
 }
 
 .errorMessage {
-  font-size: 0.8em;
-  font-weight: 600;
-}
-
-.linkWrapper {
-  position: absolute;
-  bottom: 5%;
-  display: flex;
-  align-items: center;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
 }
 
 a {
-  font-size: 15px;
-  font-weight: 500;
-  color: #222;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
 }
 
 a:hover {
@@ -451,7 +434,7 @@ a:hover {
 }
 
 .material-symbols-outlined {
-   font-size: 30px;
+   font-size: var(--font-size-large);
    font-variation-settings:
        'FILL' 1,
        'wght' 600,
@@ -460,7 +443,7 @@ a:hover {
 }
 
 .report-icon {
-  color: red;
+  color: var(--col-error);
 }
 
 @media screen and (max-width: 1500px) {
@@ -469,7 +452,6 @@ a:hover {
     padding: 0 3rem;
     width: 30%;
   }
-
 }
 
 @media screen and (max-width: 1100px) {
@@ -478,7 +460,6 @@ a:hover {
     padding: 0 3rem;
     width: 40%;
   }
-
 }
 
 @media screen and (max-width: 950px) {
@@ -508,7 +489,6 @@ a:hover {
   .showLoginFormButton {
     margin-top: 3rem;
   }
-
 }
 
 @media screen and (max-width: 750px) {
@@ -517,7 +497,6 @@ a:hover {
     padding: 0 7.5rem;
     width: 100%;
   }
-
 }
 
 @media screen and (max-width: 600px) {
@@ -547,7 +526,6 @@ a:hover {
   .description {
     font-size: 12px;
   }
-
 }
 
 @media screen and (max-width: 400px) {
@@ -556,15 +534,6 @@ a:hover {
     padding: 0 2rem;
     width: 100%;
   }
-
 }
-.passwordResetContainer {
-  width: 100%;
-  padding: 0.5rem;
-  border: 2px solid #222;
-  border-radius: 5px;
-}
-
-
 
 </style>

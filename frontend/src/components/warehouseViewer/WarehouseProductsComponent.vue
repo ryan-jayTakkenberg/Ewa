@@ -40,20 +40,14 @@ export default {
 
 .warehouseProductsContainer {
   padding: 25px;
-  border-bottom: 1px solid #e5e5e5;
-  background: #f5f5f5;
+  border-bottom: 1px solid var(--col-white-200);
+  background: var(--col-white-150);
 }
 
-.title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #222;
-}
-
-li {
-  font-size: 15px;
-  font-weight: 600;
-  color: #222;
+.title, li {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
 }
 
 table {
@@ -63,7 +57,7 @@ table {
 }
 
 th, td {
-  border: 1px solid #d5d5d5;
+  border: 1px solid var(--col-white-500);
   padding: 8px;
   text-align: left;
 }
@@ -71,12 +65,12 @@ th, td {
 th {
   font-size: 15px;
   font-weight: 600;
-  background-color: #e5e5e5;
+  background-color: var(--col-white-200);
 }
 
 td {
-  font-size: 15px;
-  font-weight: 400;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
 }
 
 </style>
