@@ -93,26 +93,11 @@ export default {
 }
 
 .modal {
-  background: #fff;
+  background: var(--col-white-100);
   border-radius: 10px;
   padding: 2rem;
   max-width: 500px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin-bottom: 3rem;
-}
-
-.image {
-  height: 100px;
-  width: 100px;
-  background: url("../../../static/images/delete.png") center no-repeat;
-  background-size: cover;
 }
 
 .description {
@@ -121,8 +106,8 @@ export default {
   justify-content: center;
   text-align: center;
   font-size: 1.5em;
-  font-weight: 700;
-  color: #222;
+  font-weight: var(--font-weight-fat);
+  color: var(--col-black);
   margin-bottom: 2rem;
 }
 
@@ -143,47 +128,47 @@ export default {
 }
 
 .reportContainer::-webkit-scrollbar-thumb {
-  background-color: #e5e5e5;
+  background-color: var(--col-white-200);
   border-radius: 10px;
 }
 
 .reportContainer::-webkit-scrollbar-track {
-  background-color: #f5f5f5;
+  background-color: var(--col-white-150);
   border-radius: 10px;
 }
 
 .report {
   width: 100%;
-  background: #fff;
+  background: var(--col-white-100);
   border-radius: 5px;
   padding: 1rem;
-  border: 2px solid #555;
+  border: 2px solid var(--col-white-800);
 }
 
 .reportHeader {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--col-white-200);
   width: 100%;
   margin-bottom: 0.5rem;
 }
 
 .reportSender {
-  font-weight: 600;
-  font-size: 0.7em;
-  color: #222;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-small);
+  color: var(--col-black);
 }
 
 .reportDate {
-  font-weight: 500;
-  color: #999;
-  font-size: 0.7em;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-small);
+  color: var(--col-white-500);
 }
 
 .reportBody {
-  font-weight: 500;
-  font-size: 0.7em;
-  color: #222;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-small);
+  color: var(--col-black)
 }
 
 .warningContainer {
@@ -194,8 +179,8 @@ export default {
   padding: 1rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
-  background: #fff3ea;
-  border-left: 5px solid #fa5530;
+  background: var(--col-warning-150);
+  border-left: 5px solid var(--col-error)
 }
 
 .warningLogo {
@@ -205,9 +190,9 @@ export default {
 }
 
 .warningText {
-  font-size: 0.8em;
-  font-weight: 500;
-  color: #222;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--col-black);
 }
 
 .buttonWrapper {
@@ -221,22 +206,26 @@ export default {
   height: 50px;
   width: 100%;
   border-radius: 5px;
-  background: #c5ce2c;
-  font-weight: 600;
-  color: #fff;
+  background: var(--col-solar-500);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-white-100);
+}
+
+.yesButton:hover {
+  background: var(--col-solar-550);
 }
 
 .noButton {
   height: 50px;
   width: 100%;
   border-radius: 5px;
-  border: 2px solid #e5e5e5;
-  font-weight: 600;
-  color: #222
+  border: 2px solid var(--col-white-150);
+  font-weight: var(--font-weight-bold);
+  color: var(--col-black);
 }
 
 .material-symbols-outlined.warning {
-  color: #b95848;
+  color: var(--col-warning-500);
   font-variation-settings:
       'FILL' 0,
       'wght' 400,

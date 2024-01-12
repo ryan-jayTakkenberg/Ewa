@@ -26,4 +26,6 @@
     --col-solar-550: hsl(63, 65%, 45%);
 
     --col-error: hsl(0, 100%, 50%);
+    --col-warning-500: hsl(8, 45%, 50%);
+    --col-warning-150: hsl(8, 45%, 95%)
 }
