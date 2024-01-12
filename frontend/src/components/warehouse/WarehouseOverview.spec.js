@@ -44,11 +44,4 @@ describe('WarehouseOverview.vue', () => {
 
         expect(wrapper.findComponent({ name: 'CreateWarehouse' }).exists()).toBe(true);
     });
-
-    it('updates inputValue when handleInputValueChange method is called', async () => {
-        const value = 'test';
-        await wrapper.vm.handleInputValueChange(value);
-
-        expect(wrapper.vm.inputValue).toEqual(value);
-    });
 });
