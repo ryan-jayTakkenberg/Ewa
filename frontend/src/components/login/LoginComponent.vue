@@ -235,7 +235,7 @@ export default {
 }
 
 .description {
-  font-size: var(--font-size-extrasmall);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   color: var(--col-white-500);
 }
@@ -311,7 +311,7 @@ form input {
 
 form label {
   position: absolute;
-  font-size: var(--font-size-extrasmall);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-fat);
   color: var(--col-white-700);
   text-transform: uppercase;

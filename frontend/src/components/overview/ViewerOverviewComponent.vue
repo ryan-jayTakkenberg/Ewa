@@ -372,7 +372,7 @@ export default {
 }
 
 .dayOfTheWeekNum {
-  font-size: var(--font-size-extralarge);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-fat);
   color: var(--col-black);
   line-height: 35px;

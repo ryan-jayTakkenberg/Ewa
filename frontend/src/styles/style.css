@@ -1,9 +1,9 @@
 :root {
-    --font-size-extrasmall: 12px;
+    --font-size-xs: 12px;
     --font-size-small: 15px;
     --font-size-medium: 20px;
     --font-size-large: 30px;
-    --font-size-extralarge: 35px;
+    --font-size-xl: 35px;
 
     --font-weight-small: 200;
     --font-weight-medium: 400;
