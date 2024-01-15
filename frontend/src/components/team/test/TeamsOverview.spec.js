@@ -12,6 +12,7 @@ describe('TeamsOverview', () => {
         wrapper = mount(TeamsOverview, {
             global: {
                 provide: {
+                    //if i dont do this i get error injection not found
                     teamsService: {
                         asyncFindAllWithProjectCount: jest.fn(() => Promise.resolve([])),
                         asyncDeleteById: jest.fn(() => Promise.resolve()),
