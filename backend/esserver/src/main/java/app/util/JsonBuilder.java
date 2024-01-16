@@ -1,17 +1,12 @@
 package app.util;
 
 import app.exceptions.BadRequestException;
-import app.exceptions.NotFoundException;
-import app.models.Order;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
@@ -99,25 +94,25 @@ public class JsonBuilder {
         }
     }
 
-    public <E extends Enum<E>> E getEnumFromField(String field, Class<E> enumClass) {
-        String stringValue = getStringFromField(field);
-        if (stringValue == null) {
-            return null;
-        }
-
-        E[] enumConstants = enumClass.getEnumConstants();
-
-        if (enumConstants != null) {
-            for (E enumValue : enumConstants) {
-                if (enumValue.name().equals(field) && stringValue.equalsIgnoreCase(enumValue.toString())) {
-                    return enumValue;
-                }
-            }
-        }
-
-
-        throw new BadRequestException(String.format("Field '%s' must be a valid enum value", field));
-    }
+//    public <E extends Enum<E>> E getEnumFromField(String field, Class<E> enumClass) {
+//        String stringValue = getStringFromField(field);
+//        if (stringValue == null) {
+//            return null;
+//        }
+//
+//        E[] enumConstants = enumClass.getEnumConstants();
+//
+//        if (enumConstants != null) {
+//            for (E enumValue : enumConstants) {
+//                if (enumValue.name().equals(field) && stringValue.equalsIgnoreCase(enumValue.toString())) {
+//                    return enumValue;
+//                }
+//            }
+//        }
+//
+//
+//        throw new BadRequestException(String.format("Field '%s' must be a valid enum value", field));
+//    }
 
     public boolean getBooleanFromField(String field) {
         if (!json.has(field)) {
