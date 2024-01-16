@@ -1,11 +1,9 @@
-
 # Green Left
 
 Green Left is a website that manages the inventory, orders, warehouses, projects and teams of Solar Serum.
 
 
 ## Color Reference
-**TODO:** UPDATE THIS TO THE CORRECT COLORS !!!! <!> <!>
 
 | Color            | Hex                                                              |
 |------------------|------------------------------------------------------------------|
