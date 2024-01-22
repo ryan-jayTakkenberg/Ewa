@@ -29,7 +29,7 @@
 
       <div class="infoValueContainer">
         <div class="infoValue">{{ currentTeam?.name ?? "Currently not in a team" }}</div>
-        <div class="infoValue">{{ this.userProjects.length }}</div>
+        <div class="infoValue">{{ userProjects.length }}</div>
         <div class="infoValue"> {{ reports.length }}</div>
       </div>
 
@@ -96,7 +96,7 @@
               class="reportWrapper"
               v-for="(report, index) in reports"
               :key="index"
-              @click="toggleSelected(index)"
+              @click="selectReport(index)"
               :class="{ 'selected': selectedReports.some(selectedReport => selectedReport.id === report.id) }">
 
             <div class="reportHeader">
@@ -290,7 +290,7 @@ export default {
       return str.charAt(0).toUpperCase() + str.slice(1);
     },
 
-    toggleSelected(index) {
+    selectReport(index) {
       const selectedReportIndex = this.selectedReports.findIndex((report) => report.id === this.reports[index].id);
 
       if (selectedReportIndex === -1) {

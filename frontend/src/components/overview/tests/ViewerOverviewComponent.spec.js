@@ -35,6 +35,25 @@ describe('ViewerOverviewComponent', () => {
         expect(wrapper.exists()).toBe(true);
     });
 
+    it('displays the username, user team, and user reports', () => {
+
+        const welcomeText = wrapper.find('.hiText');
+        const teamInfo = wrapper.findAll('.infoValue').at(0);
+        const projectInfo = wrapper.findAll('.infoValue').at(1);
+        const reportsInfo = wrapper.findAll('.infoValue').at(2);
+
+        const welcomeTextContent = welcomeText.text();
+        const teamInfoContent = teamInfo.text();
+        const projectInfoContent = projectInfo.text();
+        const reportsInfoContent = reportsInfo.text();
+
+        expect(welcomeTextContent).toContain(wrapper.vm.username);
+        const expectedTeamName = wrapper.vm.currentTeam?.name ?? "Currently not in a team";
+        expect(teamInfoContent).toContain(expectedTeamName);
+        expect(parseInt(projectInfoContent)).toEqual(wrapper.vm.userProjects.length);
+        expect(parseInt(reportsInfoContent)).toEqual(wrapper.vm.reports.length);
+    });
+
     it('calls modal on delete reports', async () => {
         const showModalSpy = jest.spyOn(wrapper.vm, 'showModal');
         await wrapper.vm.showModal();
