@@ -16,7 +16,6 @@ public class WarehouseJPARepository implements EntityRepositoryJPA<Warehouse>{
     @PersistenceContext
     private EntityManager em;
 
-
     @Override
     public List<Warehouse> findAll() {
         TypedQuery<Warehouse> query = this.em.createQuery("select w from Warehouse w", Warehouse.class);

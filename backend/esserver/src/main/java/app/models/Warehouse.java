@@ -23,7 +23,6 @@ public class Warehouse {
     private int minStorage;
     private int currentStorage;
 
-
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"warehouse"})
     private final Set<Team> teams = new HashSet<>();
@@ -36,7 +35,6 @@ public class Warehouse {
 
     }
 
-
     public Warehouse(int id, String name, String city, String address, String postalCode, int maxStorage, int minStorage,int currentStorage) {
         this.id = id;
         this.name = name;
@@ -47,8 +45,6 @@ public class Warehouse {
         this.minStorage = minStorage;
         this.currentStorage = currentStorage;
     }
-
-
 
     public static Warehouse createSampleOffer(int id){
         String name = "Warehouse " + id;

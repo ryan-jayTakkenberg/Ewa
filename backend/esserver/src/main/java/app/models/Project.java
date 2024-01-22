@@ -67,7 +67,6 @@ public class Project {
     }
 
 
-
     public Team getTeam() {
         return team;
     }
