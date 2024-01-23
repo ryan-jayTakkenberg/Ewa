@@ -63,6 +63,7 @@ class WarehouseControllerTest {
         assertNotNull(mockMvc);
     }
 
+    //F.I.R.S.t
     @Test
     void getWarehouses() throws Exception {
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
@@ -78,18 +79,22 @@ class WarehouseControllerTest {
 
     @Test
     void getWarehouseByIdInvalidId() throws Exception {
+        //arrange
         long invalidId = 999;
 
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .get("/warehouses/{id}", invalidId)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
+        //act
         mockMvc.perform(builder)
+                //assert
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void updateWarehouseInvalidData() throws Exception {
+        //arrange
         Warehouse warehouse = new Warehouse(0, "Test", "Amsterdam", "Bijlmer", "9012 AF", 100, 20, 0);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -101,19 +106,23 @@ class WarehouseControllerTest {
                 .content(warehouseJson)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
+        //act
         ResultActions response = mockMvc.perform(builder);
+        //assert
         response.andExpect(status().isNotFound());
     }
 
     @Test
     void deleteWarehouse() throws Exception {
+        //arrange
         long id = 3;
 
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .delete("/warehouses/" + id)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-
+        //act
         ResultActions response = mockMvc.perform(builder);
+        //assert
         response.andExpectAll(
                 status().isOk()
         );
@@ -121,6 +130,7 @@ class WarehouseControllerTest {
 
     @Test
     void addNewWarehouse() throws Exception {
+        //arrange
         Warehouse newWarehouse = new Warehouse(0, "New Warehouse", "New Address", "New City", "12345", 200, 50, 0);
         ObjectMapper objectMapper = new ObjectMapper();
         String newWarehouseJson = objectMapper.writeValueAsString(newWarehouse);
@@ -131,33 +141,9 @@ class WarehouseControllerTest {
                 .content(newWarehouseJson)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
+        //act
         mockMvc.perform(builder)
+                //assert
                 .andExpect(status().isOk());
     }
-
-//    @Test
-//    void updateWarehouse() throws Exception {
-//        Warehouse existingWarehouse = new Warehouse(1, "Existing Warehouse", "Existing Address", "Existing City", "54321", 300, 75, 50);
-//        warehouseRepository.save(existingWarehouse);
-//
-//        ObjectNode updateJson = new ObjectMapper().createObjectNode();
-//        updateJson.put("id", existingWarehouse.getId());
-//        updateJson.put("name", "Updated Warehouse");
-//        updateJson.put("address", "Updated Address");
-//        updateJson.put("city", "Updated City");
-//        updateJson.put("postalCode", "67890");
-//        updateJson.put("maxStorage", 400);
-//        updateJson.put("minStorage", 100);
-//        updateJson.put("currentStorage", 75);
-//
-//        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-//                .put("/warehouses/" + existingWarehouse.getId())
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(updateJson.toString())
-//                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-//
-//        // Act & Assert
-//        mockMvc.perform(builder)
-//                .andExpect(status().isOk());
-//    }
 }
