@@ -5,7 +5,6 @@ let wrapper;
 
 const SEARCHBAR_PLACEHOLDER_CONTAINS = 'search';
 const TABLE_HEADER_CONTAINS = 'order';
-const CREATE_BTN = 'Create Order';
 const ACTION_BUTTON = 'Action';
 
 beforeEach(() => wrapper = mount(orderOverview));
