@@ -78,14 +78,12 @@ class WarehouseControllerTest {
 
     @Test
     void getWarehouseByIdInvalidId() throws Exception {
-        // Arrange
         long invalidId = 999;
 
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .get("/warehouses/{id}", invalidId)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
-        // Act & Assert
         mockMvc.perform(builder)
                 .andExpect(status().isNotFound());
     }
@@ -133,7 +131,6 @@ class WarehouseControllerTest {
                 .content(newWarehouseJson)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
-        // Act & Assert
         mockMvc.perform(builder)
                 .andExpect(status().isOk());
     }
