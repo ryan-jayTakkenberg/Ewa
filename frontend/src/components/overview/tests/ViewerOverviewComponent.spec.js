@@ -35,18 +35,22 @@ describe('ViewerOverviewComponent', () => {
         expect(wrapper.exists()).toBe(true);
     });
 
+    // FIRST
     it('displays the username, user team, and user reports', () => {
 
+        // Arrange: Find elements in the wrapper for welcome text, team info, project info, and reports info
         const welcomeText = wrapper.find('.hiText');
         const teamInfo = wrapper.findAll('.infoValue').at(0);
         const projectInfo = wrapper.findAll('.infoValue').at(1);
         const reportsInfo = wrapper.findAll('.infoValue').at(2);
 
+        // Act: Retrieve the text content of the elements
         const welcomeTextContent = welcomeText.text();
         const teamInfoContent = teamInfo.text();
         const projectInfoContent = projectInfo.text();
         const reportsInfoContent = reportsInfo.text();
 
+        // Assert: Validate the displayed information against the expected values
         expect(welcomeTextContent).toContain(wrapper.vm.username);
         const expectedTeamName = wrapper.vm.currentTeam?.name ?? "Currently not in a team";
         expect(teamInfoContent).toContain(expectedTeamName);
@@ -54,21 +58,30 @@ describe('ViewerOverviewComponent', () => {
         expect(parseInt(reportsInfoContent)).toEqual(wrapper.vm.reports.length);
     });
 
+    // FIRST
     it('calls modal on delete reports', async () => {
+        // Arrange: Spy on the showModal method of the component's view model
         const showModalSpy = jest.spyOn(wrapper.vm, 'showModal');
+
+        // Act: Call the showModal method asynchronously
         await wrapper.vm.showModal();
+
+        // Assert: Verify that the showModal method has been called
         expect(showModalSpy).toHaveBeenCalled();
     });
 
+    // FIRST
     it('has a send report container', () => {
+        // Arrange: Find elements in the wrapper for select user input, report input, and send report button
         const selectUserInput = wrapper.find(SELECT_RECEIVER);
-        expect(selectUserInput.exists()).toBe(true);
-
         const reportInput = wrapper.find(REPORT_TEXT_FIELD);
-        expect(reportInput.exists()).toBe(true);
-
         const sendReportButton = wrapper.find(SEND_REPORT_BUTTON);
+
+        // Assert: Verify the existence of each component in the send report container
+        expect(selectUserInput.exists()).toBe(true);
+        expect(reportInput.exists()).toBe(true);
         expect(sendReportButton.exists()).toBe(true);
     });
+
 
 });

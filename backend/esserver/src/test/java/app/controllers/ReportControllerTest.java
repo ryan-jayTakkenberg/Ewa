@@ -69,14 +69,18 @@ class ReportControllerTest {
      */
     @Test
     void getReports() throws Exception {
+        // Arrange: Set up the request builder with the appropriate endpoint and authorization header
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .get("/reports")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
+        // Act: Perform the request using MockMvc and obtain the response actions
         ResultActions response = mockMvc.perform(builder);
+
+        // Assert: Validate that the response meets the expected criteria
         response.andExpectAll(
-                status().isOk(),
-                jsonPath("$").isArray()
+                status().isOk(),           // Assert HTTP status code is 200 (OK)
+                jsonPath("$").isArray()    // Assert the response body is a JSON array
         );
     }
 
@@ -102,32 +106,36 @@ class ReportControllerTest {
      */
     @Test
     void createReport() throws Exception {
+        // Arrange: Create a sample report object and convert it to JSON
         Report report = new Report(0, "Test report body", "23/12/2023", 1, "Tobi", 2);
-
         ObjectMapper objectMapper = new ObjectMapper();
-        String productJson = objectMapper.writeValueAsString(report);
+        String reportJson = objectMapper.writeValueAsString(report);
 
+        // Act: Build and perform a POST request to create a report
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .post("/reports")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(productJson)
+                .content(reportJson)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
         ResultActions response = mockMvc.perform(builder);
+
+        // Assert: Validate the response for successful report creation
         response.andExpectAll(
-                status().isCreated(),
-                jsonPath("$.body").value(report.getBody()),
-                jsonPath("$.date").value(report.getDate()),
-                jsonPath("$.senderId").value(report.getSenderId()),
-                jsonPath("$.senderName").value(report.getSenderName()),
-                jsonPath("$.receiverId").value(report.getReceiverId())
+                status().isCreated(),                             // Assert HTTP status code is 201 (Created)
+                jsonPath("$.body").value(report.getBody()),      // Assert the response body matches the input
+                jsonPath("$.date").value(report.getDate()),       // Assert the response date matches the input
+                jsonPath("$.senderId").value(report.getSenderId()),    // Assert senderId in the response
+                jsonPath("$.senderName").value(report.getSenderName()), // Assert senderName in the response
+                jsonPath("$.receiverId").value(report.getReceiverId())  // Assert receiverId in the response
         );
 
+        // Additional Assertions: Validate the response JSON and report ID
         String responseJson = response.andReturn().getResponse().getContentAsString();
         report = objectMapper.readValue(responseJson, Report.class);
 
-        assertNotNull(report);
-        assertTrue(report.getId() > 0); // Report ID must be higher than 0
+        assertNotNull(report);                   // Assert that the returned report object is not null
+        assertTrue(report.getId() > 0);          // Assert that the report ID is greater than 0
     }
 
     /**
@@ -152,34 +160,35 @@ class ReportControllerTest {
      */
     @Test
     void postReport() throws Exception {
+        // Arrange: Create a new report object and convert it to JSON
         Report newReport = new Report(2, "Reminder: Team meeting tomorrow.", "23/12/2023", 1, "admin", 3);
-
         ObjectMapper objectMapper = new ObjectMapper();
         String reportJson = objectMapper.writeValueAsString(newReport);
 
+        // Act: Build and perform a POST request to post a new report
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .post("/reports", newReport.getId())
+                .post("/reports", newReport.getId())   // Specify the endpoint with the report ID
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(reportJson)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
         ResultActions response = mockMvc.perform(builder);
+
+        // Assert: Validate the response for successful report posting
         response.andExpectAll(
-                status().isCreated(),
-                jsonPath("$.id").value(greaterThan(0)), // Ensure the ID is positive
-                jsonPath("$.body").value(newReport.getBody()),
-                jsonPath("$.date").value(newReport.getDate()),
-                jsonPath("$.senderId").value(newReport.getSenderId()),
-                jsonPath("$.senderName").value(newReport.getSenderName()),
-                jsonPath("$.receiverId").value(newReport.getReceiverId())
+                status().isCreated(),                             // Assert HTTP status code is 201 (Created)
+                jsonPath("$.id").value(greaterThan(0)),           // Ensure the ID is positive
+                jsonPath("$.body").value(newReport.getBody()),   // Assert the response body matches the input
+                jsonPath("$.date").value(newReport.getDate()),    // Assert the response date matches the input
+                jsonPath("$.senderId").value(newReport.getSenderId()),    // Assert senderId in the response
+                jsonPath("$.senderName").value(newReport.getSenderName()), // Assert senderName in the response
+                jsonPath("$.receiverId").value(newReport.getReceiverId())  // Assert receiverId in the response
         );
 
-        // Extract the posted report from the response
+        // Additional Assertions: Verify that the posted report is saved to the repository
         String responseJson = response.andReturn().getResponse().getContentAsString();
         Report postedReport = objectMapper.readValue(responseJson, Report.class);
-
-        // Verify that the report is saved to the repository
-        assertNotNull(reportRepo.findById(postedReport.getId()));
+        assertNotNull(reportRepo.findById(postedReport.getId())); // Verify that the report is saved to the repository
     }
 
     /**
@@ -203,26 +212,30 @@ class ReportControllerTest {
      */
     @Test
     void deleteReport() throws Exception {
+        // Arrange: Create and save a report to be deleted
         Report reportToDelete = new Report(2, "Reminder: Team meeting tomorrow.", "23/12/2023", 1, "admin", 3);
         reportRepo.save(reportToDelete);
 
+        // Act: Build and perform a DELETE request to delete the specified report
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-                .delete("/reports/{id}", reportToDelete.getId())
+                .delete("/reports/{id}", reportToDelete.getId())   // Specify the endpoint with the report ID
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
         ResultActions response = mockMvc.perform(builder);
+
+        // Assert: Validate the response for successful report deletion
         response.andExpectAll(
-                status().isOk(),
-                jsonPath("$.id").value(reportToDelete.getId()),
-                jsonPath("$.body").value(reportToDelete.getBody()),
-                jsonPath("$.date").value(reportToDelete.getDate()),
-                jsonPath("$.senderId").value(reportToDelete.getSenderId()),
-                jsonPath("$.senderName").value(reportToDelete.getSenderName()),
-                jsonPath("$.receiverId").value(reportToDelete.getReceiverId())
+                status().isOk(),                                                          // Assert HTTP status code is 200 (OK)
+                jsonPath("$.id").value(reportToDelete.getId()),                 // Assert the response ID matches the input
+                jsonPath("$.body").value(reportToDelete.getBody()),             // Assert the response body matches the input
+                jsonPath("$.date").value(reportToDelete.getDate()),             // Assert the response date matches the input
+                jsonPath("$.senderId").value(reportToDelete.getSenderId()),     // Assert senderId in the response
+                jsonPath("$.senderName").value(reportToDelete.getSenderName()), // Assert senderName in the response
+                jsonPath("$.receiverId").value(reportToDelete.getReceiverId())  // Assert receiverId in the response
         );
 
-        // Ensure the report is deleted from the repository
-        assertNull(reportRepo.findById(reportToDelete.getId()));
+        // Additional Assertions: Verify that the report is deleted from the repository
+        assertNull(reportRepo.findById(reportToDelete.getId())); // Ensure the report is deleted from the repository
     }
 
     /**
@@ -243,12 +256,13 @@ class ReportControllerTest {
      */
     @Test
     void postReportWithInvalidData() throws Exception {
-        // Create an empty report (invalid data)
+        // Arrange: Create an empty report (invalid data)
         Report invalidReport = new Report();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String invalidReportJson = objectMapper.writeValueAsString(invalidReport);
 
+        // Act: Build and perform a POST request with invalid data
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .post("/reports")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -256,6 +270,8 @@ class ReportControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
         ResultActions response = mockMvc.perform(builder);
+
+        // Assert: Validate that the response returns a bad request status
         response.andExpect(status().isBadRequest());
     }
 

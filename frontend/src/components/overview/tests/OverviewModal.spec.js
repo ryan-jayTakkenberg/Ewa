@@ -40,27 +40,29 @@ describe('OverviewModal', () => {
         expect(confirmButton.exists()).toBe(true);
     });
 
+    // FIRST
     it('cancel confirmation', () => {
+        // Arrange: Find the cancel button in the wrapper
         const cancelButton = wrapper.find(CANCEL_BUTTON);
 
-        expect(cancelButton.exists()).toBe(true);
-
-        // Simulate click on cancel button
+        // Act: Simulate a click on the cancel button
         cancelButton.trigger('click');
 
-        // Verify that the cancelDelete method is called
+        // Assert: Verify that the cancelDelete method is called by checking emitted event
+        expect(cancelButton.exists()).toBe(true);
         expect(wrapper.emitted('cancel-delete')).toBeTruthy();
     });
 
+    // FIRST
     it('confirm confirmation', () => {
+        // Arrange: Find the confirm button in the wrapper
         const confirmButton = wrapper.find(CONFIRM_BUTTON);
 
-        expect(confirmButton.exists()).toBe(true);
-
-        // Simulate click on confirm button
+        // Act: Simulate a click on the confirm button
         confirmButton.trigger('click');
 
-        // Verify that the confirmDelete method is called
+        // Assert: Verify that the confirmDelete method is called by checking emitted event
+        expect(confirmButton.exists()).toBe(true);
         expect(wrapper.emitted('confirm-delete')).toBeTruthy();
     });
 

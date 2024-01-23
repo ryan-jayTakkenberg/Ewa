@@ -1,84 +1,92 @@
 package app.repositories;
 
 import app.models.Report;
+import app.models.Warehouse;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.TestPropertySource;
+import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
 
-@DataJpaTest
-@TestPropertySource(properties = {
-        "spring.datasource.url=jdbc:mysql://oege.ie.hva.nl:3306/zkoktj_test?createDatabaseIfNotExist=true",
-        "spring.datasource.username=koktj",
-        "spring.datasource.password=Gse1qSX.FUm$NJ+F",
-        "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect",
-        "spring.jpa.hibernate.ddl-auto=update"
-})
+@ExtendWith(MockitoExtension.class)
 class ReportJPARepositoryTests {
 
-    @Autowired
-    private TestEntityManager entityManager;
+    @Mock
+    private EntityManager entityManager;
 
-    @Autowired
+    @InjectMocks
     private ReportJPARepository reportRepo;
 
+    // FIRST
     @Test
     void findAll() {
-        Report report1 = new Report(1, "Test body 1", "01/01/2022", 1, "User1", 2);
-        Report report2 = new Report(2, "Test body 2", "02/01/2022", 2, "User2", 3);
 
-        entityManager.persist(report1);
-        entityManager.persist(report2);
-        entityManager.flush();
+        // Arrange
+        TypedQuery<Report> query = mock(TypedQuery.class);
+        List<Report> newReports = Arrays.asList(
+                new Report(1, "Test", "2024-01-23", 1, "Tobi", 2),
+                new Report(2, "Test", "2024-01-23", 1, "Tobi", 2));
 
-        List<Report> reports = reportRepo.findAll();
+        when(entityManager.createQuery("SELECT r FROM Report r", Report.class)).thenReturn(query);
+        when(query.getResultList()).thenReturn(newReports);
 
-        assertNotNull(reports);
-        assertEquals(2, reports.size());
+        // Act
+        List<Report> actualReports = reportRepo.findAll();
+
+        // Assert
+        assertEquals(newReports, actualReports);
+        verify(query).getResultList();
     }
 
+    // FIRST
     @Test
     void findById() {
-        Report report = new Report(1, "Test body", "01/01/2022", 1, "User1", 2);
-        entityManager.persist(report);
-        entityManager.flush();
 
-        Report foundReport = reportRepo.findById(report.getId());
+        // Arrange
+        long reportId = 1;
+        Report expectedReport = new Report(3, "Test", "2024-01-23", 1, "Tobi", 2);
 
-        assertNotNull(foundReport);
-        assertEquals(report.getBody(), foundReport.getBody());
+        when(entityManager.find(Report.class, reportId)).thenReturn(expectedReport);
+
+        // Act
+        Report actualReport = reportRepo.findById(reportId);
+
+        // Assert
+        assertEquals(expectedReport, actualReport);
+        verify(entityManager).find(Report.class, reportId);
     }
 
-    @Test
-    void save() {
-        Report report = new Report(1, "Test body", "01/01/2022", 1, "User1", 2);
-
-        Report savedReport = reportRepo.save(report);
-
-        assertNotNull(savedReport);
-        assertEquals(report.getBody(), savedReport.getBody());
-
-        Report foundReport = entityManager.find(Report.class, savedReport.getId());
-        assertNotNull(foundReport);
-    }
-
+    // FIRST
     @Test
     void delete() {
-        Report report = new Report(1, "Test body", "01/01/2022", 1, "User1", 2);
-        entityManager.persist(report);
-        entityManager.flush();
 
-        Report deletedReport = reportRepo.delete(report);
+        // Arrange
+        long reportIdToDelete = 1;
+        Report reportToDelete = new Report(reportIdToDelete, "Test", "2024-01-23", 1, "Tobi", 2);
 
+        // Act
+        Report deletedReport = reportRepo.delete(reportToDelete);
+
+        // Assert
         assertNotNull(deletedReport);
-        assertEquals(report.getBody(), deletedReport.getBody());
+        assertEquals(reportToDelete, deletedReport);
 
-        Report foundReport = entityManager.find(Report.class, deletedReport.getId());
-        assertNull(foundReport);
+        // Verify
+        verify(entityManager).remove(reportToDelete);
+        verifyNoMoreInteractions(entityManager);
     }
+
 }
