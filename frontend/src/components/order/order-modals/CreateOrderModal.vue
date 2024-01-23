@@ -75,12 +75,6 @@ export default {
       this.productOptions.push(this.orderedProducts[index].product);
       this.orderedProducts.splice(index, 1);
     },
-
-
-
-
-
-
     validateDates() {
       if (this.order.orderDate && this.order.estimatedDeliveryDate) {
         const orderDate = new Date(this.order.orderDate);
