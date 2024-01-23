@@ -3,7 +3,6 @@ package app.controllers;
 import app.enums.PermissionLevel;
 import app.models.Team;
 import app.repositories.TeamJPARepository;
-import app.util.HashUtil;
 import app.exceptions.BadRequestException;
 import app.exceptions.ForbiddenException;
 import app.jwt.JWToken;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,7 +65,7 @@ public class UserController {
      * Create a new user or edit an existing user in the database.
      *
      * @param jwtInfo the JSON Web Token
-     * @param user    the user to create
+     * @param json   the user to create
      * @return the created user if created successfully
      * @throws ForbiddenException if no token provided
      * @throws ForbiddenException if the requester is not an admin
@@ -99,7 +97,7 @@ public class UserController {
      * Update a user in the database
      *
      * @param jwtInfo  the json web token
-     * @param user the user to add or edit
+     * @param json the user to add or edit
      * @return the user if it was edited successfully
      * @throws ForbiddenException if no token provided
      * @throws ForbiddenException if the requester is not an admin
