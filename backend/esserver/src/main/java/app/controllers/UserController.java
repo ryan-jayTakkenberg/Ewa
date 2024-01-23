@@ -92,7 +92,6 @@ public class UserController {
         User user = new User(permissionLevel, name, email, null, password, team);
         return userRepo.save(user);
     }
-
     /**
      * Update a user in the database
      *
