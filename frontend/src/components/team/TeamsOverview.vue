@@ -10,8 +10,7 @@ import TeamsEditComponent from "@/components/team/TeamsEditComponent.vue";
 import TeamsAddComponent from "@/components/team/TeamsAddComponent.vue";
 import TeamsDeleteComponent from "@/components/team/TeamsDeleteComponent.vue";
 
-import {TeamsAdaptor} from "@/service/teams-adaptor";
-import {WarehouseAdaptor} from "@/service/warehouse-adaptor";
+
 
 export default {
   name: "TeamsOverview",
@@ -102,24 +101,7 @@ export default {
       }
       this.closeEditUserModal();
     },
-    deleteCheckedTeams() {
-      // Get the IDs of the users to delete
-      const teamsIdsToDelete = this.checkedTeams.map(team => team.id);
-
-      // Uncheck the selected users in the UsersRowComponent
-      this.teams.forEach(team => {
-        team.isChecked = false;
-      });
-
-      // Remove the selected users from the users array based on their IDs
-      this.teams = this.teams.filter(user => !teamsIdsToDelete.includes(user.id));
-
-      // Clear the checkedUsers array
-      this.checkedTeams = [];
-
-      this.closeModal();
-    },
-      closeAddTeamsModal() {
+    closeAddTeamsModal() {
         this.isAddTeamsOpen = false;
       },
       toggleCheckbox(team, isChecked) {
@@ -130,10 +112,7 @@ export default {
         }
         console.log(this.checkedTeams);
       },
-      getSelectedTeams() {
-        return this.projects.filter(team => this.checkedTeams.includes(team.id));
-      },
-      async asyncDeleteTeamById(teamId) {
+    async asyncDeleteTeamById(teamId) {
         try {
           await this.teamsService.asyncDeleteById(teamId);
           this.teams = this.teams.filter((team) => team.id !== teamId);
@@ -170,15 +149,8 @@ export default {
         } catch (error) {
           console.error("Error occurred while getting the data from the backend", error)
         }
-      }, async getProjectTeams(teamId) {
-        try {
-          this.teams = await this.teamsService.asyncFindAllWithProjectCount(teamId);
-
-        } catch (error) {
-          console.error("Error occurred while getting the data from the backend", error);
-        }
       },
-    }
+  }
 }
 </script>
 
