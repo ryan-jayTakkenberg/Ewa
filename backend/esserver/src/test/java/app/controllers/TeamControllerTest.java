@@ -208,13 +208,7 @@ class TeamControllerTest {
      * Small: It tests a specific feature - handling a bad request.
      * Testable: It's designed to be easily testable and maintainable.
      */
-    /**
-     * FAST Test: Attempting to delete a non-existing team, expecting a 404 Not Found error.
-     * Focused: This test focuses on handling a 404 error when deleting a non-existing team.
-     * Automated: It is automated to run with the test suite.
-     * Small: It tests a specific feature - handling a 404 error.
-     * Testable: It's designed to be easily testable and maintainable.
-     */
+
     @Test
     void addNewTeamMissingNameField() throws Exception {
         // Arrange: Create a new team associated with the existing warehouse
@@ -233,6 +227,13 @@ class TeamControllerTest {
          *
          * @throws Exception the exception
          */
+    /**
+     * FAST Test: Attempting to delete a non-existing team, expecting a 404 Not Found error.
+     * Focused: This test focuses on handling a 404 error when deleting a non-existing team.
+     * Automated: It is automated to run with the test suite.
+     * Small: It tests a specific feature - handling a 404 error.
+     * Testable: It's designed to be easily testable and maintainable.
+     */
     @Test
     void deleteNonExistingTeam() throws Exception {
         // Attempt to delete a team with an invalid ID (e.g., ID = 999)
